@@ -1,0 +1,2 @@
+select sum(PurchasedCost)  as PurchasedCost_kr, sum(Purchased)  as Purchased_kWh,  sum(ProductionOwnUseProfit) as OwnUseProfit_kr, sum(ProductionSoldProfit) as SoldProfit_kr, 
+ sum(ProductionOwnUse)  as ProductionOwnUse_kWh, sum(ProductionSold) as ProductionSold_kWh from  Energy 

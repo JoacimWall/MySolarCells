@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.OnBoarding.InverterConnectView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        x:DataType="vm:InverterConnectViewModel">
+
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
+            Text="Inverter"/>
+
+        <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
+            Text="Pick the invert from the list below that repesentat you installation"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+         <Label  Grid.Row="2" Grid.ColumnSpan="5" Text="Pick the brand of your inverter" />
+        <Picker Grid.Row="3" Grid.ColumnSpan="5" ItemsSource="{Binding InverterModels}" SelectedItem="{Binding SelectedInverterModel}" ItemDisplayBinding="{Binding ItemTitle}"/>
+
+        <!--UserName-->
+        <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="2" Text="Username"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding UserName}" />
+
+         <!--Password-->
+        <Label Grid.Row="6" Margin="0,0,0,-6" Grid.ColumnSpan="2" Text="Password"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="7" Grid.ColumnSpan="3" Text="{Binding Password}" IsPassword="True"  />
+
+         <Button Grid.Row="8"  Grid.ColumnSpan="3" Text="Test login" Command="{Binding GetSitesCommand}"/>
+
+        <!--Homes-->
+         <Label  Grid.Row="9" Grid.ColumnSpan="5" Text="Pick the site node to analys" IsVisible="{Binding ShowSiteNodePicker}"/>
+        <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding name}"/>
+
+         <!--Install date-->
+        <Label  Grid.Row="11" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Text="Install date for inverter"/>
+        <DatePicker Grid.Row="12" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Date="{Binding InstallDate}" />
+         <!--Save Home-->
+        <Button Grid.Row="13" IsVisible="{Binding ShowSiteNodePicker}"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveInverterCommand}"/>
+
+         <!--<Button Grid.Row="2"  Grid.ColumnSpan="3" Text="Goto Tibber Api site" Command="{Binding GoToTibberApiTokenPageCommand}"/>
+         <Label Grid.Row="3" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="{x:Static trans:AppResources.Access_Token}"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+
+        <Entry Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding TibberAccessToken}"   />
+
+        <Button Grid.Row="5"  Grid.ColumnSpan="3" Text="Test API key" Command="{Binding GetHomesCommand}"/>-->
+
+        <!--Homes-->
+         <!--<Label  Grid.Row="6" Grid.ColumnSpan="5" Text="Pick the home to analys" IsVisible="{Binding ShowHomePicker}"/>
+        <Picker Grid.Row="7" Grid.ColumnSpan="5" IsVisible="{Binding ShowHomePicker}" ItemsSource="{Binding Homes}" SelectedItem="{Binding SelecteddHome}" ItemDisplayBinding="{Binding AppNickname}"/>-->
+       <!--Install date-->
+        <!--<Label  Grid.Row="8" Grid.ColumnSpan="5" Text="Select solar cells install date" IsVisible="{Binding ShowHomePicker}"/>
+        <DatePicker Grid.Row="9" Grid.ColumnSpan="5" Date="{Binding InstallDate}" />-->
+        <!--Save Home-->
+        <!--<Button Grid.Row="10"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveHomeCommand}"/>-->
+    </Grid>
+</views:BaseContentPage>

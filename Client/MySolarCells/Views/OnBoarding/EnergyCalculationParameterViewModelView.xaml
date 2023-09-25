@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.OnBoarding.EnergyCalculationParameterView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        x:DataType="vm:EnergyCalculationParameterViewModel">
+
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
+            Text="Calculation factors"/>
+
+        <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
+            Text="Calculation factors for costs and revenues related to solar cell production."
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <!--ProdCompensationElectricityLowload-->
+        <Label Grid.Row="2" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="Production compensation electricity to grid"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding Parameters.ProdCompensationElectricityLowload}"   />
+         <!--TransferFee-->
+        <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="Transfer fee"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding Parameters.TransferFee}"   />
+         <!--TaxReduction-->
+        <Label Grid.Row="6" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="Tax reduction (produced/kWh to grid)"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="7" Grid.ColumnSpan="3" Text="{Binding Parameters.TaxReduction}"   />
+         <!--EnergyTax-->
+        <Label Grid.Row="8" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="Energy tax (Production own use)"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="9" Grid.ColumnSpan="3" Text="{Binding Parameters.EnergyTax}"   />
+
+        <!--Save-->
+        <Button Grid.Row="10"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveCommand}"/>
+
+       
+    </Grid>
+</views:BaseContentPage>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.Roi.RoiView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.Roi"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        Shell.NavBarIsVisible="True"
+                        Title="ROI" 
+                        x:DataType="vm:RoiViewModel">
+
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+          ColumnDefinitions="Auto,*,Auto">
+
+         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
+            Text="{Binding RoiStats.TotalPurchased}"/>
+
+       
+    </Grid>
+</views:BaseContentPage>

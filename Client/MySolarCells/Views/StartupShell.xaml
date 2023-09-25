@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell x:Class="MySolarCells.Views.StartupShell"
+         xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:ob="clr-namespace:MySolarCells.Views.OnBoarding"
+        xmlns:views="clr-namespace:MySolarCells.Views"
+        Shell.FlyoutBehavior="Disabled">
+
+     <ShellContent Route="StartupView" ContentTemplate="{DataTemplate views:StartupView}" />
+     <ShellContent Route="ElectricitySupplierConnectView" ContentTemplate="{DataTemplate ob:ElectricitySupplierConnectView}" />
+     <ShellContent Route="InverterConnectView" ContentTemplate="{DataTemplate ob:InverterConnectView}" />
+     <ShellContent Route="EnergyCalculationParameterView" ContentTemplate="{DataTemplate ob:EnergyCalculationParameterView}" />
+     <ShellContent Route="FirstSyncView" ContentTemplate="{DataTemplate ob:FirstSyncView}" />
+
+</Shell>

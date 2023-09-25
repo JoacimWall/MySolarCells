@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.OnBoarding.FirstSyncView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:ctl="clr-namespace:MySolarCells.Controls"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        x:DataType="vm:FirstSyncViewModel">
+
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+        <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
+            Text="First Sync"/>
+
+        <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
+            Text="Now its time to get all you historic data please don't turn of the app or switch to other app"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Button Margin="0,16" Grid.Row="2" IsEnabled="{Binding StartbuttonEnable}" Grid.ColumnSpan="3" Text="Start import" Command="{Binding SyncCommand}"/>
+
+
+        <!--  Nedan är de som visas när vi laddar upp boken till backend  -->
+        <Label Grid.Row="4"
+                       Grid.ColumnSpan="3"
+                       Margin="0,32,0,0"
+                       FontSize="21"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowProgressStatus}"
+                       
+                       Text="{Binding ProgressStatus}" />
+
+        <Label Grid.Row="5"
+                       Grid.ColumnSpan="3"
+                       Margin="0,8,0,16"
+                       FontSize="17"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding ShowProgressStatus}"
+                       Text="{Binding ProgressSubStatus}" />
+
+
+
+        <!--  Progress  -->
+        <ctl:ProgressBar Grid.Row="6" Grid.ColumnSpan="3" Margin="16,16,16,16"
+                                 AlternativeTextColor="{x:Static theming:AppColors.Primary500Color}"
+                                 BarBackgroundColor="{x:Static theming:AppColors.Gray400Color}" 
+                                 GradientEndColor="{x:Static theming:AppColors.Primary800Color}" 
+                                 GradientStartColor="{x:Static theming:AppColors.Primary500Color}" 
+                                 TextColor="{x:Static theming:AppColors.WhiteColor}" 
+                                 HeightRequest="20"
+                                 FontSize="12"
+                                 IsVisible="True"
+                                 Percentage="{Binding ProgressProcent}"
+                                 ShowProcentText="True"
+                                           />
+
+        <!--  Cancel  -->
+        <!--<Button Grid.Row="7"
+                                     Grid.ColumnSpan="3"
+                                     Margin="15,10,15,0"
+                                     Command="{Binding CancelCommand}"
+                                     IsVisible="{Binding ShowProgressStatus}"
+                                     Text="{x:Static trans:AppResources.Cancel}" />-->
+
+    </Grid>
+</views:BaseContentPage>

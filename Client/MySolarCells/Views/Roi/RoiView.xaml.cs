@@ -1,0 +1,13 @@
+﻿using MySolarCells.ViewModels.Roi;
+
+namespace MySolarCells.Views.Roi;
+
+public partial class RoiView : BaseContentPage
+{
+	public RoiView(RoiViewModel vm)
+	{
+		InitializeComponent();
+        BindingContext = vm;
+		//this.StatusbarBackgroundColor = AppColors.Primary800Color;
+    }
+}
