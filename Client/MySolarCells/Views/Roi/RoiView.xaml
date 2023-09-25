@@ -8,13 +8,59 @@
                         Shell.NavBarIsVisible="True"
                         Title="ROI" 
                         x:DataType="vm:RoiViewModel">
+    <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        
+       <!--TotalPurchased-->
+        <Label Grid.Column="0" Grid.Row="0" Text="Purchased"/>
+        <Label Grid.Column="1" Grid.Row="0" Text="{Binding RoiStats.TotalPurchased}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="0" Text="{Binding RoiStats.Unit}"/>
+         <!--TotalPurchasedCost-->
+        <Label Grid.Column="0" Grid.Row="1" Text="Purchased cost"/>
+        <Label Grid.Column="1" Grid.Row="1" Text="{Binding RoiStats.TotalPurchasedCost}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="1" Text="{Binding RoiStats.Currency}"/>
+         <BoxView Grid.ColumnSpan="3" Grid.Row="2" HeightRequest="1" />
 
-    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-          ColumnDefinitions="Auto,*,Auto">
+        <!--TotalProductionSold-->
+        <Label Grid.Column="0" Grid.Row="3" Text="Production sold"/>
+        <Label Grid.Column="1" Grid.Row="3" Text="{Binding RoiStats.TotalProductionSold}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="3" Text="{Binding RoiStats.Unit}"/>
+        <!--TotalProductionSoldProfit-->
+        <Label Grid.Column="0" Grid.Row="4" Text="Production sold profit"/>
+        <Label Grid.Column="1" Grid.Row="4" Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="4" Text="{Binding RoiStats.Currency}"/>
+        <!--TotalCompensationForProductionToGrid-->
+        <Label Grid.Column="0" Grid.Row="5" Text="Compensation for production to grid"/>
+        <Label Grid.Column="1" Grid.Row="5" Text="{Binding RoiStats.TotalCompensationForProductionToGrid}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="5" Text="{Binding RoiStats.Currency}"/>
+        <!--TotalSavedEnergyTaxReductionProductionToGrid-->
+        <Label Grid.Column="0" Grid.Row="6" Text="Saved energy tax"/>
+        <Label Grid.Column="1" Grid.Row="6" Text="{Binding RoiStats.TotalSavedEnergyTaxReductionProductionToGrid}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="6" Text="{Binding RoiStats.Currency}"/>
+         <BoxView Grid.ColumnSpan="3" Grid.Row="7" HeightRequest="1" />
 
-         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
-            Text="{Binding RoiStats.TotalPurchased}"/>
 
+         <!--TotalProductionOwnUse-->
+        <Label Grid.Column="0" Grid.Row="8" Text="Production own use"/>
+        <Label Grid.Column="1" Grid.Row="8" Text="{Binding RoiStats.TotalProductionOwnUse}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="8" Text="{Binding RoiStats.Unit}"/>
+        <!--ProductionOwnUseProfit-->
+        <Label Grid.Column="0" Grid.Row="9" Text="Production own use profit"/>
+        <Label Grid.Column="1" Grid.Row="9" Text="{Binding RoiStats.TotalProductionOwnUseProfit}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="9" Text="{Binding RoiStats.Currency}"/>
+        <!--TotalSavedTransferFeeProductionOwnUse-->
+        <Label Grid.Column="0" Grid.Row="10" Text="Saved transfer fee"/>
+        <Label Grid.Column="1" Grid.Row="10" Text="{Binding RoiStats.TotalSavedTransferFeeProductionOwnUse}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="10" Text="{Binding RoiStats.Currency}"/>
+         <!--TotalSavedEnergyTaxProductionOwnUse-->
+        <Label Grid.Column="0" Grid.Row="11" Text="Saved energy tax"/>
+        <Label Grid.Column="1" Grid.Row="11" Text="{Binding RoiStats.TotalSavedEnergyTaxProductionOwnUse}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="11" Text="{Binding RoiStats.Currency}"/>
+         <BoxView Grid.ColumnSpan="3" Grid.Row="12" HeightRequest="1" />
+         <!--TotalSaved-->
+        <Label Grid.Column="0" Grid.Row="13" Text="TotalSaved"/>
+        <Label Grid.Column="1" Grid.Row="13" Text="{Binding RoiStats.TotalSaved}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="13" Text="{Binding RoiStats.Currency}"/>
        
     </Grid>
+    
 </views:BaseContentPage>
