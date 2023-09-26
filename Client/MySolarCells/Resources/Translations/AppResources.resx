@@ -88,4 +88,7 @@
  <data name="More" xml:space="preserve">
     <value>More</value>
   <comment>Need review</comment></data>
+ <data name="Production" xml:space="preserve">
+    <value>Production</value>
+  <comment>Need review</comment></data>
 </root>

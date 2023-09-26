@@ -6,7 +6,7 @@
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Roi"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         Shell.NavBarIsVisible="True"
-                        Title="ROI" 
+                        Title="Total ROI" 
                         x:DataType="vm:RoiViewModel">
     <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         
@@ -18,7 +18,7 @@
         <Label Grid.Column="0" Grid.Row="1" Text="Purchased cost"/>
         <Label Grid.Column="1" Grid.Row="1" Text="{Binding RoiStats.TotalPurchasedCost}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="1" Text="{Binding RoiStats.Currency}"/>
-         <BoxView Grid.ColumnSpan="3" Grid.Row="2" HeightRequest="1" />
+        <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="2" HeightRequest="1" />
 
         <!--TotalProductionSold-->
         <Label Grid.Column="0" Grid.Row="3" Text="Production sold"/>
@@ -36,7 +36,7 @@
         <Label Grid.Column="0" Grid.Row="6" Text="Saved energy tax"/>
         <Label Grid.Column="1" Grid.Row="6" Text="{Binding RoiStats.TotalSavedEnergyTaxReductionProductionToGrid}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="6" Text="{Binding RoiStats.Currency}"/>
-         <BoxView Grid.ColumnSpan="3" Grid.Row="7" HeightRequest="1" />
+         <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="7" HeightRequest="1" />
 
 
          <!--TotalProductionOwnUse-->
@@ -55,9 +55,9 @@
         <Label Grid.Column="0" Grid.Row="11" Text="Saved energy tax"/>
         <Label Grid.Column="1" Grid.Row="11" Text="{Binding RoiStats.TotalSavedEnergyTaxProductionOwnUse}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="11" Text="{Binding RoiStats.Currency}"/>
-         <BoxView Grid.ColumnSpan="3" Grid.Row="12" HeightRequest="1" />
+         <BoxView  Margin="0,8" Grid.ColumnSpan="3" Grid.Row="12" HeightRequest="1" />
          <!--TotalSaved-->
-        <Label Grid.Column="0" Grid.Row="13" Text="TotalSaved"/>
+        <Label Grid.Column="0" Grid.Row="13" Text="Total Saved"/>
         <Label Grid.Column="1" Grid.Row="13" Text="{Binding RoiStats.TotalSaved}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="13" Text="{Binding RoiStats.Currency}"/>
        

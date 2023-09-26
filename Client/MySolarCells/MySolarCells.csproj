@@ -72,6 +72,7 @@
 	  <PackageReference Include="Tibber.Sdk" Version="0.5.1-beta" />
 	  <PackageReference Include="EFCore.BulkExtensions" Version="8.0.0-rc.1" />
 	  <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
+	  <PackageReference Include="Microcharts.Maui" Version="1.0.0" />
 	</ItemGroup>
 	<!-- Translation -->
 	<ItemGroup>
@@ -97,12 +98,14 @@
 	  <None Remove="Resources\Fonts\mysolarcells.ttf" />
 	  <None Remove="Resources\Images\money.svg" />
 	  <None Remove="Resources\Images\dots.svg" />
+	  <None Remove="Resources\Images\chart.svg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="MultiLingualExtensionSettings.json" />
 	  <BundleResource Include="Resources\Fonts\mysolarcells.ttf" />
 	  <BundleResource Include="Resources\Images\money.svg" />
 	  <BundleResource Include="Resources\Images\dots.svg" />
+	  <BundleResource Include="Resources\Images\chart.svg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Views\Roi\" />

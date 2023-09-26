@@ -1,6 +1,7 @@
 ﻿namespace MySolarCells;
 
 using CommunityToolkit.Maui;
+using Microcharts.Maui;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 public static class MauiProgram
@@ -10,6 +11,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+            .UseMicrocharts()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .ConfigureServices()
