@@ -31,9 +31,9 @@
 
          <Button Grid.Row="8"  Grid.ColumnSpan="3" Text="Test login" Command="{Binding GetSitesCommand}"/>
 
-        <!--Homes-->
+        <!--Inverters-->
          <Label  Grid.Row="9" Grid.ColumnSpan="5" Text="Pick the site node to analys" IsVisible="{Binding ShowSiteNodePicker}"/>
-        <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding name}"/>
+        <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding ItemTitle}"/>
 
          <!--Install date-->
         <Label  Grid.Row="11" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Text="Install date for inverter"/>

@@ -23,3 +23,4 @@ global using MySolarCells.ViewModels.OnBoarding;
 //Service
 global using MySolarCells.Services;
 global using MySolarCells.Services.Sqlite;
+global using MySolarCells.Services.Inverter;

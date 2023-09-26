@@ -9,6 +9,7 @@ public enum ElectricitySupplier
 public enum InverterTyp
 {
     Unknown = 0,
-    Kostal = 1
+    Kostal = 1,
+    Huawei = 2
 }
 

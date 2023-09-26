@@ -3,21 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 
-namespace MySolarCells.Services;
+namespace MySolarCells.Services.Inverter;
 
-public interface IKostalService
-{
-    Task<Result<KostalLoginResponse>> LoginInUser(string userName, string password);
-    Task<Result<SitesResponse>> GetSites();
-    Task<Result<Device>> GetInverter(int siteNodeId);
-    Task<bool> SyncProductionOwnUseFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr);
-}
-public class KostalService : IKostalService
+
+public class KostalService : IInverterServiceInterface
 {
     private IRestClient restClient;
-    private KostalLoginResponse kostalLoginResponse;
-    private SitesResponse sitesResponse;
-    private DeviceResponse deviceResponse;
+    private InverterLoginResponse inverterLoginResponse;
+    private KostalUserRoleSitesResponse sitesResponse;
+    private KostalUserRoleDeviceResponse deviceResponse;
     public KostalService(IRestClient restClient)
     {
         this.restClient = restClient;
@@ -27,44 +21,57 @@ public class KostalService : IKostalService
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://kostal-api.solytic.com/api/graphql", defaultRequestHeaders = defaultRequestHeaders };
         this.restClient.ReInit();
     }
-    public async Task<Result<KostalLoginResponse>> LoginInUser(string userName, string password)
+    public async Task<Result<InverterLoginResponse>> LoginInUser(string userName, string password)
     {
         //LOGIN 
         string query = "mutation LOGIN_USER_MUTATION($emailAddress: String!, $password: String!, $termsOfUseAccepted: Boolean, $marketingOptIn: Boolean) {  loginUser(user: {emailAddress: $emailAddress, password: $password, termsOfUseAccepted: $termsOfUseAccepted, marketingOptIn: $marketingOptIn}) {    accessToken {      token      tokenType      expiresIn      __typename    }    refreshToken    user {      ...userMenuFragment      __typename    }    __typename  }}fragment userMenuFragment on User {  id  emailAddress  customer {    id    __typename  }  contact {    id    firstName    lastName    address {      id      country      __typename    }    __typename  }  userRoles {    id    name    __typename  }  locale  __typename}";
-        var variables = new LoginVariables { emailAddress = userName, password = password };
-        GraphQlRequest graphQlRequest = new GraphQlRequest { operationName = "LOGIN_USER_MUTATION", variables = variables, query = query };
+        var variables = new KostalUserRoleLoginVariables { emailAddress = userName, password = password };
+        KostalUserRoleGraphQlRequest graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "LOGIN_USER_MUTATION", variables = variables, query = query };
         var loginResult = await this.restClient.ExecutePostAsync<KostalLoginResponse>(string.Empty, graphQlRequest);
         if (!loginResult.WasSuccessful)
-            return new Result<KostalLoginResponse>(loginResult.ErrorMessage);
+            return new Result<InverterLoginResponse>(loginResult.ErrorMessage);
+        else
+        {
+             this.inverterLoginResponse = new InverterLoginResponse
+            {
+                token = loginResult.Model.Data.loginUser.accessToken.token,
+                expiresIn = loginResult.Model.Data.loginUser.accessToken.expiresIn,
+                tokenType = loginResult.Model.Data.loginUser.accessToken.tokenType,
+            };
 
-        kostalLoginResponse = loginResult.Model;
+        }
 
         Dictionary<string, string> tokens = new Dictionary<string, string>
         {
-            { AppConstants.Authorization, string.Format("Bearer {0}", kostalLoginResponse.Data.loginUser.accessToken.token) }
+            { AppConstants.Authorization, string.Format("Bearer {0}", this.inverterLoginResponse.token) }
         };
         this.restClient.UpdateToken(tokens);
 
-        return new Result<KostalLoginResponse>(kostalLoginResponse);
+        return new Result<InverterLoginResponse>(inverterLoginResponse);
     }
-    public async Task<Result<SitesResponse>> GetSites()
+    public async Task<Result<List<PickerItem>>> GetSites()
     {
         //SITES
         string query = "query SITES_LIST_FIRST { sites(first: 1) { nodes { id name      inclination __typename    } __typename  } }";
-        GraphQlRequest graphQlRequest = new GraphQlRequest { operationName = "SITES_LIST_FIRST", query = query, variables = new EmptyVariables() };
-        var resultSites = await this.restClient.ExecutePostAsync<SitesResponse>(string.Empty, graphQlRequest);
+        KostalUserRoleGraphQlRequest graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "SITES_LIST_FIRST", query = query, variables = new KostalUserRoleEmptyVariables() };
+        var resultSites = await this.restClient.ExecutePostAsync<KostalUserRoleSitesResponse>(string.Empty, graphQlRequest);
         sitesResponse = resultSites.Model;
-        return new Result<SitesResponse>(sitesResponse);
+        var returnlist = new List<PickerItem>();
+        foreach (var item in sitesResponse.data.sites.nodes)
+        {
+            returnlist.Add(new PickerItem { ItemValue = item.id, ItemTitle = item.name.ToString() });
+        }
+        return new Result<List<PickerItem>>(returnlist);
     }
-    public async Task<Result<Device>> GetInverter(int siteNodeId)
+    public async Task<Result<PickerItem>> GetInverter(string siteNodeId)
     {
         //FETCH_LIST_DEVICE_IDS_OF_SITE
         var query = "query FETCH_LIST_DEVICE_IDS_OF_SITE($id: Long!) {  site(id: $id) {    id    name    currency    purchaseCompensation    feedInCompensation    dataSources {      id      name      status      metadata {        id        key        value        __typename      }      devices {        id        name        type        uniqueIdentifier        metadata {          id          key          value          __typename        }        __typename      }      mostRecentDataSourceLogEntry {        timestamp        __typename      }      __typename    }    __typename  }}";
-        var graphQlRequest = new GraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new ListDeviceVariables { id = siteNodeId } };
-        var resultDevice = await this.restClient.ExecutePostAsync<DeviceResponse>(string.Empty, graphQlRequest);
+        var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(siteNodeId) } };
+        var resultDevice = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceResponse>(string.Empty, graphQlRequest);
         deviceResponse = resultDevice.Model;
         var device = deviceResponse.data.site.dataSources.First().devices.FirstOrDefault(x => x.type == "INVERTER");
-        return new Result<Device>(device);
+        return new Result<PickerItem>( new PickerItem { ItemValue= device.id, ItemTitle = device.name });
     }
 
     public async Task<bool> SyncProductionOwnUseFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr)
@@ -72,18 +79,11 @@ public class KostalService : IKostalService
 
         using var dbContext = new MscDbContext();
         var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        //LOGIN 
-        string query = "mutation LOGIN_USER_MUTATION($emailAddress: String!, $password: String!, $termsOfUseAccepted: Boolean, $marketingOptIn: Boolean) {  loginUser(user: {emailAddress: $emailAddress, password: $password, termsOfUseAccepted: $termsOfUseAccepted, marketingOptIn: $marketingOptIn}) {    accessToken {      token      tokenType      expiresIn      __typename    }    refreshToken    user {      ...userMenuFragment      __typename    }    __typename  }}fragment userMenuFragment on User {  id  emailAddress  customer {    id    __typename  }  contact {    id    firstName    lastName    address {      id      country      __typename    }    __typename  }  userRoles {    id    name    __typename  }  locale  __typename}";
-        var variables = new LoginVariables { emailAddress = inverter.UserName, password = StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey) };
-        GraphQlRequest graphQlRequest = new GraphQlRequest { operationName = "LOGIN_USER_MUTATION", variables = variables, query = query };
-        var login = await this.restClient.ExecutePostAsync<KostalLoginResponse>(string.Empty, graphQlRequest);
-        kostalLoginResponse = login.Model;
+        //LOGIN
+        var loginResult = await LoginInUser(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey));
+         inverterLoginResponse = loginResult.Model;
 
-        Dictionary<string, string> tokens = new Dictionary<string, string>
-        {
-            { AppConstants.Authorization, string.Format("Bearer {0}", kostalLoginResponse.Data.loginUser.accessToken.token) }
-        };
-        this.restClient.UpdateToken(tokens);
+       
 
        
         try
@@ -103,7 +103,7 @@ public class KostalService : IKostalService
             deviceIds.Add(Convert.ToInt32(inverter.SubSystemEntityId));
             var dataTypes = new List<string>();
             dataTypes.Add("ac_hourly_yield");
-            DeviceProductionResponse dayProduction = new DeviceProductionResponse();
+            KostalUserRoleDeviceProductionResponse dayProduction = new KostalUserRoleDeviceProductionResponse();
 
             while (start < end)
             {
@@ -122,12 +122,12 @@ public class KostalService : IKostalService
                 }
 
                 
-                var dataSelector = new DateSelector { from = processingDateFrom, to = processingDateTo, fromTimeOfDay = "00:00:00", toTimeOfDay = "23:59:59" };
-                query = "query FETCH_DEVICE_DATA($deviceIds: [Long!]!, $dataTypes: [String!]!, $dateSelector: TimeSpanSelectorInput!, $padWithNull: Boolean = true, $byTimeInterval: AggregationInterval!, $byDevice: Boolean = true, $statistic: AggregationStatistic = SUM) {  deviceData(deviceIds: $deviceIds, dataTypes: $dataTypes, dateSelector: $dateSelector, padWithNull: $padWithNull) {    aggregate(byDevice: $byDevice, byTimeInterval: $byTimeInterval, statistic: $statistic) {      timeSeries {        points {          timestamp          value          __typename        }        __typename      }      __typename    }    __typename  }}";
-                graphQlRequest = new GraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new ProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
-                var resultDay = await this.restClient.ExecutePostAsync<DeviceProductionResponse>(string.Empty, graphQlRequest);
+                var dataSelector = new KostalUserRoleDateSelector { from = processingDateFrom, to = processingDateTo, fromTimeOfDay = "00:00:00", toTimeOfDay = "23:59:59" };
+                var query = "query FETCH_DEVICE_DATA($deviceIds: [Long!]!, $dataTypes: [String!]!, $dateSelector: TimeSpanSelectorInput!, $padWithNull: Boolean = true, $byTimeInterval: AggregationInterval!, $byDevice: Boolean = true, $statistic: AggregationStatistic = SUM) {  deviceData(deviceIds: $deviceIds, dataTypes: $dataTypes, dateSelector: $dateSelector, padWithNull: $padWithNull) {    aggregate(byDevice: $byDevice, byTimeInterval: $byTimeInterval, statistic: $statistic) {      timeSeries {        points {          timestamp          value          __typename        }        __typename      }      __typename    }    __typename  }}";
+                 var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new KostalUserRoleProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
+                var resultDay = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceProductionResponse>(string.Empty, graphQlRequest);
                 dayProduction = resultDay.Model;
-                List<Point> listPoints = new List<Point>();
+                List<KostalUserRolePoint> listPoints = new List<KostalUserRolePoint>();
                 if (resultDay.WasSuccessful && resultDay.Model != null)
                 {
                     listPoints = dayProduction.data.deviceData.aggregate.timeSeries.First().points;
@@ -236,9 +236,9 @@ public class KostalService : IKostalService
 //Response
 public class KostalLoginResponse
 {
-    public LoginData Data { get; set; }
+    public KostalLoginData Data { get; set; }
 }
-public class AccessToken
+public class KostalAccessToken
 {
     public string token { get; set; }
     public string tokenType { get; set; }
@@ -246,7 +246,7 @@ public class AccessToken
     public string __typename { get; set; }
 }
 
-public class Contact
+public class KostalContact
 {
     public int id { get; set; }
     public string firstName { get; set; }
@@ -255,53 +255,53 @@ public class Contact
     public string __typename { get; set; }
 }
 
-public class Customer
+public class KostalCustomer
 {
     public int id { get; set; }
     public string __typename { get; set; }
 }
 
-public class LoginData
+public class KostalLoginData
 {
-    public LoginUser loginUser { get; set; }
+    public KostalLoginUser loginUser { get; set; }
 }
 
-public class LoginUser
+public class KostalLoginUser
 {
-    public AccessToken accessToken { get; set; }
+    public KostalAccessToken accessToken { get; set; }
     public string refreshToken { get; set; }
-    public User user { get; set; }
+    public KostalUser user { get; set; }
     public string __typename { get; set; }
 }
 
-public class User
+public class KostalUser
 {
     public int id { get; set; }
     public string emailAddress { get; set; }
-    public Customer customer { get; set; }
-    public Contact contact { get; set; }
-    public List<UserRole> userRoles { get; set; }
+    public KostalCustomer customer { get; set; }
+    public KostalContact contact { get; set; }
+    public List<KostalUserRole> userRoles { get; set; }
     public string locale { get; set; }
     public string __typename { get; set; }
 }
 
-public class UserRole
+public class KostalUserRole
 {
     public int id { get; set; }
     public string name { get; set; }
     public string __typename { get; set; }
 }
 //SITES_LIST_FIRST
-public class SitesResponse
+public class KostalUserRoleSitesResponse
 {
-    public SitesData data { get; set; }
+    public KostalUserRoleSitesData data { get; set; }
 }
-public class SitesData
+public class KostalUserRoleSitesData
 {
-    public Sites sites { get; set; }
+    public KostalUserRoleSites sites { get; set; }
 }
 
-public class Node
+public class KostalUserRoleNode
 {
     public int id { get; set; }
     public string name { get; set; }
@@ -309,44 +309,44 @@ public class Node
     public string __typename { get; set; }
 }
 
-public class Sites
+public class KostalUserRoleSites
 {
-    public List<Node> nodes { get; set; }
+    public List<KostalUserRoleNode> nodes { get; set; }
     public string __typename { get; set; }
 }
 
 //FETCH_LIST_DEVICE_IDS_OF_SITE
-public class DeviceResponse
+public class KostalUserRoleDeviceResponse
 {
-    public DeviceData data { get; set; }
+    public KostalUserRoleDeviceData data { get; set; }
 }
-public class DeviceData
+public class KostalUserRoleDeviceData
 {
-    public DeviceSite site { get; set; }
+    public KostalUserRoleDeviceSite site { get; set; }
 }
 
-public class DataSource
+public class KostalUserRoleDataSource
 {
     public int id { get; set; }
     public string name { get; set; }
     public string status { get; set; }
-    public List<Metadata> metadata { get; set; }
-    public List<Device> devices { get; set; }
-    public MostRecentDataSourceLogEntry mostRecentDataSourceLogEntry { get; set; }
+    public List<KostalUserRoleMetadata> metadata { get; set; }
+    public List<KostalUserRoleDevice> devices { get; set; }
+    public KostalUserRoleMostRecentDataSourceLogEntry mostRecentDataSourceLogEntry { get; set; }
     public string __typename { get; set; }
 }
 
-public class Device
+public class KostalUserRoleDevice
 {
     public int id { get; set; }
     public string name { get; set; }
     public string type { get; set; }
     public string uniqueIdentifier { get; set; }
-    public List<Metadata> metadata { get; set; }
+    public List<KostalUserRoleMetadata> metadata { get; set; }
     public string __typename { get; set; }
 }
 
-public class Metadata
+public class KostalUserRoleMetadata
 {
     public int id { get; set; }
     public string key { get; set; }
@@ -354,7 +354,7 @@ public class Metadata
     public string __typename { get; set; }
 }
 
-public class MostRecentDataSourceLogEntry
+public class KostalUserRoleMostRecentDataSourceLogEntry
 {
     public DateTime timestamp { get; set; }
     public string __typename { get; set; }
@@ -362,41 +362,41 @@ public class MostRecentDataSourceLogEntry
 
 
 
-public class DeviceSite
+public class KostalUserRoleDeviceSite
 {
     public int id { get; set; }
     public string name { get; set; }
     public object currency { get; set; }
     public object purchaseCompensation { get; set; }
     public object feedInCompensation { get; set; }
-    public List<DataSource> dataSources { get; set; }
+    public List<KostalUserRoleDataSource> dataSources { get; set; }
     public string __typename { get; set; }
 }
 
 
 //FETCH_DEVICE_DATA
-public class DeviceProductionResponse
+public class KostalUserRoleDeviceProductionResponse
 {
-    public DeviceProductionData data { get; set; }
+    public KostalUserRoleDeviceProductionData data { get; set; }
 }
-public class Aggregate
+public class KostalUserRoleAggregate
 {
-    public List<TimeSeries> timeSeries { get; set; }
+    public List<KostalUserRoleTimeSeries> timeSeries { get; set; }
     public string __typename { get; set; }
 }
 
-public class DeviceProductionData
+public class KostalUserRoleDeviceProductionData
 {
-    public DeviceProductionDeviceData deviceData { get; set; }
+    public KostalUserRoleDeviceProductionDeviceData deviceData { get; set; }
 }
 
-public class DeviceProductionDeviceData
+public class KostalUserRoleDeviceProductionDeviceData
 {
-    public Aggregate aggregate { get; set; }
+    public KostalUserRoleAggregate aggregate { get; set; }
     public string __typename { get; set; }
 }
 
-public class Point
+public class KostalUserRolePoint
 {
     public DateTime timestamp { get; set; }
     public decimal? value { get; set; }
@@ -405,9 +405,9 @@ public class Point
 
 
 
-public class TimeSeries
+public class KostalUserRoleTimeSeries
 {
-    public List<Point> points { get; set; }
+    public List<KostalUserRolePoint> points { get; set; }
     public string __typename { get; set; }
 }
 
@@ -417,41 +417,41 @@ public class TimeSeries
 
 
 //Request
-public class GraphQlRequest
+public class KostalUserRoleGraphQlRequest
 {
     public string operationName { get; set; }
     public Object variables { get; set; }
     public string query { get; set; }
 }
 
-public class LoginVariables
+public class KostalUserRoleLoginVariables
 {
     public string emailAddress { get; set; }
     public string password { get; set; }
     public object termsOfUseAccepted { get; set; }
     public object marketingOptIn { get; set; }
 }
-public class EmptyVariables
+public class KostalUserRoleEmptyVariables
 {
 
 }
-public class ListDeviceVariables
+public class KostalUserRoleListDeviceVariables
 {
     public int id { get; set; }
 }
 
 
-public class ProductionHourVariables
+public class KostalUserRoleProductionHourVariables
 {
     public bool padWithNull { get; set; }
     public bool byDevice { get; set; }
     public string statistic { get; set; }
     public List<int> deviceIds { get; set; }
     public List<string> dataTypes { get; set; }
-    public DateSelector dateSelector { get; set; }
+    public KostalUserRoleDateSelector dateSelector { get; set; }
     public string byTimeInterval { get; set; }
 }
-public class DateSelector
+public class KostalUserRoleDateSelector
 {
     public string from { get; set; }
     public string to { get; set; }

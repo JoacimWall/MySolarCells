@@ -80,54 +80,7 @@ namespace MySolarCells.ViewModels.OnBoarding
             await Launcher.OpenAsync(new Uri("https://developer.tibber.com/settings/access-token"));
         }
 
-        //private async Task KostalProdution()
-        //{
-        //    using var fmContext = new MscDbContext();
-        //    TimeSpan difference = DateTime.UtcNow - SelecteddHome.InstallDate;
-        //    int days = difference.Days;
-        //    int hours = difference.Hours;
-
-        //    await this.kostalService.SyncProduction(SelecteddHome);
-        //}
-
-        //private async Task TibberSoldprodution()
-        //{
-        //    using var fmContext = new MscDbContext();
-        //    TimeSpan difference = DateTime.UtcNow - SelecteddHome.InstallDate;
-        //    int days = difference.Days;
-        //    int hours = difference.Hours;
-
-        //    await this.tibberService.GetHomeProduction(SelecteddHome.SubSystemEntityId, (days * 24) + hours, SelecteddHome.HomeId);
-        //}
-
-        //private async Task TibberConsumtion()
-        //{
-        //    using var fmContext = new MscDbContext();
-        //    TimeSpan difference = DateTime.UtcNow - SelecteddHome.InstallDate;
-        //    int days = difference.Days;
-        //    int hours = difference.Hours;
-            
-        //    await this.tibberService.GetHomeConsumption(SelecteddHome.SubSystemEntityId, (days * 24) + hours, SelecteddHome.HomeId);
-        //}
-
-        
-        
-        //private async Task<bool> LoadData()
-        //{
-        //    using var fmContext = new MscDbContext();
-        //    var HomesResult = new ObservableCollection<Services.Sqlite.Models.Home>(await fmContext.Home.ToListAsync());
-        //    Homes.Clear();
-        //    bool isfirst = true;
-        //    foreach (var item in HomesResult)
-        //    {
-        //        //Homes.Add(new PickerItem { ItemTitle = item.Name, ItemValue = item.HomeId, IsDefaultValue = isfirst });
-        //        Homes.Add(item);
-        //        isfirst = false;
-        //    }
-        //    if (Homes.Count > 0)
-        //        SelecteddHome = Homes.First();
-        //    return true;
-        //}
+       
         private ObservableCollection<Tibber.Sdk.Home> homes = new ObservableCollection<Tibber.Sdk.Home>();
         public ObservableCollection<Tibber.Sdk.Home> Homes
         {
@@ -144,7 +97,7 @@ namespace MySolarCells.ViewModels.OnBoarding
             get => selecteddHome;
             set { SetProperty(ref selecteddHome, value);}
         }
-        private DateTime installDate = DateTime.Now;
+        private DateTime installDate = new DateTime(DateTime.Now.Year,1,1);
         public DateTime InstallDate
         {
             get => installDate;

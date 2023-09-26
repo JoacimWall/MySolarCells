@@ -12,13 +12,15 @@ namespace MySolarCells.Services.Sqlite.Models
         [Required]
         public DateTime FromDate { get; set; } = DateTime.Today;
         [Required]  //Nätnytta 0.078 kr/kWh
-        public decimal ProdCompensationElectricityLowload { get; set; } = 0.078M;
+        public double ProdCompensationElectricityLowload { get; set; } = 0.078;
         [Required]  //Eventuell överföringsavgift som du kostar vi köp av eller (sparar vi egen användning) Ellevio 0.3 kr
-        public decimal TransferFee { get; set; } = 0.3M;
+        public double TransferFee { get; set; } = 0.3;
         [Required] //0.60/kWh såld el Max 18 0000 kr och inte för fler kWh än huset köper in
-        public decimal TaxReduction { get; set; } = 0.6M;
+        public double TaxReduction { get; set; } = 0.6;
         [Required] //0.49/kWh såld (sparar vi egen användning)
-        public decimal EnergyTax { get; set; } = 0.49M;
+        public double EnergyTax { get; set; } = 0.49;
+        [Required] //10.5 Kwh
+        public double TotalInstallKwhPanels { get; set; } = 10.5;
         //FK's
         [Required]
         public int HomeId { get; set; }

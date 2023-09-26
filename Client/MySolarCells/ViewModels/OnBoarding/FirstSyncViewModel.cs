@@ -5,9 +5,9 @@ namespace MySolarCells.ViewModels.OnBoarding
 	public class FirstSyncViewModel : BaseViewModel
     {
         private readonly ITibberService tibberService;
-        private readonly IKostalService kostalService;
+        private readonly IInverterServiceInterface kostalService;
         //private bool keepUploading = true;
-        public FirstSyncViewModel(ITibberService tibberService,IKostalService kostalService)
+        public FirstSyncViewModel(ITibberService tibberService,IInverterServiceInterface kostalService)
 		{
             this.tibberService = tibberService;
             this.kostalService = kostalService;

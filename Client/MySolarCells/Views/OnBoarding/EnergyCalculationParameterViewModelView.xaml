@@ -7,14 +7,13 @@
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         x:DataType="vm:EnergyCalculationParameterViewModel">
 
-    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
-         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+         <Label Grid.Row="0" Margin="0,0,0,8" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
             Text="Calculation factors"/>
 
         <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
             Text="Calculation factors for costs and revenues related to solar cell production."
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalTextAlignment="Center" />
 
         <!--ProdCompensationElectricityLowload-->
         <Label Grid.Row="2" Margin="0,0,0,-6" Grid.ColumnSpan="2"
@@ -36,9 +35,14 @@
             Text="Energy tax (Production own use)"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
         <Entry Grid.Row="9" Grid.ColumnSpan="3" Text="{Binding Parameters.EnergyTax}"   />
+         <!--EnergyTax-->
+        <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="2"
+            Text="Total installed panels (kWh)"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+        <Entry Grid.Row="11" Grid.ColumnSpan="3" Text="{Binding Parameters.TotalInstallKwhPanels}"   />
 
         <!--Save-->
-        <Button Grid.Row="10"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveCommand}"/>
+        <Button Grid.Row="12"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveCommand}"/>
 
        
     </Grid>

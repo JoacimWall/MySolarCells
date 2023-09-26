@@ -1,39 +1,40 @@
 ﻿
 
+
+
 namespace MySolarCells.ViewModels.OnBoarding
 {
 	public class InverterConnectViewModel : BaseViewModel
     {
 
-        IKostalService kostalService;
-        public InverterConnectViewModel(IKostalService kostalService)
+        IInverterServiceInterface InverterService;
+        public InverterConnectViewModel()
 		{
-            this.kostalService = kostalService;
+            
             InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
+            InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
             SelectedInverterModel = InverterModels.First();
             
         }
 
-        public ICommand GetSitesCommand => new Command(async () => await GetSitesNodes());
+        public ICommand GetSitesCommand => new Command(async () => await GetBaseData());
 
-        private async Task GetSitesNodes()
+        private async Task GetBaseData()
         {
-            var resultLogin = await this.kostalService.LoginInUser(this.userName, this.password);
+            var resultLogin = await this.InverterService.LoginInUser(this.userName, this.password);
             if (!resultLogin.WasSuccessful)
             {
                 await DialogService.ShowAlertAsync(resultLogin.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
                 return;
             }
-            var resultSites = await this.kostalService.GetSites();
+            var resultSites = await this.InverterService.GetSites();
             if (!resultSites.WasSuccessful)
             {
                 await DialogService.ShowAlertAsync(resultSites.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
                 return;
             }
-            foreach (var node in resultSites.Model.data.sites.nodes)
-            {
-                SitesNodes.Add(node);
-            }
+            SitesNodes = new ObservableCollection<PickerItem>(resultSites.Model);
+            
             SelectedSiteNode = SitesNodes.First();
             ShowSiteNodePicker = true;
         }
@@ -44,7 +45,7 @@ namespace MySolarCells.ViewModels.OnBoarding
         {
             
             //Get Inverter
-            var resultInverter = await this.kostalService.GetInverter(selectedSiteNode.id);
+            var resultInverter = await this.InverterService.GetInverter(selectedSiteNode.ItemValue.ToString());
             if (!resultInverter.WasSuccessful)
             {
                 await DialogService.ShowAlertAsync(resultInverter.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
@@ -53,16 +54,16 @@ namespace MySolarCells.ViewModels.OnBoarding
 
             using var dbContext = new MscDbContext();
             //check if Home exist in db
-            var InverterExist  = await dbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.id.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
+            var InverterExist  = await dbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
             if (InverterExist == null)
             {
                 InverterExist = new Services.Sqlite.Models.Inverter
                 {
-                    SubSystemEntityId = resultInverter.Model.id.ToString(),
+                    SubSystemEntityId = resultInverter.Model.ItemValue.ToString(),
                     InverterTyp = (int)SelectedInverterModel.ItemValue,
                     FromDate = new DateTime(installDate.Year, installDate.Month, installDate.Day),
                     HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
-                    Name = resultInverter.Model.name,
+                    Name = resultInverter.Model.ItemTitle,
                     UserName = this.userName,
                     Password = StringHelper.Encrypt(this.password,AppConstants.Secretkey)
                 };
@@ -79,8 +80,8 @@ namespace MySolarCells.ViewModels.OnBoarding
             await GoToAsync(nameof(EnergyCalculationParameterView));
         }
 
-        private ObservableCollection<Node> sitesNodes = new ObservableCollection<Node>();
-        public ObservableCollection<Node> SitesNodes
+        private ObservableCollection<PickerItem> sitesNodes = new ObservableCollection<PickerItem>();
+        public ObservableCollection<PickerItem> SitesNodes
         {
             get => sitesNodes;
             set
@@ -89,8 +90,8 @@ namespace MySolarCells.ViewModels.OnBoarding
 
             }
         }
-        private Node selectedSiteNode;
-        public Node SelectedSiteNode
+        private PickerItem selectedSiteNode;
+        public PickerItem SelectedSiteNode
         {
             get => selectedSiteNode;
             set { SetProperty(ref selectedSiteNode, value); }
@@ -105,7 +106,22 @@ namespace MySolarCells.ViewModels.OnBoarding
         public PickerItem SelectedInverterModel
         {
             get => selectedInverterModel;
-            set { SetProperty(ref selectedInverterModel, value);}
+            set
+            {
+                SetProperty(ref selectedInverterModel, value);
+                switch (selectedInverterModel.ItemValue)
+                {
+                    case (int)InverterTyp.Kostal:
+                        this.InverterService = new KostalService(ServiceHelper.GetService<IRestClient>());
+                        break;
+                    case (int)InverterTyp.Huawei:
+                        this.InverterService = new HuaweiService(ServiceHelper.GetService<IRestClient>());
+                        break;
+                    default:
+                        break;
+                }
+                
+            }
         }
         
         private string userName;

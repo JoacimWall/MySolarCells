@@ -35,9 +35,9 @@ public class MscDbContext : DbContext
         //används för migrations bygga med console app
         //optionsBuilder.UseSqlite("Data Source=MyDb.db");
     }
-    public DbSet<Home> Home { get; set; }
-    public DbSet<Inverter> Inverter { get; set; }
-    public DbSet<Energy> Energy { get; set; }
-    public DbSet<EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
+    public DbSet<Models.Home> Home { get; set; }
+    public DbSet<Models.Inverter> Inverter { get; set; }
+    public DbSet<Models.Energy> Energy { get; set; }
+    public DbSet<Models.EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
 }
 
