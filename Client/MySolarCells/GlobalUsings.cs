@@ -17,9 +17,13 @@ global using MySolarCells.Helpers.Messages;
 //Views
 global using MySolarCells.Views;
 global using MySolarCells.Views.OnBoarding;
+global using MySolarCells.Views.Roi;
+global using MySolarCells.Views.Energy;
 //ViewModels
 global using MySolarCells.ViewModels;
 global using MySolarCells.ViewModels.OnBoarding;
+global using MySolarCells.ViewModels.Roi;
+global using MySolarCells.ViewModels.Energy;
 //Service
 global using MySolarCells.Services;
 global using MySolarCells.Services.Sqlite;

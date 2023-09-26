@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:MySolarCells"
     xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
     xmlns:roi="clr-namespace:MySolarCells.Views.Roi"
+    xmlns:energy="clr-namespace:MySolarCells.Views.Energy"
     xmlns:views="clr-namespace:MySolarCells.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="MySolarCells">
@@ -35,14 +36,14 @@
 
     <TabBar x:Name="MyTabbar">
 
-        <ShellContent Title="{Binding Source={x:Static trans:AppResources.ROI}}"
-                      ContentTemplate="{DataTemplate roi:RoiView}" 
-                      Icon="money.png"
-                      Route="Roi" />
         <ShellContent Title="{Binding Source={x:Static trans:AppResources.Production}}"
-                      ContentTemplate="{DataTemplate views:StartupView}"
+                      ContentTemplate="{DataTemplate energy:EnergyView}" 
                       Icon="chart.png"
-                      Route="More" />
+                      Route="Energy" />
+        <ShellContent Title="{Binding Source={x:Static trans:AppResources.ROI}}"
+                      ContentTemplate="{DataTemplate roi:RoiView}"
+                      Icon="money.png"
+                      Route="ROI" />
        
          <ShellContent Title="{Binding Source={x:Static trans:AppResources.More}}"
                       ContentTemplate="{DataTemplate views:StartupView}"

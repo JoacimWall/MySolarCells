@@ -9,7 +9,6 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<IDialogService, DialogService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<ITibberService, TibberService>();
-        builder.Services.AddSingleton<IInverterServiceInterface, KostalService>();
         builder.Services.AddSingleton<IRoiService, RoiService>();
 
         //Transient

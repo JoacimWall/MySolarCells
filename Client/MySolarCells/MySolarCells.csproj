@@ -100,6 +100,8 @@
 	  <None Remove="Resources\Images\dots.svg" />
 	  <None Remove="Resources\Images\chart.svg" />
 	  <None Remove="Services\Inverter\" />
+	  <None Remove="ViewModels\Energy\" />
+	  <None Remove="Views\Energy\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="MultiLingualExtensionSettings.json" />
@@ -112,6 +114,8 @@
 	  <Folder Include="Views\Roi\" />
 	  <Folder Include="ViewModels\Roi\" />
 	  <Folder Include="Services\Inverter\" />
+	  <Folder Include="ViewModels\Energy\" />
+	  <Folder Include="Views\Energy\" />
 	</ItemGroup>
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
     <CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
