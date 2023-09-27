@@ -2,16 +2,16 @@
 
 public class EnergyViewModel : BaseViewModel
 {
-    IRoiService roiService;
-    public EnergyViewModel(IRoiService roiService)
+    IEnergyChartService energyChartService;
+    public EnergyViewModel(IEnergyChartService energyChartService)
     {
-        this.roiService = roiService;
+        this.energyChartService = energyChartService;
 
     }
 
     public async override Task OnAppearingAsync()
     {
-        RoiStats = await  this.roiService.CalculateTotals();
+        RoiStats = new RoiStats(); // await  this.roiService.CalculateTotals();
         
     }
 

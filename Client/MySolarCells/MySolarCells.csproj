@@ -93,15 +93,10 @@
        to the Mac App Store. See: https://aka.ms/maui-publish-app-store#define-build-properties-in-your-project-file -->
 	<ItemGroup>
 	  <None Remove="MultiLingualExtensionSettings.json" />
-	  <None Remove="Views\Roi\" />
-	  <None Remove="ViewModels\Roi\" />
 	  <None Remove="Resources\Fonts\mysolarcells.ttf" />
 	  <None Remove="Resources\Images\money.svg" />
 	  <None Remove="Resources\Images\dots.svg" />
 	  <None Remove="Resources\Images\chart.svg" />
-	  <None Remove="Services\Inverter\" />
-	  <None Remove="ViewModels\Energy\" />
-	  <None Remove="Views\Energy\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="MultiLingualExtensionSettings.json" />
@@ -109,13 +104,6 @@
 	  <BundleResource Include="Resources\Images\money.svg" />
 	  <BundleResource Include="Resources\Images\dots.svg" />
 	  <BundleResource Include="Resources\Images\chart.svg" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Views\Roi\" />
-	  <Folder Include="ViewModels\Roi\" />
-	  <Folder Include="Services\Inverter\" />
-	  <Folder Include="ViewModels\Energy\" />
-	  <Folder Include="Views\Energy\" />
 	</ItemGroup>
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
     <CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
