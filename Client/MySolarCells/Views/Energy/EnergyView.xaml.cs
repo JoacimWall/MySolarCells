@@ -1,6 +1,4 @@
-﻿
-
-namespace MySolarCells.Views.Energy;
+﻿namespace MySolarCells.Views.Energy;
 
 public partial class EnergyView : BaseContentPage
 {

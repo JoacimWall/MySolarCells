@@ -14,6 +14,8 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<EnergyCalculationParameterViewModel>();
         //ROI
         builder.Services.AddTransient<RoiViewModel>();
+        //Energy
+        builder.Services.AddTransient<EnergyViewModel>();
         return builder;
     }
 }

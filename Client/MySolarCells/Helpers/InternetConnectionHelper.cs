@@ -1,6 +1,4 @@
-﻿
-
-namespace MySolarCells.Helpers;
+﻿namespace MySolarCells.Helpers;
 public static class InternetConnectionHelper
 {
     public static bool InternetAccess()

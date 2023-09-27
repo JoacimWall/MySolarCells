@@ -1,14 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace MySolarCells.Services;
 
-namespace MySolarCells.Services;
 public interface IRoiService
 {
 
     Task<RoiStats> CalculateTotals();
 }
+
 public class RoiService : IRoiService
 {
 	public RoiService()

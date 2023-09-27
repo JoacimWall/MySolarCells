@@ -1,6 +1,4 @@
-﻿
-
-namespace MySolarCells.Views;
+﻿namespace MySolarCells.Views;
 
 public partial class StartupShell : Shell
 {

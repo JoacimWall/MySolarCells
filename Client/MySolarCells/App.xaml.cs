@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace MySolarCells;
+﻿namespace MySolarCells;
 
 public partial class App : Application
 {

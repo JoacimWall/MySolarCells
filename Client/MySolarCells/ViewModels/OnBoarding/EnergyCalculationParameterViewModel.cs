@@ -1,14 +1,11 @@
 ﻿
 namespace MySolarCells.ViewModels.OnBoarding;
 
-	public class EnergyCalculationParameterViewModel : BaseViewModel
+public class EnergyCalculationParameterViewModel : BaseViewModel
 {
-
- 
     public EnergyCalculationParameterViewModel()
-		{
-      
-        
+    {
+
     }
 
     public ICommand SaveCommand => new Command(async () => await Save());
@@ -30,7 +27,7 @@ namespace MySolarCells.ViewModels.OnBoarding;
                     TaxReduction = parameters.TaxReduction,
                     EnergyTax = parameters.EnergyTax,
                     HomeId = MySolarCellsGlobals.SelectedHome.HomeId
-                    
+
                 };
                 //TODO:Do we neeed more info from tibber homes
                 await dbContext.EnergyCalculationParameter.AddAsync(parametersExist);
@@ -47,7 +44,7 @@ namespace MySolarCells.ViewModels.OnBoarding;
         {
             await DialogService.ShowAlertAsync(ex.Message, AppResources.My_Solar_Cells, AppResources.Ok);
         }
-        
+
     }
 
     private Services.Sqlite.Models.EnergyCalculationParameter parameters = new Services.Sqlite.Models.EnergyCalculationParameter();

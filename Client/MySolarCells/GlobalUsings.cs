@@ -2,13 +2,20 @@
 global using System.Threading.Tasks;
 global using System.Collections;
 global using System.Collections.ObjectModel;
-
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Windows.Input;
+
 global using CommunityToolkit.Mvvm.ComponentModel;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.Extensions.Logging;
 global using CommunityToolkit.Mvvm.Messaging;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
+
+global using Microsoft.EntityFrameworkCore;
+global using EFCore.BulkExtensions;
+
+global using Microsoft.Extensions.Logging;
+
+// ___ MySolarCells -----------
 global using MySolarCells.Resources.Translations;
 global using MySolarCells.Helpers;
 global using MySolarCells.Resources.Styles;

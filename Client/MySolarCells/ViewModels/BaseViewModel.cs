@@ -1,11 +1,4 @@
-﻿
-
-
-
-
-
-
-namespace MySolarCells.ViewModels;
+﻿namespace MySolarCells.ViewModels;
 
 public interface IAnalyticsService
 {

@@ -1,5 +1,4 @@
-﻿using System;
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public static class ServicesExtensions
 {

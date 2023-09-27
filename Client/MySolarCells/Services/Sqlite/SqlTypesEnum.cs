@@ -1,5 +1,4 @@
-﻿using System;
-namespace MySolarCells.Services.Sqlite;
+﻿namespace MySolarCells.Services.Sqlite;
 
 public enum ElectricitySupplier
 {

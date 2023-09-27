@@ -1,6 +1,4 @@
-﻿using MySolarCells.Views.Roi;
-
-namespace MySolarCells.Views;
+﻿namespace MySolarCells.Views;
 
 public static class ViewsExtensions
 {
@@ -14,6 +12,8 @@ public static class ViewsExtensions
         builder.Services.AddTransient<FirstSyncView>();
         //ROI
         builder.Services.AddTransient<RoiView>();
+        //Energy
+        builder.Services.AddTransient<EnergyView>();
         return builder;
     }
 }

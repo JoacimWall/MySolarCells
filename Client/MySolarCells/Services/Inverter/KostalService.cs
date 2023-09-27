@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EFCore.BulkExtensions;
-
-namespace MySolarCells.Services.Inverter;
-
+﻿namespace MySolarCells.Services.Inverter;
 
 public class KostalService : IInverterServiceInterface
 {

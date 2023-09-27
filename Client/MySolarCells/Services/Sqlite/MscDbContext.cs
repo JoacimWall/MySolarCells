@@ -1,6 +1,4 @@
-﻿using MySolarCells.Services.Sqlite.Models;
-
-namespace MySolarCells.Services.Sqlite;
+﻿namespace MySolarCells.Services.Sqlite;
 
 public class MscDbContext : DbContext
 {

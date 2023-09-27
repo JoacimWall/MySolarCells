@@ -1,5 +1,4 @@
-﻿using System;
-namespace MySolarCells.Services.Inverter;
+﻿namespace MySolarCells.Services.Inverter;
 
 public interface IInverterServiceInterface
 {

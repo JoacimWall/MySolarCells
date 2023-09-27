@@ -1,10 +1,8 @@
 ﻿using System.Net.Http.Headers;
-using System.Text.Json;
-using EFCore.BulkExtensions;
-using Microsoft.EntityFrameworkCore;
 using Tibber.Sdk;
 
 namespace MySolarCells.Services;
+
 public interface ITibberService
 {
     bool Init(string apiKey);
@@ -12,6 +10,7 @@ public interface ITibberService
     Task<bool> SyncConsumptionAndProductionFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr);
     //Task<bool> GetHomeProduction(string SubSystemEntityId, int hours, int homeId);
 }
+
 public class TibberService : ITibberService
 {
     private ProductInfoHeaderValue userAgent = new ProductInfoHeaderValue("my-solar-cells", "0.1");
@@ -25,12 +24,14 @@ public class TibberService : ITibberService
 
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://api.tibber.com/v1-beta/gql", defaultRequestHeaders = defaultRequestHeaders };
         this.restClient.ReInit();
-        Dictionary<string, string> tokens = new Dictionary<string, string>
-        {
-            { AppConstants.Authorization, string.Format("Bearer {0}", "XiKN2tjMlXqX_iQ_VHUkScawRgIH6571DouqqZVHN8k") }
-        };
-        this.restClient.UpdateToken(tokens);
-
+        if (MySolarCellsGlobals.SelectedHome != null)
+        { 
+            Dictionary<string, string> tokens = new Dictionary<string, string>
+            {
+                { AppConstants.Authorization, string.Format("Bearer {0}", StringHelper.Decrypt(MySolarCellsGlobals.SelectedHome.ApiKey, AppConstants.Secretkey)) }
+            };
+            this.restClient.UpdateToken(tokens);
+        }
 
 
     }

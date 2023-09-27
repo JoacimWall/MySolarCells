@@ -1,5 +1,4 @@
-﻿
-namespace MySolarCells.Helpers.Messages;
+﻿namespace MySolarCells.Helpers.Messages;
 
 public class AppResumeMessage : ValueChangedMessage<bool>
 {

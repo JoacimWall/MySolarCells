@@ -1,6 +1,4 @@
-﻿using MySolarCells.ViewModels.Roi;
-
-namespace MySolarCells.Views.Roi;
+﻿namespace MySolarCells.Views.Roi;
 
 public partial class RoiView : BaseContentPage
 {

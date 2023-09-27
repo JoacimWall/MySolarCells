@@ -2,7 +2,6 @@
 using NavigationPage = Microsoft.Maui.Controls.NavigationPage;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 
-
 namespace MySolarCells.Views;
 
 public class BaseContentPage : ContentPage

@@ -1,11 +1,11 @@
-﻿
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public interface ISettingsService
 {
     OnboardingStatusEnum OnboardingStatus { get; set; }
     int SelectedHomeId { get; set; }
 }
+
 public class SettingsService : ISettingsService
 {
     public OnboardingStatusEnum OnboardingStatus
