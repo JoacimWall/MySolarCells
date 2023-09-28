@@ -25,7 +25,7 @@
 
     </Shell.TitleView>
     <ScrollView>
-        <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
             <!--<Border Grid.Row="1" Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"
                 StrokeThickness="2"
@@ -33,55 +33,68 @@
             <Button BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="Sync" Command="{Binding SyncCommand}"></Button>
         </Border>-->
 
-            <Grid Margin="8" Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="Center" HeightRequest="30" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Padding="0" ColumnSpacing="0">
+            <Grid Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" HeightRequest="30" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Padding="0" ColumnSpacing="0">
                 <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0"  
                     StrokeThickness="2" >
                      <Border.StrokeShape>
                        <RoundRectangle CornerRadius="25,25,25,25" />
                       </Border.StrokeShape>
-                    <Button Padding="0,0,0,5" Margin="0" Command="{Binding BackCommand}" FontSize="29" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="-" BackgroundColor="Transparent" ></Button>
+                    <Button Padding="0,0,0,5" Margin="0" Command="{Binding BackCommand}" FontSize="29" TextColor="{x:Static theming:AppColors.Gray700Color}" Text="-" BackgroundColor="Transparent" ></Button>
                 </Border>
                 <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" 
                     StrokeThickness="2" >
                      <Border.StrokeShape>
                        <RoundRectangle CornerRadius="25,25,25,25" />
                       </Border.StrokeShape>
-                    <Button Padding="0,0,0,0" Margin="0" Command="{Binding ForwardCommand}" FontSize="23" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="+" BackgroundColor="Transparent" ></Button>
+                    <Button Padding="0,0,0,0" Margin="0" Command="{Binding ForwardCommand}" FontSize="23" TextColor="{x:Static theming:AppColors.Gray700Color}" Text="+" BackgroundColor="Transparent" ></Button>
                 </Border>
                 <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" 
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,6,6,6" >
-                    <Button Padding="4,0,4,0" Margin="0" Command="{Binding TodayCommand}" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="TODAY" BackgroundColor="Transparent" ></Button>
+                    <Button Padding="4,0,4,0" Margin="0" Command="{Binding TodayCommand}" TextColor="{x:Static theming:AppColors.Gray700Color}" Text="TODAY" BackgroundColor="Transparent" ></Button>
                 </Border>
                 <Border Grid.Column="3" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0,-2,0" BackgroundColor="{Binding ChartDataRequest.DayBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,0,6,0" >
-                    <Button Padding="4,0,4,0"  Command="{Binding DayCommand}"   TextColor="{x:Static theming:AppColors.Gray900Color}" Text="DAY" BackgroundColor="Transparent"></Button>
+                    <Button Padding="4,0,4,0"  Command="{Binding DayCommand}"   TextColor="{x:Static theming:AppColors.Gray700Color}" Text="DAY" BackgroundColor="Transparent"></Button>
                 </Border>
                 <Border Grid.Column="4" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,0,0,0">
-                    <Button Padding="4,0,4,0"  Command="{Binding WeekCommand}"   TextColor="{x:Static theming:AppColors.Gray900Color}" Text="WEEK" BackgroundColor="Transparent"></Button>
+                    <Button Padding="4,0,4,0"  Command="{Binding WeekCommand}"   TextColor="{x:Static theming:AppColors.Gray700Color}" Text="WEEK" BackgroundColor="Transparent"></Button>
                 </Border>
                 <Border Grid.Column="5" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.MonthBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,0,0,0">
-                    <Button Padding="4,0,4,0"  Command="{Binding MonthCommand}"  TextColor="{x:Static theming:AppColors.Gray900Color}" Text="MONTH" BackgroundColor="Transparent"></Button>
+                    <Button Padding="4,0,4,0"  Command="{Binding MonthCommand}"  TextColor="{x:Static theming:AppColors.Gray700Color}" Text="MONTH" BackgroundColor="Transparent"></Button>
                 </Border>
                 <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.YearBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,6,0,6">
-                    <Button Padding="4,0,4,0"  Command="{Binding YearCommand}"  TextColor="{x:Static theming:AppColors.Gray900Color}" Text="YEAR" BackgroundColor="Transparent"></Button>
+                    <Button Padding="4,0,4,0"  Command="{Binding YearCommand}"  TextColor="{x:Static theming:AppColors.Gray700Color}" Text="YEAR" BackgroundColor="Transparent"></Button>
                 </Border>
             </Grid>
-            <Label Grid.Row="2" Grid.ColumnSpan="3" Text="Total production"/>
-            <micro:ChartView Grid.Row="3" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="4" Grid.ColumnSpan="3" Text="Production sold"/>
-            <micro:ChartView Grid.Row="5" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="6"  Grid.ColumnSpan="3" Text="Production Used"/>
-            <micro:ChartView Grid.Row="7" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="8" Grid.ColumnSpan="3" Text="Consumed"/>
-            <micro:ChartView Grid.Row="9" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdConsumed }" BackgroundColor="Black" HeightRequest="200"/>
+             <Grid Margin="8,0" Grid.Row="2" Grid.ColumnSpan="3" HorizontalOptions="End" HeightRequest="30" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Padding="0" ColumnSpacing="0">
+                 <Border Grid.Column="3" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0,-1,0" BackgroundColor="{Binding ChartDataRequest.KwhBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 6,0,6,0" >
+                    <Button Padding="4,0,4,0"  Command="{Binding ShowKwhCommand}"   TextColor="{x:Static theming:AppColors.Gray700Color}" Text="kWh" BackgroundColor="Transparent"></Button>
+                </Border>
+                <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.CurrencyBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 0,6,0,6">
+                    <Button Padding="4,0,4,0"  Command="{Binding ShowCurrencyCommand}"  TextColor="{x:Static theming:AppColors.Gray700Color}" Text="SEK" BackgroundColor="Transparent"></Button>
+                </Border>
+
+            </Grid>
+            <Label Margin="8,-8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="5" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdSoldTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdConsumedTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdConsumed }" BackgroundColor="Black" HeightRequest="200"/>
 
 
 

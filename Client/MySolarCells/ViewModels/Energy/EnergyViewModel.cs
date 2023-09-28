@@ -1,4 +1,7 @@
-﻿namespace MySolarCells.ViewModels.Energy;
+﻿using SkiaSharp;
+using SkiaSharp.Views.Maui;
+
+namespace MySolarCells.ViewModels.Energy;
 
 public class EnergyViewModel : BaseViewModel
 {
@@ -21,6 +24,10 @@ public class EnergyViewModel : BaseViewModel
     public ICommand BackCommand => new Command(async () => await BackView());
     public ICommand ForwardCommand => new Command(async () => await ForwardView());
 
+    public ICommand ShowKwhCommand => new Command(async () => await ShowKwhViews());
+    public ICommand ShowCurrencyCommand => new Command(async () => await ShowCurrencyViews());
+
+   
     private async Task BackView()
     {
         switch (ChartDataRequest.ChartDataRange)
@@ -98,6 +105,16 @@ public class EnergyViewModel : BaseViewModel
         ChartDataRequest.ChartDataRange = ChartDataRange.Year;
         await ReloadGraph();
         return true;
+    }
+    private async Task ShowCurrencyViews()
+    {
+        ChartDataRequest.ChartDataUnit = ChartDataUnit.Currency;
+        await ReloadGraph();
+    }
+    private async Task ShowKwhViews()
+    {
+        ChartDataRequest.ChartDataUnit = ChartDataUnit.kWh;
+        await ReloadGraph();
     }
 
     private void CalculateProgress(long completed, long total)
@@ -187,15 +204,27 @@ public class EnergyViewModel : BaseViewModel
             EnergyChartProdConsumed = null;
             return false;
         }
+        
 
-
+        SKColor LineColor  = AppColors.Gray700Color.ToSKColor();
+        SKPaint YAxesPaint = new SKPaint
+        {
+            Style = SKPaintStyle.Fill,
+            Color = LineColor,
+            IsAntialias = true,
+            TextSize = 20,
+            Typeface = SkiaSharpHelper.OpenSansRegular
+        };
+        EnergyChartProdTotTitle = resultSeries.Model.ChartSeries[0].Name;
         if (resultSeries.Model.ChartSeries[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdTot = new Microcharts.BarChart
             {
+                
                 Entries = resultSeries.Model.ChartSeries[0].Entries,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
                 LabelTextSize = 24,
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
@@ -204,6 +233,7 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartProdTot = null;
 
+        EnergyChartProdSoldTitle = resultSeries.Model.ChartSeries[1].Name;
         if (resultSeries.Model.ChartSeries[1].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdSold = new Microcharts.BarChart
             {
@@ -211,6 +241,7 @@ public class EnergyViewModel : BaseViewModel
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
                 LabelTextSize = 24,
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
@@ -220,6 +251,7 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartProdSold = null;
 
+        EnergyChartProdUsedTitle = resultSeries.Model.ChartSeries[2].Name;
         if (resultSeries.Model.ChartSeries[2].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdUsed = new Microcharts.BarChart
             {
@@ -227,6 +259,7 @@ public class EnergyViewModel : BaseViewModel
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
                 LabelTextSize = 24,
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
@@ -236,6 +269,7 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartProdUsed = null;
 
+        EnergyChartProdConsumedTitle = resultSeries.Model.ChartSeries[3].Name;
         if (resultSeries.Model.ChartSeries[3].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdConsumed = new Microcharts.BarChart
             {
@@ -243,6 +277,7 @@ public class EnergyViewModel : BaseViewModel
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
                 LabelTextSize = 24,
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
@@ -294,6 +329,31 @@ public class EnergyViewModel : BaseViewModel
         set { SetProperty(ref energyChartProdConsumed, value); }
     }
 
+
+    private string energyChartProdTotTitle;
+    public string EnergyChartProdTotTitle
+    {
+        get { return energyChartProdTotTitle; }
+        set { SetProperty(ref energyChartProdTotTitle, value); }
+    }
+    private string energyChartProdSoldTitle;
+    public string EnergyChartProdSoldTitle
+    {
+        get { return energyChartProdSoldTitle; }
+        set { SetProperty(ref energyChartProdSoldTitle, value); }
+    }
+    private string energyChartProdUsedTitle;
+    public string EnergyChartProdUsedTitle
+    {
+        get { return energyChartProdUsedTitle; }
+        set { SetProperty(ref energyChartProdUsedTitle, value); }
+    }
+    private string energyChartProdConsumedTitle;
+    public string EnergyChartProdConsumedTitle
+    {
+        get { return energyChartProdConsumedTitle; }
+        set { SetProperty(ref energyChartProdConsumedTitle, value); }
+    }
 
 }
 

@@ -76,6 +76,10 @@
 	</ItemGroup>
 	<!-- Translation -->
 	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Fonts\OpenSans-Semibold.ttf" />
+	  <EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" />
+	</ItemGroup>
+	<ItemGroup>
 	  <EmbeddedResource Condition=" '$(EnableDefaultEmbeddedResourceItems)' == 'true' " Update="Resources\Translations\AppResources.resx">
 	    <Generator>PublicResXFileCodeGenerator</Generator>
 	    <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
@@ -104,6 +108,10 @@
 	  <BundleResource Include="Resources\Images\money.svg" />
 	  <BundleResource Include="Resources\Images\dots.svg" />
 	  <BundleResource Include="Resources\Images\chart.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiFont Remove="Resources\Fonts\OpenSans-Semibold.ttf" />
+	  <MauiFont Remove="Resources\Fonts\OpenSans-Regular.ttf" />
 	</ItemGroup>
   <PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
     <CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>

@@ -24,7 +24,7 @@ public class EnergyChartService : IEnergyChartService
         string entryLabel = string.Empty;
 
         DateTime baseDate = new DateTime(chartDataRequest.TimeStamp.Year, chartDataRequest.TimeStamp.Month, chartDataRequest.TimeStamp.Day);
-
+        var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
         var today = baseDate;
         var yesterday = baseDate.AddDays(-1);
         var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
@@ -102,37 +102,40 @@ public class EnergyChartService : IEnergyChartService
                     default:
                         break;
                 }
-
+            
                 var totExist = listProductionTot.FirstOrDefault(x => x.Label == entryLabel);
                 if (totExist == null)
-                    listProductionTot.Add(new DummyEntry { Value = Convert.ToSingle(item.ProductionOwnUse + item.ProductionSold), Color = totColor, Label = entryLabel });
+                    listProductionTot.Add(new DummyEntry
+                    { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse + item.ProductionSold)
+                    : Convert.ToSingle(item.ProductionOwnUseProfit + item.ProductionSoldProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax) + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction)))), Color = totColor, Label = entryLabel });
                 else
                 {
-                    totExist.Value = totExist.Value + Convert.ToSingle(item.ProductionOwnUse + item.ProductionSold);
+                    totExist.Value = totExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse + item.ProductionSold)
+                    : Convert.ToSingle(item.ProductionOwnUseProfit + item.ProductionSoldProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax) + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction)))));
                 }
 
                 var soldExist = listProductionSold.FirstOrDefault(x => x.Label == entryLabel);
                 if (soldExist == null)
-                    listProductionSold.Add(new DummyEntry { Value = Convert.ToSingle(item.ProductionSold), Color = soldColor, Label = entryLabel });
+                    listProductionSold.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionSold): Convert.ToSingle(item.ProductionSoldProfit + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))), Color = soldColor, Label = entryLabel });
                 else
                 {
-                    soldExist.Value = soldExist.Value + Convert.ToSingle(item.ProductionSold);
+                    soldExist.Value = soldExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionSold): Convert.ToSingle(item.ProductionSoldProfit + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction)))) ;
                 }
 
                 var usedExist = listProductionUsed.FirstOrDefault(x => x.Label == entryLabel);
                 if (usedExist == null)
-                    listProductionUsed.Add(new DummyEntry { Value = Convert.ToSingle(item.ProductionOwnUse), Color = usedColor, Label = entryLabel });
+                    listProductionUsed.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse): Convert.ToSingle(item.ProductionOwnUseProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax))), Color = usedColor, Label = entryLabel });
                 else
                 {
-                    usedExist.Value = usedExist.Value + Convert.ToSingle(item.ProductionOwnUse);
+                    usedExist.Value = usedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse) : Convert.ToSingle(item.ProductionOwnUseProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax))));
                 }
 
                 var consumedExist = listCunsumtion.FirstOrDefault(x => x.Label == entryLabel);
                 if (consumedExist == null)
-                    listCunsumtion.Add(new DummyEntry { Value = Convert.ToSingle(item.Purchased), Color = consumColor, Label = entryLabel });
+                    listCunsumtion.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * calcparms.TransferFee)), Color = consumColor, Label = entryLabel });
                 else
                 {
-                    consumedExist.Value = consumedExist.Value + Convert.ToSingle(item.Purchased);
+                    consumedExist.Value = consumedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * calcparms.TransferFee))) ;
                 }
 
             }
@@ -217,26 +220,61 @@ public class EnergyChartService : IEnergyChartService
                 break;
         }
 
+        
+       
+        //Base sums
+        var totalPurchasedCost = dataRows.Sum(x => x.PurchasedCost);
+        var totalPurchased = dataRows.Sum(x => x.Purchased);
+        var totalProductionSoldProfit = dataRows.Sum(x => x.ProductionSoldProfit);
+        var totalProductionSold = dataRows.Sum(x => x.ProductionSold);
+        var totalProductionOwnUseProfit = dataRows.Sum(x => x.ProductionOwnUseProfit);
+        var totalProductionOwnUse = dataRows.Sum(x => x.ProductionOwnUse);
+        //Calc
+        var totalCompensationForProductionToGrid = totalProductionSold * calcparms.ProdCompensationElectricityLowload;
+        var totalSavedTransferFeeProductionOwnUse = totalProductionOwnUse * calcparms.TransferFee;
+        var totalSavedEnergyTaxProductionOwnUse = totalProductionOwnUse * calcparms.EnergyTax;
+        var totalSavedEnergyTaxReductionProductionToGrid = totalProductionSold * calcparms.TaxReduction;
+        var totalPurchasedTransferFee = totalPurchased * calcparms.TransferFee;
 
+        string totalProductionTitle;
+        string productionSoldTile;
+        string productionUsedTile;
+        string ConsumedTile = "Consumed";
+        if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
+        {
+            totalProductionTitle = string.Format("Total production {0} kwh", Math.Round(totalProductionSold + totalProductionOwnUse,2));
+            productionSoldTile = string.Format("Production sold {0} kwh", Math.Round(totalProductionSold,2));
+            productionUsedTile = string.Format("Production used {0} kwh", Math.Round(totalProductionOwnUse,2));
+            ConsumedTile = string.Format("Consumed({0} kwh)", Math.Round(totalPurchased,2));
+        }
+        else
+        {
+
+            totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalProductionOwnUseProfit+ totalCompensationForProductionToGrid + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse + totalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionSoldTile = string.Format("Production sold {0}  SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalCompensationForProductionToGrid + totalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionUsedTile = string.Format("Production used {0}  SEK (ink tax/fee)", Math.Round(totalProductionOwnUseProfit + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse, 2));
+            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(totalPurchasedCost+ totalPurchasedTransferFee,2));
+
+        }
         List<ChartEntry> totlist =  new List<ChartEntry>();
         foreach (var item in listProductionTot)
             totlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = "Production", Color = SkiaSharp.SKColor.Parse("#e8900c"), Entries = totlist });
+        result.ChartSeries.Add(new ChartSerie { Name = totalProductionTitle, Color = SkiaSharp.SKColor.Parse("#e8900c"), Entries = totlist });
 
         List<ChartEntry> soldlist = new List<ChartEntry>();
         foreach (var item in listProductionSold)
             soldlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = "Sold", Color = SkiaSharp.SKColor.Parse("#640abf"), Entries = soldlist });
+        result.ChartSeries.Add(new ChartSerie { Name = productionSoldTile, Color = SkiaSharp.SKColor.Parse("#640abf"), Entries = soldlist });
 
         List<ChartEntry> usedlist = new List<ChartEntry>();
         foreach (var item in listProductionUsed)
             usedlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = "used", Color = SkiaSharp.SKColor.Parse("#3498db"), Entries = usedlist });
+        result.ChartSeries.Add(new ChartSerie { Name = productionUsedTile, Color = SkiaSharp.SKColor.Parse("#3498db"), Entries = usedlist });
 
         List<ChartEntry> consumedlist = new List<ChartEntry>();
         foreach (var item in listCunsumtion)
             consumedlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = "Cunsumtion", Color = SkiaSharp.SKColor.Parse("#5b46e3"), Entries = consumedlist });
+        result.ChartSeries.Add(new ChartSerie { Name = ConsumedTile, Color = SkiaSharp.SKColor.Parse("#5b46e3"), Entries = consumedlist });
 
 
         //Calc MaxValueYaxes so all graphs has the same resolution
@@ -323,9 +361,23 @@ public class ChartDataRequest : ObservableObject
             OnPropertyChanged(nameof(YearBackgrundColor));
         }
     }
+    private ChartDataUnit chartDataUnit = ChartDataUnit.kWh;
+    public ChartDataUnit ChartDataUnit
+    {
+        get
+        {
+            return chartDataUnit;
+        }
+        set
+        {
+            SetProperty(ref chartDataUnit, value);
+            OnPropertyChanged(nameof(KwhBackgrundColor));
+            OnPropertyChanged(nameof(CurrencyBackgrundColor));
+           
+        }
+    }
 
     private DateTime timeStamp =  DateTime.Now;
-
     public DateTime TimeStamp
     {
         get
@@ -349,6 +401,10 @@ public class ChartDataRequest : ObservableObject
 
     public Color YearBackgrundColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.Gray200Color : AppColors.TransparentColor; } }
 
+    public Color KwhBackgrundColor { get { return ChartDataUnit == ChartDataUnit.kWh ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+
+    public Color CurrencyBackgrundColor { get { return ChartDataUnit == ChartDataUnit.Currency ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+
     public string TimeStampTitle { get { return timeStamp.ToLongDateString(); } }
 }
 public enum ChartDataRange
@@ -358,4 +414,10 @@ public enum ChartDataRange
     Week = 2,
     Month = 3,
     Year = 4
+}
+public enum ChartDataUnit
+{
+    kWh = 1,
+    Currency = 2,
+   
 }

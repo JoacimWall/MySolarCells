@@ -26,6 +26,7 @@ public class RoiService : IRoiService
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Convert.ToInt32(roiStats.TotalProductionSold * calcparms.ProdCompensationElectricityLowload);
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToInt32(roiStats.TotalProductionOwnUse * calcparms.TransferFee);
+        roiStats.TotalTransferFeePurchased = Convert.ToInt32(roiStats.TotalPurchased * calcparms.TransferFee);
         roiStats.TotalSavedEnergyTaxProductionOwnUse = Convert.ToInt32(roiStats.TotalProductionOwnUse * calcparms.EnergyTax);
         roiStats.TotalSavedEnergyTaxReductionProductionToGrid = Convert.ToInt32(roiStats.TotalProductionSold * calcparms.TaxReduction);
         //Total minus production
@@ -65,6 +66,7 @@ public class RoiStats
     //calc values
     public int TotalCompensationForProductionToGrid { get; set; } = 0;
     public int TotalSavedTransferFeeProductionOwnUse { get; set; } = 0;
+    public int TotalTransferFeePurchased { get; set; } = 0;
     public int TotalSavedEnergyTaxProductionOwnUse { get; set; } = 0;
     public int TotalSavedEnergyTaxReductionProductionToGrid { get; set; } = 0;
 
