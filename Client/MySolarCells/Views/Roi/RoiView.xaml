@@ -5,10 +5,11 @@
                         x:Class="MySolarCells.Views.Roi.RoiView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Roi"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         Shell.NavBarIsVisible="True"
                         Title="Total ROI" 
                         x:DataType="vm:RoiViewModel">
-    <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+    <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         
        <!--TotalPurchased-->
         <Label Grid.Column="0" Grid.Row="0" Text="Purchased"/>
@@ -26,15 +27,15 @@
         <Label Grid.Column="2" Grid.Row="3" Text="{Binding RoiStats.Unit}"/>
          <!--TotalProductionNegativeSold-->
         <Label Grid.Column="0" Grid.Row="4" Text="Production sold (negative price)"/>
-        <Label Grid.Column="1" Grid.Row="4" Text="{Binding RoiStats.TotalProductionNegativeSold}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="1" Grid.Row="4" TextColor="{x:Static theming:AppColors.SignalOrangeColor}" Text="{Binding RoiStats.TotalProductionNegativeSold}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="4" Text="{Binding RoiStats.Unit}"/>
         <!--TotalProductionSoldProfit-->
         <Label Grid.Column="0" Grid.Row="5" Text="Production sold profit"/>
-        <Label Grid.Column="1" Grid.Row="5" Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="1" Grid.Row="5"  Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="5" Text="{Binding RoiStats.Currency}"/>
-         <!--TotalProductionSoldProfit-->
+         <!--TotalProductionSoldNegativeProfit-->
         <Label Grid.Column="0" Grid.Row="6" Text="Production sold profit (negative price)"/>
-        <Label Grid.Column="1" Grid.Row="6" Text="{Binding RoiStats.TotalProductionSoldNegativeProfit}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="1" Grid.Row="6" TextColor="{x:Static theming:AppColors.SignalOrangeColor}" Text="{Binding RoiStats.TotalProductionSoldNegativeProfit}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="6" Text="{Binding RoiStats.Currency}"/>
         <!--TotalCompensationForProductionToGrid-->
         <Label Grid.Column="0" Grid.Row="7" Text="Compensation for production to grid"/>
@@ -44,7 +45,7 @@
         <Label Grid.Column="0" Grid.Row="8" Text="Saved energy tax"/>
         <Label Grid.Column="1" Grid.Row="8" Text="{Binding RoiStats.TotalSavedEnergyTaxReductionProductionToGrid}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="8" Text="{Binding RoiStats.Currency}"/>
-         <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="8" HeightRequest="1" />
+         <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="9" HeightRequest="1" />
 
 
          <!--TotalProductionOwnUse-->
@@ -63,19 +64,19 @@
         <Label Grid.Column="0" Grid.Row="13" Text="Saved energy tax"/>
         <Label Grid.Column="1" Grid.Row="13" Text="{Binding RoiStats.TotalSavedEnergyTaxProductionOwnUse}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="13" Text="{Binding RoiStats.Currency}"/>
-         <BoxView  Margin="0,8" Grid.ColumnSpan="3" Grid.Row="12" HeightRequest="1" />
+         <BoxView  Margin="0,8" Grid.ColumnSpan="3" Grid.Row="14" HeightRequest="1" />
          <!--TotalSaved-->
-        <Label Grid.Column="0" Grid.Row="14" Text="Total Saved"/>
-        <Label Grid.Column="1" Grid.Row="14" Text="{Binding RoiStats.TotalSaved}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="14" Text="{Binding RoiStats.Currency}"/>
+        <Label Grid.Column="0" Grid.Row="15" Text="Total Saved"/>
+        <Label Grid.Column="1" Grid.Row="15" Text="{Binding RoiStats.TotalSaved}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="15" Text="{Binding RoiStats.Currency}"/>
          <!--TotalProduction-->
-        <Label Grid.Column="0" Grid.Row="15" Text="Total production"/>
-        <Label Grid.Column="1" Grid.Row="15" Text="{Binding RoiStats.TotalProduction}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="15" Text="{Binding RoiStats.Unit}"/>
-        <!--Production Index -->
-        <Label Grid.Column="0" Grid.Row="16" Text="Production index (prod/day/ins. kWh)"/>
-        <Label Grid.Column="1" Grid.Row="16" Text="{Binding RoiStats.ProductionIndex}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="0" Grid.Row="16" Text="Total production"/>
+        <Label Grid.Column="1" Grid.Row="16" Text="{Binding RoiStats.TotalProduction}" HorizontalTextAlignment="End"/>
         <Label Grid.Column="2" Grid.Row="16" Text="{Binding RoiStats.Unit}"/>
+        <!--Production Index -->
+        <Label Grid.Column="0" Grid.Row="17" Text="Production index (prod/day/ins. kWh)"/>
+        <Label Grid.Column="1" Grid.Row="17" Text="{Binding RoiStats.ProductionIndex}" HorizontalTextAlignment="End"/>
+        <Label Grid.Column="2" Grid.Row="17" Text="{Binding RoiStats.Unit}"/>
     </Grid>
     
 </views:BaseContentPage>
