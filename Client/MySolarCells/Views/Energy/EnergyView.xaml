@@ -5,62 +5,86 @@
                         x:Class="MySolarCells.Views.Energy.EnergyView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Energy"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         Shell.NavBarIsVisible="True"
-                        Title="Total ROI" 
+                        Title="Production" 
                         x:DataType="vm:EnergyViewModel">
-    <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-        
-       <!--TotalPurchased-->
-        <Label Grid.Column="0" Grid.Row="0" Text="Purchased"/>
-        <Label Grid.Column="1" Grid.Row="0" Text="{Binding RoiStats.TotalPurchased}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="0" Text="{Binding RoiStats.Unit}"/>
-         <!--TotalPurchasedCost-->
-        <Label Grid.Column="0" Grid.Row="1" Text="Purchased cost"/>
-        <Label Grid.Column="1" Grid.Row="1" Text="{Binding RoiStats.TotalPurchasedCost}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="1" Text="{Binding RoiStats.Currency}"/>
-        <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="2" HeightRequest="1" />
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="Production" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                     <Border.StrokeShape>
+                       <RoundRectangle CornerRadius="20,20,20,20" />
+                      </Border.StrokeShape>
+                    <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
+            </Border>
 
-        <!--TotalProductionSold-->
-        <Label Grid.Column="0" Grid.Row="3" Text="Production sold"/>
-        <Label Grid.Column="1" Grid.Row="3" Text="{Binding RoiStats.TotalProductionSold}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="3" Text="{Binding RoiStats.Unit}"/>
-        <!--TotalProductionSoldProfit-->
-        <Label Grid.Column="0" Grid.Row="4" Text="Production sold profit"/>
-        <Label Grid.Column="1" Grid.Row="4" Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="4" Text="{Binding RoiStats.Currency}"/>
-        <!--TotalCompensationForProductionToGrid-->
-        <Label Grid.Column="0" Grid.Row="5" Text="Compensation for production to grid"/>
-        <Label Grid.Column="1" Grid.Row="5" Text="{Binding RoiStats.TotalCompensationForProductionToGrid}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="5" Text="{Binding RoiStats.Currency}"/>
-        <!--TotalSavedEnergyTaxReductionProductionToGrid-->
-        <Label Grid.Column="0" Grid.Row="6" Text="Saved energy tax"/>
-        <Label Grid.Column="1" Grid.Row="6" Text="{Binding RoiStats.TotalSavedEnergyTaxReductionProductionToGrid}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="6" Text="{Binding RoiStats.Currency}"/>
-         <BoxView Margin="0,8" Grid.ColumnSpan="3" Grid.Row="7" HeightRequest="1" />
+        </Grid>
+
+    </Shell.TitleView>
+    <ScrollView>
+        <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
+            <!--<Border Grid.Row="1" Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"
+                StrokeThickness="2"
+                StrokeShape="RoundRectangle 6,6,6,6" >
+            <Button BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="Sync" Command="{Binding SyncCommand}"></Button>
+        </Border>-->
+
+            <Grid Margin="8" Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="Center" HeightRequest="30" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Padding="0" ColumnSpacing="0">
+                <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0"  
+                    StrokeThickness="2" >
+                     <Border.StrokeShape>
+                       <RoundRectangle CornerRadius="25,25,25,25" />
+                      </Border.StrokeShape>
+                    <Button Padding="0,0,0,5" Margin="0" Command="{Binding BackCommand}" FontSize="29" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="-" BackgroundColor="Transparent" ></Button>
+                </Border>
+                <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" 
+                    StrokeThickness="2" >
+                     <Border.StrokeShape>
+                       <RoundRectangle CornerRadius="25,25,25,25" />
+                      </Border.StrokeShape>
+                    <Button Padding="0,0,0,0" Margin="0" Command="{Binding ForwardCommand}" FontSize="23" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="+" BackgroundColor="Transparent" ></Button>
+                </Border>
+                <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" 
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 6,6,6,6" >
+                    <Button Padding="4,0,4,0" Margin="0" Command="{Binding TodayCommand}" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="TODAY" BackgroundColor="Transparent" ></Button>
+                </Border>
+                <Border Grid.Column="3" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0,-2,0" BackgroundColor="{Binding ChartDataRequest.DayBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 6,0,6,0" >
+                    <Button Padding="4,0,4,0"  Command="{Binding DayCommand}"   TextColor="{x:Static theming:AppColors.Gray900Color}" Text="DAY" BackgroundColor="Transparent"></Button>
+                </Border>
+                <Border Grid.Column="4" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 0,0,0,0">
+                    <Button Padding="4,0,4,0"  Command="{Binding WeekCommand}"   TextColor="{x:Static theming:AppColors.Gray900Color}" Text="WEEK" BackgroundColor="Transparent"></Button>
+                </Border>
+                <Border Grid.Column="5" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.MonthBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 0,0,0,0">
+                    <Button Padding="4,0,4,0"  Command="{Binding MonthCommand}"  TextColor="{x:Static theming:AppColors.Gray900Color}" Text="MONTH" BackgroundColor="Transparent"></Button>
+                </Border>
+                <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.YearBackgrundColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 0,6,0,6">
+                    <Button Padding="4,0,4,0"  Command="{Binding YearCommand}"  TextColor="{x:Static theming:AppColors.Gray900Color}" Text="YEAR" BackgroundColor="Transparent"></Button>
+                </Border>
+            </Grid>
+            <Label Grid.Row="2" Grid.ColumnSpan="3" Text="Total production"/>
+            <micro:ChartView Grid.Row="3" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="4" Grid.ColumnSpan="3" Text="Production sold"/>
+            <micro:ChartView Grid.Row="5" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="6"  Grid.ColumnSpan="3" Text="Production Used"/>
+            <micro:ChartView Grid.Row="7" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="8" Grid.ColumnSpan="3" Text="Consumed"/>
+            <micro:ChartView Grid.Row="9" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdConsumed }" BackgroundColor="Black" HeightRequest="200"/>
 
 
-         <!--TotalProductionOwnUse-->
-        <Label Grid.Column="0" Grid.Row="8" Text="Production own use"/>
-        <Label Grid.Column="1" Grid.Row="8" Text="{Binding RoiStats.TotalProductionOwnUse}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="8" Text="{Binding RoiStats.Unit}"/>
-        <!--ProductionOwnUseProfit-->
-        <Label Grid.Column="0" Grid.Row="9" Text="Production own use profit"/>
-        <Label Grid.Column="1" Grid.Row="9" Text="{Binding RoiStats.TotalProductionOwnUseProfit}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="9" Text="{Binding RoiStats.Currency}"/>
-        <!--TotalSavedTransferFeeProductionOwnUse-->
-        <Label Grid.Column="0" Grid.Row="10" Text="Saved transfer fee"/>
-        <Label Grid.Column="1" Grid.Row="10" Text="{Binding RoiStats.TotalSavedTransferFeeProductionOwnUse}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="10" Text="{Binding RoiStats.Currency}"/>
-         <!--TotalSavedEnergyTaxProductionOwnUse-->
-        <Label Grid.Column="0" Grid.Row="11" Text="Saved energy tax"/>
-        <Label Grid.Column="1" Grid.Row="11" Text="{Binding RoiStats.TotalSavedEnergyTaxProductionOwnUse}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="11" Text="{Binding RoiStats.Currency}"/>
-         <BoxView  Margin="0,8" Grid.ColumnSpan="3" Grid.Row="12" HeightRequest="1" />
-         <!--TotalSaved-->
-        <Label Grid.Column="0" Grid.Row="13" Text="Total Saved"/>
-        <Label Grid.Column="1" Grid.Row="13" Text="{Binding RoiStats.TotalSaved}" HorizontalTextAlignment="End"/>
-        <Label Grid.Column="2" Grid.Row="13" Text="{Binding RoiStats.Currency}"/>
-       
-    </Grid>
-    
+
+        </Grid>
+    </ScrollView>
 </views:BaseContentPage>

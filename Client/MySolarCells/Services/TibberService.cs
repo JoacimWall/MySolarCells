@@ -7,7 +7,7 @@ public interface ITibberService
 {
     bool Init(string apiKey);
     Task<Result<List<Home>>> GetBasicData();
-    Task<bool> SyncConsumptionAndProductionFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr);
+    Task<bool> SyncConsumptionAndProductionFirstTime(DateTime start, IProgress<int> progress, int progressStartNr);
     //Task<bool> GetHomeProduction(string SubSystemEntityId, int hours, int homeId);
 }
 
@@ -23,17 +23,21 @@ public class TibberService : ITibberService
         //defaultRequestHeaders.Add("White-Label-Access-Key", "bf8c1e86-b23f-49f6-9156-a1e6a08895d7");
 
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://api.tibber.com/v1-beta/gql", defaultRequestHeaders = defaultRequestHeaders };
+        ReInitRest();
+
+
+    }
+    private void ReInitRest()
+    {
         this.restClient.ReInit();
         if (MySolarCellsGlobals.SelectedHome != null)
-        { 
+        {
             Dictionary<string, string> tokens = new Dictionary<string, string>
             {
                 { AppConstants.Authorization, string.Format("Bearer {0}", StringHelper.Decrypt(MySolarCellsGlobals.SelectedHome.ApiKey, AppConstants.Secretkey)) }
             };
             this.restClient.UpdateToken(tokens);
         }
-
-
     }
     public bool Init(string apiKey)
     {
@@ -57,15 +61,16 @@ public class TibberService : ITibberService
         }
 
     }
-    public async Task<bool> SyncConsumptionAndProductionFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr)
+    public async Task<bool> SyncConsumptionAndProductionFirstTime(DateTime start, IProgress<int> progress, int progressStartNr)
     {
         try
         {
+            ReInitRest();
             int batch100 = 0;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
             List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
             using var dbContext = new MscDbContext();
-            DateTime start = MySolarCellsGlobals.SelectedHome.FromDate;
+            //DateTime start = MySolarCellsGlobals.SelectedHome.FromDate;
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
             TimeSpan difference = new TimeSpan();
@@ -73,7 +78,7 @@ public class TibberService : ITibberService
             int hours = 0;
             int hoursTot = 0;
             //TODO:Remove just for test
-           // await dbContext.Energy.BatchDeleteAsync();
+            // await dbContext.Energy.BatchDeleteAsync();
             while (start < end)
             {
                 //Get 3 mounts per request
@@ -97,7 +102,7 @@ public class TibberService : ITibberService
                     variables = new TibberConsumptionProductionRequest
                     {
                         homeid = MySolarCellsGlobals.SelectedHome.SubSystemEntityId,
-                        from = StringHelper.EncodeTo64(start.ToString("yyyy-MM-dd")),
+                        from = StringHelper.EncodeTo64(String.Format("{0:s}", start)), //start.ToString() "yyyy-MM-dd
                         first = hoursTot
                     }
                 };
@@ -108,13 +113,13 @@ public class TibberService : ITibberService
 
 
 
-                
+
                 for (int i = 0; i < cunsumI; i++)
                 {
-                    
+
                     progressStartNr++;
                     batch100++;
-                    
+
                     //Save Consumtion
                     var energy = resultSites.Model.data.viewer.home.consumption.nodes[i];
                     //check if exist in db
@@ -126,7 +131,7 @@ public class TibberService : ITibberService
                         Currency = energy.currency,
                         Timestamp = energy.from.Value
                     };
-                    await dbContext.Energy.AddAsync(energyExist);
+                    // await dbContext.Energy.AddAsync(energyExist);
 
                     energyExist.ElectricitySupplierPurchased = (int)ElectricitySupplier.Tibber;
                     energyExist.Purchased = Convert.ToDouble(energy.consumption.Value);
@@ -178,7 +183,7 @@ public class TibberService : ITibberService
                 eneryList = new List<Sqlite.Models.Energy>();
 
             }
-           
+
             //Fill all null productions so that we don't have to loop throw then on more time.
             var emptyEnergyExist = dbContext.Energy.Where(x => x.ElectricitySupplierProductionSold == (int)InverterTyp.Unknown && x.HomeId == homeId);
             foreach (var enery in emptyEnergyExist)

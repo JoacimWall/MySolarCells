@@ -69,7 +69,7 @@ public class HuaweiService : IInverterServiceInterface
         return new Result<PickerItem>( new PickerItem { ItemValue= device.id, ItemTitle = device.name });
     }
 
-    public async Task<bool> SyncProductionOwnUseFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr)
+    public async Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
         using var dbContext = new MscDbContext();
@@ -89,7 +89,7 @@ public class HuaweiService : IInverterServiceInterface
             string processingDateTo;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
             List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
-            DateTime start = inverter.FromDate;
+           
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
 
@@ -143,7 +143,11 @@ public class HuaweiService : IInverterServiceInterface
                         if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
                         { 
                             energyExist.ProductionOwnUse = (Convert.ToDouble(listPoints[i].value.Value) / 1000) - Convert.ToDouble(energyExist.ProductionSold);
-                            energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
+                            //Only add if price over zero
+                            if (energyExist.UnitPriceBuy > 0)
+                                energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
+                            else
+                                energyExist.ProductionOwnUseProfit = 0;
                         }
                         energyExist.InverterTypProductionOwnUse = (int)InverterTyp.Huawei;
                         energyExist.ProductionOwnUseSynced = true;

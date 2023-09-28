@@ -28,22 +28,37 @@ public class RoiService : IRoiService
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToInt32(roiStats.TotalProductionOwnUse * calcparms.TransferFee);
         roiStats.TotalSavedEnergyTaxProductionOwnUse = Convert.ToInt32(roiStats.TotalProductionOwnUse * calcparms.EnergyTax);
         roiStats.TotalSavedEnergyTaxReductionProductionToGrid = Convert.ToInt32(roiStats.TotalProductionSold * calcparms.TaxReduction);
+        //Total minus production
+        roiStats.TotalProductionNegativeSold = Convert.ToInt32(dbContext.Energy.Where(x => x.UnitPriceSold < 0 && x.ProductionSold > 0).Sum(x => x.ProductionSold));
+        roiStats.TotalProductionSoldNegativeProfit = Convert.ToInt32(dbContext.Energy.Where(x => x.UnitPriceSold < 0 && x.ProductionSold > 0).Sum(x => x.ProductionSoldProfit));
 
 
         roiStats.TotalSaved = Convert.ToInt32(roiStats.TotalProductionSoldProfit + roiStats.TotalProductionOwnUseProfit + roiStats.TotalCompensationForProductionToGrid
                             + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse + roiStats.TotalSavedEnergyTaxReductionProductionToGrid);
+
+
+        //Production Index amount of production per installed kWh
+        var soloarFirstDate = await dbContext.Energy.FirstOrDefaultAsync(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0);
+        var difference = DateTime.Now - soloarFirstDate.Timestamp;
+        roiStats.ProductionIndex = Convert.ToSingle(Math.Round( (roiStats.TotalProduction / Convert.ToInt32(difference.TotalDays)/ calcparms.TotalInstallKwhPanels),2));
+
         return roiStats;
+        
 	}
 }
 public class RoiStats
 {
     public int TotalProductionSold { get; set; } = 0;
+    public int TotalProductionNegativeSold { get; set; } = 0;
     public int TotalProductionOwnUse { get; set; } = 0;
     public int TotalPurchased { get; set; } = 0;
+
+    
 
     public string Unit { get; set; } = "kWh";
     public string Currency { get; set; } = "SEK";
     public int TotalProductionSoldProfit { get; set; } = 0;
+    public int TotalProductionSoldNegativeProfit { get; set; } = 0;
     public int TotalProductionOwnUseProfit { get; set; } = 0;
     public int TotalPurchasedCost { get; set; } = 0;
 
@@ -55,5 +70,9 @@ public class RoiStats
 
     //Total Saved
     public int TotalSaved { get; set; } = 0;
+    public int TotalProduction { get { return TotalProductionSold + TotalProductionOwnUse; } }
+
+    //fun Facts
+    public float ProductionIndex { get; set; } = 0;
 
 }

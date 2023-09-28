@@ -21,9 +21,10 @@ public class Result<T>
         this.GenericResponse = response;
         WasSuccessful = wasSuccessful;
     }
-    public Result(string error)
+    public Result(string error, ErrorCodes errorCode)
     {
         ErrorMessage = error;
+        ErrorCode = errorCode;
         WasSuccessful = false;
     }
     public Result(string error, string errorType = "")
@@ -41,9 +42,15 @@ public class Result<T>
     public bool WasSuccessful { get; set; }
 
     public string ErrorMessage { get; set; }
+    public ErrorCodes ErrorCode { get; set; }
 }
 public class ResultModelBool
 {
     public bool Result { get; set; }
 }
+public enum ErrorCodes
+{
+    Unknowed=0,
+    NoEnergyEntryOnCurrentDate =100
 
+}

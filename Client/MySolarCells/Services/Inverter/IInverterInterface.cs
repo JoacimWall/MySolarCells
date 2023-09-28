@@ -5,7 +5,7 @@ public interface IInverterServiceInterface
     Task<Result<InverterLoginResponse>> LoginInUser(string userName, string password);
     Task<Result<List<PickerItem>>> GetSites();
     Task<Result<PickerItem>> GetInverter(string siteNodeId);
-    Task<bool> SyncProductionOwnUseFirstTime(bool firstTime, IProgress<int> progress, int progressStartNr);
+    Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr);
 }
 public class InverterLoginResponse
 {
