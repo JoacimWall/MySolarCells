@@ -21,7 +21,7 @@
             Text="{x:Static trans:AppResources.Access_Token}"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
 
-        <Entry Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding TibberAccessToken}"   />
+        <Entry Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding TibberAccessToken}" IsPassword="True"  />
 
         <Button Grid.Row="5"  Grid.ColumnSpan="3" Text="Test API key" Command="{Binding GetHomesCommand}"/>
 

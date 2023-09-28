@@ -132,10 +132,10 @@ public class EnergyChartService : IEnergyChartService
 
                 var consumedExist = listCunsumtion.FirstOrDefault(x => x.Label == entryLabel);
                 if (consumedExist == null)
-                    listCunsumtion.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * calcparms.TransferFee)), Color = consumColor, Label = entryLabel });
+                    listCunsumtion.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * (calcparms.TransferFee + calcparms.EnergyTax))), Color = consumColor, Label = entryLabel });
                 else
                 {
-                    consumedExist.Value = consumedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * calcparms.TransferFee))) ;
+                    consumedExist.Value = consumedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * (calcparms.TransferFee + calcparms.EnergyTax))));
                 }
 
             }
@@ -235,6 +235,7 @@ public class EnergyChartService : IEnergyChartService
         var totalSavedEnergyTaxProductionOwnUse = totalProductionOwnUse * calcparms.EnergyTax;
         var totalSavedEnergyTaxReductionProductionToGrid = totalProductionSold * calcparms.TaxReduction;
         var totalPurchasedTransferFee = totalPurchased * calcparms.TransferFee;
+        var totalPurchasedTax = totalPurchased * calcparms.EnergyTax;
 
         string totalProductionTitle;
         string productionSoldTile;
@@ -250,10 +251,10 @@ public class EnergyChartService : IEnergyChartService
         else
         {
 
-            totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalProductionOwnUseProfit+ totalCompensationForProductionToGrid + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse + totalSavedEnergyTaxReductionProductionToGrid, 2));
+            totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalProductionOwnUseProfit + totalCompensationForProductionToGrid + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse + totalSavedEnergyTaxReductionProductionToGrid, 2));
             productionSoldTile = string.Format("Production sold {0}  SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalCompensationForProductionToGrid + totalSavedEnergyTaxReductionProductionToGrid, 2));
             productionUsedTile = string.Format("Production used {0}  SEK (ink tax/fee)", Math.Round(totalProductionOwnUseProfit + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse, 2));
-            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(totalPurchasedCost+ totalPurchasedTransferFee,2));
+            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(totalPurchasedCost + totalPurchasedTransferFee + totalPurchasedTax, 2));
 
         }
         List<ChartEntry> totlist =  new List<ChartEntry>();
