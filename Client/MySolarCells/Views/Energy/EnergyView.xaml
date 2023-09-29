@@ -28,16 +28,9 @@
     <ScrollView>
         <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
-            <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End"
-                                    BackCommand="{Binding BackCommand}"
-                                    ForwardCommand="{Binding ForwardCommand}"
-                                    TodayCommand="{Binding TodayCommand}"
-                                    DayCommand="{Binding DayCommand}"
-                                    WeekCommand="{Binding WeekCommand}"
-                                    MonthCommand="{Binding MonthCommand}"
-                                    YearCommand="{Binding YearCommand}"
-                                    ShowUnitCommand="{Binding ShowKwhCommand}"
-                                    ShowCurrencyCommand="{Binding ShowCurrencyCommand}"/>
+            <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ChartData="{Binding ChartDataRequest}"
+                                    GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
+                                    />
             
             
             <Label Margin="8,-8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>

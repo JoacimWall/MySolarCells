@@ -19,37 +19,9 @@ public class EnergyChartService : IEnergyChartService
     {
         using var dbContext = new MscDbContext();
         ChartDataResult result = new ChartDataResult();
-        DateTime start = new DateTime();
-        DateTime end = new DateTime();
         string entryLabel = string.Empty;
         var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
-        DateTime baseDate = new DateTime(chartDataRequest.TimeStamp.Year, chartDataRequest.TimeStamp.Month, chartDataRequest.TimeStamp.Day);
-        var resultDates = DateHelper.GetRelatedDates(baseDate);
-       
-
-        switch (chartDataRequest.ChartDataRange)
-        {
-            case ChartDataRange.Today:
-            case ChartDataRange.Day:
-                start = new DateTime(chartDataRequest.TimeStamp.Year, chartDataRequest.TimeStamp.Month, chartDataRequest.TimeStamp.Day);
-                end = start.AddDays(1);
-                break;
-            case ChartDataRange.Week:
-                start = resultDates.ThisWeekStart;
-                end = resultDates.ThisWeekEnd;
-                break;
-            case ChartDataRange.Month:
-                start = resultDates.ThisMonthStart;
-                end = resultDates.ThisMonthEnd;
-                break;
-            case ChartDataRange.Year:
-                start = resultDates.ThisYearStart;
-                end = resultDates.ThisYearhEnd;
-                break;
-            default:
-                break;
-        }
-
+        
         // ------ Create 4 serices ---------------
         //poduction Total
         List<DummyEntry> listProductionTot = new List<DummyEntry>();
@@ -64,7 +36,7 @@ public class EnergyChartService : IEnergyChartService
         List<DummyEntry> listCunsumtion = new List<DummyEntry>();
         SkiaSharp.SKColor consumColor = SkiaSharp.SKColor.Parse("#5b46e3");
 
-        var dataRows = await dbContext.Energy.Where(x => x.Timestamp >= start && x.Timestamp < end).ToListAsync();
+        var dataRows = await dbContext.Energy.Where(x => x.Timestamp >= chartDataRequest.FilterStart && x.Timestamp < chartDataRequest.FilterEnd).ToListAsync();
         if (dataRows != null && dataRows.Count == 0)
             return new Result<ChartDataResult>("No records",ErrorCodes.NoEnergyEntryOnCurrentDate);
         foreach (var item in dataRows)
@@ -126,8 +98,8 @@ public class EnergyChartService : IEnergyChartService
             }
         
         //Fill missing days
-        var currentDay = start;
-        var enddayfil = start.AddDays(1);
+        var currentDay = chartDataRequest.FilterStart;
+        var enddayfil = chartDataRequest.FilterEnd;
         switch (chartDataRequest.ChartDataRange)
         {
             case ChartDataRange.Today:
@@ -149,7 +121,7 @@ public class EnergyChartService : IEnergyChartService
                 break;
             case ChartDataRange.Week:
                
-                while (currentDay < end)
+                while (currentDay < chartDataRequest.FilterEnd)
                 {
                     entryLabel = currentDay.ToString("ddd");
                     if (listProductionTot.FirstOrDefault(x => x.Label == entryLabel) == null)
@@ -167,7 +139,7 @@ public class EnergyChartService : IEnergyChartService
                 break;
             case ChartDataRange.Month:
 
-                while (currentDay < end)
+                while (currentDay < chartDataRequest.FilterEnd)
                 {
                     entryLabel = currentDay.ToString("dd");
                     if (listProductionTot.FirstOrDefault(x => x.Label == entryLabel) == null)
@@ -185,7 +157,7 @@ public class EnergyChartService : IEnergyChartService
                 break;
             case ChartDataRange.Year:
 
-                while (currentDay < end)
+                while (currentDay < chartDataRequest.FilterEnd)
                 {
                     entryLabel = currentDay.ToString("MMM");
                     if (listProductionTot.FirstOrDefault(x => x.Label == entryLabel) == null)
@@ -206,7 +178,7 @@ public class EnergyChartService : IEnergyChartService
         }
 
 
-        var stats = await roiService.CalculateTotals(start, end, false);
+        var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd, false);
         
         string totalProductionTitle;
         string productionSoldTile;
@@ -316,6 +288,11 @@ public class ChartDataResult
 }   
 public class ChartDataRequest : ObservableObject
 {
+    public ChartDataRequest()
+    {
+
+        TimeStamp = DateTime.Today;
+    }
     private ChartDataRange chartDataRange = ChartDataRange.Today;
     public ChartDataRange ChartDataRange
     {
@@ -331,6 +308,7 @@ public class ChartDataRequest : ObservableObject
             OnPropertyChanged(nameof(WeekBackgrundColor));
             OnPropertyChanged(nameof(MonthBackgrundColor));
             OnPropertyChanged(nameof(YearBackgrundColor));
+            SetFilterDates();
         }
     }
     private ChartDataUnit chartDataUnit = ChartDataUnit.kWh;
@@ -348,8 +326,20 @@ public class ChartDataRequest : ObservableObject
            
         }
     }
+    private DateTime filterStart = DateTime.Now;
+    public DateTime FilterStart
+    {
+        get{ return filterStart; }
+        set { SetProperty(ref filterStart, value); }
+    }
+    private DateTime filterEnd = DateTime.Now;
+    public DateTime FilterEnd
+    {
+        get { return filterEnd; }
+        set { SetProperty(ref filterEnd, value); }
+    }
 
-    private DateTime timeStamp =  DateTime.Now;
+    private DateTime timeStamp;
     public DateTime TimeStamp
     {
         get
@@ -360,9 +350,44 @@ public class ChartDataRequest : ObservableObject
         {
             SetProperty(ref timeStamp, value);
             OnPropertyChanged(nameof(TimeStampTitle));
+            SetFilterDates();
         }
     }
-   
+    private void SetFilterDates()
+    {
+        DateTime baseDate = new DateTime(timeStamp.Year, timeStamp.Month, timeStamp.Day);
+        var resultDates = DateHelper.GetRelatedDates(baseDate);
+
+
+        switch (chartDataRange)
+        {
+            case ChartDataRange.Today:
+            case ChartDataRange.Day:
+                FilterStart = baseDate;
+                FilterEnd = filterStart.AddDays(1);
+                break;
+            case ChartDataRange.Week:
+                FilterStart = resultDates.ThisWeekStart;
+                FilterEnd = resultDates.ThisWeekEnd;
+                break;
+            case ChartDataRange.Month:
+                FilterStart = resultDates.ThisMonthStart;
+                FilterEnd = resultDates.ThisMonthEnd;
+                break;
+            case ChartDataRange.Year:
+                FilterStart = resultDates.ThisYearStart;
+                FilterEnd = resultDates.ThisYearhEnd;
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
+
+
+
     public Color TodayBackgrundColor { get { return chartDataRange == ChartDataRange.Today ? AppColors.Gray200Color : AppColors.TransparentColor;}  }
     
     public Color DayBackgrundColor { get{ return chartDataRange == ChartDataRange.Day ? AppColors.Gray200Color : AppColors.TransparentColor; } }

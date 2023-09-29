@@ -17,114 +17,21 @@ public class EnergyViewModel : BaseViewModel
         this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
-    public ICommand TodayCommand => new Command(async () => await TodayView());
-    public ICommand DayCommand => new Command(async () => await DayView());
-    public ICommand WeekCommand => new Command(async () => await WeekView());
-    public ICommand MonthCommand => new Command(async () => await MonthView());
-    public ICommand YearCommand => new Command(async () => await YearView());
-    public ICommand BackCommand => new Command(async () => await BackView());
-    public ICommand ForwardCommand => new Command(async () => await ForwardView());
+    //public ICommand TodayCommand => new Command(async () => await TodayView());
+    //public ICommand DayCommand => new Command(async () => await DayView());
+    //public ICommand WeekCommand => new Command(async () => await WeekView());
+    //public ICommand MonthCommand => new Command(async () => await MonthView());
+    //public ICommand YearCommand => new Command(async () => await YearView());
+    //public ICommand BackCommand => new Command(async () => await BackView());
+    //public ICommand ForwardCommand => new Command(async () => await ForwardView());
 
-    public ICommand ShowKwhCommand => new Command(async () => await ShowKwhViews());
-    public ICommand ShowCurrencyCommand => new Command(async () => await ShowCurrencyViews());
+    public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
+    //public ICommand ShowKwhCommand => new Command(async () => await ShowKwhViews());
+    //public ICommand ShowCurrencyCommand => new Command(async () => await ShowCurrencyViews());
 
    
-    private async Task BackView()
-    {
-        switch (ChartDataRequest.ChartDataRange)
-        {
-            case ChartDataRange.Today:
-            case ChartDataRange.Day:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(-1);
-                if (ChartDataRequest.TimeStamp.Date == DateTime.Now.Date)
-                    ChartDataRequest.ChartDataRange = ChartDataRange.Today;
-                else
-                    ChartDataRequest.ChartDataRange = ChartDataRange.Day;
-                break;
-            case ChartDataRange.Week:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(-7);
-                break;
-
-            case ChartDataRange.Month:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddMonths(-1);
-                break;
-
-            case ChartDataRange.Year:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddYears(-1);
-                break;
-
-        }
-        await ReloadGraph();
-    }
-    private async Task ForwardView()
-    {
-
-        switch (ChartDataRequest.ChartDataRange)
-        {
-            case ChartDataRange.Today:
-            case ChartDataRange.Day:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(1);
-                if (ChartDataRequest.TimeStamp.Date == DateTime.Now.Date)
-                    ChartDataRequest.ChartDataRange = ChartDataRange.Today;
-                else
-                    ChartDataRequest.ChartDataRange = ChartDataRange.Day;
-                break;
-            case ChartDataRange.Week:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(7);
-                break;
-
-            case ChartDataRange.Month:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddMonths(1);
-                break;
-
-            case ChartDataRange.Year:
-                ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddYears(1);
-                break;
-
-        }
-        await ReloadGraph();
-    }
-    private async Task<bool> TodayView()
-    {
-        ChartDataRequest.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-        ChartDataRequest.ChartDataRange = ChartDataRange.Today;
-        await ReloadGraph();
-        return true;
-    }
-    private async Task<bool> DayView()
-    {
-        ChartDataRequest.ChartDataRange = ChartDataRange.Day;
-        await ReloadGraph();
-        return true;
-    }
-    private async Task<bool> WeekView()
-    {
-        ChartDataRequest.ChartDataRange = ChartDataRange.Week;
-        await ReloadGraph();
-        return true;
-    }
-    private async Task<bool> MonthView()
-    {
-        ChartDataRequest.ChartDataRange = ChartDataRange.Month;
-        await ReloadGraph();
-        return true;
-    }
-    private async Task<bool> YearView()
-    {
-        ChartDataRequest.ChartDataRange = ChartDataRange.Year;
-        await ReloadGraph();
-        return true;
-    }
-    private async Task ShowCurrencyViews()
-    {
-        ChartDataRequest.ChartDataUnit = ChartDataUnit.Currency;
-        await ReloadGraph();
-    }
-    private async Task ShowKwhViews()
-    {
-        ChartDataRequest.ChartDataUnit = ChartDataUnit.kWh;
-        await ReloadGraph();
-    }
+   
+    
 
     private void CalculateProgress(long completed, long total)
     {
@@ -224,9 +131,9 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
-        List<Microcharts.ChartSerie> tests = new List<Microcharts.ChartSerie>();
-        tests.Add(resultSeries.Model.ChartSeries[1]);
-        tests.Add(resultSeries.Model.ChartSeries[2]);
+        //List<Microcharts.ChartSerie> tests = new List<Microcharts.ChartSerie>();
+        //tests.Add(resultSeries.Model.ChartSeries[1]);
+        //tests.Add(resultSeries.Model.ChartSeries[2]);
         EnergyChartProdTotTitle = resultSeries.Model.ChartSeries[0].Name;
         if (resultSeries.Model.ChartSeries[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdTot = new Microcharts.BarChart
@@ -267,7 +174,7 @@ public class EnergyViewModel : BaseViewModel
         if (resultSeries.Model.ChartSeries[2].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdUsed = new Microcharts.BarChart
             {
-                Series = tests,
+                Entries = resultSeries.Model.ChartSeries[2].Entries,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,

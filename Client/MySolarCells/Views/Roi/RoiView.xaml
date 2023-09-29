@@ -12,7 +12,8 @@
                         x:DataType="vm:RoiViewModel">
     <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
-        <control:DateNavigator Margin="8,8,0,8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"/>
+        <control:DateNavigator Margin="8,8,0,8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"
+                               GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}"/>
        <!--TotalPurchased-->
         <Label Grid.Column="0" Grid.Row="2" Text="Purchased"/>
         <Label Grid.Column="1" Grid.Row="2" Text="{Binding RoiStats.TotalPurchased}" HorizontalTextAlignment="End"/>

@@ -8,14 +8,18 @@ public class RoiViewModel : BaseViewModel
         this.roiService = roiService;
 
     }
-
+    public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadData());
     public async override Task OnAppearingAsync()
     {
-        using var dbContext = new MscDbContext();
-        RoiStats = await  this.roiService.CalculateTotals(null,null,true);
+        await ReloadData();
         
     }
-
+    private async Task<bool> ReloadData()
+    {
+        using var dlg = DialogService.GetProgress("");
+        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, false);
+        return true;
+    }
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest
     {
