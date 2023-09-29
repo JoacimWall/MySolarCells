@@ -10,7 +10,7 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<ITibberService, TibberService>();
         builder.Services.AddSingleton<IRoiService, RoiService>();
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();
-
+        builder.Services.AddSingleton<IDataSyncService, DataSyncService>();
         //Transient
         builder.Services.AddTransient<IRestClient, RestClient>();
 

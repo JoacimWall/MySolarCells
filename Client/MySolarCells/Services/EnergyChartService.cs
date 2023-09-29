@@ -202,7 +202,7 @@ public class EnergyChartService : IEnergyChartService
             totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalProductionOwnUseProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
             productionSoldTile = string.Format("Sold production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
             productionUsedTile = string.Format("Own production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
-            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
+            ConsumedTile = string.Format("Total consumption {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
 
         }
         List<ChartEntry> totlist =  new List<ChartEntry>();
@@ -225,7 +225,7 @@ public class EnergyChartService : IEnergyChartService
         List<ChartEntry> usedlist = new List<ChartEntry>();
         foreach (var item in listProductionUsed)
             usedlist.Add(item.ChartEntry);
-        result.ChartSeriesConsumtion.Add(new ChartSerie { Name = productionUsedTile, Color = SkiaSharp.SKColor.Parse("#3498db"), Entries = usedlist });
+        result.ChartSeriesConsumtion.Add(new ChartSerie { Name = productionUsedTile, Color = SkiaSharp.SKColor.Parse("#640abf"), Entries = usedlist });
 
        
 

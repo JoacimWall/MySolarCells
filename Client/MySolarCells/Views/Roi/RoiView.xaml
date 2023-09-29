@@ -8,8 +8,21 @@
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
                         Shell.NavBarIsVisible="True"
-                        Title="Total ROI" 
                         x:DataType="vm:RoiViewModel">
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="RIO" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                     <Border.StrokeShape>
+                       <RoundRectangle CornerRadius="20,20,20,20" />
+                      </Border.StrokeShape>
+                    <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
+            </Border>
+
+        </Grid>
+
+    </Shell.TitleView>
     <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
         <control:DateNavigator Margin="8,8,0,8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"

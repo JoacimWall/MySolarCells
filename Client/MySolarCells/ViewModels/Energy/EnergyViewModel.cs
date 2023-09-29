@@ -7,95 +7,24 @@ namespace MySolarCells.ViewModels.Energy;
 public class EnergyViewModel : BaseViewModel
 {
     private readonly IEnergyChartService energyChartService;
-    private readonly ITibberService tibberService;
-    private IInverterServiceInterface inverterService;
-    public EnergyViewModel(IEnergyChartService energyChartService, ITibberService tibberService)
+   
+    private IDataSyncService dataSyncService;
+    public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService)
     {
         this.energyChartService = energyChartService;
-        this.tibberService = tibberService;
-        using var dbContext = new MscDbContext();
-        this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
+        this.dataSyncService = dataSyncService;
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
-    //public ICommand TodayCommand => new Command(async () => await TodayView());
-    //public ICommand DayCommand => new Command(async () => await DayView());
-    //public ICommand WeekCommand => new Command(async () => await WeekView());
-    //public ICommand MonthCommand => new Command(async () => await MonthView());
-    //public ICommand YearCommand => new Command(async () => await YearView());
-    //public ICommand BackCommand => new Command(async () => await BackView());
-    //public ICommand ForwardCommand => new Command(async () => await ForwardView());
-
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
-    //public ICommand ShowKwhCommand => new Command(async () => await ShowKwhViews());
-    //public ICommand ShowCurrencyCommand => new Command(async () => await ShowCurrencyViews());
-
-   
-   
     
-
-    private void CalculateProgress(long completed, long total)
-    {
-        var comp = Convert.ToDouble(completed);
-        var tot = Convert.ToDouble(total);
-        var percentage = comp / tot;
-        //UploadProgress.ProgressTo(percentage, 100, Easing.Linear);
-        //ProgressProcent = (float)percentage * 100;
-        //ProgressSubStatus = "saved rows " + completed.ToString();
-    }
 
     private async Task Sync()
     {
         using var dlg = DialogService.GetProgress("");
-        using var dbContext = new MscDbContext();
-        //Get last Sync Time
-        var lastSyncTime = dbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
-        var difference = DateTime.Now - lastSyncTime.Timestamp;
-
-        var days = difference.Days;
-        var hours = difference.Hours;
-        var totalhours = (days * 24) + hours;
-
-        var progress = new Progress<int>(currentDay =>
+        var result = await this.dataSyncService.Sync();
+        if (!result.WasSuccessful)
         {
-            CalculateProgress(currentDay, totalhours);
-        });
-
-        await Task.Delay(200);
-        //keepUploading = true;
-
-        //ShowProgressStatus = true;
-        //ProgressStatus = "Import consumation and sold production.";
-        //ProgressSubStatus = "saved rows 0";
-        await Task.Delay(200);
-        var result = await this.tibberService.SyncConsumptionAndProductionFirstTime(lastSyncTime.Timestamp, progress, 0);
-        if (!result)
-        {
-
-            await DialogService.ShowAlertAsync("Error import consumation and sold production.", AppResources.My_Solar_Cells, AppResources.Ok);
-            return;
-        }
-
-
-        //ShowProgressStatus = true;
-        //ProgressStatus = "Import solar own use and calculate profit.";
-        //ProgressSubStatus = "saved rows 0";
-        await Task.Delay(200);
-
-        // var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        lastSyncTime = dbContext.Energy.Where(x => x.ProductionOwnUseSynced == false).OrderByDescending(o => o.Timestamp).First();
-        var differenceInverter = DateTime.Now - lastSyncTime.Timestamp;
-
-        var daysInv = differenceInverter.Days;
-        var hoursInv = differenceInverter.Hours;
-        var totalhoursInv = (daysInv * 24) + hoursInv;
-        progress = new Progress<int>(currentDay =>
-        {
-            CalculateProgress(currentDay, totalhoursInv);
-        });
-        var resultInverter = await this.inverterService.SyncProductionOwnUse(lastSyncTime.Timestamp, progress, 0);
-        if (!resultInverter)
-        {
-            await DialogService.ShowAlertAsync("Error import solar own use and calculate profit", AppResources.My_Solar_Cells, AppResources.Ok);
+            await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
 
         await ReloadGraph();
@@ -115,8 +44,6 @@ public class EnergyViewModel : BaseViewModel
         {
             await DialogService.ShowAlertAsync("There is no data to show on This date.", AppResources.My_Solar_Cells, AppResources.Ok);
             EnergyChartProdTot = null;
-            //EnergyChartProdSold = null;
-            //EnergyChartProdUsed = null;
             EnergyChartConsumed = null;
             return false;
         }
@@ -131,14 +58,12 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
-        //List<Microcharts.ChartSerie> tests = new List<Microcharts.ChartSerie>();
-        //tests.Add(resultSeries.Model.ChartSeries[1]);
-        //tests.Add(resultSeries.Model.ChartSeries[2]);
+        
         EnergyChartProdTotTitle = resultSeries.Model.ChartSeriesProduction[0].Name;
         if (resultSeries.Model.ChartSeriesProduction[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) || resultSeries.Model.ChartSeriesProduction[1].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdTot = new Microcharts.BarChart
             {
-                
+                Margin = 6,
                 Series = resultSeries.Model.ChartSeriesProduction,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
@@ -156,7 +81,8 @@ public class EnergyViewModel : BaseViewModel
         EnergyChartProdSoldTitle = resultSeries.Model.ChartSeriesConsumtion[0].Name;
         if (resultSeries.Model.ChartSeriesConsumtion[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) || resultSeries.Model.ChartSeriesConsumtion[1].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartConsumed = new Microcharts.BarChart
-            {
+            { 
+                Margin = 6, 
                 Series = resultSeries.Model.ChartSeriesConsumtion,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
@@ -172,41 +98,7 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartConsumed = null;
 
-        //EnergyChartProdUsedTitle = resultSeries.Model.ChartSeries[2].Name;
-        //if (resultSeries.Model.ChartSeries[2].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-        //    EnergyChartProdUsed = new Microcharts.BarChart
-        //    {
-        //        Entries = resultSeries.Model.ChartSeries[2].Entries,
-        //        CornerRadius = 6,
-        //        ShowYAxisLines = true,
-        //        ShowYAxisText = true,
-        //        YAxisTextPaint = YAxesPaint,
-        //        LabelTextSize = 24,
-        //        SerieLabelTextSize = 24,
-        //        ValueLabelTextSize = 24,
-        //        MaxValue = resultSeries.Model.MaxValueYaxes
-
-        //    };
-        //else
-        //    EnergyChartProdUsed = null;
-
-        //EnergyChartProdConsumedTitle = resultSeries.Model.ChartSeries[3].Name;
-        //if (resultSeries.Model.ChartSeries[3].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-        //    EnergyChartProdConsumed = new Microcharts.BarChart
-        //    {
-        //        Entries = resultSeries.Model.ChartSeries[3].Entries,
-        //        CornerRadius = 6,
-        //        ShowYAxisLines = true,
-        //        ShowYAxisText = true,
-        //        YAxisTextPaint = YAxesPaint,
-        //        LabelTextSize = 24,
-        //        SerieLabelTextSize = 24,
-        //        ValueLabelTextSize = 24,
-        //        MaxValue = resultSeries.Model.MaxValueYaxes
-
-        //    };
-        //else
-        //    EnergyChartProdConsumed = null;
+       
         return true;
     }
     public async override Task OnAppearingAsync()
@@ -231,18 +123,7 @@ public class EnergyViewModel : BaseViewModel
         get { return energyChartProdTot; }
         set { SetProperty(ref energyChartProdTot, value); }
     }
-    //private Microcharts.Chart energyChartProdSold;
-    //public Microcharts.Chart EnergyChartProdSold
-    //{
-    //    get { return energyChartProdSold; }
-    //    set { SetProperty(ref energyChartProdSold, value); }
-    //}
-    //private Microcharts.Chart energyChartProdUsed;
-    //public Microcharts.Chart EnergyChartProdUsed
-    //{
-    //    get { return energyChartProdUsed; }
-    //    set { SetProperty(ref energyChartProdUsed, value); }
-    //}
+   
     private Microcharts.Chart energyChartConsumed;
     public Microcharts.Chart EnergyChartConsumed
     {

@@ -9,7 +9,6 @@
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
                         Shell.NavBarIsVisible="True"
-                        Title="Production" 
                         x:DataType="vm:EnergyViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
@@ -33,10 +32,10 @@
                                     />
             
             
-            <Label Margin="8,-8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="Production"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="5" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="Consumation"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumed }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="Production"/>
+            <micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
+            <Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="Consumption"/>
+            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumed }" BackgroundColor="Black" HeightRequest="200"/>
             <!--<Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
             <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Black" HeightRequest="200"/>
             <Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdConsumedTitle}"/>
