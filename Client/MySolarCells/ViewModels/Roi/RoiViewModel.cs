@@ -11,10 +11,17 @@ public class RoiViewModel : BaseViewModel
 
     public async override Task OnAppearingAsync()
     {
-        RoiStats = await  this.roiService.CalculateTotals();
+        using var dbContext = new MscDbContext();
+        RoiStats = await  this.roiService.CalculateTotals(null,null,true);
         
     }
 
+    private ChartDataRequest chartDataRequest = new ChartDataRequest();
+    public ChartDataRequest ChartDataRequest
+    {
+        get { return chartDataRequest; }
+        set { SetProperty(ref chartDataRequest, value); }
+    }
 
     private RoiStats roiStats = new RoiStats();
     public RoiStats RoiStats

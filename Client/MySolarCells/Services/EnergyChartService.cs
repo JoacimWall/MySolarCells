@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microcharts;
+﻿using Microcharts;
 using SkiaSharp;
 
 namespace MySolarCells.Services;
@@ -12,9 +10,11 @@ public interface IEnergyChartService
 
 public class EnergyChartService : IEnergyChartService
 {
-	public EnergyChartService()
+	private readonly IRoiService roiService;
+    public EnergyChartService(IRoiService roiService)
     {
-	}
+        this.roiService = roiService;
+    }
     public async Task<Result<ChartDataResult>> GetChartData(ChartDataRequest chartDataRequest)
     {
         using var dbContext = new MscDbContext();
@@ -22,25 +22,10 @@ public class EnergyChartService : IEnergyChartService
         DateTime start = new DateTime();
         DateTime end = new DateTime();
         string entryLabel = string.Empty;
-
-        DateTime baseDate = new DateTime(chartDataRequest.TimeStamp.Year, chartDataRequest.TimeStamp.Month, chartDataRequest.TimeStamp.Day);
         var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
-        var today = baseDate;
-        var yesterday = baseDate.AddDays(-1);
-        var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
-        //fix for sunday
-        if (thisWeekStart.DayOfWeek != DayOfWeek.Monday)
-            thisWeekStart = thisWeekStart.AddDays(1);
-
-        var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-        var lastWeekStart = thisWeekStart.AddDays(-7);
-        var lastWeekEnd = thisWeekStart.AddSeconds(-1);
-        var thisMonthStart = baseDate.AddDays(1 - baseDate.Day);
-        var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
-        var lastMonthStart = thisMonthStart.AddMonths(-1);
-        var lastMonthEnd = thisMonthStart.AddSeconds(-1);
-        var thisYearStart = new DateTime(thisMonthStart.Year, 1, 1);
-        var thisYearhEnd = new DateTime(thisMonthStart.Year, 12, 31).AddDays(1);
+        DateTime baseDate = new DateTime(chartDataRequest.TimeStamp.Year, chartDataRequest.TimeStamp.Month, chartDataRequest.TimeStamp.Day);
+        var resultDates = DateHelper.GetRelatedDates(baseDate);
+       
 
         switch (chartDataRequest.ChartDataRange)
         {
@@ -50,16 +35,16 @@ public class EnergyChartService : IEnergyChartService
                 end = start.AddDays(1);
                 break;
             case ChartDataRange.Week:
-                start = thisWeekStart;
-                end = thisWeekEnd;
+                start = resultDates.ThisWeekStart;
+                end = resultDates.ThisWeekEnd;
                 break;
             case ChartDataRange.Month:
-                start = thisMonthStart;
-                end = thisMonthEnd;
+                start = resultDates.ThisMonthStart;
+                end = resultDates.ThisMonthEnd;
                 break;
             case ChartDataRange.Year:
-                start = thisYearStart;
-                end = thisYearhEnd;
+                start = resultDates.ThisYearStart;
+                end = resultDates.ThisYearhEnd;
                 break;
             default:
                 break;
@@ -220,41 +205,27 @@ public class EnergyChartService : IEnergyChartService
                 break;
         }
 
-        
-       
-        //Base sums
-        var totalPurchasedCost = dataRows.Sum(x => x.PurchasedCost);
-        var totalPurchased = dataRows.Sum(x => x.Purchased);
-        var totalProductionSoldProfit = dataRows.Sum(x => x.ProductionSoldProfit);
-        var totalProductionSold = dataRows.Sum(x => x.ProductionSold);
-        var totalProductionOwnUseProfit = dataRows.Sum(x => x.ProductionOwnUseProfit);
-        var totalProductionOwnUse = dataRows.Sum(x => x.ProductionOwnUse);
-        //Calc
-        var totalCompensationForProductionToGrid = totalProductionSold * calcparms.ProdCompensationElectricityLowload;
-        var totalSavedTransferFeeProductionOwnUse = totalProductionOwnUse * calcparms.TransferFee;
-        var totalSavedEnergyTaxProductionOwnUse = totalProductionOwnUse * calcparms.EnergyTax;
-        var totalSavedEnergyTaxReductionProductionToGrid = totalProductionSold * calcparms.TaxReduction;
-        var totalPurchasedTransferFee = totalPurchased * calcparms.TransferFee;
-        var totalPurchasedTax = totalPurchased * calcparms.EnergyTax;
 
+        var stats = await roiService.CalculateTotals(start, end, false);
+        
         string totalProductionTitle;
         string productionSoldTile;
         string productionUsedTile;
         string ConsumedTile = "Consumed";
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
-            totalProductionTitle = string.Format("Total production {0} kwh", Math.Round(totalProductionSold + totalProductionOwnUse,2));
-            productionSoldTile = string.Format("Production sold {0} kwh", Math.Round(totalProductionSold,2));
-            productionUsedTile = string.Format("Production used {0} kwh", Math.Round(totalProductionOwnUse,2));
-            ConsumedTile = string.Format("Consumed({0} kwh)", Math.Round(totalPurchased,2));
+            totalProductionTitle = string.Format("Total production {0} kwh", Math.Round(stats.TotalProductionSold + stats.TotalProductionOwnUse, 2));
+            productionSoldTile = string.Format("Production sold {0} kwh", Math.Round(stats.TotalProductionSold, 2));
+            productionUsedTile = string.Format("Production used {0} kwh", Math.Round(stats.TotalProductionOwnUse, 2));
+            ConsumedTile = string.Format("Consumed({0} kwh)", Math.Round(stats.TotalPurchased, 2));
         }
         else
         {
 
-            totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalProductionOwnUseProfit + totalCompensationForProductionToGrid + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse + totalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionSoldTile = string.Format("Production sold {0}  SEK (ink tax/fee)", Math.Round(totalProductionSoldProfit + totalCompensationForProductionToGrid + totalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionUsedTile = string.Format("Production used {0}  SEK (ink tax/fee)", Math.Round(totalProductionOwnUseProfit + totalSavedTransferFeeProductionOwnUse + totalSavedEnergyTaxProductionOwnUse, 2));
-            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(totalPurchasedCost + totalPurchasedTransferFee + totalPurchasedTax, 2));
+            totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalProductionOwnUseProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionSoldTile = string.Format("Production sold {0}  SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionUsedTile = string.Format("Production used {0}  SEK (ink tax/fee)", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
+            ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
 
         }
         List<ChartEntry> totlist =  new List<ChartEntry>();

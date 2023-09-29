@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿
+using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
 namespace MySolarCells.ViewModels.Energy;
@@ -35,6 +36,10 @@ public class EnergyViewModel : BaseViewModel
             case ChartDataRange.Today:
             case ChartDataRange.Day:
                 ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(-1);
+                if (ChartDataRequest.TimeStamp.Date == DateTime.Now.Date)
+                    ChartDataRequest.ChartDataRange = ChartDataRange.Today;
+                else
+                    ChartDataRequest.ChartDataRange = ChartDataRange.Day;
                 break;
             case ChartDataRange.Week:
                 ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(-7);
@@ -59,6 +64,10 @@ public class EnergyViewModel : BaseViewModel
             case ChartDataRange.Today:
             case ChartDataRange.Day:
                 ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(1);
+                if (ChartDataRequest.TimeStamp.Date == DateTime.Now.Date)
+                    ChartDataRequest.ChartDataRange = ChartDataRange.Today;
+                else
+                    ChartDataRequest.ChartDataRange = ChartDataRange.Day;
                 break;
             case ChartDataRange.Week:
                 ChartDataRequest.TimeStamp = ChartDataRequest.TimeStamp.AddDays(7);
@@ -215,6 +224,9 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
+        List<Microcharts.ChartSerie> tests = new List<Microcharts.ChartSerie>();
+        tests.Add(resultSeries.Model.ChartSeries[1]);
+        tests.Add(resultSeries.Model.ChartSeries[2]);
         EnergyChartProdTotTitle = resultSeries.Model.ChartSeries[0].Name;
         if (resultSeries.Model.ChartSeries[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdTot = new Microcharts.BarChart
@@ -255,7 +267,7 @@ public class EnergyViewModel : BaseViewModel
         if (resultSeries.Model.ChartSeries[2].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
             EnergyChartProdUsed = new Microcharts.BarChart
             {
-                Entries = resultSeries.Model.ChartSeries[2].Entries,
+                Series = tests,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
