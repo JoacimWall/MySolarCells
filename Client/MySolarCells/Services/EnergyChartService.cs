@@ -79,23 +79,28 @@ public class EnergyChartService : IEnergyChartService
                     soldExist.Value = soldExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionSold): Convert.ToSingle(item.ProductionSoldProfit + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction)))) ;
                 }
 
+               
+
+                var consumedExist = listCunsumtion.FirstOrDefault(x => x.Label == entryLabel);
+                if (consumedExist == null)
+                    listCunsumtion.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased + item.ProductionOwnUse) :
+                        Convert.ToSingle(item.PurchasedCost + item.ProductionOwnUseProfit + ((item.Purchased + item.ProductionOwnUse) * (calcparms.TransferFee + calcparms.EnergyTax))), Color = consumColor, Label = entryLabel });
+                else
+                {
+                    consumedExist.Value = consumedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased + item.ProductionOwnUse) :
+                        Convert.ToSingle(item.PurchasedCost + item.ProductionOwnUseProfit + ((item.Purchased + item.ProductionOwnUse) * (calcparms.TransferFee + calcparms.EnergyTax))));
+                }
+
                 var usedExist = listProductionUsed.FirstOrDefault(x => x.Label == entryLabel);
                 if (usedExist == null)
-                    listProductionUsed.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse): Convert.ToSingle(item.ProductionOwnUseProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax))), Color = usedColor, Label = entryLabel });
+                    listProductionUsed.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse) :
+                        Convert.ToSingle(item.ProductionOwnUseProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax))), Color = usedColor, Label = entryLabel });
                 else
                 {
                     usedExist.Value = usedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionOwnUse) : Convert.ToSingle(item.ProductionOwnUseProfit + (item.ProductionOwnUse * (calcparms.TransferFee + calcparms.EnergyTax))));
                 }
 
-                var consumedExist = listCunsumtion.FirstOrDefault(x => x.Label == entryLabel);
-                if (consumedExist == null)
-                    listCunsumtion.Add(new DummyEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * (calcparms.TransferFee + calcparms.EnergyTax))), Color = consumColor, Label = entryLabel });
-                else
-                {
-                    consumedExist.Value = consumedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased): Convert.ToSingle(item.PurchasedCost + (item.Purchased * (calcparms.TransferFee + calcparms.EnergyTax))));
-                }
-
-            }
+        }
         
         //Fill missing days
         var currentDay = chartDataRequest.FilterStart;
@@ -187,42 +192,50 @@ public class EnergyChartService : IEnergyChartService
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
             totalProductionTitle = string.Format("Total production {0} kwh", Math.Round(stats.TotalProductionSold + stats.TotalProductionOwnUse, 2));
-            productionSoldTile = string.Format("Production sold {0} kwh", Math.Round(stats.TotalProductionSold, 2));
-            productionUsedTile = string.Format("Production used {0} kwh", Math.Round(stats.TotalProductionOwnUse, 2));
-            ConsumedTile = string.Format("Consumed({0} kwh)", Math.Round(stats.TotalPurchased, 2));
+            productionSoldTile = string.Format("Sold production {0} kwh", Math.Round(stats.TotalProductionSold, 2));
+            productionUsedTile = string.Format("Own production {0} kwh", Math.Round(stats.TotalProductionOwnUse, 2));
+            ConsumedTile = string.Format("Total consumed {0} kwh", Math.Round(stats.TotalPurchased, 2));
         }
         else
         {
 
             totalProductionTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalProductionOwnUseProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionSoldTile = string.Format("Production sold {0}  SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionUsedTile = string.Format("Production used {0}  SEK (ink tax/fee)", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
+            productionSoldTile = string.Format("Sold production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionUsedTile = string.Format("Own production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
             ConsumedTile = string.Format("Consumed {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
 
         }
         List<ChartEntry> totlist =  new List<ChartEntry>();
         foreach (var item in listProductionTot)
             totlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = totalProductionTitle, Color = SkiaSharp.SKColor.Parse("#e8900c"), Entries = totlist });
+        result.ChartSeriesProduction.Add(new ChartSerie { Name = totalProductionTitle, Color = SkiaSharp.SKColor.Parse("#e8900c"), Entries = totlist });
 
         List<ChartEntry> soldlist = new List<ChartEntry>();
         foreach (var item in listProductionSold)
             soldlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = productionSoldTile, Color = SkiaSharp.SKColor.Parse("#640abf"), Entries = soldlist });
+        result.ChartSeriesProduction.Add(new ChartSerie { Name = productionSoldTile, Color = SkiaSharp.SKColor.Parse("#640abf"), Entries = soldlist });
 
-        List<ChartEntry> usedlist = new List<ChartEntry>();
-        foreach (var item in listProductionUsed)
-            usedlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = productionUsedTile, Color = SkiaSharp.SKColor.Parse("#3498db"), Entries = usedlist });
 
         List<ChartEntry> consumedlist = new List<ChartEntry>();
         foreach (var item in listCunsumtion)
             consumedlist.Add(item.ChartEntry);
-        result.ChartSeries.Add(new ChartSerie { Name = ConsumedTile, Color = SkiaSharp.SKColor.Parse("#5b46e3"), Entries = consumedlist });
+        result.ChartSeriesConsumtion.Add(new ChartSerie { Name = ConsumedTile, Color = SkiaSharp.SKColor.Parse("#5b46e3"), Entries = consumedlist });
 
+
+        List<ChartEntry> usedlist = new List<ChartEntry>();
+        foreach (var item in listProductionUsed)
+            usedlist.Add(item.ChartEntry);
+        result.ChartSeriesConsumtion.Add(new ChartSerie { Name = productionUsedTile, Color = SkiaSharp.SKColor.Parse("#3498db"), Entries = usedlist });
+
+       
 
         //Calc MaxValueYaxes so all graphs has the same resolution
-        foreach (var item in result.ChartSeries)
+        foreach (var item in result.ChartSeriesProduction)
+        {
+            if (item.Entries.Max(x => x.Value) > result.MaxValueYaxes)
+                result.MaxValueYaxes = item.Entries.Max(x => x.Value).Value;
+        }
+        foreach (var item in result.ChartSeriesConsumtion)
         {
             if (item.Entries.Max(x => x.Value) > result.MaxValueYaxes)
                 result.MaxValueYaxes = item.Entries.Max(x => x.Value).Value;
@@ -283,7 +296,8 @@ public class DummyEntry
 }
 public class ChartDataResult
 {
-    public List<ChartSerie> ChartSeries { get; set; } = new List<ChartSerie>();
+    public List<ChartSerie> ChartSeriesProduction { get; set; } = new List<ChartSerie>();
+    public List<ChartSerie> ChartSeriesConsumtion { get; set; } = new List<ChartSerie>();
     public float MaxValueYaxes { get; set; }
 }   
 public class ChartDataRequest : ObservableObject
