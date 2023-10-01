@@ -1,4 +1,5 @@
 ﻿
+using Microcharts;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -44,7 +45,10 @@ public class EnergyViewModel : BaseViewModel
         {
             await DialogService.ShowAlertAsync("There is no data to show on This date.", AppResources.My_Solar_Cells, AppResources.Ok);
             EnergyChartProdTot = null;
-            EnergyChartConsumed = null;
+            EnergyChartProdSold = null;
+            EnergyChartProdUsed = null;
+            EnergyChartConsumedTot = null;
+            EnergyChartConsumedGrid = null;
             return false;
         }
         
@@ -58,13 +62,13 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
-        
-        EnergyChartProdTotTitle = resultSeries.Model.ChartSeriesProduction[0].Name;
-        if (resultSeries.Model.ChartSeriesProduction[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) || resultSeries.Model.ChartSeriesProduction[1].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //Production Total
+        EnergyChartProdTotTitle = resultSeries.Model.ChartSeriesProductionTot[0].Name;
+        if (resultSeries.Model.ChartSeriesProductionTot[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) )
             EnergyChartProdTot = new Microcharts.BarChart
             {
                 Margin = 6,
-                Series = resultSeries.Model.ChartSeriesProduction,
+                Entries = resultSeries.Model.ChartSeriesProductionTot[0].Entries,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
@@ -73,17 +77,18 @@ public class EnergyViewModel : BaseViewModel
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
                 MaxValue = resultSeries.Model.MaxValueYaxes,
-                LegendOption = Microcharts.SeriesLegendOption.Bottom
+               // LegendOption = Microcharts.SeriesLegendOption.Bottom
             };
         else
             EnergyChartProdTot = null;
 
-        EnergyChartProdSoldTitle = resultSeries.Model.ChartSeriesConsumtion[0].Name;
-        if (resultSeries.Model.ChartSeriesConsumtion[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) || resultSeries.Model.ChartSeriesConsumtion[1].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartConsumed = new Microcharts.BarChart
-            { 
-                Margin = 6, 
-                Series = resultSeries.Model.ChartSeriesConsumtion,
+        //Production Sold
+        EnergyChartProdSoldTitle = resultSeries.Model.ChartSeriesProductionSold[0].Name;
+        if (resultSeries.Model.ChartSeriesProductionSold[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartProdSold = new Microcharts.BarChart
+            {
+                Margin = 6,
+                Entries = resultSeries.Model.ChartSeriesProductionSold[0].Entries,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
@@ -92,13 +97,69 @@ public class EnergyViewModel : BaseViewModel
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
                 MaxValue = resultSeries.Model.MaxValueYaxes,
-                LegendOption= Microcharts.SeriesLegendOption.Bottom
-                
+               // LegendOption = Microcharts.SeriesLegendOption.Bottom
             };
         else
-            EnergyChartConsumed = null;
+            EnergyChartProdSold = null;
 
-       
+        //Production Used
+        EnergyChartProdUsedTitle = resultSeries.Model.ChartSeriesProductionUsed[0].Name;
+        if (resultSeries.Model.ChartSeriesProductionUsed[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartProdUsed = new Microcharts.BarChart
+            {
+                Margin = 6,
+                Entries = resultSeries.Model.ChartSeriesProductionUsed[0].Entries,
+                CornerRadius = 6,
+                ShowYAxisLines = true,
+                ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
+                LabelTextSize = 24,
+                SerieLabelTextSize = 24,
+                ValueLabelTextSize = 24,
+                MaxValue = resultSeries.Model.MaxValueYaxes,
+               // LegendOption = Microcharts.SeriesLegendOption.Bottom
+            };
+        else
+            EnergyChartProdUsed = null;
+
+        //Consumtion Total
+        EnergyChartConsumedTotTitle = resultSeries.Model.ChartSeriesConsumtionTot[0].Name;
+        if (resultSeries.Model.ChartSeriesConsumtionTot[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartConsumedTot = new Microcharts.BarChart
+            {
+                Margin = 6,
+                Entries = resultSeries.Model.ChartSeriesConsumtionTot[0].Entries,
+                CornerRadius = 6,
+                ShowYAxisLines = true,
+                ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
+                LabelTextSize = 24,
+                SerieLabelTextSize = 24,
+                ValueLabelTextSize = 24,
+                MaxValue = resultSeries.Model.MaxValueYaxes,
+               // LegendOption = Microcharts.SeriesLegendOption.Bottom
+            };
+        else
+            EnergyChartConsumedTot = null;
+        //Consumtion Grid
+        EnergyChartConsumedGridTitle = resultSeries.Model.ChartSeriesConsumtionGrid[0].Name;
+        if (resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartConsumedGrid = new Microcharts.BarChart
+            {
+                Margin = 6,
+                Entries = resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries,
+                CornerRadius = 6,
+                ShowYAxisLines = true,
+                ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
+                LabelTextSize = 24,
+                SerieLabelTextSize = 24,
+                ValueLabelTextSize = 24,
+                MaxValue = resultSeries.Model.MaxValueYaxes,
+                //LegendOption = Microcharts.SeriesLegendOption.Bottom
+            };
+        else
+            energyChartConsumedGrid = null;
         return true;
     }
     public async override Task OnAppearingAsync()
@@ -109,7 +170,16 @@ public class EnergyViewModel : BaseViewModel
 
 
     }
+    private ObservableCollection<ChartEntry> testData = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> TestData
+    {
+        get => testData;
+        set
+        {
+            SetProperty(ref testData, value);
 
+        }
+    }
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest
     {
@@ -123,14 +193,30 @@ public class EnergyViewModel : BaseViewModel
         get { return energyChartProdTot; }
         set { SetProperty(ref energyChartProdTot, value); }
     }
-   
-    private Microcharts.Chart energyChartConsumed;
-    public Microcharts.Chart EnergyChartConsumed
+    private Microcharts.Chart energyChartProdSold;
+    public Microcharts.Chart EnergyChartProdSold
     {
-        get { return energyChartConsumed; }
-        set { SetProperty(ref energyChartConsumed, value); }
+        get { return energyChartProdSold; }
+        set { SetProperty(ref energyChartProdSold, value); }
     }
-
+    private Microcharts.Chart energyChartProdUsed;
+    public Microcharts.Chart EnergyChartProdUsed
+    {
+        get { return energyChartProdUsed; }
+        set { SetProperty(ref energyChartProdUsed, value); }
+    }
+    private Microcharts.Chart energyChartConsumedTot;
+    public Microcharts.Chart EnergyChartConsumedTot
+    {
+        get { return energyChartConsumedTot; }
+        set { SetProperty(ref energyChartConsumedTot, value); }
+    }
+    private Microcharts.Chart energyChartConsumedGrid;
+    public Microcharts.Chart EnergyChartConsumedGrid
+    {
+        get { return energyChartConsumedGrid; }
+        set { SetProperty(ref energyChartConsumedGrid, value); }
+    }
 
     private string energyChartProdTotTitle;
     public string EnergyChartProdTotTitle
@@ -150,12 +236,17 @@ public class EnergyViewModel : BaseViewModel
         get { return energyChartProdUsedTitle; }
         set { SetProperty(ref energyChartProdUsedTitle, value); }
     }
-    private string energyChartProdConsumedTitle;
-    public string EnergyChartProdConsumedTitle
+    private string energyChartConsumedTotTitle;
+    public string EnergyChartConsumedTotTitle
     {
-        get { return energyChartProdConsumedTitle; }
-        set { SetProperty(ref energyChartProdConsumedTitle, value); }
+        get { return energyChartConsumedTotTitle; }
+        set { SetProperty(ref energyChartConsumedTotTitle, value); }
     }
-
+    private string energyChartConsumedGridTitle;
+    public string EnergyChartConsumedGridTitle
+    {
+        get { return energyChartConsumedGridTitle; }
+        set { SetProperty(ref energyChartConsumedGridTitle, value); }
+    }
 }
 

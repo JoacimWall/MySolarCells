@@ -10,6 +10,7 @@ public static class ViewsExtensions
         builder.Services.AddTransient<InverterConnectView>();
         builder.Services.AddTransient<EnergyCalculationParameterView>();
         builder.Services.AddTransient<FirstSyncView>();
+        builder.Services.AddTransient<InvestmentAndLoanView>();
         //ROI
         builder.Services.AddTransient<RoiView>();
         //Energy

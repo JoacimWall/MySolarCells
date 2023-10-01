@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.OnBoarding.InvestmentAndLoanView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        Shell.NavBarIsVisible="True"
+                        x:DataType="vm:InvestmentAndLoanViewModel">
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="Investment/Lon" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Save" BackgroundColor="Transparent" ></Button>
+            </Border>
+
+        </Grid>
+
+    </Shell.TitleView>
+    <ScrollView>
+        <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+          ColumnDefinitions="Auto,*,Auto">
+
+            <Label Grid.Row="0" Grid.ColumnSpan="3" FontSize="17"
+            Text="Here you can enter the investment and any loans taken out for your installation"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Text="Investment/lon:" />
+            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding InvestmentAndLons}" SelectedItem="{Binding SelectedInvestmentAndlon}" ItemDisplayBinding="{Binding Description}"/>
+             <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddInestlonCommand}"/>
+            <!--Description-->
+            <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndlon.Description}" />
+            <!--FromDate-->
+            <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="Date"/>
+            <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Date="{Binding SelectedInvestmentAndlon.FromDate}" />
+
+            <!--Investment-->
+            <Label Grid.Row="8" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Investment"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="9" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndlon.Investment}" />
+
+            <!--Lon-->
+            <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Lon (press 'Add' for adding interest information)"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="11" Grid.ColumnSpan="2" Text="{Binding SelectedInvestmentAndlon.Lon}" />
+
+            <!--Inerest picker-->
+            <Label Margin="0,0,0,-6" Grid.Row="12" Grid.ColumnSpan="3" Text="Interest:" />
+            <Picker Margin="0" Grid.Row="13" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedInvestmentAndlon.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
+            <Button Grid.Row="13"  Grid.Column="3" Text="Add" Command="{Binding AddInterestCommand}"/>
+            <!--Description-->
+            <Label Grid.Row="14" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="15" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
+            <!--FromDate iterest-->
+            <Label  Grid.Row="16" Grid.ColumnSpan="3" Text="Date"/>
+            <DatePicker Grid.Row="17" Grid.ColumnSpan="3" Date="{Binding SelectedInterest.FromDate}" />
+
+            <!--Investment-->
+            <Label Grid.Row="18" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Interest"
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="19" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Interest}" />
+
+            <!--Lon-->
+            <Label Grid.Row="20" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Amortization" 
+            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Entry Grid.Row="21" Grid.ColumnSpan="2" Text="{Binding SelectedInterest.Amortization}" />
+            <!--Skip save-->
+            <Button Grid.Row="22"  Grid.ColumnSpan="3" IsVisible="{Binding IsOnbordingMode}" Text="Skip" Command="{Binding SkipCommand}"/>
+        </Grid>
+    </ScrollView>
+</views:BaseContentPage>

@@ -85,12 +85,12 @@ public class TibberService : ITibberService
                 if (start.AddMonths(3) < end)
                 {
                     difference = start.AddMonths(3) - start;
-                    nextStart = start.AddMonths(3);
+                    nextStart = start.AddMonths(3).AddHours(1);
                 }
                 else
                 {
                     difference = end - start;
-                    nextStart = end;
+                    nextStart = end.AddHours(1);
                 }
 
                 days = difference.Days;
@@ -134,10 +134,10 @@ public class TibberService : ITibberService
                     // await dbContext.Energy.AddAsync(energyExist);
 
                     energyExist.ElectricitySupplierPurchased = (int)ElectricitySupplier.Tibber;
-                    energyExist.Purchased = Convert.ToDouble(energy.consumption.Value);
-                    energyExist.PurchasedCost = Convert.ToDouble(energy.cost.Value);
-                    energyExist.UnitPriceBuy = Convert.ToDouble(energy.unitPrice.Value);
-                    energyExist.UnitPriceVatBuy = Convert.ToDouble(energy.unitPriceVAT.Value);
+                    energyExist.Purchased = energy.consumption.HasValue ? Convert.ToDouble(energy.consumption.Value) : 0;
+                    energyExist.PurchasedCost = energy.cost.HasValue ? Convert.ToDouble(energy.cost.Value) : 0;
+                    energyExist.UnitPriceBuy = energy.unitPrice.HasValue ? Convert.ToDouble(energy.unitPrice.Value) : 0;
+                    energyExist.UnitPriceVatBuy = energy.unitPriceVAT.HasValue ? Convert.ToDouble(energy.unitPriceVAT.Value) : 0;
                     energyExist.PurchasedSynced = true;
                     //production
                     if (resultSites.Model.data.viewer.home.production != null && resultSites.Model.data.viewer.home.production.nodes != null)

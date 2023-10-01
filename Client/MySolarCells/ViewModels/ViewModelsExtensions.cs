@@ -1,6 +1,4 @@
-﻿using MySolarCells.ViewModels.Roi;
-
-namespace MySolarCells.ViewModels;
+﻿namespace MySolarCells.ViewModels;
 
 public static class ViewModelsExtensions
 {
@@ -12,6 +10,7 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<InverterConnectViewModel>();
         builder.Services.AddTransient<FirstSyncViewModel>();
         builder.Services.AddTransient<EnergyCalculationParameterViewModel>();
+        builder.Services.AddTransient<InvestmentAndLoanViewModel>();
         //ROI
         builder.Services.AddTransient<RoiViewModel>();
         //Energy

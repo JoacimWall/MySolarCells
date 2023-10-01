@@ -10,6 +10,7 @@
      <ShellContent Route="ElectricitySupplierConnectView" ContentTemplate="{DataTemplate ob:ElectricitySupplierConnectView}" />
      <ShellContent Route="InverterConnectView" ContentTemplate="{DataTemplate ob:InverterConnectView}" />
      <ShellContent Route="EnergyCalculationParameterView" ContentTemplate="{DataTemplate ob:EnergyCalculationParameterView}" />
+     <ShellContent Route="InvestmentAndLoanView" ContentTemplate="{DataTemplate ob:InvestmentAndLoanView}" />
      <ShellContent Route="FirstSyncView" ContentTemplate="{DataTemplate ob:FirstSyncView}" />
 
 </Shell>

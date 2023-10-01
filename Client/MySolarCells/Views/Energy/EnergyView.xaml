@@ -31,15 +31,21 @@
                                     GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
                                     />
             
-            
-            <Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="Production"/>
-            <micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="Consumption"/>
-            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumed }" BackgroundColor="Black" HeightRequest="200"/>
-            <!--<Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Black" HeightRequest="200"/>
-            <Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdConsumedTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdConsumed }" BackgroundColor="Black" HeightRequest="200"/>-->
+            <!--Total production-->
+            <Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>
+            <micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--Total Consumtion-->
+            <Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
+            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedTot }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--Production Used-->
+            <Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--production Sold-->
+            <Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdSoldTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--Consumtion Grid-->
+            <Label Grid.Row="11" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedGridTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="12" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedGrid }" BackgroundColor="Blue" HeightRequest="200"/>
 
 
 
