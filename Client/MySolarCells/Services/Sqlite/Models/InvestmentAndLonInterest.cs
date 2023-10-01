@@ -10,9 +10,6 @@ public class InvestmentAndLonInterest
     [Required]
     public float Interest { get; set; } = 0;
     [Required]
-    public int Amortization { get; set; } = 0;
-    
-    [Required]
     public DateTime FromDate { get; set; } = DateTime.Today;
     //FK's
     [Required]

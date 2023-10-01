@@ -46,6 +46,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             dbEntity.Description = selectedInvestmentAndlon.Description;
             dbEntity.Lon = selectedInvestmentAndlon.Lon;
             //TODO:Se till att updatera ränta tabell också
+            dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
         }
         await dbContext.SaveChangesAsync();

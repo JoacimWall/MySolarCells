@@ -18,7 +18,7 @@ public class InvestmentAndLon : ObservableObject
     public int Investment { get; set; } = 0;
     [Required]
     public int Lon { get; set; } = 0;
-
+    
     public ObservableCollection<InvestmentAndLonInterest> Interest { get; set; }
 
     //FK's

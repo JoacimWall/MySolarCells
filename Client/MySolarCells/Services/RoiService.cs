@@ -32,6 +32,7 @@ public class RoiService : IRoiService
         roiStats.TotalProductionSold = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionSold), 2));
         roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2));
         roiStats.TotalProductionOwnUse = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUse), 2));
+
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.ProdCompensationElectricityLowload, 2));
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.TransferFee, 2));
@@ -49,9 +50,18 @@ public class RoiService : IRoiService
         roiStats.TotalProductionNegativeSold = Convert.ToSingle(Math.Round(energy.Where(x => x.UnitPriceSold < 0 && x.ProductionSold > 0).Sum(x => x.ProductionSold), 2));
         roiStats.TotalProductionSoldNegativeProfit = Convert.ToSingle(Math.Round(energy.Where(x => x.UnitPriceSold < 0 && x.ProductionSold > 0).Sum(x => x.ProductionSoldProfit), 2));
 
+        //summation
+        roiStats.SumPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchasedCost + roiStats.TotalTransferFeePurchased + roiStats.TotalTaxPurchased,2));
+        roiStats.SumProductionSold = Convert.ToSingle(Math.Round(roiStats.TotalProductionSoldProfit + roiStats.TotalCompensationForProductionToGrid + roiStats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+        roiStats.SumProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUseProfit + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse, 2));
 
-        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.TotalProductionSoldProfit + roiStats.TotalProductionOwnUseProfit + roiStats.TotalCompensationForProductionToGrid
-                            + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse + roiStats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+
+        //Ränta
+        var resultRanta =await  GetInterest(start, end);
+        roiStats.TotalInvestment = resultRanta.Item1;
+        roiStats.TotalInterest = Convert.ToSingle(Math.Round(resultRanta.Item2,2));
+
+        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUse, 2));
 
         roiStats.TotalProduction = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold + roiStats.TotalProductionOwnUse, 2));
         //Production Index amount of production per installed kWh
@@ -63,6 +73,40 @@ public class RoiService : IRoiService
         }
         return roiStats;
 
+    }
+    //returns total invest and total Interest
+    private async Task<Tuple<int,float>> GetInterest(DateTime? start, DateTime? end)
+    {
+        int investmentTot = 0;
+        float interest = 0;
+        
+
+        using var dbContext = new MscDbContext();
+        var result = dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        foreach (var item in result)
+        {
+            investmentTot = investmentTot + item.Investment + item.Lon;
+        }
+            
+        DateTime current = start.Value;
+        while (current < end)
+        {
+            foreach (var item in result)
+            {
+                if (item.Lon > 0)
+                {
+                    var interestCur = item.Interest.Where(x => x.FromDate <= current).OrderBy(o => o.FromDate).First();
+                    interest = interest + ((item.Lon * (interestCur.Interest / 100)) / 365);
+
+                }
+
+            }         
+  
+            current = current.AddDays(1);
+        }
+           
+        
+        return new Tuple<int, float>(investmentTot, interest);
     }
 }
 public class RoiStats
@@ -89,12 +133,17 @@ public class RoiStats
     public float TotalTaxPurchased { get; set; } = 0;
     public float TotalPurchasedTransferFee { get; set; } = 0;
     public float TotalPurchasedTax { get; set; } = 0;
-
-
+    //intrest
+    public float TotalInterest { get; set; } = 0;
+    public float TotalInvestment { get; set; } = 0;
 
     public float TotalSavedEnergyTaxReductionProductionToGrid { get; set; } = 0;
 
-    //Total Saved
+    //Summ Saved
+    public float SumPurchased { get; set; } = 0;
+    public float SumProductionSold { get; set; } = 0;
+    public float SumProductionOwnUse { get; set; } = 0;
+
     public float TotalSaved { get; set; } = 0;
     public float TotalProduction { get; set; } = 0;
 
