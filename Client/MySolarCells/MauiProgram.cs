@@ -30,8 +30,10 @@ public static class MauiProgram
         MySolarCellsGlobals.ConsoleWriteLineDebug("CacheDirectory   " + FileSystem.CacheDirectory);
         MySolarCellsGlobals.ConsoleWriteLineDebug("AppDataDirectory   " + FileSystem.AppDataDirectory);
 #endif
-
-        return builder.Build();
+        var app = builder.Build();
+        //we must initialize our service helper before using it
+        ServiceHelper.Initialize(app.Services);
+        return app;
 	}
 }
 

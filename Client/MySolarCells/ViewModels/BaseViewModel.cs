@@ -20,9 +20,9 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     protected readonly ISettingsService SettingsService;
     public BaseViewModel()
     {
-        DialogService = ServiceHelper.GetService<IDialogService>();
-        AnalyticsService = ServiceHelper.GetService<IAnalyticsService>();
-        SettingsService = ServiceHelper.GetService<ISettingsService>();
+        DialogService =  ServiceHelper.GetService<IDialogService>();
+        //AnalyticsService = ServiceHelper.GetService<IAnalyticsService>();
+        SettingsService =  ServiceHelper.GetService<ISettingsService>();
         FirstTimeAppearing = true;
         FirstTimeNavigatingTo = true;
     }
