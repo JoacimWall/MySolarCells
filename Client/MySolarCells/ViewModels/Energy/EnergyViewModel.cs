@@ -1,6 +1,5 @@
 ﻿
 using Microcharts;
-using NetTopologySuite.Index.HPRtree;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -21,18 +20,26 @@ public class EnergyViewModel : BaseViewModel
         //LinearGradientBrush brushProduction1 = new LinearGradientBrush(prod);
         //brushProduction1.EndPoint = new Point(0, 1);
         //LinearGradientBrush brushProduction2 = Color.FromArgb("#489c2a");
-        Brush brushSold = Color.FromArgb("#fa9702");
-        Brush brushUsed = Color.FromArgb("#22a81b");
-        Brush brushPurchased = Color.FromArgb("#1b25b3");
+        ColorSold = Color.FromArgb("#fa9702");
+        ColorUsed = Color.FromArgb("#22a81b");
+        ColorPurchased = Color.FromArgb("#1b25b3");
+        BrushSold = Color.FromArgb("#fa9702");
+        BrushUsed = Color.FromArgb("#22a81b");
+        BrushPurchased = Color.FromArgb("#1b25b3");
 
-        PaletteBrushesProductionSold.Add(brushSold);
-        PaletteBrushesProductionUsed.Add(brushUsed);
-        PaletteBrushesPurchased.Add(brushPurchased);
+        PaletteBrushesProductionSold.Add(BrushSold);
+        PaletteBrushesProductionUsed.Add(BrushUsed);
+        PaletteBrushesPurchased.Add(BrushPurchased);
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
-    
 
+    public Brush BrushSold { get; set; }
+    public Brush BrushUsed { get; set; }
+    public Brush BrushPurchased { get; set; }
+    public Color ColorSold { get; set; }
+    public Color ColorUsed { get; set; }
+    public Color ColorPurchased { get; set; }
     private async Task Sync()
     {
         using var dlg = DialogService.GetProgress("");

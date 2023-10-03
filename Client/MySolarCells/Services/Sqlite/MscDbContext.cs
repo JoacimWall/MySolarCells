@@ -23,8 +23,17 @@ public class MscDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //använd i app mode
+        string fodlderPath = FileSystem.AppDataDirectory;
+        if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+            fodlderPath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
 
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory,"Db_v_1.db3");
+        if (!Directory.Exists(fodlderPath))
+        {
+            Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
+            Directory.CreateDirectory("MySolarCells");
+        }
+
+        var dbPath = Path.Combine(fodlderPath, "Db_v_1.db3");
         try
         {
             optionsBuilder.UseSqlite($"Filename={dbPath}");
@@ -40,6 +49,7 @@ public class MscDbContext : DbContext
     {
         //UniqueIndex
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
+        modelBuilder.Entity<Models.Preferences>().HasIndex(u => u.Name).IsUnique();
         //modelBuilder.Entity<TemplateType>().HasIndex(u => u.Type).IsUnique();
         modelBuilder.Entity<InvestmentAndLon>()
             .HasMany(c => c.Interest);
@@ -51,5 +61,6 @@ public class MscDbContext : DbContext
     public DbSet<Models.EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
     public DbSet<Models.InvestmentAndLon> InvestmentAndLon { get; set; }
     public DbSet<Models.InvestmentAndLonInterest> InvestmentAndLonInterest { get; set; }
+    public DbSet<Models.Preferences> Preferences { get; set; }
 }
 

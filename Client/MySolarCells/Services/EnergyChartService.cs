@@ -225,21 +225,21 @@ public class EnergyChartService : IEnergyChartService
         string consumedGridTile;
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
-            productionTotTitle = string.Format("Total production {0} kwh", Math.Round(stats.TotalProductionSold + stats.TotalProductionOwnUse, 2));
-            productionSoldTile = string.Format("Sold production {0} kwh", Math.Round(stats.TotalProductionSold, 2));
-            productionUsedTile = string.Format("Own production {0} kwh", Math.Round(stats.TotalProductionOwnUse, 2));
+            productionTotTitle = string.Format("Production {0} kwh", Math.Round(stats.TotalProductionSold + stats.TotalProductionOwnUse, 2));
+            productionSoldTile = string.Format("Sold {0} kwh", Math.Round(stats.TotalProductionSold, 2));
+            productionUsedTile = string.Format("Own use {0} kwh", Math.Round(stats.TotalProductionOwnUse, 2));
 
-            consumedTotTile = string.Format("Total consumed {0} kwh", Math.Round(stats.TotalPurchased+ stats.TotalProductionSold, 2));
-            consumedGridTile = string.Format("Grid consumed {0} kwh", Math.Round(stats.TotalPurchased, 2));
+            consumedTotTile = string.Format("Consumed {0} kwh", Math.Round(stats.TotalPurchased + stats.TotalProductionSold, 2));
+            consumedGridTile = string.Format("Grid {0} kwh", Math.Round(stats.TotalPurchased, 2));
         }
         else
         {
-            productionTotTitle = string.Format("Total production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalProductionOwnUseProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionSoldTile = string.Format("Sold production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
-            productionUsedTile = string.Format("Own production {0} SEK (ink tax/fee)", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
+            productionTotTitle = string.Format("Production {0} SEK(ink tax/fee)", Math.Round(stats.TotalProductionSoldProfit + stats.TotalProductionOwnUseProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionSoldTile = string.Format("Sold {0} SEK", Math.Round(stats.TotalProductionSoldProfit + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+            productionUsedTile = string.Format("Own use {0} SEK", Math.Round(stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse, 2));
 
-            consumedTotTile = string.Format("Total consumption {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalProductionSoldProfit + stats.TotalPurchasedTransferFee + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalPurchasedTax, 2));
-            consumedGridTile = string.Format("Grid consumption {0} SEK (ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
+            consumedTotTile = string.Format("Consumed {0} SEK(ink tax/fee)", Math.Round(stats.TotalPurchasedCost + stats.TotalProductionSoldProfit + stats.TotalPurchasedTransferFee + stats.TotalCompensationForProductionToGrid + stats.TotalSavedEnergyTaxProductionOwnUse + stats.TotalPurchasedTax, 2));
+            consumedGridTile = string.Format("Grid {0} SEK", Math.Round(stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax, 2));
 
         }
         List<ChartEntry> totlist =  new List<ChartEntry>();

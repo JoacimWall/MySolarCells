@@ -1,8 +1,14 @@
 ﻿//using System;
-#if IOS
+#if IOS || MACCATALYST
 using Foundation;
 using QuickLook;
 using UIKit;
+#endif
+#if ANDROID
+
+using Android.Content;
+using Android.OS;
+using Java.IO;
 #endif
 namespace MySolarCells.Services;
 public interface ISaveAndView
@@ -50,11 +56,89 @@ public class SaveService : ISaveAndView
 
 
 
-#endif
 
+#elif MACCATALYST
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string filePath = Path.Combine(path, filename);
+        stream.Position = 0;
+        //Saves the document
+        using FileStream fileStream = new(filePath, FileMode.Create, FileAccess.ReadWrite);
+        stream.CopyTo(fileStream);
+        fileStream.Flush();
+        fileStream.Dispose();
+#pragma warning disable CA1416
+        //Launch the file
+        UIViewController? currentController = UIApplication.SharedApplication!.KeyWindow!.RootViewController;
+#pragma warning restore CA1416
+        while (currentController!.PresentedViewController != null)
+            currentController = currentController.PresentedViewController;
+        UIView? currentView = currentController.View;
+
+        QLPreviewController qlPreview = new();
+        QLPreviewItem item = new QLPreviewItemBundle(filename, filePath);
+        qlPreview.DataSource = new PreviewControllerDS(item);
+        currentController.PresentViewController((UIViewController)qlPreview, true, null);
+
+        return true;
+
+#else
+        string exception = string.Empty;
+         string? root = null;
+
+      if (Android.OS.Environment.IsExternalStorageEmulated)
+      {
+        root = Android.App.Application.Context!.GetExternalFilesDir(Android.OS.Environment.DirectoryDownloads)!.AbsolutePath;
+      }
+      else
+        root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+
+      Java.IO.File myDir = new(root + "/Syncfusion");
+      myDir.Mkdir();
+      Java.IO.File file = new(myDir, filename);
+
+      if (file.Exists())
+      {
+        file.Delete();
+      }
+
+      try
+      {
+        FileOutputStream outs = new(file);
+        outs.Write(stream.ToArray());
+
+        outs.Flush();
+        outs.Close();
+      }
+      catch (Exception e)
+      {
+        exception = e.ToString();
+      }
+      if (file.Exists())
+      {
+        if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.N)
+        {
+          var fileUri = AndroidX.Core.Content.FileProvider.GetUriForFile(Android.App.Application.Context, Android.App.Application.Context.PackageName + ".provider", file);
+          var intent = new Intent(Intent.ActionView);
+          intent.SetData(fileUri);
+          intent.AddFlags(ActivityFlags.NewTask);
+          intent.AddFlags(ActivityFlags.GrantReadUriPermission);
+          Android.App.Application.Context.StartActivity(intent);
+        }
+        else
+        {
+          var fileUri = Android.Net.Uri.Parse(file.AbsolutePath);
+          var intent = new Intent(Intent.ActionView);
+          intent.SetDataAndType(fileUri, contentType);
+          intent = Intent.CreateChooser(intent, "Open File");
+          intent!.AddFlags(ActivityFlags.NewTask);
+          Android.App.Application.Context.StartActivity(intent);
+        }
+      }
+        return true;
+#endif
     }
 }
-#if IOS
+#if IOS || MACCATALYST
 public class QLPreviewItemFileSystem : QLPreviewItem
 {
     readonly string _fileName, _filePath;

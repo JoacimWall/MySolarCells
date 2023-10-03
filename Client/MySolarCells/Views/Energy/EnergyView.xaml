@@ -31,24 +31,16 @@
             <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ChartData="{Binding ChartDataRequest}"
                                     GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
                                     />
+             <Label VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="20" Margin="8,8,8,8" Text="{Binding EnergyChartProdTotTitle}"/>
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+                <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorSold}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
+                <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorUsed}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
+            </HorizontalStackLayout>
 
-            <!--Total production-->
-            <!--<Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>-->
-            <!--<micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Blue" HeightRequest="200"/>-->
-            <!--Total Consumtion-->
-            <!--<Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
-            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedTot }" BackgroundColor="Blue" HeightRequest="200"/>-->
-            <!--Production Used-->
-            <!--<Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Blue" HeightRequest="200"/>-->
-            <!--production Sold-->
-            <!--<Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdSoldTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Blue" HeightRequest="200"/>-->
-            <!--Consumtion Grid-->
-            <!--<Label Grid.Row="11" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedGridTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="12" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedGrid }" BackgroundColor="Blue" HeightRequest="200"/>-->
-            <Label Margin="8,8,8,0" Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>
-            <chart:SfCartesianChart Grid.Row="3" Grid.ColumnSpan="3" HeightRequest="250">
+
+            <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250">
                 <chart:SfCartesianChart.ZoomPanBehavior>
                     <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
                 </chart:SfCartesianChart.ZoomPanBehavior>
@@ -56,8 +48,8 @@
                 <chart:SfCartesianChart.XAxes>
                     <chart:NumericalAxis ShowMajorGridLines="False" />
                     <chart:CategoryAxis>
-                        
-                       
+
+
                     </chart:CategoryAxis>
                 </chart:SfCartesianChart.XAxes>
 
@@ -90,8 +82,18 @@
 
             </chart:SfCartesianChart>
 
-            <Label Grid.Row="4" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
-            <chart:SfCartesianChart Grid.Row="5" Grid.ColumnSpan="3" HeightRequest="250">
+             <Label  VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,8" Grid.Column="0" FontSize="20" Text="{Binding EnergyChartConsumedTotTitle}"/>
+               
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,8" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
+                <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorUsed}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
+                <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
+                <Label VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
+            </HorizontalStackLayout>
+
+
+
+            <chart:SfCartesianChart Grid.Row="7" Grid.ColumnSpan="3" HeightRequest="250">
                 <chart:SfCartesianChart.ZoomPanBehavior>
                     <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
                 </chart:SfCartesianChart.ZoomPanBehavior>
@@ -99,8 +101,8 @@
                 <chart:SfCartesianChart.XAxes>
                     <chart:NumericalAxis ShowMajorGridLines="False" />
                     <chart:CategoryAxis>
-                        
-                       
+
+
                     </chart:CategoryAxis>
                 </chart:SfCartesianChart.XAxes>
 
@@ -118,16 +120,16 @@
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
+                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
                 </chart:StackingColumnSeries>
 
-                <chart:StackingColumnSeries ItemsSource="{Binding DataPurchased}"
+                <chart:StackingColumnSeries ItemsSource="{Binding DataUsed}"
                                 XBindingPath="Label"
                                 YBindingPath="Value"
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="4,4,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
+                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
 
                 </chart:StackingColumnSeries>
 
