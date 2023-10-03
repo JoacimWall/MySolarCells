@@ -126,6 +126,9 @@ public partial class DateNavigator : ContentView
                 break;
 
         }
+        if (ChartData.TimeStamp.Date < MySolarCellsGlobals.SelectedHome.FromDate)
+            ChartData.TimeStamp = MySolarCellsGlobals.SelectedHome.FromDate;
+
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
         
@@ -146,7 +149,6 @@ public partial class DateNavigator : ContentView
             case ChartDataRange.Week:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddDays(7);
                 break;
-
             case ChartDataRange.Month:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddMonths(1);
                 break;
@@ -156,6 +158,10 @@ public partial class DateNavigator : ContentView
                 break;
 
         }
+        //Check that we not go forward in time 
+        if (ChartData.TimeStamp.Date > DateTime.Today)
+            ChartData.TimeStamp = DateTime.Today;
+
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
         

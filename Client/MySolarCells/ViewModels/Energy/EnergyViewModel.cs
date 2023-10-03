@@ -22,7 +22,7 @@ public class EnergyViewModel : BaseViewModel
         //brushProduction1.EndPoint = new Point(0, 1);
         //LinearGradientBrush brushProduction2 = Color.FromArgb("#489c2a");
         Brush brushSold = Color.FromArgb("#fa9702");
-        Brush brushUsed = Color.FromArgb("#c9841c");
+        Brush brushUsed = Color.FromArgb("#22a81b");
         Brush brushPurchased = Color.FromArgb("#1b25b3");
 
         PaletteBrushesProductionSold.Add(brushSold);

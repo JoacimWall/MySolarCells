@@ -50,7 +50,7 @@ public class MoreViewModel : BaseViewModel
             //Titles
             worksheet.Range["A3"].Text = "Purchased kWh";
             worksheet.Range["A4"].Text = "Purchased cost (SEK)";
-            worksheet.Range["A4"].Text = "Purchased transfer fee";
+            worksheet.Range["A5"].Text = "Purchased transfer fee";
             worksheet.Range["A6"].Text = "Purchased energy tax";
             worksheet.Range["A7"].Text = "Sum";
             worksheet.Range["A7"].CellStyle.Font.Bold = true;
@@ -81,7 +81,9 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A1"].ColumnWidth = 36;
 
             int index =0;
+            Single productionindex = -1; //used for geting the first month with production
             double totalProducedSaved = 0;
+            
             for (char c = 'B'; c < 'Z'; c++)
             {
                 if (index == result.Model.Count)
@@ -92,7 +94,7 @@ public class MoreViewModel : BaseViewModel
                 worksheet.Range[c.ToString() + "3"].Value = result.Model[index].RoiStats.TotalPurchased.ToString();
                 worksheet.Range[c.ToString() + "3"].NumberFormat = "###,##";
                 worksheet.Range[c.ToString() + "4"].Value = result.Model[index].RoiStats.TotalPurchasedCost.ToString();
-                worksheet.Range[c.ToString() + "4"].Value = result.Model[index].RoiStats.TotalTransferFeePurchased.ToString();
+                worksheet.Range[c.ToString() + "5"].Value = result.Model[index].RoiStats.TotalTransferFeePurchased.ToString();
                 worksheet.Range[c.ToString() + "6"].Value = result.Model[index].RoiStats.TotalTaxPurchased.ToString();
                 worksheet.Range[c.ToString() + "7"].Value = result.Model[index].RoiStats.SumPurchased.ToString();
                 worksheet.Range[c.ToString() + "7"].CellStyle.Font.Bold = true;
@@ -125,6 +127,24 @@ public class MoreViewModel : BaseViewModel
 
 
                 totalProducedSaved = totalProducedSaved + result.Model[index].RoiStats.TotalSaved;
+                if (productionindex == -1 && result.Model[index].RoiStats.TotalProduction > 0)
+                    productionindex = 1;
+                else if (productionindex > 0)
+                {
+                    var relDates = Helpers.DateHelper.GetRelatedDates(DateTime.Today);
+                    //check current month
+                    if (result.Model[index].FromDate == relDates.ThisMonthStart)
+                    {
+                        TimeSpan difference = new TimeSpan();
+                        difference = DateTime.Today - result.Model[index].FromDate;
+                        TimeSpan mothDays = relDates.ThisMonthStart.AddMonths(1) - relDates.ThisMonthStart;
+                        productionindex = productionindex + (Convert.ToSingle( difference.Days)/ mothDays.Days);
+                    }
+                    else
+                    {
+                        productionindex++;
+                    }
+                } 
 
                 index++;
             }
@@ -144,7 +164,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A29"].CellStyle.Font.Bold = true;
             worksheet.Range["A29"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["B26"].Value = Math.Round( toalInvestLon / (totalProducedSaved/index),2).ToString();
+            worksheet.Range["B26"].Value = Math.Round( (toalInvestLon / (totalProducedSaved/ productionindex)/12),2).ToString();
             worksheet.Range["B27"].Value = toalInvestLon.ToString();
             worksheet.Range["B28"].Value = Math.Round(totalProducedSaved,0).ToString();
             worksheet.Range["B29"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();

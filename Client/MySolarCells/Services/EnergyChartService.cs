@@ -332,7 +332,7 @@ public class DummyEntry
     /// </summary>
     /// <value>The color of the value label.</value>
     public SKColor ValueLabelColor { get; set; } = SKColors.Black;
-    public ChartEntry ChartEntry { get { return new ChartEntry(Value == 0 ? null : Value) { Label = Label, ValueLabel = ValueLabel, Color = Color, OtherColor = OtherColor, TextColor = TextColor,  ValueLabelColor = ValueLabelColor }; } }
+    public ChartEntry ChartEntry { get { return new ChartEntry(Value == 0 || Value == null ? null : Convert.ToSingle(Math.Round(Value.Value,2))) { Label = Label, ValueLabel = ValueLabel, Color = Color, OtherColor = OtherColor, TextColor = TextColor,  ValueLabelColor = ValueLabelColor }; } }
    
 
 }
