@@ -98,7 +98,7 @@ public class MoreViewModel : BaseViewModel
                 worksheet.Range[c.ToString() + "6"].Value = result.Model[index].RoiStats.TotalTaxPurchased.ToString();
                 worksheet.Range[c.ToString() + "7"].Value = result.Model[index].RoiStats.SumPurchased.ToString();
                 worksheet.Range[c.ToString() + "7"].CellStyle.Font.Bold = true;
-
+                worksheet.Range[c.ToString() + "7"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
                 worksheet.Range[c.ToString() + "9"].Value = result.Model[index].RoiStats.TotalProductionSold.ToString();
                 worksheet.Range[c.ToString() + "10"].Value = result.Model[index].RoiStats.TotalProductionSoldProfit.ToString();
