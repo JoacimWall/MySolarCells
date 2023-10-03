@@ -15,6 +15,8 @@ public static class ViewsExtensions
         builder.Services.AddTransient<RoiView>();
         //Energy
         builder.Services.AddTransient<EnergyView>();
+        //More
+        builder.Services.AddTransient<MoreView>();
         return builder;
     }
 }

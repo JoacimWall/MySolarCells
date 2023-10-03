@@ -11,6 +11,7 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<IRoiService, RoiService>();
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();
         builder.Services.AddSingleton<IDataSyncService, DataSyncService>();
+        builder.Services.AddSingleton<ISaveAndView, SaveService>();
         //Transient
         builder.Services.AddTransient<IRestClient, RestClient>();
 

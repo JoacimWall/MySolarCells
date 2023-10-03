@@ -30,11 +30,13 @@ global using MySolarCells.Views;
 global using MySolarCells.Views.OnBoarding;
 global using MySolarCells.Views.Roi;
 global using MySolarCells.Views.Energy;
+global using MySolarCells.Views.More;
 //ViewModels
 global using MySolarCells.ViewModels;
 global using MySolarCells.ViewModels.OnBoarding;
 global using MySolarCells.ViewModels.Roi;
 global using MySolarCells.ViewModels.Energy;
+global using MySolarCells.ViewModels.More;
 //Service
 global using MySolarCells.Services;
 global using MySolarCells.Services.Sqlite;

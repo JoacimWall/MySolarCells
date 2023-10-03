@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.More.MoreView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:ctl="clr-namespace:MySolarCells.Controls"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        x:DataType="vm:MoreViewModel">
+     <ScrollView>
+    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+        
+
+        <Button Margin="0,16" Grid.Row="1"  Grid.ColumnSpan="3" Text="Invest And Lon" Command="{Binding ShowInvestAndLonCommand}"/>
+
+        <Button Margin="0,16" Grid.Row="2"  Grid.ColumnSpan="3" Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
+        
+
+    </Grid>
+     </ScrollView>
+</views:BaseContentPage>

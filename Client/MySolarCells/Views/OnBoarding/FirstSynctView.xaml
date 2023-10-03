@@ -8,7 +8,7 @@
                         xmlns:ctl="clr-namespace:MySolarCells.Controls"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         x:DataType="vm:FirstSyncViewModel">
-
+     <ScrollView>
     <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
         <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
             Text="First Sync"/>
@@ -66,4 +66,5 @@
                                      Text="{x:Static trans:AppResources.Cancel}" />-->
 
     </Grid>
+     </ScrollView>
 </views:BaseContentPage>

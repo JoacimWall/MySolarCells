@@ -1,5 +1,6 @@
 ﻿
 using Microcharts;
+using NetTopologySuite.Index.HPRtree;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -14,6 +15,19 @@ public class EnergyViewModel : BaseViewModel
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
+        //GradientStopCollection prod = new GradientStopCollection();
+        //prod.Add(new GradientStop(Color.FromArgb("#fa9702"), (float)0.1));
+        //prod.Add(new GradientStop(Color.FromArgb("#c9841c"), (float)1.0));
+        //LinearGradientBrush brushProduction1 = new LinearGradientBrush(prod);
+        //brushProduction1.EndPoint = new Point(0, 1);
+        //LinearGradientBrush brushProduction2 = Color.FromArgb("#489c2a");
+        Brush brushSold = Color.FromArgb("#fa9702");
+        Brush brushUsed = Color.FromArgb("#c9841c");
+        Brush brushPurchased = Color.FromArgb("#1b25b3");
+
+        PaletteBrushesProductionSold.Add(brushSold);
+        PaletteBrushesProductionUsed.Add(brushUsed);
+        PaletteBrushesPurchased.Add(brushPurchased);
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
@@ -160,6 +174,23 @@ public class EnergyViewModel : BaseViewModel
             };
         else
             energyChartConsumedGrid = null;
+
+        DataSold.Clear();
+        foreach (var item in resultSeries.Model.ChartSeriesProductionSold[0].Entries)
+            DataSold.Add(item);
+
+        DataUsed.Clear();
+        foreach (var item in resultSeries.Model.ChartSeriesProductionUsed[0].Entries)
+            DataUsed.Add(item);
+
+        DataPurchased.Clear();
+        foreach (var item in resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries)
+            DataPurchased.Add(item);
+        
+        if (ChartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
+            ProductionChartXtitle = "kWh";
+        else
+            ProductionChartXtitle = "SEK";
         return true;
     }
     public async override Task OnAppearingAsync()
@@ -170,16 +201,44 @@ public class EnergyViewModel : BaseViewModel
 
 
     }
-    private ObservableCollection<ChartEntry> testData = new ObservableCollection<ChartEntry>();
-    public ObservableCollection<ChartEntry> TestData
+
+    public IList<Brush> PaletteBrushesProductionSold { get; set; } = new List<Brush>();
+    public IList<Brush> PaletteBrushesProductionUsed { get; set; } = new List<Brush>();
+
+    public IList<Brush> PaletteBrushesPurchased { get; set; } = new List<Brush>();
+   
+
+    private ObservableCollection<ChartEntry> dataSold = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> DataSold
     {
-        get => testData;
+        get => dataSold;
         set
         {
-            SetProperty(ref testData, value);
+            SetProperty(ref dataSold, value);
 
         }
     }
+    private ObservableCollection<ChartEntry> dataUsed = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> DataUsed
+    {
+        get => dataUsed;
+        set
+        {
+            SetProperty(ref dataUsed, value);
+
+        }
+    }
+    private ObservableCollection<ChartEntry> dataPurchased = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> DataPurchased
+    {
+        get => dataPurchased;
+        set
+        {
+            SetProperty(ref dataPurchased, value);
+
+        }
+    }
+
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest
     {
@@ -247,6 +306,12 @@ public class EnergyViewModel : BaseViewModel
     {
         get { return energyChartConsumedGridTitle; }
         set { SetProperty(ref energyChartConsumedGridTitle, value); }
+    }
+    private string productionChartXtitle;
+    public string ProductionChartXtitle
+    {
+        get { return productionChartXtitle; }
+        set { SetProperty(ref productionChartXtitle, value); }
     }
 }
 

@@ -3,6 +3,7 @@
 using CommunityToolkit.Maui;
 using Microcharts.Maui;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using Syncfusion.Maui.Core.Hosting;
 
 public static class MauiProgram
 {
@@ -11,6 +12,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+            .ConfigureSyncfusionCore()
             .UseMicrocharts()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()

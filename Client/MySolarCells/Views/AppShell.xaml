@@ -9,6 +9,7 @@
     xmlns:roi="clr-namespace:MySolarCells.Views.Roi"
     xmlns:energy="clr-namespace:MySolarCells.Views.Energy"
     xmlns:ob="clr-namespace:MySolarCells.Views.OnBoarding"
+    xmlns:more="clr-namespace:MySolarCells.Views.More"
     xmlns:views="clr-namespace:MySolarCells.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="MySolarCells">
@@ -47,7 +48,7 @@
                       Route="ROI" />
        
          <ShellContent Title="{Binding Source={x:Static trans:AppResources.More}}"
-                      ContentTemplate="{DataTemplate ob:InvestmentAndLoanView}"
+                      ContentTemplate="{DataTemplate more:MoreView}"
                       Icon="dots.png"
                       Route="More" />
 

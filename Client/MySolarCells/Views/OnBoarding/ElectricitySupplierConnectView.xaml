@@ -6,7 +6,7 @@
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         x:DataType="vm:ElectricitySupplierConnectViewModel">
-
+     <ScrollView>
     <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
          <Label Grid.Row="0" Margin="0,0,0,-6" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center"
             Text="Tibber"/>
@@ -34,4 +34,5 @@
         <!--Save Home-->
         <Button Grid.Row="10"  Grid.ColumnSpan="3" Text="Save and move on" IsVisible="{Binding ShowHomePicker}" Command="{Binding SaveHomeCommand}"/>
     </Grid>
+     </ScrollView>
 </views:BaseContentPage>

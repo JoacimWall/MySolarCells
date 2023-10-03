@@ -6,6 +6,7 @@
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Energy"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+                        xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
                         Shell.NavBarIsVisible="True"
@@ -15,10 +16,10 @@
             <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="Production" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
-                     <Border.StrokeShape>
-                       <RoundRectangle CornerRadius="20,20,20,20" />
-                      </Border.StrokeShape>
-                    <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
             </Border>
 
         </Grid>
@@ -30,25 +31,107 @@
             <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ChartData="{Binding ChartDataRequest}"
                                     GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
                                     />
-            
+
             <!--Total production-->
-            <Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>
-            <micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--<Label Margin="8,8,8,0" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>-->
+            <!--<micro:ChartView Margin="8,0,8,8" Grid.Row="4" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdTot }" BackgroundColor="Blue" HeightRequest="200"/>-->
             <!--Total Consumtion-->
-            <Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
-            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedTot }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--<Label Grid.Row="5" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
+            <micro:ChartView Margin="8,0,8,8" Grid.Row="6" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedTot }" BackgroundColor="Blue" HeightRequest="200"/>-->
             <!--Production Used-->
-            <Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--<Label Grid.Row="7" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdUsedTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="8" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdUsed }" BackgroundColor="Blue" HeightRequest="200"/>-->
             <!--production Sold-->
-            <Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdSoldTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--<Label Grid.Row="9" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdSoldTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="10" Grid.ColumnSpan="3" Chart="{Binding EnergyChartProdSold }" BackgroundColor="Blue" HeightRequest="200"/>-->
             <!--Consumtion Grid-->
-            <Label Grid.Row="11" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedGridTitle}"/>
-            <micro:ChartView Margin="8,0,0,8" Grid.Row="12" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedGrid }" BackgroundColor="Blue" HeightRequest="200"/>
+            <!--<Label Grid.Row="11" Margin="8,0,8,0" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedGridTitle}"/>
+            <micro:ChartView Margin="8,0,0,8" Grid.Row="12" Grid.ColumnSpan="3" Chart="{Binding EnergyChartConsumedGrid }" BackgroundColor="Blue" HeightRequest="200"/>-->
+            <Label Margin="8,8,8,0" Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding EnergyChartProdTotTitle}"/>
+            <chart:SfCartesianChart Grid.Row="3" Grid.ColumnSpan="3" HeightRequest="250">
+                <chart:SfCartesianChart.ZoomPanBehavior>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
+                </chart:SfCartesianChart.ZoomPanBehavior>
 
+                <chart:SfCartesianChart.XAxes>
+                    <chart:NumericalAxis ShowMajorGridLines="False" />
+                    <chart:CategoryAxis>
+                        
+                       
+                    </chart:CategoryAxis>
+                </chart:SfCartesianChart.XAxes>
 
+                <chart:SfCartesianChart.YAxes>
+                    <chart:NumericalAxis>
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="{Binding ProductionChartXtitle}"/>
+                        </chart:NumericalAxis.Title>
+                    </chart:NumericalAxis>
+                </chart:SfCartesianChart.YAxes>
 
+                <chart:StackingColumnSeries ItemsSource="{Binding DataSold}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
+                </chart:StackingColumnSeries>
+
+                <chart:StackingColumnSeries ItemsSource="{Binding DataUsed}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="4,4,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
+
+                </chart:StackingColumnSeries>
+
+            </chart:SfCartesianChart>
+
+            <Label Grid.Row="4" Margin="8,8,8,8" Grid.ColumnSpan="3" Text="{Binding EnergyChartConsumedTotTitle}"/>
+            <chart:SfCartesianChart Grid.Row="5" Grid.ColumnSpan="3" HeightRequest="250">
+                <chart:SfCartesianChart.ZoomPanBehavior>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
+                </chart:SfCartesianChart.ZoomPanBehavior>
+
+                <chart:SfCartesianChart.XAxes>
+                    <chart:NumericalAxis ShowMajorGridLines="False" />
+                    <chart:CategoryAxis>
+                        
+                       
+                    </chart:CategoryAxis>
+                </chart:SfCartesianChart.XAxes>
+
+                <chart:SfCartesianChart.YAxes>
+                    <chart:NumericalAxis>
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="{Binding ProductionChartXtitle}"/>
+                        </chart:NumericalAxis.Title>
+                    </chart:NumericalAxis>
+                </chart:SfCartesianChart.YAxes>
+
+                <chart:StackingColumnSeries ItemsSource="{Binding DataPurchased}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
+                </chart:StackingColumnSeries>
+
+                <chart:StackingColumnSeries ItemsSource="{Binding DataPurchased}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="4,4,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
+
+                </chart:StackingColumnSeries>
+
+            </chart:SfCartesianChart>
         </Grid>
     </ScrollView>
 </views:BaseContentPage>

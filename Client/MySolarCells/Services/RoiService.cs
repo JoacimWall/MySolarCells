@@ -6,6 +6,7 @@ public interface IRoiService
 {
 
     Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, bool all);
+    Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport();
 }
 
 public class RoiService : IRoiService
@@ -61,7 +62,7 @@ public class RoiService : IRoiService
         roiStats.TotalInvestment = resultRanta.Item1;
         roiStats.TotalInterest = Convert.ToSingle(Math.Round(resultRanta.Item2,2));
 
-        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUse, 2));
+        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUse - roiStats.TotalInterest, 2));
 
         roiStats.TotalProduction = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold + roiStats.TotalProductionOwnUse, 2));
         //Production Index amount of production per installed kWh
@@ -74,6 +75,24 @@ public class RoiService : IRoiService
         return roiStats;
 
     }
+
+    public async Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport()
+    {
+        List<ReportRoiStats> result = new List<ReportRoiStats>();
+        using var dbContext = new MscDbContext();
+        var  start = Helpers.DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
+        var dates = Helpers.DateHelper.GetRelatedDates(DateTime.Today);
+        var current = start.ThisMonthStart;
+        while (current < dates.ThisMonthEnd)
+        {
+            var stats = await CalculateTotals(current, current.AddMonths(1),false);
+            result.Add(new ReportRoiStats { FromDate = current, RoiStats = stats });
+            current = current.AddMonths(1);
+        }
+
+        return new Result<List<ReportRoiStats>>(result);
+    }
+
     //returns total invest and total Interest
     private async Task<Tuple<int,float>> GetInterest(DateTime? start, DateTime? end)
     {
@@ -93,7 +112,7 @@ public class RoiService : IRoiService
         {
             foreach (var item in result)
             {
-                if (item.Lon > 0)
+                if (item.Lon > 0 && item.Interest.Any(x => x.FromDate <= current))
                 {
                     var interestCur = item.Interest.Where(x => x.FromDate <= current).OrderBy(o => o.FromDate).First();
                     interest = interest + ((item.Lon * (interestCur.Interest / 100)) / 365);
@@ -108,6 +127,12 @@ public class RoiService : IRoiService
         
         return new Tuple<int, float>(investmentTot, interest);
     }
+}
+public class ReportRoiStats
+{
+    public DateTime FromDate { get; set; }
+    public RoiStats RoiStats { get; set; }
+
 }
 public class RoiStats
 {
@@ -146,7 +171,7 @@ public class RoiStats
 
     public float TotalSaved { get; set; } = 0;
     public float TotalProduction { get; set; } = 0;
-
+    
     //fun Facts
     public float ProductionIndex { get; set; } = 0;
 

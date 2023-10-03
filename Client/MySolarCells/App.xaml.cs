@@ -6,6 +6,7 @@ public partial class App : Application
     public App(ISettingsService settingsService)
     {
         InitializeComponent();
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNTI3NEAzMjMzMmUzMDJlMzBkR2xabUJjTnZ2Q3hQMnMrVVhobURpbDBMNzErbTMzYm15dmowZERRbUtFPQ==");
         this.settingsService = settingsService;
         MainPage = new StartupShell();
 
