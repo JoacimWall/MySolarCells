@@ -30,7 +30,9 @@ public static class ServiceHelper
                 return new KostalService(ServiceHelper.GetService<IRestClient>());
             case (int)InverterTyp.Huawei:
                 return new HuaweiService(ServiceHelper.GetService<IRestClient>());
-       
+            case (int)InverterTyp.HomeAssistent:
+                return new HomeAssistentInverterService();
+
             default:
                 return null;
         }

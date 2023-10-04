@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MySolarCells.Services;
 
@@ -51,11 +52,11 @@ public class RestClient : IRestClient
         this.client.Timeout = new TimeSpan(0, 0, 60);
 
         this.client.DefaultRequestHeaders.Accept.Clear();
-        this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
         this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
         this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
-       
+        this.client.DefaultRequestHeaders.Add("Connection", "keep-alive");
         if (ApiSettings.defaultRequestHeaders != null)
             foreach (var header in ApiSettings.defaultRequestHeaders)
             {

@@ -9,6 +9,7 @@ public enum InverterTyp
 {
     Unknown = 0,
     Kostal = 1,
-    Huawei = 2
+    Huawei = 2,
+    HomeAssistent = 3
 }
 

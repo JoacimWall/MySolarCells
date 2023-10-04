@@ -6,6 +6,17 @@ public class KostalService : IInverterServiceInterface
     private InverterLoginResponse inverterLoginResponse;
     private KostalUserRoleSitesResponse sitesResponse;
     private KostalUserRoleDeviceResponse deviceResponse;
+
+    public string InverterGuideText => "Use the same login as in the kostal app/Kostal web portal login";
+    public string DefaultApiUrl => "";
+    public bool ShowUserName => true;
+
+    public bool ShowPassword => true;
+
+    public bool ShowApiUrl => false;
+
+    public bool ShowApiKey => false;
+
     public KostalService(IRestClient restClient)
     {
         this.restClient = restClient;
@@ -15,7 +26,7 @@ public class KostalService : IInverterServiceInterface
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://kostal-api.solytic.com/api/graphql", defaultRequestHeaders = defaultRequestHeaders };
         this.restClient.ReInit();
     }
-    public async Task<Result<InverterLoginResponse>> LoginInUser(string userName, string password)
+    public async Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
     {
         //LOGIN 
         string query = "mutation LOGIN_USER_MUTATION($emailAddress: String!, $password: String!, $termsOfUseAccepted: Boolean, $marketingOptIn: Boolean) {  loginUser(user: {emailAddress: $emailAddress, password: $password, termsOfUseAccepted: $termsOfUseAccepted, marketingOptIn: $marketingOptIn}) {    accessToken {      token      tokenType      expiresIn      __typename    }    refreshToken    user {      ...userMenuFragment      __typename    }    __typename  }}fragment userMenuFragment on User {  id  emailAddress  customer {    id    __typename  }  contact {    id    firstName    lastName    address {      id      country      __typename    }    __typename  }  userRoles {    id    name    __typename  }  locale  __typename}";
@@ -43,7 +54,7 @@ public class KostalService : IInverterServiceInterface
 
         return new Result<InverterLoginResponse>(inverterLoginResponse);
     }
-    public async Task<Result<List<PickerItem>>> GetSites()
+    public async Task<Result<List<PickerItem>>> GetPickerOne()
     {
         //SITES
         string query = "query SITES_LIST_FIRST { sites(first: 1) { nodes { id name      inclination __typename    } __typename  } }";
@@ -57,15 +68,15 @@ public class KostalService : IInverterServiceInterface
         }
         return new Result<List<PickerItem>>(returnlist);
     }
-    public async Task<Result<PickerItem>> GetInverter(string siteNodeId)
+    public async Task<Result<GetInverterResponse>> GetInverter(PickerItem pickerItem)
     {
         //FETCH_LIST_DEVICE_IDS_OF_SITE
         var query = "query FETCH_LIST_DEVICE_IDS_OF_SITE($id: Long!) {  site(id: $id) {    id    name    currency    purchaseCompensation    feedInCompensation    dataSources {      id      name      status      metadata {        id        key        value        __typename      }      devices {        id        name        type        uniqueIdentifier        metadata {          id          key          value          __typename        }        __typename      }      mostRecentDataSourceLogEntry {        timestamp        __typename      }      __typename    }    __typename  }}";
-        var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(siteNodeId) } };
+        var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(pickerItem.ItemValue) } };
         var resultDevice = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceResponse>(string.Empty, graphQlRequest);
         deviceResponse = resultDevice.Model;
         var device = deviceResponse.data.site.dataSources.First().devices.FirstOrDefault(x => x.type == "INVERTER");
-        return new Result<PickerItem>( new PickerItem { ItemValue= device.id, ItemTitle = device.name });
+        return new Result<GetInverterResponse>( new GetInverterResponse { InverterId= device.id.ToString(), Name = device.name });
     }
 
     public async Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr)
@@ -74,7 +85,7 @@ public class KostalService : IInverterServiceInterface
         using var dbContext = new MscDbContext();
         var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
-        var loginResult = await LoginInUser(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey));
+        var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey),"","") ;
          inverterLoginResponse = loginResult.Model;
 
         try
