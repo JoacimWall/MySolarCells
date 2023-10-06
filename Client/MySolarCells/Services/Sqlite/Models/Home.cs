@@ -14,6 +14,9 @@ public class Home
     [Required]
     public int ElectricitySupplier { get; set; }
     [Required]
+    public bool ImportOnlySpotPrice { get; set; }
+    
+    [Required]
     public string ApiKey { get; set; } = string.Empty;
 }
 

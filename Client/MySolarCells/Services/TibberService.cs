@@ -68,6 +68,7 @@ public class TibberService : ITibberService
             ReInitRest();
             int batch100 = 0;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
+            bool importOnlySpotPrice = MySolarCellsGlobals.SelectedHome.ImportOnlySpotPrice;
             List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
             using var dbContext = new MscDbContext();
             //DateTime start = MySolarCellsGlobals.SelectedHome.FromDate;
@@ -112,8 +113,8 @@ public class TibberService : ITibberService
                 var cunsumI = resultSites.Model.data.viewer.home.consumption.nodes.Count;
 
 
-
-
+                //used to check så the backend not give the same value twice
+                bool existCheckDb = true;
                 for (int i = 0; i < cunsumI; i++)
                 {
 
@@ -123,7 +124,22 @@ public class TibberService : ITibberService
                     //Save Consumtion
                     var energy = resultSites.Model.data.viewer.home.consumption.nodes[i];
                     //check if exist in db
-                    //var energyExist = await dbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+                    if (existCheckDb)
+                    {
+                        var energyExistAllready = await dbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+                        if (energyExistAllready == null)
+                        {
+                            existCheckDb = false;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    //if allready added
+                    if (eneryList.Any(x => x.Timestamp == energy.from.Value))
+                        continue;
+
                     var energyExist = new Sqlite.Models.Energy
                     {
                         HomeId = homeId,
@@ -134,8 +150,16 @@ public class TibberService : ITibberService
                     // await dbContext.Energy.AddAsync(energyExist);
 
                     energyExist.ElectricitySupplierPurchased = (int)ElectricitySupplier.Tibber;
-                    energyExist.Purchased = energy.consumption.HasValue ? Convert.ToDouble(energy.consumption.Value) : 0;
-                    energyExist.PurchasedCost = energy.cost.HasValue ? Convert.ToDouble(energy.cost.Value) : 0;
+                    if (importOnlySpotPrice)
+                    {
+                        energyExist.Purchased = 0;
+                        energyExist.PurchasedCost = 0;
+                    }
+                    else
+                    {
+                        energyExist.Purchased = energy.consumption.HasValue ? Convert.ToDouble(energy.consumption.Value) : 0;
+                        energyExist.PurchasedCost = energy.cost.HasValue ? Convert.ToDouble(energy.cost.Value) : 0;
+                    }
                     energyExist.UnitPriceBuy = energy.unitPrice.HasValue ? Convert.ToDouble(energy.unitPrice.Value) : 0;
                     energyExist.UnitPriceVatBuy = energy.unitPriceVAT.HasValue ? Convert.ToDouble(energy.unitPriceVAT.Value) : 0;
                     energyExist.PurchasedSynced = true;
@@ -146,8 +170,16 @@ public class TibberService : ITibberService
                         if (energyProd != null)
                         {
                             energyExist.ElectricitySupplierProductionSold = (int)ElectricitySupplier.Tibber;
-                            energyExist.ProductionSold = energyProd.production.HasValue ? Convert.ToDouble(energyProd.production.Value) : 0;
-                            energyExist.ProductionSoldProfit = energyProd.profit.HasValue ? Convert.ToDouble(energyProd.profit.Value) : 0;
+                            if (importOnlySpotPrice)
+                            {
+                                energyExist.ProductionSold = 0;
+                                energyExist.ProductionSoldProfit = 0;
+                            }
+                            else
+                            {
+                                energyExist.ProductionSold = energyProd.production.HasValue ? Convert.ToDouble(energyProd.production.Value) : 0;
+                                energyExist.ProductionSoldProfit = energyProd.profit.HasValue ? Convert.ToDouble(energyProd.profit.Value) : 0;
+                            }
                             energyExist.UnitPriceSold = energyProd.unitPrice.HasValue ? Convert.ToDouble(energyProd.unitPrice.Value) : 0;
                             energyExist.UnitPriceVatSold = energyProd.unitPriceVAT.HasValue ? Convert.ToDouble(energyProd.unitPriceVAT.Value) : 0;
                             energyExist.ProductionSoldSynced = true;

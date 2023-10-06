@@ -14,6 +14,10 @@ public class Energy
     [Required]
     public double Purchased { get; set; } = 0;
     [Required]
+    public double BatteryCharge { get; set; } = 0;
+    [Required]
+    public double BatteryUsed { get; set; } = 0;
+    [Required]
     public string Unit { get; set; } = "kWh";
     [Required]
     public string Currency { get; set; } = "SEK";
@@ -43,6 +47,8 @@ public class Energy
     public bool ProductionOwnUseSynced { get; set; } = false;
     [Required]
     public bool PurchasedSynced { get; set; } = false;
+    [Required]
+    public bool BatterySynced { get; set; } = false;
     //FK's
     [Required]
     public int HomeId  { get; set; } 

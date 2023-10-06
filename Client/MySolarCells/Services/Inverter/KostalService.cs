@@ -54,25 +54,25 @@ public class KostalService : IInverterServiceInterface
 
         return new Result<InverterLoginResponse>(inverterLoginResponse);
     }
-    public async Task<Result<List<PickerItem>>> GetPickerOne()
+    public async Task<Result<List<InverterSite>>> GetPickerOne()
     {
         //SITES
         string query = "query SITES_LIST_FIRST { sites(first: 1) { nodes { id name      inclination __typename    } __typename  } }";
         KostalUserRoleGraphQlRequest graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "SITES_LIST_FIRST", query = query, variables = new KostalUserRoleEmptyVariables() };
         var resultSites = await this.restClient.ExecutePostAsync<KostalUserRoleSitesResponse>(string.Empty, graphQlRequest);
         sitesResponse = resultSites.Model;
-        var returnlist = new List<PickerItem>();
+        var returnlist = new List<InverterSite>();
         foreach (var item in sitesResponse.data.sites.nodes)
         {
-            returnlist.Add(new PickerItem { ItemValue = item.id, ItemTitle = item.name.ToString() });
+            returnlist.Add(new InverterSite { Id = item.id.ToString(), Name = item.name.ToString() });
         }
-        return new Result<List<PickerItem>>(returnlist);
+        return new Result<List<InverterSite>>(returnlist);
     }
-    public async Task<Result<GetInverterResponse>> GetInverter(PickerItem pickerItem)
+    public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
         //FETCH_LIST_DEVICE_IDS_OF_SITE
         var query = "query FETCH_LIST_DEVICE_IDS_OF_SITE($id: Long!) {  site(id: $id) {    id    name    currency    purchaseCompensation    feedInCompensation    dataSources {      id      name      status      metadata {        id        key        value        __typename      }      devices {        id        name        type        uniqueIdentifier        metadata {          id          key          value          __typename        }        __typename      }      mostRecentDataSourceLogEntry {        timestamp        __typename      }      __typename    }    __typename  }}";
-        var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(pickerItem.ItemValue) } };
+        var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(inverterSite.Id) } };
         var resultDevice = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceResponse>(string.Empty, graphQlRequest);
         deviceResponse = resultDevice.Model;
         var device = deviceResponse.data.site.dataSources.First().devices.FirstOrDefault(x => x.type == "INVERTER");

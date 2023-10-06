@@ -31,8 +31,8 @@
                 <Label IsVisible="{Binding ShowApiUrl}" Text="API url" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
                 <Entry IsVisible="{Binding ShowApiUrl}" Text="{Binding ApiUrl}"   />
                  <!--Api Key-->
-                <Label IsVisible="{Binding ShowApiUrl}" Text="API key" HorizontalTextAlignment="Start" HorizontalOptions="Start"  />
-                <Entry IsVisible="{Binding ShowApiUrl}" Text="{Binding ApiKey}"   />
+                <Label IsVisible="{Binding ShowApiKey}" Text="API key" HorizontalTextAlignment="Start" HorizontalOptions="Start"  />
+                <Entry IsVisible="{Binding ShowApiKey}" Text="{Binding ApiKey}"   />
 
             </VerticalStackLayout>
 
@@ -41,7 +41,7 @@
 
             <!--Inverters-->
             <Label  Grid.Row="9" Grid.ColumnSpan="5" Text="Pick the site node to analys" IsVisible="{Binding ShowSiteNodePicker}"/>
-            <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding ItemTitle}"/>
+            <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding Name}"/>
 
             <!--Install date-->
             <Label  Grid.Row="11" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Text="Install date for inverter"/>

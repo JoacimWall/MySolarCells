@@ -13,10 +13,10 @@ public class Inverter
     public string SubSystemEntityId { get; set; }
     [Required]
     public int InverterTyp { get; set; }
-    [Required]
-    public string UserName { get; set; }
-    [Required]
-    public string Password { get; set; }
+    public string UserName { get; set; } 
+    public string Password { get; set; } 
+    public string ApiUrl { get; set; } 
+    public string ApiKey { get; set; } 
     //FK's
     [Required]
     public int HomeId { get; set; }

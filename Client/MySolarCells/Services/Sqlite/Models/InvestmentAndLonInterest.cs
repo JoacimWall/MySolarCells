@@ -14,5 +14,10 @@ public class InvestmentAndLonInterest
     //FK's
     [Required]
     public int InvestmentAndLonId { get; set; }
-}
 
+    [NotMapped]
+    public string Name
+    {
+        get { return FromDate.ToShortDateString(); }
+    }
+}

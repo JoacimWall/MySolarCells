@@ -21,6 +21,7 @@ public class ElectricitySupplierConnectViewModel : BaseViewModel
         {
             homeExist = new Services.Sqlite.Models.Home
             {
+                ImportOnlySpotPrice = importOnlySpotPrice,
                 ApiKey = StringHelper.Encrypt(tibberAccessToken, AppConstants.Secretkey),
                 Name = selecteddHome.AppNickname,
                 SubSystemEntityId = selecteddHome.Id.ToString(),
@@ -113,6 +114,11 @@ public class ElectricitySupplierConnectViewModel : BaseViewModel
         get => showHomePicker;
         set { SetProperty(ref showHomePicker, value); }
     }
-
+    private bool importOnlySpotPrice;
+    public bool ImportOnlySpotPrice
+    {
+        get => importOnlySpotPrice;
+        set { SetProperty(ref importOnlySpotPrice, value); }
+    }
 }
 

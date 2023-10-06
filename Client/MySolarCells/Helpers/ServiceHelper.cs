@@ -32,6 +32,8 @@ public static class ServiceHelper
                 return new HuaweiService(ServiceHelper.GetService<IRestClient>());
             case (int)InverterTyp.HomeAssistent:
                 return new HomeAssistentInverterService();
+            case (int)InverterTyp.SolarEdge:
+                return new SolarEdgeService(ServiceHelper.GetService<IRestClient>());
 
             default:
                 return null;

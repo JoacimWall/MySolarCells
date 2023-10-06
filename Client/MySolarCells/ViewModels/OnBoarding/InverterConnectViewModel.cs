@@ -2,14 +2,16 @@
 
 public class InverterConnectViewModel : BaseViewModel
 {
-
+    private InverterLoginResponse inverterLoginResponse;
     IInverterServiceInterface InverterService;
     public InverterConnectViewModel()
     {
 
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
+
         SelectedInverterModel = InverterModels.First();
 
     }
@@ -24,13 +26,14 @@ public class InverterConnectViewModel : BaseViewModel
             await DialogService.ShowAlertAsync(resultLogin.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
             return;
         }
+        inverterLoginResponse = resultLogin.Model;
         var resultSites = await this.InverterService.GetPickerOne();
         if (!resultSites.WasSuccessful)
         {
             await DialogService.ShowAlertAsync(resultSites.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
             return;
         }
-        SitesNodes = new ObservableCollection<PickerItem>(resultSites.Model);
+        SitesNodes = new ObservableCollection<InverterSite>(resultSites.Model);
 
         SelectedSiteNode = SitesNodes.First();
         ShowSiteNodePicker = true;
@@ -51,7 +54,7 @@ public class InverterConnectViewModel : BaseViewModel
 
         using var dbContext = new MscDbContext();
         //check if Home exist in db
-        var InverterExist = await dbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
+        var InverterExist = await dbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.InverterId.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
         if (InverterExist == null)
         {
             InverterExist = new Services.Sqlite.Models.Inverter
@@ -62,7 +65,9 @@ public class InverterConnectViewModel : BaseViewModel
                 HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
                 Name = resultInverter.Model.Name,
                 UserName = this.userName,
-                Password = StringHelper.Encrypt(this.password, AppConstants.Secretkey)
+                Password = string.IsNullOrEmpty(this.password) ? "" : StringHelper.Encrypt(this.password, AppConstants.Secretkey),
+                ApiUrl = "",
+                ApiKey = StringHelper.Encrypt(this.inverterLoginResponse.token, AppConstants.Secretkey)
             };
             //TODO:Do we neeed more info from Inverter
             await dbContext.Inverter.AddAsync(InverterExist);
@@ -77,21 +82,24 @@ public class InverterConnectViewModel : BaseViewModel
         await GoToAsync(nameof(EnergyCalculationParameterView));
     }
 
-    private ObservableCollection<PickerItem> sitesNodes = new ObservableCollection<PickerItem>();
-    public ObservableCollection<PickerItem> SitesNodes
+    private ObservableCollection<InverterSite> sitesNodes = new ObservableCollection<InverterSite>();
+    public ObservableCollection<InverterSite> SitesNodes
     {
         get => sitesNodes;
         set
         {
             SetProperty(ref sitesNodes, value);
-
+           
         }
     }
-    private PickerItem selectedSiteNode;
-    public PickerItem SelectedSiteNode
+    private InverterSite selectedSiteNode;
+    public InverterSite SelectedSiteNode
     {
         get => selectedSiteNode;
-        set { SetProperty(ref selectedSiteNode, value); }
+        set {
+            SetProperty(ref selectedSiteNode, value);
+            InstallDate = value.InstallationDate;
+            }
     }
     private ObservableCollection<PickerItem> inverterModels = new ObservableCollection<PickerItem>();
     public ObservableCollection<PickerItem> InverterModels
@@ -147,7 +155,7 @@ public class InverterConnectViewModel : BaseViewModel
         get => apiUrl;
         set { SetProperty(ref apiUrl, value); }
     }
-    private string apiKey= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyNzZjN2E3ZmY5OWU0MGI2OGNhZDE1NmM2YTgzMDI4OCIsImlhdCI6MTY5NjM5NjI1NiwiZXhwIjoyMDExNzU2MjU2fQ.o_JFjiPNdPyJl0YtBmY5fKJO_A6ms3Gs40jDfZG9ofY";
+    private string apiKey= "F6U9YMSHEDBK3ADYBRPCICDHISQ5KWU3";
     public string ApiKey
     {
         get => apiKey;
