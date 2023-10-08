@@ -55,7 +55,7 @@ public class DataSyncService : IDataSyncService
         await Task.Delay(200);
 
         // var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        lastSyncTime = dbContext.Energy.Where(x => x.ProductionOwnUseSynced == false).OrderByDescending(o => o.Timestamp).First();
+        lastSyncTime = dbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
         var differenceInverter = DateTime.Now - lastSyncTime.Timestamp;
 
         var daysInv = differenceInverter.Days;

@@ -299,10 +299,10 @@ public class SolarEdgeService : IInverterServiceInterface
                     {
                         DateTime timestamp = Convert.ToDateTime(value.date);
                         DateTime searchTime = new DateTime(timestamp.Year, timestamp.Month, timestamp.Day, timestamp.Hour, 0, 0);
-                        if (timestamp.Minute == 0)
-                        {   //So the last 15 minutes land on prev hour. 13:00 belong to 12:45-13:00 production then timestamp 12:00    
-                            searchTime = searchTime.AddHours(-1);
-                        }
+                        //if (timestamp.Minute == 0)
+                        //{   //So the last 15 minutes land on prev hour. 13:00 belong to 12:45-13:00 production then timestamp 12:00    
+                        //    searchTime = searchTime.AddHours(-1);
+                        //}
                         var exist = sumes.FirstOrDefault(x => x.TimeStamp == searchTime);
                         if (exist == null)
                         {
