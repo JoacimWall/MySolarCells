@@ -155,7 +155,7 @@ public class InverterConnectViewModel : BaseViewModel
         get => apiUrl;
         set { SetProperty(ref apiUrl, value); }
     }
-    private string apiKey= "F6U9YMSHEDBK3ADYBRPCICDHISQ5KWU3";
+    private string apiKey= "";
     public string ApiKey
     {
         get => apiKey;
