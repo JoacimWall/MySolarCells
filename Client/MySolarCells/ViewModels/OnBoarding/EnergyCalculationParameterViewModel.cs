@@ -8,14 +8,20 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
     MscDbContext dbContext = new MscDbContext();
     public EnergyCalculationParameterViewModel()
     {
-        //Add default first one
+        var list = dbContext.EnergyCalculationParameter.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
+        if (list != null && list.Count > 0)
+        {
+            Parameters = new ObservableCollection<Services.Sqlite.Models.EnergyCalculationParameter>(list);
+            selectedParameters = parameters.Last();
+        }
+        else //Add default first one
         AddParameters();
     }
     public ICommand AddParametersCommand => new Command( () =>  AddParameters());
 
     private void AddParameters()
     {
-        Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter { HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
+        Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter { HomeId = MySolarCellsGlobals.SelectedHome.HomeId, FromDate = MySolarCellsGlobals.SelectedHome.FromDate });
         dbContext.EnergyCalculationParameter.Add(Parameters.Last());
         SelectedParameters = Parameters.Last();
     }
@@ -79,6 +85,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         get => selectedParameters;
         set { SetProperty(ref selectedParameters, value); }
     }
+    
 
 }
 

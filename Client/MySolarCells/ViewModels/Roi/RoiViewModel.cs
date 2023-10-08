@@ -31,6 +31,7 @@ public class RoiViewModel : BaseViewModel
     private async Task<bool> ReloadData()
     {
         using var dlg = DialogService.GetProgress("");
+        await Task.Delay(200);
         RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, false);
         return true;
     }

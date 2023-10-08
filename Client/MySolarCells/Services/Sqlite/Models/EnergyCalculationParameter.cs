@@ -10,10 +10,12 @@ public class EnergyCalculationParameter : ObservableObject
     public DateTime FromDate
     {
         get { return fromDate; }
-        set { SetProperty(ref fromDate, value);
+        set
+        {
+            SetProperty(ref fromDate, value);
             OnPropertyChanged(nameof(Name));
-            }
-    } 
+        }
+    }
     [Required]  //Nätnytta 0.078 kr/kWh
     public double ProdCompensationElectricityLowload { get; set; } = 0.078;
     [Required]  //Eventuell överföringsavgift som du kostar vi köp av eller (sparar vi egen användning) Ellevio 0.3 kr
@@ -26,14 +28,34 @@ public class EnergyCalculationParameter : ObservableObject
     public double TotalInstallKwhPanels { get; set; } = 10.5;
     [Required] //fixed price 
     public double FixedPriceKwh { get; set; } = 0;
+
+    private bool useSpotPrice = true;
     [Required] //fixed price 
-    public bool UseSpotPrice { get; set; } = true;
+    public bool UseSpotPrice
+    {
+        get => useSpotPrice;
+        set
+        {
+            SetProperty(ref useSpotPrice, value);
+            ShowFixedPrice = value ? false : true;
+        }
+    }
     //FK's
     [Required]
     public int HomeId { get; set; }
 
     [NotMapped]
-    public string Name {get { return FromDate.ToShortDateString(); }
+    public string Name
+    {
+        get { return FromDate.ToShortDateString(); }
+    }
+
+    private bool showFixedPrice;
+    [NotMapped]
+    public bool ShowFixedPrice
+    {
+        get => showFixedPrice;
+        set { SetProperty(ref showFixedPrice, value); }
     }
 }
 

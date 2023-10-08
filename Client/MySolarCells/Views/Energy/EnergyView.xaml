@@ -31,12 +31,14 @@
             <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ChartData="{Binding ChartDataRequest}"
                                     GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
                                     />
-             <Label VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="20" Margin="8,8,8,8" Text="{Binding EnergyChartProdTotTitle}"/>
+             <Label VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="20" Margin="8,8,8,8" Text="{Binding ProductionChartTitle}"/>
             <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
                 <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorSold}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorUsed}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
+                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
             </HorizontalStackLayout>
 
 
@@ -75,20 +77,32 @@
                                 YBindingPath="Value"
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
-                                CornerRadius="4,4,0,0"
+                                CornerRadius="0,0,0,0"
                                 PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
+
+                </chart:StackingColumnSeries>
+
+                 <chart:StackingColumnSeries ItemsSource="{Binding DataBatteryCharge}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
 
                 </chart:StackingColumnSeries>
 
             </chart:SfCartesianChart>
 
-             <Label  VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,8" Grid.Column="0" FontSize="20" Text="{Binding EnergyChartConsumedTotTitle}"/>
+             <Label  VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,8" Grid.Column="0" FontSize="20" Text="{Binding ConsumtionChartTitle}"/>
                
             <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,8" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
                 <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorUsed}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
                 <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
                 <Label VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
+                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorSold}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartBatteryUsedTitle}"/>
             </HorizontalStackLayout>
 
 
@@ -128,8 +142,18 @@
                                 YBindingPath="Value"
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
-                                CornerRadius="4,4,0,0"
+                                CornerRadius="0,0,0,0"
                                 PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
+
+                </chart:StackingColumnSeries>
+
+                 <chart:StackingColumnSeries ItemsSource="{Binding DataBatteryUsed}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
 
                 </chart:StackingColumnSeries>
 

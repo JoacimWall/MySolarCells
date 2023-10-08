@@ -65,10 +65,10 @@ public class EnergyViewModel : BaseViewModel
         if (!resultSeries.WasSuccessful)
         {
             await DialogService.ShowAlertAsync("There is no data to show on This date.", AppResources.My_Solar_Cells, AppResources.Ok);
-            EnergyChartProdTot = null;
+            EnergyChartBatteryCharge = null;
             EnergyChartProdSold = null;
             EnergyChartProdUsed = null;
-            EnergyChartConsumedTot = null;
+            EnergyChartBatteryUsed = null;
             EnergyChartConsumedGrid = null;
             return false;
         }
@@ -83,25 +83,7 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
-        //Production Total
-        EnergyChartProdTotTitle = resultSeries.Model.ChartSeriesProductionTot[0].Name;
-        if (resultSeries.Model.ChartSeriesProductionTot[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0) )
-            EnergyChartProdTot = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesProductionTot[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-               // LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            EnergyChartProdTot = null;
+        
 
         //Production Sold
         EnergyChartProdSoldTitle = resultSeries.Model.ChartSeriesProductionSold[0].Name;
@@ -123,6 +105,25 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartProdSold = null;
 
+        //Battery charge
+        EnergyBatteryChargeChartTitle = resultSeries.Model.ChartSeriesBatteryCharge[0].Name;
+        if (resultSeries.Model.ChartSeriesBatteryCharge[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartBatteryCharge = new Microcharts.BarChart
+            {
+                Margin = 6,
+                Entries = resultSeries.Model.ChartSeriesBatteryCharge[0].Entries,
+                CornerRadius = 6,
+                ShowYAxisLines = true,
+                ShowYAxisText = true,
+                YAxisTextPaint = YAxesPaint,
+                LabelTextSize = 24,
+                SerieLabelTextSize = 24,
+                ValueLabelTextSize = 24,
+                MaxValue = resultSeries.Model.MaxValueYaxes,
+                // LegendOption = Microcharts.SeriesLegendOption.Bottom
+            };
+        else
+            EnergyChartBatteryCharge = null;
         //Production Used
         EnergyChartProdUsedTitle = resultSeries.Model.ChartSeriesProductionUsed[0].Name;
         if (resultSeries.Model.ChartSeriesProductionUsed[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
@@ -143,13 +144,13 @@ public class EnergyViewModel : BaseViewModel
         else
             EnergyChartProdUsed = null;
 
-        //Consumtion Total
-        EnergyChartConsumedTotTitle = resultSeries.Model.ChartSeriesConsumtionTot[0].Name;
-        if (resultSeries.Model.ChartSeriesConsumtionTot[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartConsumedTot = new Microcharts.BarChart
+        //Battery Used
+        EnergyChartBatteryUsedTitle = resultSeries.Model.ChartSeriesBatteryUsed[0].Name;
+        if (resultSeries.Model.ChartSeriesBatteryUsed[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            EnergyChartBatteryUsed = new Microcharts.BarChart
             {
                 Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesConsumtionTot[0].Entries,
+                Entries = resultSeries.Model.ChartSeriesBatteryUsed[0].Entries,
                 CornerRadius = 6,
                 ShowYAxisLines = true,
                 ShowYAxisText = true,
@@ -158,10 +159,10 @@ public class EnergyViewModel : BaseViewModel
                 SerieLabelTextSize = 24,
                 ValueLabelTextSize = 24,
                 MaxValue = resultSeries.Model.MaxValueYaxes,
-               // LegendOption = Microcharts.SeriesLegendOption.Bottom
+                // LegendOption = Microcharts.SeriesLegendOption.Bottom
             };
         else
-            EnergyChartConsumedTot = null;
+            EnergyChartBatteryUsed = null;
         //Consumtion Grid
         EnergyChartConsumedGridTitle = resultSeries.Model.ChartSeriesConsumtionGrid[0].Name;
         if (resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
@@ -182,13 +183,24 @@ public class EnergyViewModel : BaseViewModel
         else
             energyChartConsumedGrid = null;
 
+
+        ConsumtionChartTitle = resultSeries.Model.ConsumtionChartTitle;
+        ProductionChartTitle = resultSeries.Model.ProductionChartTitle;
         DataSold.Clear();
         foreach (var item in resultSeries.Model.ChartSeriesProductionSold[0].Entries)
             DataSold.Add(item);
 
+        DataBatteryCharge.Clear();
+        foreach (var item in resultSeries.Model.ChartSeriesBatteryCharge[0].Entries)
+            DataBatteryCharge.Add(item);
+
         DataUsed.Clear();
         foreach (var item in resultSeries.Model.ChartSeriesProductionUsed[0].Entries)
             DataUsed.Add(item);
+
+        DataBatteryUsed.Clear();
+        foreach (var item in resultSeries.Model.ChartSeriesBatteryUsed[0].Entries)
+            DataBatteryUsed.Add(item);
 
         DataPurchased.Clear();
         foreach (var item in resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries)
@@ -211,7 +223,6 @@ public class EnergyViewModel : BaseViewModel
 
     public IList<Brush> PaletteBrushesProductionSold { get; set; } = new List<Brush>();
     public IList<Brush> PaletteBrushesProductionUsed { get; set; } = new List<Brush>();
-
     public IList<Brush> PaletteBrushesPurchased { get; set; } = new List<Brush>();
    
 
@@ -225,6 +236,16 @@ public class EnergyViewModel : BaseViewModel
 
         }
     }
+    private ObservableCollection<ChartEntry> dataBatteryCharge = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> DataBatteryCharge
+    {
+        get => dataBatteryCharge;
+        set
+        {
+            SetProperty(ref dataBatteryCharge, value);
+
+        }
+    }
     private ObservableCollection<ChartEntry> dataUsed = new ObservableCollection<ChartEntry>();
     public ObservableCollection<ChartEntry> DataUsed
     {
@@ -232,6 +253,16 @@ public class EnergyViewModel : BaseViewModel
         set
         {
             SetProperty(ref dataUsed, value);
+
+        }
+    }
+    private ObservableCollection<ChartEntry> dataBatteryUsed = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> DataBatteryUsed
+    {
+        get => dataBatteryUsed;
+        set
+        {
+            SetProperty(ref dataBatteryUsed, value);
 
         }
     }
@@ -253,11 +284,11 @@ public class EnergyViewModel : BaseViewModel
         set { SetProperty(ref chartDataRequest, value); }
     }
 
-    private Microcharts.Chart energyChartProdTot;
-    public Microcharts.Chart EnergyChartProdTot
+    private Microcharts.Chart energyChartBatteryCharge;
+    public Microcharts.Chart EnergyChartBatteryCharge
     {
-        get { return energyChartProdTot; }
-        set { SetProperty(ref energyChartProdTot, value); }
+        get { return energyChartBatteryCharge; }
+        set { SetProperty(ref energyChartBatteryCharge, value); }
     }
     private Microcharts.Chart energyChartProdSold;
     public Microcharts.Chart EnergyChartProdSold
@@ -271,11 +302,11 @@ public class EnergyViewModel : BaseViewModel
         get { return energyChartProdUsed; }
         set { SetProperty(ref energyChartProdUsed, value); }
     }
-    private Microcharts.Chart energyChartConsumedTot;
-    public Microcharts.Chart EnergyChartConsumedTot
+    private Microcharts.Chart energyChartBatteryUsed;
+    public Microcharts.Chart EnergyChartBatteryUsed
     {
-        get { return energyChartConsumedTot; }
-        set { SetProperty(ref energyChartConsumedTot, value); }
+        get { return energyChartBatteryUsed; }
+        set { SetProperty(ref energyChartBatteryUsed, value); }
     }
     private Microcharts.Chart energyChartConsumedGrid;
     public Microcharts.Chart EnergyChartConsumedGrid
@@ -284,11 +315,11 @@ public class EnergyViewModel : BaseViewModel
         set { SetProperty(ref energyChartConsumedGrid, value); }
     }
 
-    private string energyChartProdTotTitle;
-    public string EnergyChartProdTotTitle
+    private string energyBatteryChargeChartTitle;
+    public string EnergyBatteryChargeChartTitle
     {
-        get { return energyChartProdTotTitle; }
-        set { SetProperty(ref energyChartProdTotTitle, value); }
+        get { return energyBatteryChargeChartTitle; }
+        set { SetProperty(ref energyBatteryChargeChartTitle, value); }
     }
     private string energyChartProdSoldTitle;
     public string EnergyChartProdSoldTitle
@@ -302,11 +333,11 @@ public class EnergyViewModel : BaseViewModel
         get { return energyChartProdUsedTitle; }
         set { SetProperty(ref energyChartProdUsedTitle, value); }
     }
-    private string energyChartConsumedTotTitle;
-    public string EnergyChartConsumedTotTitle
+    private string energyChartBatteryUsedTitle;
+    public string EnergyChartBatteryUsedTitle
     {
-        get { return energyChartConsumedTotTitle; }
-        set { SetProperty(ref energyChartConsumedTotTitle, value); }
+        get { return energyChartBatteryUsedTitle; }
+        set { SetProperty(ref energyChartBatteryUsedTitle, value); }
     }
     private string energyChartConsumedGridTitle;
     public string EnergyChartConsumedGridTitle
@@ -319,6 +350,18 @@ public class EnergyViewModel : BaseViewModel
     {
         get { return productionChartXtitle; }
         set { SetProperty(ref productionChartXtitle, value); }
+    }
+    private string productionChartTitle;
+    public string ProductionChartTitle
+    {
+        get { return productionChartTitle; }
+        set { SetProperty(ref productionChartTitle, value); }
+    }
+    private string consumtionChartTitle;
+    public string ConsumtionChartTitle
+    {
+        get { return consumtionChartTitle; }
+        set { SetProperty(ref consumtionChartTitle, value); }
     }
 }
 

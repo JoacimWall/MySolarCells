@@ -1,5 +1,8 @@
 ﻿
 
+using System;
+using Microsoft.EntityFrameworkCore;
+
 namespace MySolarCells.Services;
 
 public interface IRoiService
@@ -14,37 +17,101 @@ public class RoiService : IRoiService
     public RoiService()
     {
     }
+    //This function should can prpduce wrong if the cahnge of calulation parameters in the middel of the date span 
     public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, bool all)
     {
+        using var dbContext = new MscDbContext();
+        //int batch100 = 0;
+        //List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
+        //foreach (var item in dbContext.Energy)
+        //{
+        //    item.Purchased = item.Purchased > 0 ? item.Purchased / 4 : 0;
+        //    item.PurchasedCost = item.PurchasedCost > 0 ? item.PurchasedCost / 4: 0;
+        //    item.ProductionSold = item.ProductionSold > 0 ? item.ProductionSold / 4 : 0;
+        //    item.ProductionSoldProfit = item.ProductionSoldProfit > 0 ? item.ProductionSoldProfit / 4 : 0;
+        //    item.ProductionOwnUse = item.ProductionOwnUse > 0 ? item.ProductionOwnUse / 4 : 0;
+        //    item.ProductionOwnUseProfit = item.ProductionOwnUseProfit > 0 ? item.ProductionOwnUseProfit / 4 : 0;
+        //    item.BatteryCharge = item.BatteryCharge > 0 ? item.BatteryCharge / 12 : 0;
+        //    item.BatteryChargeProfit = item.BatteryChargeProfit > 0 ? item.BatteryChargeProfit / 12 : 0;
+        //    item.BatteryUsed = item.BatteryUsed > 0 ? item.BatteryUsed / 12 : 0;
+        //    item.BatteryUsedProfit = item.BatteryUsedProfit > 0 ? item.BatteryUsedProfit / 12 : 0;
+        //    eneryList.Add(item);
+
+        //    if (batch100 == 100)
+        //    {
+        //        await Task.Delay(100); //Så att GUI hinner uppdatera
+        //        batch100 = 0;
+        //        await dbContext.BulkUpdateAsync(eneryList);
+        //        eneryList = new List<Sqlite.Models.Energy>();
+        //    }
+        //}
+        //if (eneryList.Count > 0)
+        //{
+        //    await Task.Delay(100); //Så att GUI hinner uppdatera
+           
+        //    batch100 = 0;
+        //    await dbContext.BulkUpdateAsync(eneryList);
+        //    eneryList = new List<Sqlite.Models.Energy>();
+        //}
+
+
+
+
+
         List<Sqlite.Models.Energy> energy;
         RoiStats roiStats = new RoiStats();
-        using var dbContext = new MscDbContext();
-        var calcParams = dbContext.EnergyCalculationParameter.First();
-        var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
+        
+        var calcParams = dbContext.EnergyCalculationParameter.OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        //var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
         if (all)
             energy = await dbContext.Energy.ToListAsync();
         else
             energy = await dbContext.Energy.Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
         //Base sums
-        roiStats.TotalPurchasedCost =  Convert.ToSingle(Math.Round(energy.Sum(x => x.PurchasedCost),2));
+        //Consumed
         roiStats.TotalPurchased = Convert.ToSingle(Math.Round(energy.Sum(x => x.Purchased), 2));
-        roiStats.TotalProductionSoldProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2));
+        if (calcParams.UseSpotPrice)
+            roiStats.TotalPurchasedCost =  Convert.ToSingle(Math.Round(energy.Sum(x => x.PurchasedCost),2));
+        else
+            roiStats.TotalPurchasedCost = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.FixedPriceKwh, 2));
+
+        //Sold
         roiStats.TotalProductionSold = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionSold), 2));
-        roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2));
+        if (calcParams.UseSpotPrice)
+            roiStats.TotalProductionSoldProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2));
+        else
+            roiStats.TotalProductionSoldProfit = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.FixedPriceKwh, 2));
+
+        //Production Own use
         roiStats.TotalProductionOwnUse = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUse), 2));
+        if (calcParams.UseSpotPrice)
+            roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2));
+        else
+            roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.FixedPriceKwh, 2));
+        //Battery
+        roiStats.TotalBatteryCharge = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryCharge), 2));
+        if (calcParams.UseSpotPrice)
+            roiStats.TotalBatteryUsedProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2));
+        else
+            roiStats.TotalBatteryUsedProfit = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.FixedPriceKwh, 2));
+        
+
+        roiStats.TotalBatteryUsed = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryUsed), 2));
 
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.ProdCompensationElectricityLowload, 2));
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.TransferFee, 2));
+        roiStats.TotalSavedTransferFeeBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.TransferFee, 2));
         roiStats.TotalTransferFeePurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.TransferFee, 2));
         roiStats.TotalSavedEnergyTaxProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.EnergyTax, 2));
+        roiStats.TotalSavedEnergyTaxBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.EnergyTax, 2));
         roiStats.TotalTaxPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.EnergyTax, 2));
         roiStats.TotalSavedEnergyTaxReductionProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.TaxReduction, 2));
 
 
-        roiStats.TotalPurchasedTransferFee = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcparms.TransferFee, 2));
-        roiStats.TotalPurchasedTax = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcparms.EnergyTax, 2));
+        roiStats.TotalPurchasedTransferFee = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.TransferFee, 2));
+        roiStats.TotalPurchasedTax = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.EnergyTax, 2));
 
 
         //Total minus production
@@ -54,7 +121,7 @@ public class RoiService : IRoiService
         //summation
         roiStats.SumPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchasedCost + roiStats.TotalTransferFeePurchased + roiStats.TotalTaxPurchased,2));
         roiStats.SumProductionSold = Convert.ToSingle(Math.Round(roiStats.TotalProductionSoldProfit + roiStats.TotalCompensationForProductionToGrid + roiStats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
-        roiStats.SumProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUseProfit + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse, 2));
+        roiStats.SumProductionOwnUseAndBattery = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUseProfit + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse + roiStats.TotalBatteryUsedProfit + roiStats.TotalSavedTransferFeeBatteryUse + roiStats.TotalSavedEnergyTaxBatteryUse, 2));
 
 
         //Ränta
@@ -62,7 +129,7 @@ public class RoiService : IRoiService
         roiStats.TotalInvestment = resultRanta.Item1;
         roiStats.TotalInterest = Convert.ToSingle(Math.Round(resultRanta.Item2,2));
 
-        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUse - roiStats.TotalInterest, 2));
+        roiStats.TotalSaved = Convert.ToSingle(Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUseAndBattery - roiStats.TotalInterest, 2));
 
         roiStats.TotalProduction = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold + roiStats.TotalProductionOwnUse, 2));
         //Production Index amount of production per installed kWh
@@ -140,21 +207,26 @@ public class RoiStats
     public float TotalProductionNegativeSold { get; set; } = 0;
     public float TotalProductionOwnUse { get; set; } = 0;
     public float TotalPurchased { get; set; } = 0;
-
-
+    public float TotalBatteryCharge { get; set; } = 0;
+    public float TotalBatteryUsed { get; set; } = 0;
 
     public string Unit { get; set; } = "kWh";
     public string Currency { get; set; } = "SEK";
     public float TotalProductionSoldProfit { get; set; } = 0;
     public float TotalProductionSoldNegativeProfit { get; set; } = 0;
     public float TotalProductionOwnUseProfit { get; set; } = 0;
+    public float TotalBatteryUsedProfit { get; set; } = 0;
+    
     public float TotalPurchasedCost { get; set; } = 0;
 
     //calc values
     public float TotalCompensationForProductionToGrid { get; set; } = 0;
     public float TotalSavedTransferFeeProductionOwnUse { get; set; } = 0;
+    public float TotalSavedTransferFeeBatteryUse { get; set; } = 0;
     public float TotalTransferFeePurchased { get; set; } = 0;
     public float TotalSavedEnergyTaxProductionOwnUse { get; set; } = 0;
+    public float TotalSavedEnergyTaxBatteryUse { get; set; } = 0;
+    
     public float TotalTaxPurchased { get; set; } = 0;
     public float TotalPurchasedTransferFee { get; set; } = 0;
     public float TotalPurchasedTax { get; set; } = 0;
@@ -167,7 +239,7 @@ public class RoiStats
     //Summ Saved
     public float SumPurchased { get; set; } = 0;
     public float SumProductionSold { get; set; } = 0;
-    public float SumProductionOwnUse { get; set; } = 0;
+    public float SumProductionOwnUseAndBattery { get; set; } = 0;
 
     public float TotalSaved { get; set; } = 0;
     public float TotalProduction { get; set; } = 0;
