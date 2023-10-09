@@ -209,7 +209,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A33"].CellStyle.Font.Bold = true;
             worksheet.Range["A33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["B30"].Value = Math.Round((toalInvestLon / (totalProducedSaved / productionindex) / 12), 2).ToString();
+            worksheet.Range["B30"].Value = Math.Round(((toalInvestLon- totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
             worksheet.Range["B31"].Value = toalInvestLon.ToString();
             worksheet.Range["B32"].Value = Math.Round(totalProducedSaved, 0).ToString();
             worksheet.Range["B33"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();

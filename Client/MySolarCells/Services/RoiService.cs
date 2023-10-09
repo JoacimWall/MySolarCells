@@ -21,52 +21,17 @@ public class RoiService : IRoiService
     public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, bool all)
     {
         using var dbContext = new MscDbContext();
-        //int batch100 = 0;
-        //List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
-        //foreach (var item in dbContext.Energy)
-        //{
-        //    item.Purchased = item.Purchased > 0 ? item.Purchased / 4 : 0;
-        //    item.PurchasedCost = item.PurchasedCost > 0 ? item.PurchasedCost / 4: 0;
-        //    item.ProductionSold = item.ProductionSold > 0 ? item.ProductionSold / 4 : 0;
-        //    item.ProductionSoldProfit = item.ProductionSoldProfit > 0 ? item.ProductionSoldProfit / 4 : 0;
-        //    item.ProductionOwnUse = item.ProductionOwnUse > 0 ? item.ProductionOwnUse / 4 : 0;
-        //    item.ProductionOwnUseProfit = item.ProductionOwnUseProfit > 0 ? item.ProductionOwnUseProfit / 4 : 0;
-        //    item.BatteryCharge = item.BatteryCharge > 0 ? item.BatteryCharge / 12 : 0;
-        //    item.BatteryChargeProfit = item.BatteryChargeProfit > 0 ? item.BatteryChargeProfit / 12 : 0;
-        //    item.BatteryUsed = item.BatteryUsed > 0 ? item.BatteryUsed / 12 : 0;
-        //    item.BatteryUsedProfit = item.BatteryUsedProfit > 0 ? item.BatteryUsedProfit / 12 : 0;
-        //    eneryList.Add(item);
-
-        //    if (batch100 == 100)
-        //    {
-        //        await Task.Delay(100); //Så att GUI hinner uppdatera
-        //        batch100 = 0;
-        //        await dbContext.BulkUpdateAsync(eneryList);
-        //        eneryList = new List<Sqlite.Models.Energy>();
-        //    }
-        //}
-        //if (eneryList.Count > 0)
-        //{
-        //    await Task.Delay(100); //Så att GUI hinner uppdatera
-           
-        //    batch100 = 0;
-        //    await dbContext.BulkUpdateAsync(eneryList);
-        //    eneryList = new List<Sqlite.Models.Energy>();
-        //}
-
-
-
-
+        
 
         List<Sqlite.Models.Energy> energy;
         RoiStats roiStats = new RoiStats();
         
-        var calcParams = dbContext.EnergyCalculationParameter.OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        var calcParams = dbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
         //var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
         if (all)
-            energy = await dbContext.Energy.ToListAsync();
+            energy = await dbContext.Energy.AsNoTracking().ToListAsync();
         else
-            energy = await dbContext.Energy.Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
+            energy = await dbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
         //Base sums
         //Consumed
@@ -144,6 +109,7 @@ public class RoiService : IRoiService
             var difference = DateTime.Now - soloarFirstDate.Timestamp;
             roiStats.ProductionIndex = Convert.ToSingle(Math.Round((roiStats.TotalProduction / Convert.ToInt32(difference.TotalDays) / calcParams.TotalInstallKwhPanels), 2));
         }
+        roiStats.EnergyCalculationParameter = calcParams;
         return roiStats;
 
     }
@@ -151,9 +117,8 @@ public class RoiService : IRoiService
     public async Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport()
     {
         List<ReportRoiStats> result = new List<ReportRoiStats>();
-        using var dbContext = new MscDbContext();
-        var  start = Helpers.DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
-        var dates = Helpers.DateHelper.GetRelatedDates(DateTime.Today);
+        var  start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
+        var dates = DateHelper.GetRelatedDates(DateTime.Today);
         var current = start.ThisMonthStart;
         while (current < dates.ThisMonthEnd)
         {
@@ -173,7 +138,7 @@ public class RoiService : IRoiService
         
 
         using var dbContext = new MscDbContext();
-        var result = dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        var result = dbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
             investmentTot = investmentTot + item.Investment + item.Lon;
@@ -255,5 +220,7 @@ public class RoiStats
     
     //fun Facts
     public float ProductionIndex { get; set; } = 0;
+
+    public Sqlite.Models.EnergyCalculationParameter EnergyCalculationParameter { get; set; }
 
 }
