@@ -27,8 +27,8 @@ public class Energy
     public double ProductionOwnUseProfit { get; set; } = 0;
     [Required]
     public double PurchasedCost { get; set; } = 0;
-    //[Required]
-    //public double BatteryChargeProfit { get; set; } = 0;
+    [Required]
+    public double BatteryChargeProfitFake { get; set; } = 0;
     [Required]
     public double BatteryUsedProfit { get; set; } = 0;
     [Required]

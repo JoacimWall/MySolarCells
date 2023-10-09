@@ -13,8 +13,8 @@
         
 
         <Button Margin="0,16" Grid.Row="1"  Grid.ColumnSpan="3" Text="Invest And Lon" Command="{Binding ShowInvestAndLonCommand}"/>
-
-        <Button Margin="0,16" Grid.Row="2"  Grid.ColumnSpan="3" Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
+        <Button Margin="0,16" Grid.Row="2"  Grid.ColumnSpan="3" Text="Calc parameters" Command="{Binding ShowCalcParametersCommand}"/>
+        <Button Margin="0,16" Grid.Row="3"  Grid.ColumnSpan="3" Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
         
 
     </Grid>

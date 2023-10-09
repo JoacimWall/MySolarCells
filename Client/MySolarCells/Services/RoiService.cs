@@ -89,22 +89,27 @@ public class RoiService : IRoiService
             roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2));
         else
             roiStats.TotalProductionOwnUseProfit = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.FixedPriceKwh, 2));
-        //Battery
-        roiStats.TotalBatteryCharge = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryCharge), 2));
+        //Battery Used
+        roiStats.TotalBatteryUsed = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryUsed), 2));
         if (calcParams.UseSpotPrice)
             roiStats.TotalBatteryUsedProfit = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2));
         else
             roiStats.TotalBatteryUsedProfit = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.FixedPriceKwh, 2));
-        
-
-        roiStats.TotalBatteryUsed = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryUsed), 2));
+        //Battery Used
+        roiStats.TotalBatteryCharge = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryCharge), 2));
+        if (calcParams.UseSpotPrice)
+            roiStats.TotalBatteryChargeProfitFake = Convert.ToSingle(Math.Round(energy.Sum(x => x.BatteryChargeProfitFake), 2));
+        else
+            roiStats.TotalBatteryChargeProfitFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.FixedPriceKwh, 2));
 
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.ProdCompensationElectricityLowload, 2));
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.TransferFee, 2));
+        roiStats.TotalSavedTransferFeeBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.TransferFee, 2));
         roiStats.TotalSavedTransferFeeBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.TransferFee, 2));
         roiStats.TotalTransferFeePurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.TransferFee, 2));
         roiStats.TotalSavedEnergyTaxProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.EnergyTax, 2));
+        roiStats.TotalSavedEnergyTaxBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.EnergyTax, 2));
         roiStats.TotalSavedEnergyTaxBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.EnergyTax, 2));
         roiStats.TotalTaxPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.EnergyTax, 2));
         roiStats.TotalSavedEnergyTaxReductionProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.TaxReduction, 2));
@@ -216,6 +221,8 @@ public class RoiStats
     public float TotalProductionSoldNegativeProfit { get; set; } = 0;
     public float TotalProductionOwnUseProfit { get; set; } = 0;
     public float TotalBatteryUsedProfit { get; set; } = 0;
+    //This is only for fun you dont sell this kwh you load the battery  
+    public float TotalBatteryChargeProfitFake { get; set; } = 0;
     
     public float TotalPurchasedCost { get; set; } = 0;
 
@@ -223,10 +230,12 @@ public class RoiStats
     public float TotalCompensationForProductionToGrid { get; set; } = 0;
     public float TotalSavedTransferFeeProductionOwnUse { get; set; } = 0;
     public float TotalSavedTransferFeeBatteryUse { get; set; } = 0;
+    public float TotalSavedTransferFeeBatteryChargeFake { get; set; } = 0;
     public float TotalTransferFeePurchased { get; set; } = 0;
     public float TotalSavedEnergyTaxProductionOwnUse { get; set; } = 0;
     public float TotalSavedEnergyTaxBatteryUse { get; set; } = 0;
-    
+    public float TotalSavedEnergyTaxBatteryChargeFake { get; set; } = 0;
+
     public float TotalTaxPurchased { get; set; } = 0;
     public float TotalPurchasedTransferFee { get; set; } = 0;
     public float TotalPurchasedTax { get; set; } = 0;

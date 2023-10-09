@@ -1,5 +1,4 @@
 ﻿
-using Microcharts;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -14,32 +13,10 @@ public class EnergyViewModel : BaseViewModel
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
-        //GradientStopCollection prod = new GradientStopCollection();
-        //prod.Add(new GradientStop(Color.FromArgb("#fa9702"), (float)0.1));
-        //prod.Add(new GradientStop(Color.FromArgb("#c9841c"), (float)1.0));
-        //LinearGradientBrush brushProduction1 = new LinearGradientBrush(prod);
-        //brushProduction1.EndPoint = new Point(0, 1);
-        //LinearGradientBrush brushProduction2 = Color.FromArgb("#489c2a");
-        ColorSold = Color.FromArgb("#fa9702");
-        ColorUsed = Color.FromArgb("#22a81b");
-        ColorPurchased = Color.FromArgb("#1b25b3");
-        BrushSold = Color.FromArgb("#fa9702");
-        BrushUsed = Color.FromArgb("#22a81b");
-        BrushPurchased = Color.FromArgb("#1b25b3");
-
-        PaletteBrushesProductionSold.Add(BrushSold);
-        PaletteBrushesProductionUsed.Add(BrushUsed);
-        PaletteBrushesPurchased.Add(BrushPurchased);
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
 
-    public Brush BrushSold { get; set; }
-    public Brush BrushUsed { get; set; }
-    public Brush BrushPurchased { get; set; }
-    public Color ColorSold { get; set; }
-    public Color ColorUsed { get; set; }
-    public Color ColorPurchased { get; set; }
     private async Task Sync()
     {
         using var dlg = DialogService.GetProgress("");
@@ -65,11 +42,6 @@ public class EnergyViewModel : BaseViewModel
         if (!resultSeries.WasSuccessful)
         {
             await DialogService.ShowAlertAsync("There is no data to show on This date.", AppResources.My_Solar_Cells, AppResources.Ok);
-            EnergyChartBatteryCharge = null;
-            EnergyChartProdSold = null;
-            EnergyChartProdUsed = null;
-            EnergyChartBatteryUsed = null;
-            EnergyChartConsumedGrid = null;
             return false;
         }
         
@@ -83,128 +55,73 @@ public class EnergyViewModel : BaseViewModel
             TextSize = 20,
             Typeface = SkiaSharpHelper.OpenSansRegular
         };
-        
-
-        //Production Sold
-        EnergyChartProdSoldTitle = resultSeries.Model.ChartSeriesProductionSold[0].Name;
-        if (resultSeries.Model.ChartSeriesProductionSold[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartProdSold = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesProductionSold[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-               // LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            EnergyChartProdSold = null;
-
-        //Battery charge
-        EnergyBatteryChargeChartTitle = resultSeries.Model.ChartSeriesBatteryCharge[0].Name;
-        if (resultSeries.Model.ChartSeriesBatteryCharge[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartBatteryCharge = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesBatteryCharge[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-                // LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            EnergyChartBatteryCharge = null;
-        //Production Used
-        EnergyChartProdUsedTitle = resultSeries.Model.ChartSeriesProductionUsed[0].Name;
-        if (resultSeries.Model.ChartSeriesProductionUsed[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartProdUsed = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesProductionUsed[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-               // LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            EnergyChartProdUsed = null;
-
-        //Battery Used
-        EnergyChartBatteryUsedTitle = resultSeries.Model.ChartSeriesBatteryUsed[0].Name;
-        if (resultSeries.Model.ChartSeriesBatteryUsed[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartBatteryUsed = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesBatteryUsed[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-                // LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            EnergyChartBatteryUsed = null;
-        //Consumtion Grid
-        EnergyChartConsumedGridTitle = resultSeries.Model.ChartSeriesConsumtionGrid[0].Name;
-        if (resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            EnergyChartConsumedGrid = new Microcharts.BarChart
-            {
-                Margin = 6,
-                Entries = resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries,
-                CornerRadius = 6,
-                ShowYAxisLines = true,
-                ShowYAxisText = true,
-                YAxisTextPaint = YAxesPaint,
-                LabelTextSize = 24,
-                SerieLabelTextSize = 24,
-                ValueLabelTextSize = 24,
-                MaxValue = resultSeries.Model.MaxValueYaxes,
-                //LegendOption = Microcharts.SeriesLegendOption.Bottom
-            };
-        else
-            energyChartConsumedGrid = null;
 
 
         ConsumtionChartTitle = resultSeries.Model.ConsumtionChartTitle;
         ProductionChartTitle = resultSeries.Model.ProductionChartTitle;
+
+        // ---------- Production Graph ---------------------------
+        //Production Sold
         DataSold.Clear();
-        foreach (var item in resultSeries.Model.ChartSeriesProductionSold[0].Entries)
-            DataSold.Add(item);
+        EnergyChartProdSoldTitle = resultSeries.Model.ProductionSoldTile;
+        Brush brushProductionSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
+        ColorSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
+        PaletteBrushesProductionSold.Add(brushProductionSold);
+        if (resultSeries.Model.ChartSeriesProductionSold.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesProductionSold)
+                DataSold.Add(item);
 
+        //Battery charge
         DataBatteryCharge.Clear();
-        foreach (var item in resultSeries.Model.ChartSeriesBatteryCharge[0].Entries)
-            DataBatteryCharge.Add(item);
+        EnergyBatteryChargeChartTitle = resultSeries.Model.BatteryChargeTitle;
+        Brush brushBatteryCharge = resultSeries.Model.ChartSeriesBatteryCharge.First().Color;
+        ColorbatteryCharge = resultSeries.Model.ChartSeriesBatteryCharge.First().Color;
+        PaletteBrushesBatteryCharge.Add(brushBatteryCharge); 
+        if (resultSeries.Model.ChartSeriesBatteryCharge.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesBatteryCharge)
+                DataBatteryCharge.Add(item);
 
-        DataUsed.Clear();
-        foreach (var item in resultSeries.Model.ChartSeriesProductionUsed[0].Entries)
-            DataUsed.Add(item);
-
+        //----------Consumption Graph ------------------------------
+        //Battery Used
         DataBatteryUsed.Clear();
-        foreach (var item in resultSeries.Model.ChartSeriesBatteryUsed[0].Entries)
-            DataBatteryUsed.Add(item);
+        EnergyChartBatteryUsedTitle = resultSeries.Model.BatteryUsedTile;
+        Brush brushBatteryUsed = resultSeries.Model.ChartSeriesBatteryUsed.First().Color;
+        ColorbatteryUsed = resultSeries.Model.ChartSeriesBatteryUsed.First().Color;
+        PaletteBrushesBatteryUsed.Add(brushBatteryUsed);
+        if (resultSeries.Model.ChartSeriesBatteryUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesBatteryUsed)
+                DataBatteryUsed.Add(item);
 
+        //Consumtion Grid
         DataPurchased.Clear();
-        foreach (var item in resultSeries.Model.ChartSeriesConsumtionGrid[0].Entries)
-            DataPurchased.Add(item);
+        EnergyChartConsumedGridTitle = resultSeries.Model.ConsumedGridTile;
+        Brush brushConsumedGrid = resultSeries.Model.ChartSeriesConsumtionGrid.First().Color;
+        ColorPurchased = resultSeries.Model.ChartSeriesConsumtionGrid.First().Color;
+        PaletteBrushesPurchased.Add(brushConsumedGrid);
+        if (resultSeries.Model.ChartSeriesConsumtionGrid.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesConsumtionGrid)
+                DataPurchased.Add(item);
+        //-------- Production And Cosnumption Graph ------------------
+        //Production Used
+        DataUsed.Clear();
+        EnergyChartProdUsedTitle = resultSeries.Model.ProductionUsedTile;
+        Brush brushProdUsed = resultSeries.Model.ChartSeriesProductionUsed.First().Color;
+        ColorUsed = resultSeries.Model.ChartSeriesProductionUsed.First().Color;
+        PaletteBrushesProductionUsed.Add(brushProdUsed);
+        if (resultSeries.Model.ChartSeriesProductionUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesProductionUsed)
+                DataUsed.Add(item);
+
+
+
+
+
+
+
+
+       
+
+       
         
         if (ChartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
             ProductionChartXtitle = "kWh";
@@ -224,7 +141,8 @@ public class EnergyViewModel : BaseViewModel
     public IList<Brush> PaletteBrushesProductionSold { get; set; } = new List<Brush>();
     public IList<Brush> PaletteBrushesProductionUsed { get; set; } = new List<Brush>();
     public IList<Brush> PaletteBrushesPurchased { get; set; } = new List<Brush>();
-   
+    public IList<Brush> PaletteBrushesBatteryCharge { get; set; } = new List<Brush>();
+    public IList<Brush> PaletteBrushesBatteryUsed { get; set; } = new List<Brush>();
 
     private ObservableCollection<ChartEntry> dataSold = new ObservableCollection<ChartEntry>();
     public ObservableCollection<ChartEntry> DataSold
@@ -283,37 +201,66 @@ public class EnergyViewModel : BaseViewModel
         get { return chartDataRequest; }
         set { SetProperty(ref chartDataRequest, value); }
     }
-
-    private Microcharts.Chart energyChartBatteryCharge;
-    public Microcharts.Chart EnergyChartBatteryCharge
+    private Color colorSold;
+    public Color ColorSold
     {
-        get { return energyChartBatteryCharge; }
-        set { SetProperty(ref energyChartBatteryCharge, value); }
+        get { return colorSold; }
+        set { SetProperty(ref colorSold, value); }
     }
-    private Microcharts.Chart energyChartProdSold;
-    public Microcharts.Chart EnergyChartProdSold
+    private Color colorUsed;
+    public Color ColorUsed
     {
-        get { return energyChartProdSold; }
-        set { SetProperty(ref energyChartProdSold, value); }
+        get { return colorUsed; }
+        set { SetProperty(ref colorUsed, value); }
     }
-    private Microcharts.Chart energyChartProdUsed;
-    public Microcharts.Chart EnergyChartProdUsed
+    private Color colorPurchased;
+    public Color ColorPurchased
     {
-        get { return energyChartProdUsed; }
-        set { SetProperty(ref energyChartProdUsed, value); }
+        get { return colorPurchased; }
+        set { SetProperty(ref colorPurchased, value); }
     }
-    private Microcharts.Chart energyChartBatteryUsed;
-    public Microcharts.Chart EnergyChartBatteryUsed
+    private Color colorbatteryUsed;
+    public Color ColorbatteryUsed
     {
-        get { return energyChartBatteryUsed; }
-        set { SetProperty(ref energyChartBatteryUsed, value); }
+        get { return colorbatteryUsed; }
+        set { SetProperty(ref colorbatteryUsed, value); }
     }
-    private Microcharts.Chart energyChartConsumedGrid;
-    public Microcharts.Chart EnergyChartConsumedGrid
+    private Color colorbatteryCharge;
+    public Color ColorbatteryCharge
     {
-        get { return energyChartConsumedGrid; }
-        set { SetProperty(ref energyChartConsumedGrid, value); }
+        get { return colorbatteryCharge; }
+        set { SetProperty(ref colorbatteryCharge, value); }
     }
+    //private Chart energyChartBatteryCharge;
+    //public .Chart EnergyChartBatteryCharge
+    //{
+    //    get { return energyChartBatteryCharge; }
+    //    set { SetProperty(ref energyChartBatteryCharge, value); }
+    //}
+    //private Microcharts.Chart energyChartProdSold;
+    //public Microcharts.Chart EnergyChartProdSold
+    //{
+    //    get { return energyChartProdSold; }
+    //    set { SetProperty(ref energyChartProdSold, value); }
+    //}
+    //private Microcharts.Chart energyChartProdUsed;
+    //public Microcharts.Chart EnergyChartProdUsed
+    //{
+    //    get { return energyChartProdUsed; }
+    //    set { SetProperty(ref energyChartProdUsed, value); }
+    //}
+    //private Microcharts.Chart energyChartBatteryUsed;
+    //public Microcharts.Chart EnergyChartBatteryUsed
+    //{
+    //    get { return energyChartBatteryUsed; }
+    //    set { SetProperty(ref energyChartBatteryUsed, value); }
+    //}
+    //private Microcharts.Chart energyChartConsumedGrid;
+    //public Microcharts.Chart EnergyChartConsumedGrid
+    //{
+    //    get { return energyChartConsumedGrid; }
+    //    set { SetProperty(ref energyChartConsumedGrid, value); }
+    //}
 
     private string energyBatteryChargeChartTitle;
     public string EnergyBatteryChargeChartTitle

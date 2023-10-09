@@ -33,34 +33,15 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         try
         {
             await this.dbContext.SaveChangesAsync();
-            SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
-            await GoToAsync(nameof(FirstSyncView));
-            //TODO:Kolla så vi inte får med konsting time stamp på fromDate
-            //var parametersExist = await dbContext.EnergyCalculationParameter.FirstOrDefaultAsync(x => x.EnergyCalculationParameterId == selectedParameters.EnergyCalculationParameterId && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-            //if (parametersExist == null)
-            //{
-            //    parametersExist = new Services.Sqlite.Models.EnergyCalculationParameter
-            //    {
-            //        FromDate = selectedParameters.FromDate,
-            //        ProdCompensationElectricityLowload = selectedParameters.ProdCompensationElectricityLowload,
-            //        TransferFee = selectedParameters.TransferFee,
-            //        TaxReduction = selectedParameters.TaxReduction,
-            //        EnergyTax = selectedParameters.EnergyTax,
-            //        UseSpotPrice = selectedParameters.UseSpotPrice,
-            //        FixedPriceKwh = selectedParameters.FixedPriceKwh,
-            //        HomeId = MySolarCellsGlobals.SelectedHome.HomeId
-
-            //    };
-            //    //TODO:Do we neeed more info from tibber homes
-            //    await dbContext.EnergyCalculationParameter.AddAsync(parametersExist);
-            //    await dbContext.SaveChangesAsync();
-            //    SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
-            //    await GoToAsync(nameof(FirstSyncView));
-            //}
-            //else
-            //{
-            //    await DialogService.ShowAlertAsync("You cant save the same from date as exist", AppResources.My_Solar_Cells, AppResources.Ok);
-            //}
+            if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InverterSelected)
+            {
+                SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
+                await GoToAsync(nameof(FirstSyncView));
+            }
+            else
+            {
+                await GoBack();
+            }
         }
         catch (Exception ex)
         {

@@ -311,7 +311,8 @@ public class SolarEdgeService : IInverterServiceInterface
                         }
                         switch (item.type.ToLower())
                         {
-                            case "selfconsumption":
+                            //case "selfconsumption":
+                            case "production":
                                 exist.SelfConsumption = exist.SelfConsumption + (value.value.HasValue ? value.value.Value : 0);
                                 break;
                             case "feedin":
@@ -330,6 +331,7 @@ public class SolarEdgeService : IInverterServiceInterface
                             default:
                                 break;
                         }
+                        exist.SelfConsumption = exist.SelfConsumption - exist.FeedIn;
                     }
                 }
                 //Add Battery max 7 days
@@ -405,12 +407,14 @@ public class SolarEdgeService : IInverterServiceInterface
                         energyExist.BatteryCharge = sumes[i].batteryCharge > 0 ? Convert.ToDouble((sumes[i].batteryCharge/12)/1000) : 0;
                         energyExist.BatteryUsed = sumes[i].batteryOutput > 0 ? Convert.ToDouble((sumes[i].batteryOutput/12) / 1000) : 0;
                         //Fixar till så att det blir rätt då ProductionOwnUse är både använt och laddat batteriet
-                        energyExist.ProductionOwnUse = energyExist.ProductionOwnUse - energyExist.BatteryCharge;
+                        energyExist.ProductionOwnUse = energyExist.ProductionOwnUse - energyExist.BatteryUsed;
+                        if (energyExist.ProductionOwnUse < 0)
+                            energyExist.ProductionOwnUse = 0;
                         //Calc spot costs
                         energyExist.PurchasedCost = energyExist.Purchased * energyExist.UnitPriceBuy;
                         energyExist.ProductionSoldProfit = energyExist.ProductionSold * energyExist.UnitPriceSold;
                         energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
-                        //energyExist.BatteryChargeProfit = energyExist.BatteryCharge * energyExist.UnitPriceSold;
+                        energyExist.BatteryChargeProfitFake = energyExist.BatteryCharge * energyExist.UnitPriceSold;
                         energyExist.BatteryUsedProfit = energyExist.BatteryUsed * energyExist.UnitPriceBuy;
                         eneryList.Add(energyExist);
                     }

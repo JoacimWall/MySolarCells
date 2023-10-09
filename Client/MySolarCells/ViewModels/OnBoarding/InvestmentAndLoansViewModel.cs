@@ -50,6 +50,15 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
         }
         await dbContext.SaveChangesAsync();
+        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.FirstImporInverterIsDone)
+        {
+            await GoBack();
+            //await GoToAsync(nameof(FirstSyncView));
+        }
+        else
+        {
+            await GoBack();
+        }
     }
 
     private async Task AddInterest()

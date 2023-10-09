@@ -18,6 +18,13 @@ public class MoreViewModel : BaseViewModel
     }
 
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
+    public ICommand ShowCalcParametersCommand => new Command(async () => await ShowCalcParameters());
+
+    private async Task ShowCalcParameters()
+    {
+        await GoToAsync(nameof(EnergyCalculationParameterView));
+    }
+
     public ICommand ExportExcelCommand => new Command(async () => await ExportExcel(MySolarCellsGlobals.SelectedHome.HomeId));
 
     private async Task<bool> ExportExcel(int homeId)

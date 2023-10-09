@@ -14,7 +14,7 @@ public partial class App : Application
     }
     private async Task<bool> initApp(bool fromResume)
     {
-        //this.settingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
+        this.settingsService.OnboardingStatus = OnboardingStatusEnum.FirstImporInverterIsDone;
         switch (settingsService.OnboardingStatus)
         {
             case OnboardingStatusEnum.Unknown:

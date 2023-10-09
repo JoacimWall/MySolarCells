@@ -5,7 +5,6 @@
                         x:Class="MySolarCells.Views.Energy.EnergyView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Energy"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
                         xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
@@ -37,7 +36,7 @@
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorUsed}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
-                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
+                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryCharge}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
             </HorizontalStackLayout>
 
@@ -88,7 +87,7 @@
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
+                                PaletteBrushes="{Binding PaletteBrushesBatteryCharge}">
 
                 </chart:StackingColumnSeries>
 
@@ -101,7 +100,7 @@
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
                 <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
                 <Label VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
-                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorSold}"  />
+                 <BoxView VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryUsed}"  />
                 <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartBatteryUsedTitle}"/>
             </HorizontalStackLayout>
 
@@ -153,7 +152,7 @@
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
+                                PaletteBrushes="{Binding PaletteBrushesBatteryUsed}">
 
                 </chart:StackingColumnSeries>
 

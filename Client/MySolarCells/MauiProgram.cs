@@ -1,7 +1,6 @@
 ﻿namespace MySolarCells;
 
 using CommunityToolkit.Maui;
-using Microcharts.Maui;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
 
@@ -13,7 +12,6 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
             .ConfigureSyncfusionCore()
-            .UseMicrocharts()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .ConfigureServices()
