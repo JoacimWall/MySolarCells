@@ -10,7 +10,8 @@
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifer>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
 		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!--<RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+		<!--<RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>-->
+		<!--<SelfContained>true</SelfContained>-->
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MySolarCells</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -19,7 +20,7 @@
 		<!-- Display name -->
 		<ApplicationTitle>My Solar Cells</ApplicationTitle>
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mysolarcells</ApplicationId>
+		<ApplicationId>com.walltech.mysolarcells.beta</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
@@ -117,5 +118,30 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	  <CodesignProvision>My solar cells Beta</CodesignProvision>
+	  <CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
+	  <MtouchLink>SdkOnly</MtouchLink>
+	  <RunAOTCompilation>true</RunAOTCompilation>
+	  <!-- Optional -->
+	  <EnableLLVM>true</EnableLLVM>
+	  <!--Detta för annars funkar inte MediaElment på IOS i Release mode-->
+	  <UseInterpreter>true</UseInterpreter>
+	  <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+	  <CodesignExtraArgs></CodesignExtraArgs>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+	  <AndroidDexTool>d8</AndroidDexTool>
+	  <LangVersion>latest</LangVersion>
+	  <RunAOTCompilation>false</RunAOTCompilation>
+	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
+	  <AndroidKeyStore>True</AndroidKeyStore>
+	  <AndroidSigningKeyStore>/Users/joacimwall/GitRepos/MySolarCells/Client/com.walltech.mysolarcells.beta/com.walltech.mysolarcells.beta.keystore</AndroidSigningKeyStore>
+	  <AndroidSigningStorePass>Digital4818</AndroidSigningStorePass>
+	  <AndroidSigningKeyAlias>com.walltech.mysoloarcells.beta</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>Digital4818</AndroidSigningKeyPass>
 	</PropertyGroup>
 </Project>

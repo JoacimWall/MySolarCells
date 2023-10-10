@@ -215,7 +215,7 @@ public class MoreViewModel : BaseViewModel
 
             worksheet.Range["A29"].Text = "ROI";
             worksheet.Range["A30"].CellStyle.Font.Bold = true;
-            worksheet.Range["A30"].Text = "Years until ROI";
+            worksheet.Range["A30"].Text = "Years left until ROI";
             worksheet.Range["A31"].Text = "Total investment & lon";
             worksheet.Range["A32"].Text = "Total produced & saved";
             worksheet.Range["A33"].Text = "Left of investment cost";
