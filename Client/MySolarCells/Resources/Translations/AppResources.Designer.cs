@@ -76,11 +76,56 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Goto Tibber Api site.
+        /// </summary>
+        public static string Goto_Tibber_Api_Site {
+            get {
+                return ResourceManager.GetString("Goto_Tibber_Api_Site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid supplier.
+        /// </summary>
+        public static string Grid_Supplier {
+            get {
+                return ResourceManager.GetString("Grid_Supplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import only spot prices.
+        /// </summary>
+        public static string Import_Only_Spot_Prices {
+            get {
+                return ResourceManager.GetString("Import_Only_Spot_Prices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this if you get consumption and production from Inverter and only need Tibber for the Spot price per hour..
+        /// </summary>
+        public static string Import_Only_Spot_Prices_Desc {
+            get {
+                return ResourceManager.GetString("Import_Only_Spot_Prices_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In order to retrieve information from Tibber, we need an Access Token. You can get it by click on &apos;Goto Tibber Api site&apos; below. Copy/paste the api key in to the field below..
         /// </summary>
         public static string In_Order_To_Retrieve_Information_From_Tibber_And_More {
             get {
                 return ResourceManager.GetString("In_Order_To_Retrieve_Information_From_Tibber_And_More", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inverter.
+        /// </summary>
+        public static string Inverter {
+            get {
+                return ResourceManager.GetString("Inverter", resourceCulture);
             }
         }
         
@@ -139,6 +184,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pick the invert from the list below that represent you installation.
+        /// </summary>
+        public static string Pick_The_Invert_Desc {
+            get {
+                return ResourceManager.GetString("Pick_The_Invert_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Production.
         /// </summary>
         public static string Production {
@@ -153,6 +207,51 @@ namespace MySolarCells.Resources.Translations {
         public static string ROI {
             get {
                 return ResourceManager.GetString("ROI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the home you want to analyze.
+        /// </summary>
+        public static string Select_The_Home_You_Want_To_Analyze {
+            get {
+                return ResourceManager.GetString("Select_The_Home_You_Want_To_Analyze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tibber.
+        /// </summary>
+        public static string Tibber {
+            get {
+                return ResourceManager.GetString("Tibber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validate.
+        /// </summary>
+        public static string Validate {
+            get {
+                return ResourceManager.GetString("Validate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
     }

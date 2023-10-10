@@ -8,15 +8,23 @@
                         xmlns:ctl="clr-namespace:MySolarCells.Controls"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         x:DataType="vm:MoreViewModel">
-     <ScrollView>
-    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
-        
+    <ScrollView>
+        <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
 
-        <Button Margin="0,16" Grid.Row="1"  Grid.ColumnSpan="3" Text="Invest And Lon" Command="{Binding ShowInvestAndLonCommand}"/>
-        <Button Margin="0,16" Grid.Row="2"  Grid.ColumnSpan="3" Text="Calc parameters" Command="{Binding ShowCalcParametersCommand}"/>
-        <Button Margin="0,16" Grid.Row="3"  Grid.ColumnSpan="3" Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
-        
+            <VerticalStackLayout Grid.Row="1"  Grid.ColumnSpan="3">
+                <Button Margin="0,16"  Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
+                <Button Margin="0,16"  Text="Electricity supplier" Command="{Binding ElectricitySupplierCommand}"/>
+                <Button Margin="0,16"  Text="Inverter settings" Command="{Binding InverterSettingsCommand}"/>
+                <Button Margin="0,16"  Text="Calc parameters" Command="{Binding ShowCalcParametersCommand}"/>
+                <Button Margin="0,16"  Text="Invest And Lon" Command="{Binding ShowInvestAndLonCommand}"/>
 
-    </Grid>
-     </ScrollView>
+
+
+
+            </VerticalStackLayout>
+
+
+
+        </Grid>
+    </ScrollView>
 </views:BaseContentPage>

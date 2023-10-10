@@ -5,12 +5,12 @@ namespace MySolarCells.ViewModels.OnBoarding;
 
 public class InvestmentAndLoanViewModel : BaseViewModel
 {
-   
+
     public InvestmentAndLoanViewModel()
     {
-       
+
         using var dbContext = new MscDbContext();
-        var result =  dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        var result = dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
             InvestmentAndLons.Add(item);
@@ -50,14 +50,15 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
         }
         await dbContext.SaveChangesAsync();
-        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.FirstImporInverterIsDone)
+        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
         {
             await GoBack();
-            //await GoToAsync(nameof(FirstSyncView));
+           
         }
         else
         {
-            await GoBack();
+            SettingsService.OnboardingStatus = OnboardingStatusEnum.InvestmentAndLonDone;
+            await GoToAsync(nameof(FirstSyncView));
         }
     }
 
@@ -68,7 +69,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             if (SelectedInvestmentAndlon.Interest == null)
                 SelectedInvestmentAndlon.Interest = new ObservableCollection<InvestmentAndLonInterest>();
 
-            SelectedInvestmentAndlon.Interest.Add(new Services.Sqlite.Models.InvestmentAndLonInterest {Description = "MyDescription", FromDate = DateTime.Today });
+            SelectedInvestmentAndlon.Interest.Add(new Services.Sqlite.Models.InvestmentAndLonInterest { Description = "MyDescription", FromDate = DateTime.Today });
             SelectedInterest = SelectedInvestmentAndlon.Interest.Last();
         }
     }

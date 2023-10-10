@@ -18,15 +18,18 @@ public partial class App : Application
         switch (settingsService.OnboardingStatus)
         {
             case OnboardingStatusEnum.Unknown:
-                await Shell.Current.GoToAsync($"//{nameof(ElectricitySupplierConnectView)}");
+                await Shell.Current.GoToAsync($"//{nameof(ElectricitySupplierView)}");
                 break;
             case OnboardingStatusEnum.ElectricitySupplierSelected:
-                await Shell.Current.GoToAsync($"//{nameof(InverterConnectView)}");
+                await Shell.Current.GoToAsync($"//{nameof(InverterView)}");
                 break;
             case OnboardingStatusEnum.InverterSelected:
                 await Shell.Current.GoToAsync($"//{nameof(EnergyCalculationParameterView)}");
                 break;
             case OnboardingStatusEnum.EnergyCalculationparametersSelected:
+                await Shell.Current.GoToAsync($"//{nameof(InvestmentAndLoanView)}");
+                break;
+            case OnboardingStatusEnum.InvestmentAndLonDone:
             case OnboardingStatusEnum.FirstImportElectricitySupplierIsDone:
                 await Shell.Current.GoToAsync($"//{nameof(FirstSyncView)}");
                 break;

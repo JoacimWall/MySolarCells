@@ -91,4 +91,38 @@
  <data name="Production" xml:space="preserve">
     <value>Production</value>
   <comment>Need review</comment></data>
+ <data name="Grid_Supplier" xml:space="preserve">
+    <value>Grid supplier</value>
+  <comment>Need review</comment></data>
+<data name="Save" xml:space="preserve">
+    <value>Save</value>
+  <comment>Need review</comment></data>
+<data name="Tibber" xml:space="preserve">
+    <value>Tibber</value>
+  <comment>Need review</comment></data>
+<data name="Validate" xml:space="preserve">
+    <value>Validate</value>
+  <comment>Need review</comment></data>
+<data name="Select_The_Home_You_Want_To_Analyze" xml:space="preserve">
+    <value>Select the home you want to analyze</value>
+  <comment>Need review</comment></data>
+<data name="Year" xml:space="preserve">
+    <value>Year</value>
+  <comment>Need review</comment></data>
+<data name="Import_Only_Spot_Prices" xml:space="preserve">
+    <value>Import only spot prices</value>
+  <comment>Need review</comment></data>
+<data name="Import_Only_Spot_Prices_Desc" xml:space="preserve">
+    <value>Use this if you get consumption and production from Inverter and only need Tibber for the Spot price per hour.</value>
+  <comment>Need review</comment></data>
+<data name="Goto_Tibber_Api_Site" xml:space="preserve">
+    <value>Goto Tibber Api site</value>
+  <comment>Need review</comment></data>
+<data name="Inverter" xml:space="preserve">
+    <value>Inverter</value>
+  <comment>Need review</comment></data>
+<data name="Pick_The_Invert_Desc" xml:space="preserve">
+    <value>Pick the invert from the list below that represent you installation</value>
+  <comment>Need review</comment></data>
+
 </root>

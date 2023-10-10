@@ -1,23 +1,38 @@
 ﻿namespace MySolarCells.ViewModels.OnBoarding;
 
-public class InverterConnectViewModel : BaseViewModel
+public class InverterViewModel : BaseViewModel
 {
     private InverterLoginResponse inverterLoginResponse;
     IInverterServiceInterface InverterService;
-    public InverterConnectViewModel()
+    public InverterViewModel()
     {
 
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
+        using var dbContext = new MscDbContext();
+        var inverter = dbContext.Inverter.FirstOrDefault();
+        if (inverter == null)
+        {
+            SelectedInverterModel = InverterModels.First();
+        }
+        else
+        {
+            foreach (var item in InverterModels)
+            {
+                if (item.ItemValue == inverter.InverterTyp)
+                {
+                    SelectedInverterModel = item;
+                    break;
+                }
+            }
 
-        SelectedInverterModel = InverterModels.First();
-
+        }
     }
 
     public ICommand TestConnectionCommand => new Command(async () => await TestConnection());
-    public ICommand SaveInverterCommand => new Command(async () => await SavAndMoveOn());
+    public ICommand SaveCommand => new Command(async () => await SaveInverter());
     private async Task TestConnection()
     {
         var resultLogin = await this.InverterService.TestConnection(this.userName, this.password,this.apiUrl,this.apiKey);
@@ -41,7 +56,7 @@ public class InverterConnectViewModel : BaseViewModel
 
 
 
-    private async Task SavAndMoveOn()
+    private async Task SaveInverter()
     {
 
         //Get Inverter
@@ -77,9 +92,16 @@ public class InverterConnectViewModel : BaseViewModel
         {
             await DialogService.ShowAlertAsync("This house is already tracked", AppResources.My_Solar_Cells, AppResources.Ok);
         }
-
-        SettingsService.OnboardingStatus = OnboardingStatusEnum.InverterSelected;
-        await GoToAsync(nameof(EnergyCalculationParameterView));
+        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
+        {
+            await GoBack();
+        }
+        else
+        {
+            SettingsService.OnboardingStatus = OnboardingStatusEnum.InverterSelected;
+            await GoToAsync(nameof(EnergyCalculationParameterView));
+        }
+        
     }
 
     private ObservableCollection<InverterSite> sitesNodes = new ObservableCollection<InverterSite>();

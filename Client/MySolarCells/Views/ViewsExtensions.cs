@@ -6,8 +6,8 @@ public static class ViewsExtensions
     {
         
         //Onoarding
-        builder.Services.AddTransient<ElectricitySupplierConnectView>();
-        builder.Services.AddTransient<InverterConnectView>();
+        builder.Services.AddTransient<ElectricitySupplierView>();
+        builder.Services.AddTransient<InverterView>();
         builder.Services.AddTransient<EnergyCalculationParameterView>();
         builder.Services.AddTransient<FirstSyncView>();
         builder.Services.AddTransient<InvestmentAndLoanView>();

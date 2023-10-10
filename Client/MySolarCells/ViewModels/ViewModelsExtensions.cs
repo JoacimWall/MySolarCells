@@ -6,8 +6,8 @@ public static class ViewModelsExtensions
     {
         
         //Onboarding
-        builder.Services.AddTransient<ElectricitySupplierConnectViewModel>();
-        builder.Services.AddTransient<InverterConnectViewModel>();
+        builder.Services.AddTransient<ElectricitySupplierViewModel>();
+        builder.Services.AddTransient<InverterViewModel>();
         builder.Services.AddTransient<FirstSyncViewModel>();
         builder.Services.AddTransient<EnergyCalculationParameterViewModel>();
         builder.Services.AddTransient<InvestmentAndLoanViewModel>();

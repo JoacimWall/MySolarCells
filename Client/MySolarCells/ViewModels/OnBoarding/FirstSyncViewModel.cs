@@ -75,9 +75,10 @@ public class FirstSyncViewModel : BaseViewModel
             }
             else
             {
-                SettingsService.OnboardingStatus = OnboardingStatusEnum.FirstImporInverterIsDone;
+                SettingsService.OnboardingStatus = OnboardingStatusEnum.OnboardingDone;
                 App.Current.MainPage = new AppShell();
             }
+            
         }
     }
 

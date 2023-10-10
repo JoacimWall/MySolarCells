@@ -33,14 +33,14 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         try
         {
             await this.dbContext.SaveChangesAsync();
-            if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InverterSelected)
+            if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
             {
-                SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
-                await GoToAsync(nameof(FirstSyncView));
+                await GoBack();
             }
             else
             {
-                await GoBack();
+                SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
+                await GoToAsync(nameof(InvestmentAndLoanView));
             }
         }
         catch (Exception ex)

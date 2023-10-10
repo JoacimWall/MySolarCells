@@ -19,6 +19,19 @@ public class MoreViewModel : BaseViewModel
 
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
     public ICommand ShowCalcParametersCommand => new Command(async () => await ShowCalcParameters());
+    public ICommand ElectricitySupplierCommand => new Command(async () => await ShowElectricitySupplier());
+
+    private async Task ShowElectricitySupplier()
+    {
+        await GoToAsync(nameof(ElectricitySupplierView));
+    }
+
+    public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
+
+    private async Task ShowInverterSettings()
+    {
+        await GoToAsync(nameof(EnergyCalculationParameterView));
+    }
 
     private async Task ShowCalcParameters()
     {

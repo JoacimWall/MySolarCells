@@ -5,18 +5,34 @@
                         x:Class="MySolarCells.Views.OnBoarding.EnergyCalculationParameterView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        Shell.NavBarIsVisible="True"
                         x:DataType="vm:EnergyCalculationParameterViewModel">
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="Investment/Lon" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Save}" BackgroundColor="Transparent" ></Button>
+            </Border>
+
+        </Grid>
+
+    </Shell.TitleView>
     <ScrollView>
         <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
             <Label Grid.Row="0" Margin="0,0,0,8" Grid.ColumnSpan="3" FontSize="24" HorizontalTextAlignment="Center" Text="Calculation factors"/>
 
             <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17" Text="Calculation factors for costs and revenues related to solar cell production." HorizontalTextAlignment="Center" />
 
-             <Label Margin="0,0,0,-6" Grid.Row="2" Grid.ColumnSpan="3" Text="Calcuation parameters:" />
+            <Label Margin="0,0,0,-6" Grid.Row="2" Grid.ColumnSpan="3" Text="Calcuation parameters:" />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameters, Mode=TwoWay}" ItemDisplayBinding="{Binding FromDate}"/>
-             <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddParametersCommand}"/>
+            <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddParametersCommand}"/>
 
-             <!--FromDate-->
+            <!--FromDate-->
             <Label  Grid.Row="4" Grid.ColumnSpan="3" Text="From date"/>
             <DatePicker Grid.Row="5" Grid.ColumnSpan="3" Date="{Binding SelectedParameters.FromDate}" />
 
@@ -40,16 +56,12 @@
                 <CheckBox IsChecked="{Binding SelectedParameters.UseSpotPrice}" VerticalOptions="Center"/>
                 <Label   Text="Use Spot prices" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
-             <!--Fixed price-->
+            <!--Fixed price-->
             <VerticalStackLayout Grid.Row="16" Margin="6,0,0,-6" Grid.Column="1" Grid.ColumnSpan="2" IsVisible="{Binding SelectedParameters.ShowFixedPrice}">
-                 <Label  Text="Fixed price (kWh)" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+                <Label  Text="Fixed price (kWh)" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
                 <Entry Grid.Row="17" Grid.Column="1" Grid.ColumnSpan="2" IsVisible="{Binding SelectedParameters.ShowFixedPrice}" Text="{Binding SelectedParameters.FixedPriceKwh}"   />
-           
-
             </VerticalStackLayout>
-           
-            <!--Save-->
-            <Button Grid.Row="19"  Grid.ColumnSpan="3" Text="Save and move on" Command="{Binding SaveCommand}"/>
+
 
 
         </Grid>

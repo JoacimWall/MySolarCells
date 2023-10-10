@@ -2,15 +2,38 @@
 <Shell x:Class="MySolarCells.Views.StartupShell"
          xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:ob="clr-namespace:MySolarCells.Views.OnBoarding"
-        xmlns:views="clr-namespace:MySolarCells.Views"
-        Shell.FlyoutBehavior="Disabled">
+         xmlns:ob="clr-namespace:MySolarCells.Views.OnBoarding"
+         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+         xmlns:views="clr-namespace:MySolarCells.Views"
+         Shell.FlyoutBehavior="Disabled">
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{x:Static theming:AppColors.Primary500Color}" />
+                <Setter Property="Shell.ForegroundColor" Value="{x:Static theming:AppColors.WhiteColor}" />
+                <Setter Property="Shell.TitleColor" Value="{x:Static theming:AppColors.WhiteColor}" />
+                <Setter Property="Shell.DisabledColor" Value="{x:Static theming:AppColors.Gray400Color}" />
+                <Setter Property="Shell.UnselectedColor" Value="{x:Static theming:AppColors.Gray400Color}" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{x:Static theming:AppColors.Primary500Color}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="{x:Static theming:AppColors.WhiteColor}" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{x:Static theming:AppColors.Gray400Color}" />
+                <Setter Property="Shell.TabBarTitleColor" Value="{x:Static theming:AppColors.Primary500Color}" />
+                <Setter Property="Shell.NavBarHasShadow" Value="False" />
 
-     <ShellContent Route="StartupView" ContentTemplate="{DataTemplate views:StartupView}" />
-     <ShellContent Route="ElectricitySupplierConnectView" ContentTemplate="{DataTemplate ob:ElectricitySupplierConnectView}" />
-     <ShellContent Route="InverterConnectView" ContentTemplate="{DataTemplate ob:InverterConnectView}" />
-     <ShellContent Route="EnergyCalculationParameterView" ContentTemplate="{DataTemplate ob:EnergyCalculationParameterView}" />
-     <ShellContent Route="InvestmentAndLoanView" ContentTemplate="{DataTemplate ob:InvestmentAndLoanView}" />
-     <ShellContent Route="FirstSyncView" ContentTemplate="{DataTemplate ob:FirstSyncView}" />
+            </Style>
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="ShellContent" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="Tab" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="ShellItem" />
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <ShellContent Route="StartupView" ContentTemplate="{DataTemplate views:StartupView}" />
+    <ShellContent Route="ElectricitySupplierView" ContentTemplate="{DataTemplate ob:ElectricitySupplierView}" />
+    <ShellContent Route="InverterView" ContentTemplate="{DataTemplate ob:InverterView}" />
+    <ShellContent Route="EnergyCalculationParameterView" ContentTemplate="{DataTemplate ob:EnergyCalculationParameterView}" />
+    <ShellContent Route="InvestmentAndLoanView" ContentTemplate="{DataTemplate ob:InvestmentAndLoanView}" />
+    <ShellContent Route="FirstSyncView" ContentTemplate="{DataTemplate ob:FirstSyncView}" />
 
 </Shell>
