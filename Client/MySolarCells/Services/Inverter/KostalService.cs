@@ -79,7 +79,7 @@ public class KostalService : IInverterServiceInterface
         return new Result<GetInverterResponse>( new GetInverterResponse { InverterId= device.id.ToString(), Name = device.name });
     }
 
-    public async Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr)
+    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
         using var dbContext = new MscDbContext();

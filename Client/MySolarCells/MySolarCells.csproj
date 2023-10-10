@@ -59,7 +59,6 @@
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="Acr.UserDialogs" Version="8.0.1" />
-		<PackageReference Include="Tibber.Sdk" Version="0.5.1-beta" />
 		<PackageReference Include="EFCore.BulkExtensions" Version="8.0.0-rc.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="23.1.38" />
@@ -94,6 +93,7 @@
 		<None Remove="Resources\Images\chart.svg" />
 		<None Remove="Platforms\Android\Resources\xml\" />
 		<None Remove="Platforms\Android\Resources\xml\provider_paths.xml" />
+		<None Remove="Services\GridSupplier\" />
 	</ItemGroup>
 	<ItemGroup>
 		<BundleResource Include="MultiLingualExtensionSettings.json" />
@@ -105,6 +105,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Platforms\Android\Resources\xml\" />
+	  <Folder Include="Services\GridSupplier\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />

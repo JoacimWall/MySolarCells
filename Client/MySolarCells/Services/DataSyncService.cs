@@ -9,12 +9,12 @@ public interface IDataSyncService
 
 public class DataSyncService : IDataSyncService
 {
-    private readonly ITibberService tibberService;
+    private readonly IGridSupplierInterface gridSupplierInterface;
     private readonly IInverterServiceInterface inverterService;
-    public DataSyncService(ITibberService tibberService)
+    public DataSyncService()
     {
-        this.tibberService = tibberService;
         using var dbContext = new MscDbContext();
+        this.gridSupplierInterface = ServiceHelper.GetGridSupplierService(dbContext.Home.First().ElectricitySupplier);
         this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
     }
 
@@ -42,7 +42,7 @@ public class DataSyncService : IDataSyncService
         //ProgressStatus = "Import consumation and sold production.";
         //ProgressSubStatus = "saved rows 0";
         await Task.Delay(200);
-        var result = await this.tibberService.SyncConsumptionAndProductionFirstTime(lastSyncTime.Timestamp, progress, 0);
+        var result = await this.gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
         if (!result)
         {
             return new Result<BoolModel>("Error import consumation and sold production.");
@@ -65,7 +65,7 @@ public class DataSyncService : IDataSyncService
         {
             CalculateProgress(currentDay, totalhoursInv);
         });
-        var resultInverter = await this.inverterService.SyncProductionOwnUse(lastSyncTime.Timestamp, progress, 0);
+        var resultInverter = await this.inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
         if (!resultInverter)
         {
             return new Result<BoolModel>("Error import solar own use and calculate profit");

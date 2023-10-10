@@ -41,3 +41,4 @@ global using MySolarCells.ViewModels.More;
 global using MySolarCells.Services;
 global using MySolarCells.Services.Sqlite;
 global using MySolarCells.Services.Inverter;
+global using MySolarCells.Services.GridSupplier;

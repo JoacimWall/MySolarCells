@@ -9,17 +9,32 @@ public static class ServiceHelper
         Services = serviceProvider;
 
     public static T GetService<T>() => Services.GetService<T>();
-//    public static TService GetService<TService>() => Current.GetService<TService>();
+    //    public static TService GetService<TService>() => Current.GetService<TService>();
 
-//    public static IServiceProvider Current =>
-//#if ANDROID
-//        MauiApplication.Current.Services;
-//#elif IOS || MACCATALYST 
-//        MauiUIApplicationDelegate.Current.Services;
-//#else
-//        null;
-//#endif
+    //    public static IServiceProvider Current =>
+    //#if ANDROID
+    //        MauiApplication.Current.Services;
+    //#elif IOS || MACCATALYST 
+    //        MauiUIApplicationDelegate.Current.Services;
+    //#else
+    //        null;
+    //#endif
+    public static IGridSupplierInterface GetGridSupplierService(int electricitySupplier)
+    {
 
+        switch (electricitySupplier)
+        {
+            case (int)ElectricitySupplier.Unknown:
+                return new TibberService(ServiceHelper.GetService<IRestClient>());
+            case (int)ElectricitySupplier.Tibber:
+                return new TibberService(ServiceHelper.GetService<IRestClient>());
+           
+
+            default:
+                return null;
+        }
+
+    }
 
     public static IInverterServiceInterface GetInverterService(int inverterModel)
     {

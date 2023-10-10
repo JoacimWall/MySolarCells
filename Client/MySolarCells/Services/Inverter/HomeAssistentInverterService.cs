@@ -101,7 +101,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
         return new Result<GetInverterResponse>( new GetInverterResponse { InverterId = inverterSite.Name, Name = inverterSite.Name });
     }
 
-    public async Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr)
+    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
         using var dbContext = new MscDbContext();

@@ -7,7 +7,6 @@ public static class ServicesExtensions
         //Singelton
         builder.Services.AddSingleton<IDialogService, DialogService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
-        builder.Services.AddSingleton<ITibberService, TibberService>();
         builder.Services.AddSingleton<IRoiService, RoiService>();
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();
         builder.Services.AddSingleton<IDataSyncService, DataSyncService>();

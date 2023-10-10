@@ -1,27 +1,31 @@
-﻿using System.Net.Http.Headers;
-using Tibber.Sdk;
+﻿
+using System.Net.Http.Headers;
 
-namespace MySolarCells.Services;
+namespace MySolarCells.Services.GridSupplier;
 
-public interface ITibberService
+
+
+public class TibberService : IGridSupplierInterface
 {
-    bool Init(string apiKey);
-    Task<Result<List<Home>>> GetBasicData();
-    Task<bool> SyncConsumptionAndProductionFirstTime(DateTime start, IProgress<int> progress, int progressStartNr);
-    //Task<bool> GetHomeProduction(string SubSystemEntityId, int hours, int homeId);
-}
-
-public class TibberService : ITibberService
-{
-    private ProductInfoHeaderValue userAgent = new ProductInfoHeaderValue("my-solar-cells", "0.1");
-    private TibberApiClient client;
+    
     private IRestClient restClient;
+    public string GuideText => "To use Tibber you ned your private API key. You can get that by click on the button below and login.";
+    public string DefaultApiUrl => "";
+    public bool ShowUserName => false;
+
+    public bool ShowPassword => false;
+
+    public bool ShowApiUrl => false;
+
+    public bool ShowApiKey => true;
+    public bool ShowNavigateUrl => true;
+
+    private GridSupplierLoginResponse gridSupplierLoginResponse;
     public TibberService(IRestClient restClient)
     {
         this.restClient = restClient;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
-        //defaultRequestHeaders.Add("White-Label-Access-Key", "bf8c1e86-b23f-49f6-9156-a1e6a08895d7");
-
+       
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://api.tibber.com/v1-beta/gql", defaultRequestHeaders = defaultRequestHeaders };
         ReInitRest();
 
@@ -39,29 +43,82 @@ public class TibberService : ITibberService
             this.restClient.UpdateToken(tokens);
         }
     }
-    public bool Init(string apiKey)
+   
+    public async Task<Result<GridSupplierLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
     {
-        this.client = new TibberApiClient(apiKey, this.userAgent);
-
-        return true;
-    }
-    public async Task<Result<List<Home>>> GetBasicData()
-    {
-        var basicData = await client.GetBasicData();
-        using var fmContext = new MscDbContext();
-        //TODO:Handel errors
-        if (basicData.Errors != null)
+       
+        Dictionary<string, string> tokens = new Dictionary<string, string>
+            {
+                { AppConstants.Authorization, string.Format("Bearer {0}", apiKey) }
+            };
+        this.restClient.UpdateToken(tokens);
+        GraphQlRequestTibber graphQlRequestTibber = new GraphQlRequestTibber
         {
-            return new Result<List<Home>>(basicData.Errors.First().Message);
-        }
+            query = "{ viewer { accountType }}"
+        };
+        
+        var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
+        if (!result.WasSuccessful)
+            return new Result<GridSupplierLoginResponse>(result.ErrorMessage);
         else
         {
-            return new Result<List<Home>>(basicData.Data.Viewer.Homes.ToList());
+            gridSupplierLoginResponse = new GridSupplierLoginResponse { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() };
+            return new Result<GridSupplierLoginResponse>(new GridSupplierLoginResponse { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() });
 
         }
 
+
+
+        
+
     }
-    public async Task<bool> SyncConsumptionAndProductionFirstTime(DateTime start, IProgress<int> progress, int progressStartNr)
+    public async Task<Result<List<Sqlite.Models.Home>>> GetPickerOne()
+    {
+        GraphQlRequestTibber graphQlRequestTibber = new GraphQlRequestTibber
+        {
+            query = "{ viewer { homes { id address { address1 postalCode city country } }}}"
+        };
+        var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
+        if (!result.WasSuccessful)
+            return new Result<List<Sqlite.Models.Home>>(result.ErrorMessage);
+        else
+        {
+            List<Sqlite.Models.Home> homes = new List<Sqlite.Models.Home>();
+            foreach (var item in result.Model.data.viewer.homes)
+            {
+                homes.Add(new Sqlite.Models.Home
+                {
+                     ApiKey = gridSupplierLoginResponse.ApiKey,
+                      ElectricitySupplier = (int)ElectricitySupplier.Tibber,
+                      Name = item.address.address1,
+                      SubSystemEntityId = item.id
+
+                });
+            }
+            return new Result<List<Sqlite.Models.Home>>(homes);
+
+        }
+        //if (basicData.Errors != null)
+        //{
+        //    return new Result<List<Sqlite.Models.Home>>(basicData.Errors.First().Message);
+        //}
+        //else
+        //{
+        //    var returlist = new List<Sqlite.Models.Home>();
+        //    foreach (var item in basicData.Data.Viewer.Homes.ToList())
+        //    {
+        //        returlist.Add(new Sqlite.Models.Home
+        //        {
+        //            ApiKey = StringHelper.Decrypt(MySolarCellsGlobals.SelectedHome.ApiKey, AppConstants.Secretkey),
+        //            SubSystemEntityId = item.Id.ToString(),
+        //            Name = item.AppNickname
+        //        });
+        //    }
+        //    return new Result<List<Sqlite.Models.Home>>(returlist);
+
+        //}
+    }
+    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
         try
         {
@@ -108,7 +165,7 @@ public class TibberService : ITibberService
                     }
                 };
                 graphQlRequestTibber.query = "query getdata($homeid: ID!, $from: String, $first: Int) { viewer { home(id: $homeid) { consumption(resolution: HOURLY, after: $from, first: $first) { nodes { from to cost unitPrice unitPriceVAT consumption consumptionUnit currency } } production(resolution: HOURLY, after: $from, first: $first) { nodes { from to profit unitPrice unitPriceVAT production productionUnit currency}}}}}";
-                var resultSites = await this.restClient.ExecutePostAsync<TibberConsumptionResponse>(string.Empty, graphQlRequestTibber);
+                var resultSites = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
 
                 var cunsumI = resultSites.Model.data.viewer.home.consumption.nodes.Count;
 
@@ -258,40 +315,10 @@ public class TibberService : ITibberService
             return false;
         }
     }
-    //public async Task<bool> GetHomeProduction(string SubSystemEntityId, int hours, int homeId)
-    //{
-    //    var production = await client.GetHomeProduction(Guid.Parse(SubSystemEntityId), EnergyResolution.Hourly, hours);
-    //    using var fmContext = new MscDbContext();
-    //    //TODO:Handel errors
 
-    //    foreach (var energy in production)
-    //    {
-    //        //check if Home exist in db
-    //        var energyExist = await fmContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.From.Value.DateTime && x.HomeId == homeId);
-    //        if (energyExist == null)
-    //        {
-    //            energyExist = new Sqlite.Models.Energy
-    //            {
-    //                HomeId = homeId,
-    //                Unit = energy.ProductionUnit,
-    //                Currency = energy.Currency,
-    //                Timestamp = energy.From.Value.DateTime
-    //            };
-    //            await fmContext.Energy.AddAsync(energyExist);
-    //        }
-    //        energyExist.ElectricitySupplierProductionSold = (int)ElectricitySupplier.Tibber;
-    //        energyExist.ProductionSold = energy.Production.HasValue ? energy.Production.Value : 0;
-    //        energyExist.ProductionSoldProfit = energy.Profit.HasValue ? energy.Profit.Value : 0;
-    //        energyExist.UnitPriceSold = energy.UnitPrice.HasValue ? energy.UnitPrice.Value : 0;
-    //        energyExist.UnitPriceVatSold = energy.UnitPriceVat.HasValue ? energy.UnitPriceVat.Value : 0;
-
-    //        await fmContext.SaveChangesAsync();
-
-
-    //    }
-    //    return true;
-    //}
+    
 }
+
 //Requests
 public class GraphQlRequestTibber
 {
@@ -310,7 +337,8 @@ public class TibberConsumptionProductionRequest
 
 
 //Responses
-public class TibberConsumptionResponse
+
+public class TibberResponse
 {
     public TibberData data { get; set; }
 }
@@ -322,13 +350,28 @@ public class TibberData
 public class TibberViewer
 {
     public TibberHome home { get; set; }
+    public List<string> accountType { get; set; }
+    public List<TibberHome> homes { get; set; }
 }
 
-
+public class TibberAddress
+{
+    public string address1 { get; set; }
+    public object address2 { get; set; }
+    public object address3 { get; set; }
+    public string postalCode { get; set; }
+    public string city { get; set; }
+    public string country { get; set; }
+    public string latitude { get; set; }
+    public string longitude { get; set; }
+}
 public class TibberHome
 {
+    public string id { get; set; }
     public TibberConsumption consumption { get; set; }
     public TibberProduction production { get; set; }
+    public TibberAddress address { get; set; }
+
 }
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 public class TibberConsumption

@@ -5,7 +5,7 @@ public interface IInverterServiceInterface
     Task<Result<InverterLoginResponse>> TestConnection(string userName, string password,string apiUrl,string apiKey);
     Task<Result<List<InverterSite>>> GetPickerOne();
     Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite);
-    Task<bool> SyncProductionOwnUse(DateTime start, IProgress<int> progress, int progressStartNr);
+    Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr);
     
     string InverterGuideText { get; }
     string DefaultApiUrl { get; }

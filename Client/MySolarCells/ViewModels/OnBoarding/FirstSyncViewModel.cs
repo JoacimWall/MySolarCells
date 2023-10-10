@@ -2,13 +2,13 @@
 
 public class FirstSyncViewModel : BaseViewModel
 {
-    private readonly ITibberService tibberService;
+    private readonly IGridSupplierInterface gridSupplierService;
     private IInverterServiceInterface inverterService;
     //private bool keepUploading = true;
-    public FirstSyncViewModel(ITibberService tibberService)
+    public FirstSyncViewModel()
     {
-        this.tibberService = tibberService;
         using var dbContext = new MscDbContext();
+        this.gridSupplierService = ServiceHelper.GetGridSupplierService(dbContext.Home.First().ElectricitySupplier); ;
         this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
 
     }
@@ -31,13 +31,13 @@ public class FirstSyncViewModel : BaseViewModel
 
         await Task.Delay(200);
         //keepUploading = true;
-        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.EnergyCalculationparametersSelected)
+        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLonDone)
         {
             ShowProgressStatus = true;
             ProgressStatus = "Import consumation and sold production.";
             ProgressSubStatus = "saved rows 0";
             await Task.Delay(200);
-            var result = await this.tibberService.SyncConsumptionAndProductionFirstTime(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);
+            var result = await this.gridSupplierService.Sync(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);
             if (!result)
             {
 
@@ -68,7 +68,7 @@ public class FirstSyncViewModel : BaseViewModel
            {
                CalculateProgress(currentDay, totalhoursInv);
            });
-            var result = await this.inverterService.SyncProductionOwnUse(inverter.FromDate, progress, 0);
+            var result = await this.inverterService.Sync(inverter.FromDate, progress, 0);
             if (!result)
             {
                 await DialogService.ShowAlertAsync("Error import solar own use and calculate profit", AppResources.My_Solar_Cells, AppResources.Ok);
