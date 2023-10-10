@@ -135,7 +135,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <AndroidDexTool>d8</AndroidDexTool>
 	  <LangVersion>latest</LangVersion>
-	  <RunAOTCompilation>false</RunAOTCompilation>
+	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidKeyStore>True</AndroidKeyStore>
