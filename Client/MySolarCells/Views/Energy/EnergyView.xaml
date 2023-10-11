@@ -43,11 +43,11 @@
 
             <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250">
                 <chart:SfCartesianChart.ZoomPanBehavior>
-                    <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
                 </chart:SfCartesianChart.ZoomPanBehavior>
 
                 <chart:SfCartesianChart.XAxes>
-                    <chart:NumericalAxis ShowMajorGridLines="False" />
+                    <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
                     <chart:CategoryAxis>
 
 
@@ -108,11 +108,11 @@
 
             <chart:SfCartesianChart Grid.Row="7" Grid.ColumnSpan="3" HeightRequest="250">
                 <chart:SfCartesianChart.ZoomPanBehavior>
-                    <chart:ChartZoomPanBehavior EnablePinchZooming="True"/>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
                 </chart:SfCartesianChart.ZoomPanBehavior>
 
                 <chart:SfCartesianChart.XAxes>
-                    <chart:NumericalAxis ShowMajorGridLines="False" />
+                    <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
                     <chart:CategoryAxis>
 
 
@@ -155,6 +155,56 @@
                                 PaletteBrushes="{Binding PaletteBrushesBatteryUsed}">
 
                 </chart:StackingColumnSeries>
+
+            </chart:SfCartesianChart>
+
+            <Label  VerticalTextAlignment="Center" Grid.Row="8" Margin="8,8,8,8" Grid.Column="0" FontSize="20" Text="{Binding PriceChartTitle}"/>
+               
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,8" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3">
+                <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorPriceBuy}"  />
+                <Label VerticalTextAlignment="Center" Text="{Binding PriceChartPriceBuyTitle}"/>
+                <BoxView  VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPriceSell}"  />
+                <Label VerticalTextAlignment="Center"  Text="{Binding PriceChartPriceSellTitle}"/>
+            </HorizontalStackLayout>
+             <chart:SfCartesianChart Grid.Row="10" Grid.ColumnSpan="3" HeightRequest="250">
+                <chart:SfCartesianChart.ZoomPanBehavior>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
+                </chart:SfCartesianChart.ZoomPanBehavior>
+
+               <chart:SfCartesianChart.XAxes>
+                    <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
+                    <chart:CategoryAxis>
+
+
+                    </chart:CategoryAxis>
+                </chart:SfCartesianChart.XAxes>
+
+                <chart:SfCartesianChart.YAxes>
+                    <chart:NumericalAxis>
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="{Binding PriceChartXtitle}"/>
+                        </chart:NumericalAxis.Title>
+                    </chart:NumericalAxis>
+                </chart:SfCartesianChart.YAxes>
+
+                <chart:ColumnSeries ItemsSource="{Binding PriceBuy}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesPriceBuy}">
+                </chart:ColumnSeries>
+
+                <chart:ColumnSeries ItemsSource="{Binding PriceSell}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesPriceSell}">
+
+                </chart:ColumnSeries>
+
+                
 
             </chart:SfCartesianChart>
         </Grid>

@@ -21,17 +21,16 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             if (selectedInvestmentAndlon.Interest != null && selectedInvestmentAndlon.Interest.Count > 0)
                 SelectedInterest = selectedInvestmentAndlon.Interest.Last();
         }
+        else
+        {
+            AddInvestLon();
+        }
     }
 
-    public ICommand AddInestlonCommand => new Command(async () => await AddInvestLon());
-    public ICommand AddInterestCommand => new Command(async () => await AddInterest());
+    public ICommand AddInestlonCommand => new Command( () =>  AddInvestLon());
+    public ICommand AddInterestCommand => new Command( () =>  AddInterest());
     public ICommand SaveCommand => new Command(async () => await Save());
-    public ICommand SkipCommand => new Command(async () => await Skip());
-
-    private Task Skip()
-    {
-        throw new NotImplementedException();
-    }
+    
 
     private async Task Save()
     {
@@ -62,27 +61,27 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         }
     }
 
-    private async Task AddInterest()
+    private void  AddInterest()
     {
         if (SelectedInvestmentAndlon != null)
         {
             if (SelectedInvestmentAndlon.Interest == null)
                 SelectedInvestmentAndlon.Interest = new ObservableCollection<InvestmentAndLonInterest>();
 
-            SelectedInvestmentAndlon.Interest.Add(new Services.Sqlite.Models.InvestmentAndLonInterest { Description = "MyDescription", FromDate = DateTime.Today });
+            SelectedInvestmentAndlon.Interest.Add(new InvestmentAndLonInterest { Description = "MyDescription", FromDate = DateTime.Today });
             SelectedInterest = SelectedInvestmentAndlon.Interest.Last();
         }
     }
 
-    private async Task AddInvestLon()
+    private void AddInvestLon()
     {
-        InvestmentAndLons.Add(new Services.Sqlite.Models.InvestmentAndLon { Description = "My base investment", HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
+        InvestmentAndLons.Add(new InvestmentAndLon { Description = "My base investment", HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
         SelectedInvestmentAndlon = InvestmentAndLons.Last();
 
     }
 
-    private ObservableCollection<Services.Sqlite.Models.InvestmentAndLon> investmentAndLons = new ObservableCollection<Services.Sqlite.Models.InvestmentAndLon>();
-    public ObservableCollection<Services.Sqlite.Models.InvestmentAndLon> InvestmentAndLons
+    private ObservableCollection<InvestmentAndLon> investmentAndLons = new ObservableCollection<InvestmentAndLon>();
+    public ObservableCollection<InvestmentAndLon> InvestmentAndLons
     {
         get => investmentAndLons;
         set
@@ -91,14 +90,14 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
         }
     }
-    private Services.Sqlite.Models.InvestmentAndLon selectedInvestmentAndlon;
-    public Services.Sqlite.Models.InvestmentAndLon SelectedInvestmentAndlon
+    private InvestmentAndLon selectedInvestmentAndlon;
+    public InvestmentAndLon SelectedInvestmentAndlon
     {
         get => selectedInvestmentAndlon;
         set { SetProperty(ref selectedInvestmentAndlon, value); }
     }
-    private Services.Sqlite.Models.InvestmentAndLonInterest selectedInterest;
-    public Services.Sqlite.Models.InvestmentAndLonInterest SelectedInterest
+    private InvestmentAndLonInterest selectedInterest;
+    public InvestmentAndLonInterest SelectedInterest
     {
         get => selectedInterest;
         set { SetProperty(ref selectedInterest, value); }

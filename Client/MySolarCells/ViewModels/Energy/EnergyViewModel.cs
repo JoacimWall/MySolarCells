@@ -57,10 +57,35 @@ public class EnergyViewModel : BaseViewModel
         };
 
 
+        // ---------- Price Graph ---------------------------
+        PriceChartTitle = resultSeries.Model.PriceChartTitle;
+        //Price Buy
+        PriceBuy.Clear();
+        PriceChartPriceBuyTitle = resultSeries.Model.PriceBuyTile;
+        Brush brushPriceBuy = resultSeries.Model.ChartSeriesPriceBuy.First().Color;
+        ColorPriceBuy = resultSeries.Model.ChartSeriesPriceBuy.First().Color;
+        PaletteBrushesPriceBuy.Add(brushPriceBuy);
+        if (resultSeries.Model.ChartSeriesPriceBuy.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesPriceBuy)
+                PriceBuy.Add(item);
+
+        //Price Sell
+        PriceSell.Clear();
+        PriceChartPriceSellTitle = resultSeries.Model.PriceSellTile;
+        Brush brushPriceSell = resultSeries.Model.ChartSeriesPriceSell.First().Color;
+        ColorPriceSell = resultSeries.Model.ChartSeriesPriceSell.First().Color;
+        PaletteBrushesPriceSell.Add(brushPriceSell);
+        if (resultSeries.Model.ChartSeriesPriceSell.Any(x => x.Value.HasValue && x.Value.Value > 0))
+            foreach (var item in resultSeries.Model.ChartSeriesPriceSell)
+                PriceSell.Add(item);
+
+
+
+        // ---------- Production Graph ---------------------------
         ConsumtionChartTitle = resultSeries.Model.ConsumtionChartTitle;
         ProductionChartTitle = resultSeries.Model.ProductionChartTitle;
 
-        // ---------- Production Graph ---------------------------
+
         //Production Sold
         DataSold.Clear();
         EnergyChartProdSoldTitle = resultSeries.Model.ProductionSoldTile;
@@ -127,6 +152,8 @@ public class EnergyViewModel : BaseViewModel
             ProductionChartXtitle = "kWh";
         else
             ProductionChartXtitle = "SEK";
+
+        PriceChartXtitle = "SEK";
         return true;
     }
     public async override Task OnAppearingAsync()
@@ -137,7 +164,33 @@ public class EnergyViewModel : BaseViewModel
 
 
     }
+    // ------------ Price Chart ------------------
+    public IList<Brush> PaletteBrushesPriceBuy { get; set; } = new List<Brush>();
+    public IList<Brush> PaletteBrushesPriceSell { get; set; } = new List<Brush>();
 
+    private ObservableCollection<ChartEntry> priceBuy = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> PriceBuy
+    {
+        get => priceBuy;
+        set
+        {
+            SetProperty(ref priceBuy, value);
+
+        }
+    }
+    private ObservableCollection<ChartEntry> priceSell = new ObservableCollection<ChartEntry>();
+    public ObservableCollection<ChartEntry> PriceSell
+    {
+        get => priceSell;
+        set
+        {
+            SetProperty(ref priceSell, value);
+
+        }
+    }
+
+
+    // ------------ Energy Charts ---------------
     public IList<Brush> PaletteBrushesProductionSold { get; set; } = new List<Brush>();
     public IList<Brush> PaletteBrushesProductionUsed { get; set; } = new List<Brush>();
     public IList<Brush> PaletteBrushesPurchased { get; set; } = new List<Brush>();
@@ -201,6 +254,20 @@ public class EnergyViewModel : BaseViewModel
         get { return chartDataRequest; }
         set { SetProperty(ref chartDataRequest, value); }
     }
+
+    private Color colorPriceBuy;
+    public Color ColorPriceBuy
+    {
+        get { return colorPriceBuy; }
+        set { SetProperty(ref colorPriceBuy, value); }
+    }
+    private Color colorPriceSell;
+    public Color ColorPriceSell
+    {
+        get { return colorPriceSell; }
+        set { SetProperty(ref colorPriceSell, value); }
+    }
+
     private Color colorSold;
     public Color ColorSold
     {
@@ -261,6 +328,8 @@ public class EnergyViewModel : BaseViewModel
     //    get { return energyChartConsumedGrid; }
     //    set { SetProperty(ref energyChartConsumedGrid, value); }
     //}
+    
+
 
     private string energyBatteryChargeChartTitle;
     public string EnergyBatteryChargeChartTitle
@@ -298,6 +367,26 @@ public class EnergyViewModel : BaseViewModel
         get { return productionChartXtitle; }
         set { SetProperty(ref productionChartXtitle, value); }
     }
+    private string priceChartXtitle;
+    public string PriceChartXtitle
+    {
+        get { return priceChartXtitle; }
+        set { SetProperty(ref priceChartXtitle, value); }
+    }
+    private string priceChartPriceBuyTitle;
+    public string PriceChartPriceBuyTitle
+    {
+        get { return priceChartPriceBuyTitle; }
+        set { SetProperty(ref priceChartPriceBuyTitle, value); }
+    }
+    private string priceChartPriceSellTitle;
+    public string PriceChartPriceSellTitle
+    {
+        get { return priceChartPriceSellTitle; }
+        set { SetProperty(ref priceChartPriceSellTitle, value); }
+    }
+
+
     private string productionChartTitle;
     public string ProductionChartTitle
     {
@@ -309,6 +398,12 @@ public class EnergyViewModel : BaseViewModel
     {
         get { return consumtionChartTitle; }
         set { SetProperty(ref consumtionChartTitle, value); }
+    }
+    private string priceChartTitle;
+    public string PriceChartTitle
+    {
+        get { return priceChartTitle; }
+        set { SetProperty(ref priceChartTitle, value); }
     }
 }
 

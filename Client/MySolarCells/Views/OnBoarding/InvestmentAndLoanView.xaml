@@ -23,7 +23,7 @@
 
     </Shell.TitleView>
     <ScrollView>
-        <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid RowSpacing="8" ColumnSpacing="4" Margin="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="Auto,*,Auto">
 
             <Label Grid.Row="0" Grid.ColumnSpan="3" FontSize="17"
@@ -32,7 +32,7 @@
             HorizontalOptions="Center" />
 
             <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Text="Investment/lon:" />
-            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding InvestmentAndLons}" SelectedItem="{Binding SelectedInvestmentAndlon}" ItemDisplayBinding="{Binding Description}"/>
+            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLons}" SelectedItem="{Binding SelectedInvestmentAndlon}" ItemDisplayBinding="{Binding Description}"/>
              <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddInestlonCommand}"/>
             <!--Description-->
             <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
@@ -50,7 +50,7 @@
             <!--Lon-->
             <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Lon (press 'Add' for adding interest information)"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="11" Grid.ColumnSpan="2" Text="{Binding SelectedInvestmentAndlon.Lon}" />
+            <Entry Grid.Row="11" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndlon.Lon}" />
              <!--Amortization-->
             <!--<Label Grid.Row="11" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Amortization" 
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
@@ -58,23 +58,23 @@
 
             <!--Inerest picker-->
             <Label Margin="0,0,0,-6" Grid.Row="13" Grid.ColumnSpan="3" Text="Interest:" />
-            <Picker Margin="0" Grid.Row="14" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedInvestmentAndlon.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
-            <Button Grid.Row="15"  Grid.Column="3" Text="Add" Command="{Binding AddInterestCommand}"/>
+            <Picker Margin="0" Grid.Row="14" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndlon.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
+            <Button Grid.Row="14"  Grid.Column="3" Text="Add" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
-            <Label Grid.Row="16" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
+            <Label Grid.Row="15" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="17" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
+            <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
             <!--FromDate iterest-->
-            <Label  Grid.Row="18" Grid.ColumnSpan="3" Text="Date"/>
-            <DatePicker Grid.Row="19" Grid.ColumnSpan="3" Date="{Binding SelectedInterest.FromDate}" />
+            <Label  Grid.Row="17" Grid.ColumnSpan="3" Text="Date"/>
+            <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Date="{Binding SelectedInterest.FromDate}" />
 
             <!--Investment-->
-            <Label Grid.Row="20" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Interest"
+            <Label Grid.Row="19" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Interest"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="21" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Interest}" />
+            <Entry Grid.Row="20" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Interest}" />
 
             <!--Skip save-->
-            <Button Grid.Row="22"  Grid.ColumnSpan="3" IsVisible="{Binding IsOnbordingMode}" Text="Skip" Command="{Binding SkipCommand}"/>
+            <!--<Button Grid.Row="22"  Grid.ColumnSpan="3" IsVisible="{Binding IsOnbordingMode}" Text="Skip" Command="{Binding SkipCommand}"/>-->
         </Grid>
     </ScrollView>
 </views:BaseContentPage>

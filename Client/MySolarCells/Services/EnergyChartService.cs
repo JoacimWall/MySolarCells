@@ -26,7 +26,7 @@ public class EnergyChartService : IEnergyChartService
         //Production used
         List<ChartEntry> listProductionUsed = new List<ChartEntry>();
         Color usedColor = Color.Parse("#46a80d");
-        
+
         //Consumtion
         List<ChartEntry> listCunsumtionGrid = new List<ChartEntry>();
         Color consumGridColor = Color.Parse("#bf2522");
@@ -36,6 +36,15 @@ public class EnergyChartService : IEnergyChartService
         //BatteryChargeExist
         List<ChartEntry> listBatteryCharge = new List<ChartEntry>();
         Color batteryChargeColor = Color.Parse("#2685e3");
+
+        //Price buy
+        List<ChartEntry> lisPriceBuy = new List<ChartEntry>();
+        Color priceBuyColor = Color.Parse("#640abf");
+        //price Sel
+        List<ChartEntry> lisPriceSold = new List<ChartEntry>();
+        Color priceSellColor = Color.Parse("#46a80d");
+
+        int devPrice = 0;
         var dataRows = await dbContext.Energy.Where(x => x.Timestamp >= chartDataRequest.FilterStart && x.Timestamp < chartDataRequest.FilterEnd).ToListAsync();
         if (dataRows != null && dataRows.Count == 0)
             return new Result<ChartDataResult>("No records", ErrorCodes.NoEnergyEntryOnCurrentDate);
@@ -46,21 +55,41 @@ public class EnergyChartService : IEnergyChartService
                 case ChartDataRange.Today:
                 case ChartDataRange.Day:
                     entryLabel = item.Timestamp.ToString("HH:mm");
+                    devPrice = 0;
                     break;
                 case ChartDataRange.Week:
                     entryLabel = item.Timestamp.ToString("ddd");
+                    devPrice = 24;
                     break;
                 case ChartDataRange.Month:
                     entryLabel = item.Timestamp.ToString("dd");
+                    devPrice = 24;
                     break;
                 case ChartDataRange.Year:
                     entryLabel = item.Timestamp.ToString("MMM");
+                    devPrice = 24 * 30;
                     break;
                 default:
                     break;
             }
 
-            //TODO:All Profit that used in graph is base on Spotprise should also use fixed proce if that is in calc params. 
+            //Price buy
+            var pricebuyExist = lisPriceBuy.FirstOrDefault(x => x.Label == entryLabel);
+            if (pricebuyExist == null)
+                lisPriceBuy.Add(new ChartEntry { Value = Convert.ToSingle(item.UnitPriceBuy + calcparms.TransferFee + calcparms.EnergyTax), Color = priceBuyColor, Label = entryLabel });
+            else
+            {
+                pricebuyExist.Value = pricebuyExist.Value + Convert.ToSingle(item.UnitPriceBuy + calcparms.TransferFee + calcparms.EnergyTax);
+            }
+            //Price Sell
+            var priceSoldExist = lisPriceSold.FirstOrDefault(x => x.Label == entryLabel);
+            if (priceSoldExist == null)
+                lisPriceSold.Add(new ChartEntry { Value = Convert.ToSingle(item.UnitPriceSold + calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction), Color = priceSellColor, Label = entryLabel });
+            else
+            {
+                priceSoldExist.Value = priceSoldExist.Value + Convert.ToSingle(item.UnitPriceBuy + calcparms.TransferFee + calcparms.EnergyTax);
+            }
+            //TODO:All Profit that used in graph is base on Spotprise should also use fixed price if that is in calc params. 
             //Production Sold
             var prodSoldExist = listProductionSold.FirstOrDefault(x => x.Label == entryLabel);
             if (prodSoldExist == null)
@@ -90,12 +119,15 @@ public class EnergyChartService : IEnergyChartService
             if (batteryUsedExist == null)
                 listBatteryUsed.Add(new ChartEntry
                 {
-                    Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryUsed) : Convert.ToSingle(item.BatteryUsedProfit + ((item.BatteryUsed) * (calcparms.TransferFee + calcparms.EnergyTax))),Color = batteryUsedColor, Label = entryLabel });
+                    Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryUsed) : Convert.ToSingle(item.BatteryUsedProfit + ((item.BatteryUsed) * (calcparms.TransferFee + calcparms.EnergyTax))),
+                    Color = batteryUsedColor,
+                    Label = entryLabel
+                });
             else
             {
                 batteryUsedExist.Value = batteryUsedExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryUsed) : Convert.ToSingle(item.BatteryUsedProfit + item.BatteryUsed + ((item.BatteryUsed) * (calcparms.TransferFee + calcparms.EnergyTax))));
             }
-            
+
             //Consumed FromGrid
             var consumedGridExist = listCunsumtionGrid.FirstOrDefault(x => x.Label == entryLabel);
             if (consumedGridExist == null)
@@ -105,8 +137,13 @@ public class EnergyChartService : IEnergyChartService
                 consumedGridExist.Value = consumedGridExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.Purchased) : Convert.ToSingle(item.PurchasedCost + item.ProductionOwnUseProfit + ((item.Purchased) * (calcparms.TransferFee + calcparms.EnergyTax))));
             }
 
-            
+
         }
+        //fix prices
+        foreach (var item in lisPriceBuy)
+            item.Value = devPrice != 0 ? item.Value / devPrice : item.Value;
+        foreach (var item in lisPriceSold)
+            item.Value = devPrice != 0 ? item.Value / devPrice : item.Value;
 
         //Fill missing days
         var currentDay = chartDataRequest.FilterStart;
@@ -199,7 +236,7 @@ public class EnergyChartService : IEnergyChartService
 
         var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd, false);
 
-       
+
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
             result.BatteryChargeTitle = string.Format("Battery {0}", Math.Round(stats.TotalBatteryCharge, 2));
@@ -211,6 +248,10 @@ public class EnergyChartService : IEnergyChartService
 
             result.ProductionChartTitle = string.Format("Production {0} kWh", Math.Round(stats.TotalBatteryCharge + stats.TotalProductionOwnUse + stats.TotalProductionSold, 2));
             result.ConsumtionChartTitle = string.Format("Consumtion {0} kWh", Math.Round(stats.TotalBatteryUsed + stats.TotalPurchased + stats.TotalProductionOwnUse, 2));
+            result.PriceChartTitle = "Prices";
+            result.PriceBuyTile = "Buy (transfer fee/tax)";
+            result.PriceSellTile = "Sell (tax red../net ben..)";
+
         }
         else
         {
@@ -229,9 +270,13 @@ public class EnergyChartService : IEnergyChartService
 
             result.ProductionChartTitle = string.Format("Production {0} Sek", Math.Round(sold + used, 2));
             result.ConsumtionChartTitle = string.Format("Consumtion {0} Sek", Math.Round(purchasedGrid + used + batteryUsed, 2));
-
+            result.PriceChartTitle = "Prices";
+            result.PriceBuyTile = "Buy (transfer fee/tax)";
+            result.PriceSellTile = "Sell (tax red../net ben..)";
         }
-        result.ChartSeriesProductionSold= listProductionSold;
+        result.ChartSeriesPriceBuy = lisPriceBuy;
+        result.ChartSeriesPriceSell = lisPriceSold;
+        result.ChartSeriesProductionSold = listProductionSold;
         result.ChartSeriesBatteryCharge = listBatteryCharge;
         result.ChartSeriesConsumtionGrid = listCunsumtionGrid;
         result.ChartSeriesBatteryUsed = listBatteryUsed;
@@ -304,14 +349,21 @@ public class ChartEntry
 }
 public class ChartDataResult
 {
+    public string PriceChartTitle { get; set; }
+    public List<ChartEntry> ChartSeriesPriceBuy { get; set; } = new List<ChartEntry>();
+    public List<ChartEntry> ChartSeriesPriceSell { get; set; } = new List<ChartEntry>();
+    public string PriceBuyTile { get; set; }
+    public string PriceSellTile { get; set; }
+
+    public string ConsumtionChartTitle { get; set; }
+    public string ProductionChartTitle { get; set; }
     public List<ChartEntry> ChartSeriesBatteryCharge { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesProductionUsed { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesProductionSold { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesBatteryUsed { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesConsumtionGrid { get; set; } = new List<ChartEntry>();
     public float MaxValueYaxes { get; set; }
-    public string ConsumtionChartTitle { get; set; }
-    public string ProductionChartTitle { get; set; }
+
 
     public string BatteryChargeTitle { get; set; }
     public string ProductionSoldTile { get; set; }
@@ -371,8 +423,8 @@ public class ChartDataRequest : ObservableObject
         get { return filterEnd; }
         set { SetProperty(ref filterEnd, value); }
     }
-    
-   
+
+
     private DateTime timeStamp;
     public DateTime TimeStamp
     {
