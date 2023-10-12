@@ -69,15 +69,18 @@ public class RoiService : IRoiService
 
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.ProdCompensationElectricityLowload, 2));
+        roiStats.TotalCompensationForProductionToGridChargeBatteryFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.ProdCompensationElectricityLowload, 2));
+
         roiStats.TotalSavedTransferFeeProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.TransferFee, 2));
-        roiStats.TotalSavedTransferFeeBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.TransferFee, 2));
+        //roiStats.TotalSavedTransferFeeBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.TransferFee, 2));
         roiStats.TotalSavedTransferFeeBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.TransferFee, 2));
         roiStats.TotalTransferFeePurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.TransferFee, 2));
         roiStats.TotalSavedEnergyTaxProductionOwnUse = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUse * calcParams.EnergyTax, 2));
-        roiStats.TotalSavedEnergyTaxBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.EnergyTax, 2));
+        //roiStats.TotalSavedEnergyTaxBatteryChargeFake = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.EnergyTax, 2));
         roiStats.TotalSavedEnergyTaxBatteryUse = Convert.ToSingle(Math.Round(roiStats.TotalBatteryUsed * calcParams.EnergyTax, 2));
         roiStats.TotalTaxPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.EnergyTax, 2));
         roiStats.TotalSavedEnergyTaxReductionProductionToGrid = Convert.ToSingle(Math.Round(roiStats.TotalProductionSold * calcParams.TaxReduction, 2));
+        roiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid = Convert.ToSingle(Math.Round(roiStats.TotalBatteryCharge * calcParams.TaxReduction, 2));
 
 
         roiStats.TotalPurchasedTransferFee = Convert.ToSingle(Math.Round(roiStats.TotalPurchased * calcParams.TransferFee, 2));
@@ -91,6 +94,7 @@ public class RoiService : IRoiService
         //summation
         roiStats.SumPurchased = Convert.ToSingle(Math.Round(roiStats.TotalPurchasedCost + roiStats.TotalTransferFeePurchased + roiStats.TotalTaxPurchased,2));
         roiStats.SumProductionSold = Convert.ToSingle(Math.Round(roiStats.TotalProductionSoldProfit + roiStats.TotalCompensationForProductionToGrid + roiStats.TotalSavedEnergyTaxReductionProductionToGrid, 2));
+        roiStats.SumProductionBatteryChargeFakeSold = Convert.ToSingle(Math.Round(roiStats.TotalBatteryChargeProfitFake + roiStats.TotalCompensationForProductionToGridChargeBatteryFake + roiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid, 2));
         roiStats.SumProductionOwnUseAndBattery = Convert.ToSingle(Math.Round(roiStats.TotalProductionOwnUseProfit + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse + roiStats.TotalBatteryUsedProfit + roiStats.TotalSavedTransferFeeBatteryUse + roiStats.TotalSavedEnergyTaxBatteryUse, 2));
 
 
@@ -193,13 +197,15 @@ public class RoiStats
 
     //calc values
     public float TotalCompensationForProductionToGrid { get; set; } = 0;
+    public float TotalCompensationForProductionToGridChargeBatteryFake { get; set; } = 0;
+    
     public float TotalSavedTransferFeeProductionOwnUse { get; set; } = 0;
     public float TotalSavedTransferFeeBatteryUse { get; set; } = 0;
-    public float TotalSavedTransferFeeBatteryChargeFake { get; set; } = 0;
+    //public float TotalSavedTransferFeeBatteryChargeFake { get; set; } = 0;
     public float TotalTransferFeePurchased { get; set; } = 0;
     public float TotalSavedEnergyTaxProductionOwnUse { get; set; } = 0;
     public float TotalSavedEnergyTaxBatteryUse { get; set; } = 0;
-    public float TotalSavedEnergyTaxBatteryChargeFake { get; set; } = 0;
+    //public float TotalSavedEnergyTaxBatteryChargeFake { get; set; } = 0;
 
     public float TotalTaxPurchased { get; set; } = 0;
     public float TotalPurchasedTransferFee { get; set; } = 0;
@@ -209,10 +215,13 @@ public class RoiStats
     public float TotalInvestment { get; set; } = 0;
 
     public float TotalSavedEnergyTaxReductionProductionToGrid { get; set; } = 0;
+    public float TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid { get; set; } = 0;
 
+    
     //Summ Saved
     public float SumPurchased { get; set; } = 0;
     public float SumProductionSold { get; set; } = 0;
+    public float SumProductionBatteryChargeFakeSold { get; set; } = 0;
     public float SumProductionOwnUseAndBattery { get; set; } = 0;
 
     public float TotalSaved { get; set; } = 0;

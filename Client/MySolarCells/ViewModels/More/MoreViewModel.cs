@@ -85,24 +85,32 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A13"].CellStyle.Font.Bold = true;
             worksheet.Range["A13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A15"].Text = "Production own use kWh";
-            worksheet.Range["A16"].Text = "Production own use battery kWh";
-            worksheet.Range["A17"].Text = "Saved cost";
-            worksheet.Range["A18"].Text = "Saved cost battery";
-            worksheet.Range["A19"].Text = "Saved transfer fee";
-            worksheet.Range["A20"].Text = "Saved transfer fee battery";
-            worksheet.Range["A21"].Text = "Saved energy tax";
-            worksheet.Range["A22"].Text = "Saved energy tax battery";
-            worksheet.Range["A23"].Text = "Sum";
-            worksheet.Range["A23"].CellStyle.Font.Bold = true;
-            worksheet.Range["A23"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            worksheet.Range["A15"].Text = "Production alt sold battery charge sold kWh";
+            worksheet.Range["A16"].Text = "Production alt sold battery charge profit";
+            worksheet.Range["A17"].Text = "Compensation for alt sold battery charge to grid";
+            worksheet.Range["A18"].Text = "Alt sold battery charge saved energy tax";
+            worksheet.Range["A19"].Text = "Sum";
+            worksheet.Range["A19"].CellStyle.Font.Bold = true;
+            worksheet.Range["A19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A25"].Text = "Total production kWh";
-            worksheet.Range["A26"].Text = "Total interest";
-            worksheet.Range["A27"].Text = "Result";
-            worksheet.Range["A27"].CellStyle.Font.Bold = true;
-            worksheet.Range["A27"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-            worksheet.Range["A1:A27"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
+            worksheet.Range["A21"].Text = "Production own use kWh";
+            worksheet.Range["A22"].Text = "Production own use battery kWh";
+            worksheet.Range["A23"].Text = "Saved cost";
+            worksheet.Range["A24"].Text = "Saved cost battery";
+            worksheet.Range["A25"].Text = "Saved transfer fee";
+            worksheet.Range["A26"].Text = "Saved transfer fee battery";
+            worksheet.Range["A27"].Text = "Saved energy tax";
+            worksheet.Range["A28"].Text = "Saved energy tax battery";
+            worksheet.Range["A29"].Text = "Sum";
+            worksheet.Range["A29"].CellStyle.Font.Bold = true;
+            worksheet.Range["A29"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+
+            worksheet.Range["A31"].Text = "Total production kWh";
+            worksheet.Range["A32"].Text = "Total interest";
+            worksheet.Range["A33"].Text = "Result";
+            worksheet.Range["A33"].CellStyle.Font.Bold = true;
+            worksheet.Range["A33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            worksheet.Range["A1:A33"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
             worksheet.Range["A1"].ColumnWidth = 36;
 
             int index = 0;
@@ -159,23 +167,31 @@ public class MoreViewModel : BaseViewModel
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.TotalProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.TotalBatteryUsed.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.TotalProductionOwnUseProfit.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "18"].Value = result.Model[index].RoiStats.TotalBatteryUsedProfit.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "19"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "20"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeBatteryUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "21"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "22"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxBatteryUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "23"].Value = result.Model[index].RoiStats.SumProductionOwnUseAndBattery.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "23"].CellStyle.Font.Bold = true;
-                    worksheet.Range[prefixValue + c.ToString() + "23"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+                    worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.TotalBatteryCharge.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.TotalBatteryChargeProfitFake.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.TotalCompensationForProductionToGridChargeBatteryFake.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "18"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "19"].Value = result.Model[index].RoiStats.SumProductionBatteryChargeFakeSold.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Font.Bold = true;
+                    worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "25"].Value = result.Model[index].RoiStats.TotalProduction.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "26"].Value = result.Model[index].RoiStats.TotalInterest.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "27"].Value = result.Model[index].RoiStats.TotalSaved.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "27"].CellStyle.Font.Bold = true;
-                    worksheet.Range[prefixValue + c.ToString() + "27"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+                    worksheet.Range[prefixValue + c.ToString() + "21"].Value = result.Model[index].RoiStats.TotalProductionOwnUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "22"].Value = result.Model[index].RoiStats.TotalBatteryUsed.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "23"].Value = result.Model[index].RoiStats.TotalProductionOwnUseProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "24"].Value = result.Model[index].RoiStats.TotalBatteryUsedProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "25"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeProductionOwnUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "26"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeBatteryUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "27"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxProductionOwnUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "28"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxBatteryUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "29"].Value = result.Model[index].RoiStats.SumProductionOwnUseAndBattery.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "29"].CellStyle.Font.Bold = true;
+                    worksheet.Range[prefixValue + c.ToString() + "29"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+
+                    worksheet.Range[prefixValue + c.ToString() + "31"].Value = result.Model[index].RoiStats.TotalProduction.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "32"].Value = result.Model[index].RoiStats.TotalInterest.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "33"].Value = result.Model[index].RoiStats.TotalSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "33"].CellStyle.Font.Bold = true;
+                    worksheet.Range[prefixValue + c.ToString() + "33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
                     //worksheet.Range[c.ToString() + "3:23"].HorizontalAlignment = ExcelHAlign.HAlignRight;
 
@@ -213,36 +229,36 @@ public class MoreViewModel : BaseViewModel
                 toalInvestLon = toalInvestLon + item.Investment + item.Lon;
             }
 
-            worksheet.Range["A29"].Text = "ROI";
-            worksheet.Range["A30"].CellStyle.Font.Bold = true;
-            worksheet.Range["A30"].Text = "Years left until ROI";
-            worksheet.Range["A31"].Text = "Total investment & lon";
-            worksheet.Range["A32"].Text = "Total produced & saved";
-            worksheet.Range["A33"].Text = "Left of investment cost";
-            worksheet.Range["A33"].CellStyle.Font.Bold = true;
-            worksheet.Range["A33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            worksheet.Range["A34"].Text = "ROI";
+            worksheet.Range["A35"].CellStyle.Font.Bold = true;
+            worksheet.Range["A36"].Text = "Years left until ROI";
+            worksheet.Range["A37"].Text = "Total investment & lon";
+            worksheet.Range["A38"].Text = "Total produced & saved";
+            worksheet.Range["A39"].Text = "Left of investment cost";
+            worksheet.Range["A39"].CellStyle.Font.Bold = true;
+            worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["B30"].Value = Math.Round(((toalInvestLon- totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
-            worksheet.Range["B31"].Value = toalInvestLon.ToString();
-            worksheet.Range["B32"].Value = Math.Round(totalProducedSaved, 0).ToString();
-            worksheet.Range["B33"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();
-            worksheet.Range["B33"].CellStyle.Font.Bold = true;
-            worksheet.Range["B33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            worksheet.Range["B36"].Value = Math.Round(((toalInvestLon- totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
+            worksheet.Range["B37"].Value = toalInvestLon.ToString();
+            worksheet.Range["B38"].Value = Math.Round(totalProducedSaved, 0).ToString();
+            worksheet.Range["B39"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();
+            worksheet.Range["B39"].CellStyle.Font.Bold = true;
+            worksheet.Range["B39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
             var parmas = await dbContext.EnergyCalculationParameter.Where(x => x.HomeId == homeId).ToListAsync();
             var indexParm = 0;
 
             //rubriker
-            worksheet.Range["A35"].Text = "Calcualtion parameters";
-            worksheet.Range["A36"].CellStyle.Font.Bold = true;
-            worksheet.Range["A37"].Text = "From Date";
-            worksheet.Range["A38"].Text = "Compensation electricity load";
-            worksheet.Range["A39"].Text = "Transfer fee";
-            worksheet.Range["A40"].Text = "Tax reduction";
-            worksheet.Range["A41"].Text = "Energy tax";
-            worksheet.Range["A42"].Text = "Total installed Kwh";
-            worksheet.Range["A43"].Text = "Use Spot prices";
-            worksheet.Range["A44"].Text = "Fixed price/Kwh";
+            worksheet.Range["A41"].Text = "Calcualtion parameters";
+            worksheet.Range["A41"].CellStyle.Font.Bold = true;
+            worksheet.Range["A42"].Text = "From Date";
+            worksheet.Range["A43"].Text = "Compensation electricity load";
+            worksheet.Range["A44"].Text = "Transfer fee";
+            worksheet.Range["A45"].Text = "Tax reduction";
+            worksheet.Range["A46"].Text = "Energy tax";
+            worksheet.Range["A47"].Text = "Total installed Kwh";
+            worksheet.Range["A48"].Text = "Use Spot prices";
+            worksheet.Range["A49"].Text = "Fixed price/Kwh";
 
 
             for (char c = 'B'; c <= 'Z'; c++)
@@ -250,27 +266,27 @@ public class MoreViewModel : BaseViewModel
                 if (indexParm == parmas.Count)
                     break;
 
-                worksheet.Range[c.ToString() + "37"].Text = parmas[indexParm].FromDate.ToString("yyyy-MM");
-                worksheet.Range[c.ToString() + "37"].CellStyle.Font.Bold = true;
-                worksheet.Range[c.ToString() + "37"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
+                worksheet.Range[c.ToString() + "42"].Text = parmas[indexParm].FromDate.ToString("yyyy-MM");
+                worksheet.Range[c.ToString() + "42"].CellStyle.Font.Bold = true;
+                worksheet.Range[c.ToString() + "42"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
                 //Nätnytta 0.078 kr/kWh
-                worksheet.Range[c.ToString() + "38"].Value = parmas[indexParm].ProdCompensationElectricityLowload.ToString();
+                worksheet.Range[c.ToString() + "43"].Value = parmas[indexParm].ProdCompensationElectricityLowload.ToString();
 
                 //Eventuell överföringsavgift som du kostar vi köp av eller (sparar vi egen användning) Ellevio 0.3 kr
-                worksheet.Range[c.ToString() + "39"].Value = parmas[indexParm].TransferFee.ToString();
+                worksheet.Range[c.ToString() + "44"].Value = parmas[indexParm].TransferFee.ToString();
 
                 //0.60/kWh såld el Max 18 0000 kr och inte för fler kWh än huset köper in
-                worksheet.Range[c.ToString() + "40"].Value = parmas[indexParm].TaxReduction.ToString();
+                worksheet.Range[c.ToString() + "45"].Value = parmas[indexParm].TaxReduction.ToString();
                 //0.49/kWh såld (sparar vi egen användning)
-                worksheet.Range[c.ToString() + "41"].Value = parmas[indexParm].EnergyTax.ToString();
+                worksheet.Range[c.ToString() + "46"].Value = parmas[indexParm].EnergyTax.ToString();
 
                 //10.5 Kwh
-                worksheet.Range[c.ToString() + "42"].Value = parmas[indexParm].TotalInstallKwhPanels.ToString();
+                worksheet.Range[c.ToString() + "47"].Value = parmas[indexParm].TotalInstallKwhPanels.ToString();
                 //SpotPrice
-                worksheet.Range[c.ToString() + "43"].Value = parmas[indexParm].UseSpotPrice.ToString();
+                worksheet.Range[c.ToString() + "48"].Value = parmas[indexParm].UseSpotPrice.ToString();
 
                 //fixed price
-                worksheet.Range[c.ToString() + "44"].Value = parmas[indexParm].FixedPriceKwh.ToString();
+                worksheet.Range[c.ToString() + "49"].Value = parmas[indexParm].FixedPriceKwh.ToString();
 
                 indexParm++;
             }

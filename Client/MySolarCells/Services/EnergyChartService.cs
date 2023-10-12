@@ -259,7 +259,7 @@ public class EnergyChartService : IEnergyChartService
             double used = stats.TotalProductionOwnUseProfit + stats.TotalSavedTransferFeeProductionOwnUse + stats.TotalSavedEnergyTaxProductionOwnUse;
             double purchasedGrid = stats.TotalPurchasedCost + stats.TotalPurchasedTransferFee + stats.TotalPurchasedTax;
             double batteryUsed = stats.TotalBatteryUsedProfit + stats.TotalSavedTransferFeeBatteryUse + stats.TotalSavedEnergyTaxBatteryUse;
-            double batteryCharge = stats.TotalBatteryChargeProfitFake + stats.TotalSavedTransferFeeBatteryChargeFake + stats.TotalSavedEnergyTaxBatteryChargeFake;
+            double batteryCharge = stats.TotalBatteryChargeProfitFake + stats.TotalCompensationForProductionToGridChargeBatteryFake + stats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid;
 
             result.BatteryChargeTitle = string.Format("Battery {0}", Math.Round(batteryCharge, 2));
             result.ProductionSoldTile = string.Format("Sold {0}", Math.Round(sold, 2));
