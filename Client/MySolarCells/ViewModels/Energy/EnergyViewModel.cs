@@ -41,7 +41,7 @@ public class EnergyViewModel : BaseViewModel
         }
         if (!resultSeries.WasSuccessful)
         {
-            await DialogService.ShowAlertAsync("There is no data to show on This date.", AppResources.My_Solar_Cells, AppResources.Ok);
+            await DialogService.ShowAlertAsync(AppResources.There_Is_No_Data_To_Show_On_This_Date, AppResources.My_Solar_Cells, AppResources.Ok);
             return false;
         }
         
@@ -298,38 +298,6 @@ public class EnergyViewModel : BaseViewModel
         get { return colorbatteryCharge; }
         set { SetProperty(ref colorbatteryCharge, value); }
     }
-    //private Chart energyChartBatteryCharge;
-    //public .Chart EnergyChartBatteryCharge
-    //{
-    //    get { return energyChartBatteryCharge; }
-    //    set { SetProperty(ref energyChartBatteryCharge, value); }
-    //}
-    //private Microcharts.Chart energyChartProdSold;
-    //public Microcharts.Chart EnergyChartProdSold
-    //{
-    //    get { return energyChartProdSold; }
-    //    set { SetProperty(ref energyChartProdSold, value); }
-    //}
-    //private Microcharts.Chart energyChartProdUsed;
-    //public Microcharts.Chart EnergyChartProdUsed
-    //{
-    //    get { return energyChartProdUsed; }
-    //    set { SetProperty(ref energyChartProdUsed, value); }
-    //}
-    //private Microcharts.Chart energyChartBatteryUsed;
-    //public Microcharts.Chart EnergyChartBatteryUsed
-    //{
-    //    get { return energyChartBatteryUsed; }
-    //    set { SetProperty(ref energyChartBatteryUsed, value); }
-    //}
-    //private Microcharts.Chart energyChartConsumedGrid;
-    //public Microcharts.Chart EnergyChartConsumedGrid
-    //{
-    //    get { return energyChartConsumedGrid; }
-    //    set { SetProperty(ref energyChartConsumedGrid, value); }
-    //}
-    
-
 
     private string energyBatteryChargeChartTitle;
     public string EnergyBatteryChargeChartTitle

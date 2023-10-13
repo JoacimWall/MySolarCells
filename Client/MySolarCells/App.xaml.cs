@@ -29,7 +29,7 @@ public partial class App : Application
             case OnboardingStatusEnum.EnergyCalculationparametersSelected:
                 await Shell.Current.GoToAsync($"//{nameof(InvestmentAndLoanView)}");
                 break;
-            case OnboardingStatusEnum.InvestmentAndLonDone:
+            case OnboardingStatusEnum.InvestmentAndLoanDone:
             case OnboardingStatusEnum.FirstImportElectricitySupplierIsDone:
                 await Shell.Current.GoToAsync($"//{nameof(FirstSyncView)}");
                 break;

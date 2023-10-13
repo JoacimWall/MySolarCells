@@ -1,9 +1,5 @@
 ﻿
-using System.IO;
-using System.Net.Http.Headers;
-using EventKit;
 using MySolarCells.Services.Sqlite.Models;
-
 namespace MySolarCells.Services.GridSupplier;
 
 
@@ -12,8 +8,9 @@ public class TibberService : IGridSupplierInterface
 {
 
     private IRestClient restClient;
-    public string GuideText => "To use Tibber you ned your private API key. You can get that by click on the button below and login.";
+    public string GuideText => AppResources.Tibber_Guide_Text;
     public string DefaultApiUrl => "";
+    public string NavigationUrl => "https://developer.tibber.com/settings/access-token";
     public bool ShowUserName => false;
 
     public bool ShowPassword => false;

@@ -51,7 +51,7 @@ public class MscDbContext : DbContext
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
         modelBuilder.Entity<Models.Preferences>().HasIndex(u => u.Name).IsUnique();
         //modelBuilder.Entity<TemplateType>().HasIndex(u => u.Type).IsUnique();
-        modelBuilder.Entity<InvestmentAndLon>()
+        modelBuilder.Entity<InvestmentAndLoan>()
             .HasMany(c => c.Interest);
     }
 
@@ -59,8 +59,8 @@ public class MscDbContext : DbContext
     public DbSet<Models.Inverter> Inverter { get; set; }
     public DbSet<Models.Energy> Energy { get; set; }
     public DbSet<Models.EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
-    public DbSet<Models.InvestmentAndLon> InvestmentAndLon { get; set; }
-    public DbSet<Models.InvestmentAndLonInterest> InvestmentAndLonInterest { get; set; }
+    public DbSet<Models.InvestmentAndLoan> InvestmentAndLon { get; set; }
+    public DbSet<Models.InvestmentAndLoanInterest> InvestmentAndLonInterest { get; set; }
     public DbSet<Models.Preferences> Preferences { get; set; }
 }
 

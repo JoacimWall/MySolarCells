@@ -30,4 +30,157 @@
   <data name="Access_Token" xml:space="preserve">
     <value>Tilgangstoken</value>
   <comment>Need review</comment></data>
+  <data name="My_Solar_Cells" xml:space="preserve">
+    <value>Mine solceller</value>
+  <comment>Need review</comment></data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  <comment>Need review</comment></data>
+  <data name="ROI" xml:space="preserve">
+    <value>ROI</value>
+  <comment>Need review</comment></data>
+  <data name="More" xml:space="preserve">
+    <value>Mer</value>
+  <comment>Need review</comment></data>
+  <data name="Production" xml:space="preserve">
+    <value>Produksjon</value>
+  <comment>Need review</comment></data>
+  <data name="Grid_Supplier" xml:space="preserve">
+    <value>Nettleverandør</value>
+  <comment>Need review</comment></data>
+  <data name="Save" xml:space="preserve">
+    <value>Lagre</value>
+  <comment>Need review</comment></data>
+  <data name="Tibber" xml:space="preserve">
+    <value>Tibber</value>
+  <comment>Need review</comment></data>
+  <data name="Validate" xml:space="preserve">
+    <value>Validere</value>
+  <comment>Need review</comment></data>
+  <data name="Select_The_Home_You_Want_To_Analyze" xml:space="preserve">
+    <value>Velg boligen du vil analysere</value>
+  <comment>Need review</comment></data>
+  <data name="Year" xml:space="preserve">
+    <value>År</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Only_Spot_Prices" xml:space="preserve">
+    <value>Importer kun spotpriser</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Only_Spot_Prices_Desc" xml:space="preserve">
+    <value>Bruk denne hvis du får forbruk og produksjon fra Inverter og kun trenger Tibber til Spotpris pr time.</value>
+  <comment>Need review</comment></data>
+  <data name="Goto_Tibber_Api_Site" xml:space="preserve">
+    <value>Gå til Tibber Api-siden</value>
+  <comment>Need review</comment></data>
+  <data name="Inverter" xml:space="preserve">
+    <value>Inverter</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Invert_Desc" xml:space="preserve">
+    <value>Velg inverten fra listen nedenfor som representerer din installasjon</value>
+  <comment>Need review</comment></data>
+  <data name="Tibber_Guide_Text" xml:space="preserve">
+    <value>For å bruke Tibber trenger du din private API-nøkkel. Du får det ved å klikke på knappen nedenfor og logge inn.</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Grid_Supplier" xml:space="preserve">
+    <value>Importer data fra nettleverandør.</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Rows_Amount" xml:space="preserve">
+    <value>Lagrede rader {0}</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Inverter" xml:space="preserve">
+    <value>Importer data fra inverter</value>
+  <comment>Need review</comment></data>
+  <data name="Error_Import_Data_From_Inverter" xml:space="preserve">
+    <value>Feil ved import av data fra inverter</value>
+  <comment>Need review</comment></data>
+  <data name="My_Description" xml:space="preserve">
+    <value>Min beskrivelse</value>
+  <comment>Need review</comment></data>
+  <data name="My_Investment_And_Loan" xml:space="preserve">
+    <value>Min investering og lån</value>
+  <comment>Need review</comment></data>
+  <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
+    <value>Det er ingen data å vise på denne datoen</value>
+  <comment>Need review</comment></data>
+  <data name="Purchased" xml:space="preserve">
+    <value>Kjøpt</value>
+  <comment>Need review</comment></data>
+  <data name="kWh" xml:space="preserve">
+    <value>kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Currency" xml:space="preserve">
+    <value>SEK</value>
+  <comment>Need review</comment></data>
+  <data name="Transfer_Fee" xml:space="preserve">
+    <value>Overføringsgebyr</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Transfer_Fee" xml:space="preserve">
+    <value>Overføringsgebyr for batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Tax" xml:space="preserve">
+    <value>Energiavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Energy_Tax" xml:space="preserve">
+    <value>Batterienergiavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Amount" xml:space="preserve">
+    <value>Beløp</value>
+  <comment>Need review</comment></data>
+  <data name="Production_To_Grid" xml:space="preserve">
+    <value>Produksjon til nett</value>
+  <comment>Need review</comment></data>
+  <data name="If_Battery_Is_Not_Used" xml:space="preserve">
+    <value>Hvis batteriet ikke brukes</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Own_Use" xml:space="preserve">
+    <value>Produksjon eget bruk</value>
+  <comment>Need review</comment></data>
+  <data name="KWh_From_Battery" xml:space="preserve">
+    <value>KWh fra batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Currency" xml:space="preserve">
+    <value>Batteri kr</value>
+  <comment>Need review</comment></data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  <comment>Need review</comment></data>
+  <data name="Interest" xml:space="preserve">
+    <value>Renter</value>
+  <comment>Need review</comment></data>
+  <data name="Result" xml:space="preserve">
+    <value>Resultat</value>
+  <comment>Need review</comment></data>
+  <data name="Years_Left_Until_ROI" xml:space="preserve">
+    <value>År igjen til ROI</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Investment_And_Loan" xml:space="preserve">
+    <value>Total investering og lån</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Produced_And_Saved" xml:space="preserve">
+    <value>Totalt produsert og lagret</value>
+  <comment>Need review</comment></data>
+  <data name="Left_Of_Investment_Cost" xml:space="preserve">
+    <value>Til venstre for investeringskostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Parameters" xml:space="preserve">
+    <value>Beregningsparametere</value>
+  <comment>Need review</comment></data>
+  <data name="From_Date" xml:space="preserve">
+    <value>Fra dato</value>
+  <comment>Need review</comment></data>
+  <data name="Compensation_Electricity_Load" xml:space="preserve">
+    <value>Kompensasjon for strømbelastning</value>
+  <comment>Need review</comment></data>
+  <data name="Tax_Reduction" xml:space="preserve">
+    <value>Skattereduksjon</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Installed_Kwh" xml:space="preserve">
+    <value>Totalt installert Kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Use_Spot_Prices" xml:space="preserve">
+    <value>Bruk spotpriser</value>
+  <comment>Need review</comment></data>
+  <data name="Fixed_Price_Kwh" xml:space="preserve">
+    <value>Fast pris/Kwh</value>
+  <comment>Need review</comment></data>
 </root>

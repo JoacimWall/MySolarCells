@@ -13,13 +13,13 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         var result = dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
-            InvestmentAndLons.Add(item);
+            InvestmentAndLoans.Add(item);
         }
-        if (InvestmentAndLons != null && InvestmentAndLons.Count > 0)
+        if (InvestmentAndLoans != null && InvestmentAndLoans.Count > 0)
         {
-            selectedInvestmentAndlon = InvestmentAndLons.Last();
-            if (selectedInvestmentAndlon.Interest != null && selectedInvestmentAndlon.Interest.Count > 0)
-                SelectedInterest = selectedInvestmentAndlon.Interest.Last();
+            selectedInvestmentAndloan = InvestmentAndLoans.Last();
+            if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count > 0)
+                SelectedInterest = selectedInvestmentAndloan.Interest.Last();
         }
         else
         {
@@ -35,15 +35,15 @@ public class InvestmentAndLoanViewModel : BaseViewModel
     private async Task Save()
     {
         using var dbContext = new MscDbContext();
-        if (selectedInvestmentAndlon.InvestmentAndLonId == 0)
-            dbContext.InvestmentAndLon.Add(selectedInvestmentAndlon);
+        if (selectedInvestmentAndloan.InvestmentAndLoanId == 0)
+            dbContext.InvestmentAndLon.Add(selectedInvestmentAndloan);
         else //update
         {
-            var dbEntity = dbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLonId == selectedInvestmentAndlon.InvestmentAndLonId);
-            dbEntity.FromDate = selectedInvestmentAndlon.FromDate;
-            dbEntity.Investment = selectedInvestmentAndlon.Investment;
-            dbEntity.Description = selectedInvestmentAndlon.Description;
-            dbEntity.Lon = selectedInvestmentAndlon.Lon;
+            var dbEntity = dbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLoanId == selectedInvestmentAndloan.InvestmentAndLoanId);
+            dbEntity.FromDate = selectedInvestmentAndloan.FromDate;
+            dbEntity.Investment = selectedInvestmentAndloan.Investment;
+            dbEntity.Description = selectedInvestmentAndloan.Description;
+            dbEntity.Loan = selectedInvestmentAndloan.Loan;
             //TODO:Se till att updatera ränta tabell också
             dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
@@ -56,48 +56,48 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         }
         else
         {
-            SettingsService.OnboardingStatus = OnboardingStatusEnum.InvestmentAndLonDone;
+            SettingsService.OnboardingStatus = OnboardingStatusEnum.InvestmentAndLoanDone;
             await GoToAsync(nameof(FirstSyncView));
         }
     }
 
     private void  AddInterest()
     {
-        if (SelectedInvestmentAndlon != null)
+        if (SelectedInvestmentAndloan != null)
         {
-            if (SelectedInvestmentAndlon.Interest == null)
-                SelectedInvestmentAndlon.Interest = new ObservableCollection<InvestmentAndLonInterest>();
+            if (SelectedInvestmentAndloan.Interest == null)
+                SelectedInvestmentAndloan.Interest = new ObservableCollection<InvestmentAndLoanInterest>();
 
-            SelectedInvestmentAndlon.Interest.Add(new InvestmentAndLonInterest { Description = "MyDescription", FromDate = DateTime.Today });
-            SelectedInterest = SelectedInvestmentAndlon.Interest.Last();
+            SelectedInvestmentAndloan.Interest.Add(new InvestmentAndLoanInterest { Description = AppResources.My_Description, FromDate = DateTime.Today });
+            SelectedInterest = SelectedInvestmentAndloan.Interest.Last();
         }
     }
 
     private void AddInvestLon()
     {
-        InvestmentAndLons.Add(new InvestmentAndLon { Description = "My base investment", HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
-        SelectedInvestmentAndlon = InvestmentAndLons.Last();
+        InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.My_Investment_And_Loan, HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
+        SelectedInvestmentAndloan = InvestmentAndLoans.Last();
 
     }
 
-    private ObservableCollection<InvestmentAndLon> investmentAndLons = new ObservableCollection<InvestmentAndLon>();
-    public ObservableCollection<InvestmentAndLon> InvestmentAndLons
+    private ObservableCollection<InvestmentAndLoan> investmentAndLoans = new ObservableCollection<InvestmentAndLoan>();
+    public ObservableCollection<InvestmentAndLoan> InvestmentAndLoans
     {
-        get => investmentAndLons;
+        get => investmentAndLoans;
         set
         {
-            SetProperty(ref investmentAndLons, value);
+            SetProperty(ref investmentAndLoans, value);
 
         }
     }
-    private InvestmentAndLon selectedInvestmentAndlon;
-    public InvestmentAndLon SelectedInvestmentAndlon
+    private InvestmentAndLoan selectedInvestmentAndloan;
+    public InvestmentAndLoan SelectedInvestmentAndloan
     {
-        get => selectedInvestmentAndlon;
-        set { SetProperty(ref selectedInvestmentAndlon, value); }
+        get => selectedInvestmentAndloan;
+        set { SetProperty(ref selectedInvestmentAndloan, value); }
     }
-    private InvestmentAndLonInterest selectedInterest;
-    public InvestmentAndLonInterest SelectedInterest
+    private InvestmentAndLoanInterest selectedInterest;
+    public InvestmentAndLoanInterest SelectedInterest
     {
         get => selectedInterest;
         set { SetProperty(ref selectedInterest, value); }

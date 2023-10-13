@@ -31,11 +31,11 @@ public class FirstSyncViewModel : BaseViewModel
 
         await Task.Delay(200);
         //keepUploading = true;
-        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLonDone)
+        if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLoanDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus = "Import consumation and sold production.";
-            ProgressSubStatus = "saved rows 0";
+            ProgressStatus =  AppResources.Import_Data_From_Grid_Supplier;
+            ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount,"0");
             await Task.Delay(200);
             var result = await this.gridSupplierService.Sync(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);
             if (!result)
@@ -53,8 +53,8 @@ public class FirstSyncViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.FirstImportElectricitySupplierIsDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus = "Import solar own use and calculate profit.";
-            ProgressSubStatus = "saved rows 0";
+            ProgressStatus = AppResources.Import_Data_From_Inverter;
+            ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
             using var dbContext = new MscDbContext();
             var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
@@ -71,7 +71,7 @@ public class FirstSyncViewModel : BaseViewModel
             var result = await this.inverterService.Sync(inverter.FromDate, progress, 0);
             if (!result)
             {
-                await DialogService.ShowAlertAsync("Error import solar own use and calculate profit", AppResources.My_Solar_Cells, AppResources.Ok);
+                await DialogService.ShowAlertAsync(AppResources.Error_Import_Data_From_Inverter, AppResources.My_Solar_Cells, AppResources.Ok);
             }
             else
             {
@@ -94,7 +94,7 @@ public class FirstSyncViewModel : BaseViewModel
         var percentage = comp / tot;
         //UploadProgress.ProgressTo(percentage, 100, Easing.Linear);
         ProgressProcent = (float)percentage * 100;
-        ProgressSubStatus = "saved rows " + completed.ToString();
+        ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, completed.ToString()); 
     }
     private bool _startbuttonEnable = true;
     public bool StartbuttonEnable

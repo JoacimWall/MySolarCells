@@ -121,7 +121,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
 
     private async Task GoToNavigateUrl()
     {
-        await Launcher.OpenAsync(new Uri("https://developer.tibber.com/settings/access-token"));
+        await Launcher.OpenAsync(new Uri(this.navigationUrl));
     }
 
     private ObservableCollection<PickerItem> gridSupplierModels = new ObservableCollection<PickerItem>();
@@ -145,6 +145,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
             this.GuideText = this.gridSupplierService.GuideText;
             this.ApiUrl = this.gridSupplierService.DefaultApiUrl;
             this.showNavigateUrl = this.gridSupplierService.ShowNavigateUrl;
+            this.navigationUrl = this.gridSupplierService.NavigationUrl;
         }
     }
 
@@ -189,6 +190,12 @@ public class ElectricitySupplierViewModel : BaseViewModel
     {
         get => apiUrl;
         set { SetProperty(ref apiUrl, value); }
+    }
+    private string navigationUrl;
+    public string NavigationUrl
+    {
+        get => navigationUrl;
+        set { SetProperty(ref navigationUrl, value); }
     }
     private string apiKey = "";
     public string ApiKey

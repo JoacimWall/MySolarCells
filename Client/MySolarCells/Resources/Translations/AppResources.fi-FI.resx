@@ -31,4 +31,157 @@
   <data name="Access_Token" xml:space="preserve">
     <value>Käyttöoikeustunnus</value>
   <comment>Need review</comment></data>
+  <data name="My_Solar_Cells" xml:space="preserve">
+    <value>Minun aurinkokennot</value>
+  <comment>Need review</comment></data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  <comment>Need review</comment></data>
+  <data name="ROI" xml:space="preserve">
+    <value>ROI</value>
+  <comment>Need review</comment></data>
+  <data name="More" xml:space="preserve">
+    <value>Lisää</value>
+  <comment>Need review</comment></data>
+  <data name="Production" xml:space="preserve">
+    <value>Tuotanto</value>
+  <comment>Need review</comment></data>
+  <data name="Grid_Supplier" xml:space="preserve">
+    <value>Verkon toimittaja</value>
+  <comment>Need review</comment></data>
+  <data name="Save" xml:space="preserve">
+    <value>Tallentaa</value>
+  <comment>Need review</comment></data>
+  <data name="Tibber" xml:space="preserve">
+    <value>Tibber</value>
+  <comment>Need review</comment></data>
+  <data name="Validate" xml:space="preserve">
+    <value>Vahvista</value>
+  <comment>Need review</comment></data>
+  <data name="Select_The_Home_You_Want_To_Analyze" xml:space="preserve">
+    <value>Valitse koti, jonka haluat analysoida</value>
+  <comment>Need review</comment></data>
+  <data name="Year" xml:space="preserve">
+    <value>vuosi</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Only_Spot_Prices" xml:space="preserve">
+    <value>Tuo vain spot-hinnat</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Only_Spot_Prices_Desc" xml:space="preserve">
+    <value>Käytä tätä, jos saat kulutuksen ja tuotannon Inverteriltä ja tarvitset vain Tibberia Spot-hinnalla per tunti.</value>
+  <comment>Need review</comment></data>
+  <data name="Goto_Tibber_Api_Site" xml:space="preserve">
+    <value>Siirry Tibber Api -sivustolle</value>
+  <comment>Need review</comment></data>
+  <data name="Inverter" xml:space="preserve">
+    <value>Invertteri</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Invert_Desc" xml:space="preserve">
+    <value>Valitse käänteinen alla olevasta luettelosta, joka edustaa asennusta</value>
+  <comment>Need review</comment></data>
+  <data name="Tibber_Guide_Text" xml:space="preserve">
+    <value>Tarvitset yksityisen API-avaimesi käyttääksesi Tibberiä. Saat sen napsauttamalla alla olevaa painiketta ja kirjautumalla sisään.</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Grid_Supplier" xml:space="preserve">
+    <value>Tuo tiedot verkon toimittajalta.</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Rows_Amount" xml:space="preserve">
+    <value>Tallennetut rivit {0}</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Inverter" xml:space="preserve">
+    <value>Tuo tiedot invertteristä</value>
+  <comment>Need review</comment></data>
+  <data name="Error_Import_Data_From_Inverter" xml:space="preserve">
+    <value>Virhe tietojen tuonnissa invertteristä</value>
+  <comment>Need review</comment></data>
+  <data name="My_Description" xml:space="preserve">
+    <value>Minun kuvaukseni</value>
+  <comment>Need review</comment></data>
+  <data name="My_Investment_And_Loan" xml:space="preserve">
+    <value>Sijoitukseni ja lainani</value>
+  <comment>Need review</comment></data>
+  <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
+    <value>Tälle päivälle ei ole näytettävää dataa</value>
+  <comment>Need review</comment></data>
+  <data name="Purchased" xml:space="preserve">
+    <value>Osti</value>
+  <comment>Need review</comment></data>
+  <data name="kWh" xml:space="preserve">
+    <value>kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Currency" xml:space="preserve">
+    <value>SEK</value>
+  <comment>Need review</comment></data>
+  <data name="Transfer_Fee" xml:space="preserve">
+    <value>Siirtomaksu</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Transfer_Fee" xml:space="preserve">
+    <value>Akun siirtomaksu</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Tax" xml:space="preserve">
+    <value>Energiavero</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Energy_Tax" xml:space="preserve">
+    <value>Akkuenergiavero</value>
+  <comment>Need review</comment></data>
+  <data name="Amount" xml:space="preserve">
+    <value>Määrä</value>
+  <comment>Need review</comment></data>
+  <data name="Production_To_Grid" xml:space="preserve">
+    <value>Tuotanto verkkoon</value>
+  <comment>Need review</comment></data>
+  <data name="If_Battery_Is_Not_Used" xml:space="preserve">
+    <value>Jos akkua ei käytetä</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Own_Use" xml:space="preserve">
+    <value>Tuotanto omaan käyttöön</value>
+  <comment>Need review</comment></data>
+  <data name="KWh_From_Battery" xml:space="preserve">
+    <value>kWh akusta</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Currency" xml:space="preserve">
+    <value>Akku SEK</value>
+  <comment>Need review</comment></data>
+  <data name="Total" xml:space="preserve">
+    <value>Kaikki yhteensä</value>
+  <comment>Need review</comment></data>
+  <data name="Interest" xml:space="preserve">
+    <value>Kiinnostuksen kohde</value>
+  <comment>Need review</comment></data>
+  <data name="Result" xml:space="preserve">
+    <value>Tulos</value>
+  <comment>Need review</comment></data>
+  <data name="Years_Left_Until_ROI" xml:space="preserve">
+    <value>Vuosia jäljellä ROI:han</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Investment_And_Loan" xml:space="preserve">
+    <value>Investointi ja laina yhteensä</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Produced_And_Saved" xml:space="preserve">
+    <value>Tuotettu ja tallennettu yhteensä</value>
+  <comment>Need review</comment></data>
+  <data name="Left_Of_Investment_Cost" xml:space="preserve">
+    <value>Jäljellä investointikustannuksia</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Parameters" xml:space="preserve">
+    <value>Laskentaparametrit</value>
+  <comment>Need review</comment></data>
+  <data name="From_Date" xml:space="preserve">
+    <value>Päivämäärästä</value>
+  <comment>Need review</comment></data>
+  <data name="Compensation_Electricity_Load" xml:space="preserve">
+    <value>Sähkökuorman kompensointi</value>
+  <comment>Need review</comment></data>
+  <data name="Tax_Reduction" xml:space="preserve">
+    <value>Veronalennus</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Installed_Kwh" xml:space="preserve">
+    <value>Asennettu yhteensä kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Use_Spot_Prices" xml:space="preserve">
+    <value>Käytä Spot-hintoja</value>
+  <comment>Need review</comment></data>
+  <data name="Fixed_Price_Kwh" xml:space="preserve">
+    <value>Kiinteä hinta/kwh</value>
+  <comment>Need review</comment></data>
 </root>

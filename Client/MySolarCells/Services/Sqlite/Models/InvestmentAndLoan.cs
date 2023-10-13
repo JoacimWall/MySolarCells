@@ -1,15 +1,15 @@
 ﻿namespace MySolarCells.Services.Sqlite.Models;
 
-public class InvestmentAndLon : ObservableObject
+public class InvestmentAndLoan : ObservableObject
 {
-    public InvestmentAndLon()
+    public InvestmentAndLoan()
     {
-        Interest = new ObservableCollection<InvestmentAndLonInterest>();
+        Interest = new ObservableCollection<InvestmentAndLoanInterest>();
 
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int InvestmentAndLonId { get; set; }
+    public int InvestmentAndLoanId { get; set; }
     [Required]
     public string Description { get; set; }
     [Required]
@@ -17,9 +17,9 @@ public class InvestmentAndLon : ObservableObject
     [Required]
     public int Investment { get; set; } = 0;
     [Required]
-    public int Lon { get; set; } = 0;
+    public int Loan { get; set; } = 0;
     
-    public ObservableCollection<InvestmentAndLonInterest> Interest { get; set; }
+    public ObservableCollection<InvestmentAndLoanInterest> Interest { get; set; }
 
     //FK's
     [Required]

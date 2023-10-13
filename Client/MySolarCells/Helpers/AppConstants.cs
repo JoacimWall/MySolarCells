@@ -11,7 +11,7 @@ public enum OnboardingStatusEnum
     ElectricitySupplierSelected = 1,
     InverterSelected =2,
     EnergyCalculationparametersSelected = 3,
-    InvestmentAndLonDone = 4,
+    InvestmentAndLoanDone = 4,
     FirstImportElectricitySupplierIsDone = 5,
     OnboardingDone = 6,
    // OnboardingDone =7

@@ -1,16 +1,10 @@
-﻿using Azure;
-using Syncfusion.XlsIO;
-using Syncfusion.XlsIO.Implementation;
-using System.IO;
-using System.Reflection;
-
+﻿using Syncfusion.XlsIO;
 
 namespace MySolarCells.ViewModels.More;
 
 public class MoreViewModel : BaseViewModel
 {
     private IRoiService roiService;
-    //private bool keepUploading = true;
     public MoreViewModel(IRoiService roiService)
     {
         this.roiService = roiService;
@@ -69,45 +63,55 @@ public class MoreViewModel : BaseViewModel
 
 
             //Titles
-            worksheet.Range["A3"].Text = "Purchased kWh";
-            worksheet.Range["A4"].Text = "Purchased cost (SEK)";
-            worksheet.Range["A5"].Text = "Purchased transfer fee";
-            worksheet.Range["A6"].Text = "Purchased energy tax";
-            worksheet.Range["A7"].Text = "Sum";
+            worksheet.Range["A2"].Text = AppResources.Purchased;
+            worksheet.Range["A2"].CellStyle.Font.Bold = true;
+            worksheet.Range["A3"].Text = AppResources.kWh;
+            worksheet.Range["A4"].Text = AppResources.Currency ;
+            worksheet.Range["A5"].Text = AppResources.Transfer_Fee;
+            worksheet.Range["A6"].Text = AppResources.Energy_Tax;
+            worksheet.Range["A7"].Text = AppResources.Amount;
             worksheet.Range["A7"].CellStyle.Font.Bold = true;
             worksheet.Range["A7"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A9"].Text = "Production sold kWh";
-            worksheet.Range["A10"].Text = "Production sold profit";
-            worksheet.Range["A11"].Text = "Compensation for production to grid";
-            worksheet.Range["A12"].Text = "Saved energy tax";
-            worksheet.Range["A13"].Text = "Sum";
+            worksheet.Range["A8"].Text = AppResources.Production_To_Grid;
+            worksheet.Range["A8"].CellStyle.Font.Bold = true;
+            worksheet.Range["A9"].Text = AppResources.kWh;
+            worksheet.Range["A10"].Text = AppResources.Currency;
+            worksheet.Range["A11"].Text = AppResources.Production_To_Grid;
+            worksheet.Range["A12"].Text = AppResources.Energy_Tax;
+            worksheet.Range["A13"].Text = AppResources.Amount;
             worksheet.Range["A13"].CellStyle.Font.Bold = true;
             worksheet.Range["A13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A15"].Text = "Production alt sold battery charge sold kWh";
-            worksheet.Range["A16"].Text = "Production alt sold battery charge profit";
-            worksheet.Range["A17"].Text = "Compensation for alt sold battery charge to grid";
-            worksheet.Range["A18"].Text = "Alt sold battery charge saved energy tax";
-            worksheet.Range["A19"].Text = "Sum";
+            worksheet.Range["A14"].Text = AppResources.If_Battery_Is_Not_Used;
+            worksheet.Range["A14"].CellStyle.Font.Bold = true;
+            worksheet.Range["A15"].Text = AppResources.kWh;
+            worksheet.Range["A16"].Text = AppResources.Currency;
+            worksheet.Range["A17"].Text = AppResources.Production_To_Grid;
+            worksheet.Range["A18"].Text = AppResources.Energy_Tax;
+            worksheet.Range["A19"].Text = AppResources.Amount;
             worksheet.Range["A19"].CellStyle.Font.Bold = true;
             worksheet.Range["A19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A21"].Text = "Production own use kWh";
-            worksheet.Range["A22"].Text = "Production own use battery kWh";
-            worksheet.Range["A23"].Text = "Saved cost";
-            worksheet.Range["A24"].Text = "Saved cost battery";
-            worksheet.Range["A25"].Text = "Saved transfer fee";
-            worksheet.Range["A26"].Text = "Saved transfer fee battery";
-            worksheet.Range["A27"].Text = "Saved energy tax";
-            worksheet.Range["A28"].Text = "Saved energy tax battery";
-            worksheet.Range["A29"].Text = "Sum";
+            worksheet.Range["A20"].Text = AppResources.Production_Own_Use;
+            worksheet.Range["A20"].CellStyle.Font.Bold = true;
+            worksheet.Range["A21"].Text = AppResources.kWh;
+            worksheet.Range["A22"].Text = AppResources.KWh_From_Battery;
+            worksheet.Range["A23"].Text = AppResources.Currency;
+            worksheet.Range["A24"].Text = AppResources.Battery_Currency;
+            worksheet.Range["A25"].Text = AppResources.Transfer_Fee;
+            worksheet.Range["A26"].Text = AppResources.Battery_Transfer_Fee;
+            worksheet.Range["A27"].Text = AppResources.Energy_Tax;
+            worksheet.Range["A28"].Text = AppResources.Battery_Energy_Tax;
+            worksheet.Range["A29"].Text = AppResources.Amount;
             worksheet.Range["A29"].CellStyle.Font.Bold = true;
             worksheet.Range["A29"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A31"].Text = "Total production kWh";
-            worksheet.Range["A32"].Text = "Total interest";
-            worksheet.Range["A33"].Text = "Result";
+            worksheet.Range["A30"].Text = AppResources.Total;
+            worksheet.Range["A30"].CellStyle.Font.Bold = true;
+            worksheet.Range["A31"].Text = AppResources.kWh;
+            worksheet.Range["A32"].Text = AppResources.Interest;
+            worksheet.Range["A33"].Text = AppResources.Result;
             worksheet.Range["A33"].CellStyle.Font.Bold = true;
             worksheet.Range["A33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
             worksheet.Range["A1:A33"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
@@ -226,15 +230,15 @@ public class MoreViewModel : BaseViewModel
             int toalInvestLon = 0;
             foreach (var item in invest)
             {
-                toalInvestLon = toalInvestLon + item.Investment + item.Lon;
+                toalInvestLon = toalInvestLon + item.Investment + item.Loan;
             }
 
-            worksheet.Range["A34"].Text = "ROI";
+            worksheet.Range["A35"].Text = AppResources.ROI;
             worksheet.Range["A35"].CellStyle.Font.Bold = true;
-            worksheet.Range["A36"].Text = "Years left until ROI";
-            worksheet.Range["A37"].Text = "Total investment & lon";
-            worksheet.Range["A38"].Text = "Total produced & saved";
-            worksheet.Range["A39"].Text = "Left of investment cost";
+            worksheet.Range["A36"].Text = AppResources.Years_Left_Until_ROI;
+            worksheet.Range["A37"].Text = AppResources.Total_Investment_And_Loan;
+            worksheet.Range["A38"].Text = AppResources.Total_Produced_And_Saved;
+            worksheet.Range["A39"].Text = AppResources.Left_Of_Investment_Cost;
             worksheet.Range["A39"].CellStyle.Font.Bold = true;
             worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
@@ -249,16 +253,16 @@ public class MoreViewModel : BaseViewModel
             var indexParm = 0;
 
             //rubriker
-            worksheet.Range["A41"].Text = "Calcualtion parameters";
+            worksheet.Range["A41"].Text = AppResources.Calculation_Parameters;
             worksheet.Range["A41"].CellStyle.Font.Bold = true;
-            worksheet.Range["A42"].Text = "From Date";
-            worksheet.Range["A43"].Text = "Compensation electricity load";
-            worksheet.Range["A44"].Text = "Transfer fee";
-            worksheet.Range["A45"].Text = "Tax reduction";
-            worksheet.Range["A46"].Text = "Energy tax";
-            worksheet.Range["A47"].Text = "Total installed Kwh";
-            worksheet.Range["A48"].Text = "Use Spot prices";
-            worksheet.Range["A49"].Text = "Fixed price/Kwh";
+            worksheet.Range["A42"].Text = AppResources.From_Date;
+            worksheet.Range["A43"].Text = AppResources.Compensation_Electricity_Load;
+            worksheet.Range["A44"].Text = AppResources.Transfer_Fee;
+            worksheet.Range["A45"].Text = AppResources.Tax_Reduction;
+            worksheet.Range["A46"].Text = AppResources.Energy_Tax;
+            worksheet.Range["A47"].Text = AppResources.Total_Installed_Kwh;
+            worksheet.Range["A48"].Text = AppResources.Use_Spot_Prices;
+            worksheet.Range["A49"].Text = AppResources.Fixed_Price_Kwh;
 
 
             for (char c = 'B'; c <= 'Z'; c++)
@@ -291,163 +295,7 @@ public class MoreViewModel : BaseViewModel
                 indexParm++;
             }
 
-//for (char c = 'B'; c <= 'Z'; c++)
-//{
-//    if (index == result.Model.Count)
-//        continue;
-////Enter values to the cells from A3 to A5
-//worksheet.Range["A3"].Text = "46036 Michigan Ave";
-//worksheet.Range["A4"].Text = "Canton, USA";
-//worksheet.Range["A5"].Text = "Phone: +1 231-231-2310";
 
-////Make the text bold
-//worksheet.Range["A3:A5"].CellStyle.Font.Bold = true;
-
-////Merge cells
-// worksheet.Range["D1:E1"].Merge();
-
-////Enter text to the cell D1 and apply formatting.
-//worksheet.Range["D1"].Text = "INVOICE";
-//worksheet.Range["D1"].CellStyle.Font.Bold = true;
-//worksheet.Range["D1"].CellStyle.Font.RGBColor = Syncfusion.Drawing.Color.FromArgb(0, 42, 118, 189);
-//worksheet.Range["D1"].CellStyle.Font.Size = 35;
-
-////Apply alignment in the cell D1
-//worksheet.Range["D1"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
-//worksheet.Range["D1"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignTop;
-
-////Enter values to the cells from D5 to E8
-//worksheet.Range["D5"].Text = "INVOICE#";
-//worksheet.Range["E5"].Text = "DATE";
-//worksheet.Range["D6"].Number = 1028;
-//worksheet.Range["E6"].Value = "12/31/2018";
-//worksheet.Range["D7"].Text = "CUSTOMER ID";
-//worksheet.Range["E7"].Text = "TERMS";
-//worksheet.Range["D8"].Number = 564;
-//worksheet.Range["E8"].Text = "Due Upon Receipt";
-
-////Apply RGB backcolor to the cells from D5 to E8
-//worksheet.Range["D5:E5"].CellStyle.Color = Syncfusion.Drawing.Color.FromArgb(0, 42, 118, 189);
-//worksheet.Range["D7:E7"].CellStyle.Color = Syncfusion.Drawing.Color.FromArgb(0, 42, 118, 189);
-
-////Apply known colors to the text in cells D5 to E8
-//worksheet.Range["D5:E5"].CellStyle.Font.Color = ExcelKnownColors.White;
-//worksheet.Range["D7:E7"].CellStyle.Font.Color = ExcelKnownColors.White;
-
-////Make the text as bold from D5 to E8
-//worksheet.Range["D5:E8"].CellStyle.Font.Bold = true;
-
-////Apply alignment to the cells from D5 to E8
-//worksheet.Range["D5:E8"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-//worksheet.Range["D5:E5"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-//worksheet.Range["D7:E7"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-//worksheet.Range["D6:E6"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignTop;
-
-////Enter value and applying formatting in the cell A7
-//worksheet.Range["A7"].Text = "  BILL TO";
-//worksheet.Range["A7"].CellStyle.Color = Syncfusion.Drawing.Color.FromArgb(0, 42, 118, 189);
-//worksheet.Range["A7"].CellStyle.Font.Bold = true;
-//worksheet.Range["A7"].CellStyle.Font.Color = ExcelKnownColors.White;
-
-////Apply alignment
-//worksheet.Range["A7"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
-//worksheet.Range["A7"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
-
-////Enter values in the cells A8 to A12
-//worksheet.Range["A8"].Text = "Steyn";
-//worksheet.Range["A9"].Text = "Great Lakes Food Market";
-//worksheet.Range["A10"].Text = "20 Whitehall Rd";
-//worksheet.Range["A11"].Text = "North Muskegon,USA";
-//worksheet.Range["A12"].Text = "+1 231-654-0000";
-
-////Create a Hyperlink for e-mail in the cell A13
-//IHyperLink hyperlink = worksheet.HyperLinks.Add(worksheet.Range["A13"]);
-//hyperlink.Type = ExcelHyperLinkType.Url;
-//hyperlink.Address = "Steyn@greatlakes.com";
-//hyperlink.ScreenTip = "Send Mail";
-
-////Enter details of products and prices
-//worksheet.Range["A15"].Text = "DESCRIPTION";
-//worksheet.Range["C15"].Text = "QTY";
-//worksheet.Range["D15"].Text = "UNIT PRICE";
-//worksheet.Range["E15"].Text = "AMOUNT";
-//worksheet.Range["A16"].Text = "Cabrales Cheese";
-//worksheet.Range["A17"].Text = "Chocos";
-//worksheet.Range["A18"].Text = "Pasta";
-//worksheet.Range["A19"].Text = "Cereals";
-//worksheet.Range["A20"].Text = "Ice Cream";
-//worksheet.Range["C16"].Number = 3;
-//worksheet.Range["C17"].Number = 2;
-//worksheet.Range["C18"].Number = 1;
-//worksheet.Range["C19"].Number = 4;
-//worksheet.Range["C20"].Number = 3;
-//worksheet.Range["D16"].Number = 21;
-//worksheet.Range["D17"].Number = 54;
-//worksheet.Range["D18"].Number = 10;
-//worksheet.Range["D19"].Number = 20;
-//worksheet.Range["D20"].Number = 30;
-//worksheet.Range["D23"].Text = "Total";
-
-////Apply number format
-//worksheet.Range["D16:E22"].NumberFormat = "$.00";
-//worksheet.Range["E23"].NumberFormat = "$.00";
-
-////Merge column A and B from row 15 to 22
-//worksheet.Range["A15:B15"].Merge();
-//worksheet.Range["A16:B16"].Merge();
-//worksheet.Range["A17:B17"].Merge();
-//worksheet.Range["A18:B18"].Merge();
-//worksheet.Range["A19:B19"].Merge();
-//worksheet.Range["A20:B20"].Merge();
-//worksheet.Range["A21:B21"].Merge();
-//worksheet.Range["A22:B22"].Merge();
-
-////Apply incremental formula for column Amount by multiplying Qty and UnitPrice
-//application.EnableIncrementalFormula = true;
-//worksheet.Range["E16:E20"].Formula = "=C16*D16";
-
-////Formula for Sum the total
-//worksheet.Range["E23"].Formula = "=SUM(E16:E22)";
-
-////Apply borders
-//worksheet.Range["A16:E22"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
-//worksheet.Range["A16:E22"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-//worksheet.Range["A16:E22"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].Color = ExcelKnownColors.Grey_25_percent;
-//worksheet.Range["A16:E22"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].Color = ExcelKnownColors.Grey_25_percent;
-//worksheet.Range["A23:E23"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].LineStyle = ExcelLineStyle.Thin;
-//worksheet.Range["A23:E23"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].LineStyle = ExcelLineStyle.Thin;
-//worksheet.Range["A23:E23"].CellStyle.Borders[ExcelBordersIndex.EdgeTop].Color = ExcelKnownColors.Black;
-//worksheet.Range["A23:E23"].CellStyle.Borders[ExcelBordersIndex.EdgeBottom].Color = ExcelKnownColors.Black;
-
-////Apply font setting for cells with product details
-//worksheet.Range["A3:E23"].CellStyle.Font.FontName = "Arial";
-//worksheet.Range["A3:E23"].CellStyle.Font.Size = 10;
-//worksheet.Range["A15:E15"].CellStyle.Font.Color = ExcelKnownColors.White;
-//worksheet.Range["A15:E15"].CellStyle.Font.Bold = true;
-//worksheet.Range["D23:E23"].CellStyle.Font.Bold = true;
-
-////Apply cell color
-//worksheet.Range["A15:E15"].CellStyle.Color = Syncfusion.Drawing.Color.FromArgb(0, 42, 118, 189);
-
-////Apply alignment to cells with product details
-//worksheet.Range["A15"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
-//worksheet.Range["C15:C22"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-//worksheet.Range["D15:E15"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignCenter;
-
-////Apply row height and column width to look good
-//worksheet.Range["A1"].ColumnWidth = 36;
-//worksheet.Range["B1"].ColumnWidth = 11;
-//worksheet.Range["C1"].ColumnWidth = 8;
-//worksheet.Range["D1:E1"].ColumnWidth = 18;
-//worksheet.Range["A1"].RowHeight = 47;
-//worksheet.Range["A2"].RowHeight = 15;
-//worksheet.Range["A3:A4"].RowHeight = 15;
-//worksheet.Range["A5"].RowHeight = 18;
-//worksheet.Range["A6"].RowHeight = 29;
-//worksheet.Range["A7"].RowHeight = 18;
-//worksheet.Range["A8"].RowHeight = 15;
-//worksheet.Range["A9:A14"].RowHeight = 15;
-//worksheet.Range["A15:A23"].RowHeight = 18;
 
 MemoryStream ms = new MemoryStream();
 workbook.SaveAs(ms);

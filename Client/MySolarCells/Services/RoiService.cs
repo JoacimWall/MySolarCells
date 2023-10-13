@@ -145,7 +145,7 @@ public class RoiService : IRoiService
         var result = dbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
-            investmentTot = investmentTot + item.Investment + item.Lon;
+            investmentTot = investmentTot + item.Investment + item.Loan;
         }
             
         DateTime current = start.Value;
@@ -153,10 +153,10 @@ public class RoiService : IRoiService
         {
             foreach (var item in result)
             {
-                if (item.Lon > 0 && item.Interest.Any(x => x.FromDate <= current))
+                if (item.Loan > 0 && item.Interest.Any(x => x.FromDate <= current))
                 {
                     var interestCur = item.Interest.Where(x => x.FromDate <= current).OrderBy(o => o.FromDate).First();
-                    interest = interest + ((item.Lon * (interestCur.Interest / 100)) / 365);
+                    interest = interest + ((item.Loan * (interestCur.Interest / 100)) / 365);
 
                 }
 

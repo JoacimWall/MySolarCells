@@ -11,6 +11,7 @@ namespace MySolarCells.Services.GridSupplier
 
         string GuideText { get; }
         string DefaultApiUrl { get; }
+        string NavigationUrl { get; }
         bool ShowUserName { get; }
         bool ShowPassword { get; }
         bool ShowApiUrl { get; }

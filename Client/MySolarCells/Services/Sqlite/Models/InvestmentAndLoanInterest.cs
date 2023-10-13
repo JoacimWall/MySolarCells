@@ -1,10 +1,10 @@
 ﻿namespace MySolarCells.Services.Sqlite.Models;
 
-public class InvestmentAndLonInterest
+public class InvestmentAndLoanInterest
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int InvestmentAndLonInterestId { get; set; }
+    public int InvestmentAndLoanInterestId { get; set; }
     [Required]
     public string Description { get; set; }
     [Required]
@@ -13,7 +13,7 @@ public class InvestmentAndLonInterest
     public DateTime FromDate { get; set; } = DateTime.Today;
     //FK's
     [Required]
-    public int InvestmentAndLonId { get; set; }
+    public int InvestmentAndLoanId { get; set; }
 
     [NotMapped]
     public string Name
