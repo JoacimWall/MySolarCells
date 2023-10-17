@@ -291,4 +291,10 @@
   <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
     <value>Produksjonsindeks (prod/dag/ins. kWh)</value>
   <comment>Need review</comment></data>
+  <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
+    <value>Bruk samme pålogging som i kostal-appen/Kostal nettportalpålogging</value>
+  <comment>Need review</comment></data>
+  <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
+    <value>Kontobrukere bør generere en API-nøkkel på kontonivå fra https://monitoring.solaredge.com</value>
+  <comment>Need review</comment></data>
 </root>

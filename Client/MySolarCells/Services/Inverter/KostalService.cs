@@ -7,7 +7,7 @@ public class KostalService : IInverterServiceInterface
     private KostalUserRoleSitesResponse sitesResponse;
     private KostalUserRoleDeviceResponse deviceResponse;
 
-    public string InverterGuideText => "Use the same login as in the kostal app/Kostal web portal login";
+    public string InverterGuideText => AppResources.Kostal_Intro_Guide_Text;
     public string DefaultApiUrl => "";
     public bool ShowUserName => true;
 

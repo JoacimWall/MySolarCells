@@ -292,4 +292,10 @@
   <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
     <value>Tuotantoindeksi (tuote/päivä/tuumaa kWh)</value>
   <comment>Need review</comment></data>
+  <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
+    <value>Käytä samaa kirjautumistunnusta kuin Kostal-sovelluksessa/Kostal-verkkoportaalissa</value>
+  <comment>Need review</comment></data>
+  <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
+    <value>Tilin käyttäjien tulee luoda tilitason API-avain osoitteessa https://monitoring.solaredge.com</value>
+  <comment>Need review</comment></data>
 </root>

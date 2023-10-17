@@ -73,7 +73,7 @@
     <value>Gå till Tibber Api-webbplatsen</value>
   <comment>Need review</comment></data>
   <data name="Inverter" xml:space="preserve">
-    <value>Inverter</value>
+    <value>Växelriktare</value>
   <comment>Need review</comment></data>
   <data name="Pick_The_Invert_Desc" xml:space="preserve">
     <value>Välj inverten från listan nedan som representerar din installation</value>
@@ -226,7 +226,7 @@
     <value>Investering</value>
   <comment>Need review</comment></data>
   <data name="Investment_slash_Loan" xml:space="preserve">
-    <value>Investering/lån</value>
+    <value>Investering och lån</value>
   <comment>Need review</comment></data>
   <data name="Investment_Loan_Intro_Text" xml:space="preserve">
     <value>Här kan du ange investeringen och eventuella lån som tagits för din installation</value>
@@ -290,5 +290,11 @@
   <comment>Need review</comment></data>
   <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
     <value>Produktionsindex (prod/dag/ins. kWh)</value>
+  <comment>Need review</comment></data>
+  <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
+    <value>Använd samma inloggning som i kostal app/Kostal webbportal login</value>
+  <comment>Need review</comment></data>
+  <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
+    <value>Kontoanvändare bör generera en API-nyckel på kontonivå från https://monitoring.solaredge.com</value>
   <comment>Need review</comment></data>
 </root>

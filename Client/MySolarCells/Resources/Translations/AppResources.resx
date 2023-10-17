@@ -281,7 +281,7 @@
     <value>Investment</value>
   <comment>Need review</comment></data>
 <data name="Investment_slash_Loan" xml:space="preserve">
-    <value>Investment/loan</value>
+    <value>Investment and loan</value>
   <comment>Need review</comment></data>
 <data name="Investment_Loan_Intro_Text" xml:space="preserve">
     <value>Here you can enter the investment and any loans taken out for your installation</value>
@@ -352,4 +352,11 @@
 <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
     <value>Production index (prod/day/ins. kWh)</value>
   <comment>Need review</comment></data>
+<data name="Kostal_Intro_Guide_Text" xml:space="preserve">
+    <value>Use the same login as in the kostal app/Kostal web portal login</value>
+  <comment>Need review</comment></data>
+<data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
+    <value>Account users should generate an Account Level API Key from https://monitoring.solaredge.com</value>
+  <comment>Need review</comment></data>
+
 </root>

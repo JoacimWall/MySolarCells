@@ -124,7 +124,7 @@
             <Label Grid.Column="1" Grid.Row="25" Text="{Binding RoiStats.TotalSaved}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="25" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
             <!--TotalProduction-->
-            <Label Grid.Column="0" Grid.Row="26" Text="{x:Static trans:AppResources.Total_Produced}" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="26" Text="{x:Static trans:AppResources.Total_Produced_And_Saved}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="26" Text="{Binding RoiStats.TotalProduction}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="26" Text="{Binding RoiStats.Unit}" FontAttributes="Bold" />
             <!--Intr Index -->

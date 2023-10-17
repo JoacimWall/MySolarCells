@@ -400,11 +400,20 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Investment/loan.
+        ///   Looks up a localized string similar to Investment and loan.
         /// </summary>
         public static string Investment_slash_Loan {
             get {
                 return ResourceManager.GetString("Investment_slash_Loan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the same login as in the kostal app/Kostal web portal login.
+        /// </summary>
+        public static string Kostal_Intro_Guide_Text {
+            get {
+                return ResourceManager.GetString("Kostal_Intro_Guide_Text", resourceCulture);
             }
         }
         
@@ -720,6 +729,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Select_The_Home_You_Want_To_Analyze {
             get {
                 return ResourceManager.GetString("Select_The_Home_You_Want_To_Analyze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account users should generate an Account Level API Key from https://monitoring.solaredge.com.
+        /// </summary>
+        public static string SolarEdge_Intro_Guide_Text {
+            get {
+                return ResourceManager.GetString("SolarEdge_Intro_Guide_Text", resourceCulture);
             }
         }
         

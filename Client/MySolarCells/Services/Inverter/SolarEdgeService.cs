@@ -8,7 +8,7 @@ public class SolarEdgeService : IInverterServiceInterface
     private InverterLoginResponse inverterLoginResponse;
 
 
-    public string InverterGuideText => "Account users should generate an Account Level API Key from https://monitoring.solaredge.com";
+    public string InverterGuideText => AppResources.SolarEdge_Intro_Guide_Text;
     public string DefaultApiUrl => "";
     public bool ShowUserName => false;
 
