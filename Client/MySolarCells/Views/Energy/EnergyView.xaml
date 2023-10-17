@@ -18,7 +18,7 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
+                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
             </Border>
 
         </Grid>

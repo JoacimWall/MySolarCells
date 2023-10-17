@@ -183,4 +183,112 @@
   <data name="Fixed_Price_Kwh" xml:space="preserve">
     <value>Fast pris/Kwh</value>
   <comment>Need review</comment></data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Uppdatera</value>
+  <comment>Need review</comment></data>
+  <data name="Export_To_Excel" xml:space="preserve">
+    <value>exportera till Excel</value>
+  <comment>Need review</comment></data>
+  <data name="Grid_Electricity_Supplier" xml:space="preserve">
+    <value>Nät elleverantör</value>
+  <comment>Need review</comment></data>
+  <data name="Install_Year" xml:space="preserve">
+    <value>Installationsår</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Brand_Of_Your_Grid_Supplier" xml:space="preserve">
+    <value>Välj märke på din nätleverantör</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Grid_Supplier_Intro_Text" xml:space="preserve">
+    <value>Välj märke på din nätleverantör</value>
+  <comment>Need review</comment></data>
+  <data name="Username" xml:space="preserve">
+    <value>Användarnamn</value>
+  <comment>Need review</comment></data>
+  <data name="Api_Url" xml:space="preserve">
+    <value>API-url</value>
+  <comment>Need review</comment></data>
+  <data name="Api_Key" xml:space="preserve">
+    <value>Api nyckel</value>
+  <comment>Need review</comment></data>
+  <data name="Install_Date" xml:space="preserve">
+    <value>Installationsdatum</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_Your_Site" xml:space="preserve">
+    <value>Välj din anläggning</value>
+  <comment>Need review</comment></data>
+  <data name="Description" xml:space="preserve">
+    <value>Beskrivning</value>
+  <comment>Need review</comment></data>
+  <data name="Loan_Press_Add_For_Adding_Interest_Information" xml:space="preserve">
+    <value>Lån (tryck på 'Lägg till' för att lägga till ränteinformation)</value>
+  <comment>Need review</comment></data>
+  <data name="Investment" xml:space="preserve">
+    <value>Investering</value>
+  <comment>Need review</comment></data>
+  <data name="Investment_slash_Loan" xml:space="preserve">
+    <value>Investering/lån</value>
+  <comment>Need review</comment></data>
+  <data name="Investment_Loan_Intro_Text" xml:space="preserve">
+    <value>Här kan du ange investeringen och eventuella lån som tagits för din installation</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data" xml:space="preserve">
+    <value>Importera data</value>
+  <comment>Need review</comment></data>
+  <data name="First_Import_Intro_Text" xml:space="preserve">
+    <value>Nu är det dags att skaffa alla dina historiska data. Stäng inte av appen eller byt till en annan app</value>
+  <comment>Need review</comment></data>
+  <data name="Start" xml:space="preserve">
+    <value>Starta import</value>
+  <comment>Need review</comment></data>
+  <data name="Cost" xml:space="preserve">
+    <value>Kosta</value>
+  <comment>Need review</comment></data>
+  <data name="Sum" xml:space="preserve">
+    <value>Belopp</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Sold" xml:space="preserve">
+    <value>Produktionen såld</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Charge" xml:space="preserve">
+    <value>Batteriladdning</value>
+  <comment>Need review</comment></data>
+  <data name="Profit" xml:space="preserve">
+    <value>Vinst</value>
+  <comment>Need review</comment></data>
+  <data name="Compensation_For_Production_To_Grid" xml:space="preserve">
+    <value>Ersättning för produktion till elnät</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Energy_Tax" xml:space="preserve">
+    <value>Sparad energiskatt</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_used" xml:space="preserve">
+    <value>Batteri används</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Cost" xml:space="preserve">
+    <value>Sparad kostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Cost_Battery" xml:space="preserve">
+    <value>Sparad kostnad batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Transfer_Fee" xml:space="preserve">
+    <value>Sparad övergångsavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
+    <value>Sparat överföringsavgiftsbatteri</value>
+  <comment>Need review</comment></data>
+  <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
+    <value>Sparat energiskattebatteri</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Production_Sold_Own_Use" xml:space="preserve">
+    <value>Total produktion (såld/egen användning)</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Production" xml:space="preserve">
+    <value>Total produktion</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Interest" xml:space="preserve">
+    <value>Total ränta</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
+    <value>Produktionsindex (prod/dag/ins. kWh)</value>
+  <comment>Need review</comment></data>
 </root>

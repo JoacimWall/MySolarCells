@@ -335,7 +335,7 @@ public class TibberService : IGridSupplierInterface
                     listPrice.AddRange(result.Model.data.viewer.home.currentSubscription.priceInfo.today);
                 if (result.Model.data.viewer.home.currentSubscription.priceInfo.tomorrow.Count > 0)
                     listPrice.AddRange(result.Model.data.viewer.home.currentSubscription.priceInfo.tomorrow);
-
+               
                 foreach (var priceItem in listPrice)
                 {
                     var existPrice = await dbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == priceItem.startsAt && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
@@ -359,6 +359,7 @@ public class TibberService : IGridSupplierInterface
                         existPrice.UnitPriceBuy = priceItem.total;
                         existPrice.UnitPriceSold = priceItem.energy;
                     }
+                    existPrice.PriceLevel = priceItem.level;
                     await dbContext.SaveChangesAsync();
 
                 }
@@ -449,6 +450,8 @@ public class TibberPrice
     public string level { get; set; }
     public DateTime startsAt { get; set; }
     public string currency { get; set; }
+    
+    
 }
 
 

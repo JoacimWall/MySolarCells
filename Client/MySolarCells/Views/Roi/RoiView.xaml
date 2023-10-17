@@ -11,13 +11,13 @@
                         x:DataType="vm:RoiViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="RIO" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.ROI}" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Refresh" BackgroundColor="Transparent" ></Button>
+                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
             </Border>
 
         </Grid>
@@ -28,109 +28,111 @@
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
             <control:DateNavigator Margin="8,8,0,16" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"
                                GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}"/>
+
+
             <!--TotalPurchased-->
-            <Label Grid.Column="0" Grid.Row="2" Text="Purchased"/>
+            <Label Grid.Column="0" Grid.Row="2" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Purchased}"/>
             <Label Grid.Column="1" Grid.Row="2" Text="{Binding RoiStats.TotalPurchased}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="2" Text="{Binding RoiStats.Unit}"/>
             <!--TotalPurchasedCost-->
-            <Label Grid.Column="0" Grid.Row="3" Text="Purchased cost"/>
+            <Label Grid.Column="0" Grid.Row="3" Text="{x:Static trans:AppResources.Cost}"/>
             <Label Grid.Column="1" Grid.Row="3" Text="{Binding RoiStats.TotalPurchasedCost}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="3" Text="{Binding RoiStats.Currency}"/>
             <!--TotalTransferFeePurchased-->
-            <Label Grid.Column="0" Grid.Row="4" Text="Purchased transfer fee"/>
+            <Label Grid.Column="0" Grid.Row="4" Text="{x:Static trans:AppResources.Transfer_Fee}"/>
             <Label Grid.Column="1" Grid.Row="4" Text="{Binding RoiStats.TotalTransferFeePurchased}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="4" Text="{Binding RoiStats.Currency}"/>
             <!--TotalTaxPurchased-->
-            <Label Grid.Column="0" Grid.Row="5" Text="Purchased energy tax"/>
+            <Label Grid.Column="0" Grid.Row="5" Text="{x:Static trans:AppResources.Energy_Tax}"/>
             <Label Grid.Column="1" Grid.Row="5" Text="{Binding RoiStats.TotalTaxPurchased}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="5" Text="{Binding RoiStats.Currency}"/>
             <BoxView Margin="0,4" Grid.ColumnSpan="3" Grid.Row="6" HeightRequest="1" />
             <!--SumPurchased-->
-            <Label Grid.Column="0" Grid.Row="7" Text="Sum:" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="7" Text="{x:Static trans:AppResources.Sum}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="7" Text="{Binding RoiStats.SumPurchased}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Margin="0,0,0,8" Grid.Column="2" Grid.Row="7" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
 
             <!--TotalProductionSold-->
-            <Label Grid.Column="0" Grid.Row="8" Text="Production sold"/>
+            <Label Grid.Column="0" Grid.Row="8" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Production_Sold}"/>
             <Label Grid.Column="1" Grid.Row="8" Text="{Binding RoiStats.TotalProductionSold}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="8" Text="{Binding RoiStats.Unit}"/>
             <!--Totalbattery-->
-            <Label Grid.Column="0" Grid.Row="9" Text="Battery Charge"/>
+            <Label Grid.Column="0" Grid.Row="9" Text="{x:Static trans:AppResources.Battery_Charge}"/>
             <Label Grid.Column="1" Grid.Row="9" Text="{Binding RoiStats.TotalBatteryCharge}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="9" Text="{Binding RoiStats.Unit}"/>
             <!--TotalProductionSoldProfit-->
-            <Label Grid.Column="0" Grid.Row="10" Text="Production sold profit"/>
+            <Label Grid.Column="0" Grid.Row="10" Text="{x:Static trans:AppResources.Profit}"/>
             <Label Grid.Column="1" Grid.Row="10"  Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="10" Text="{Binding RoiStats.Currency}"/>
 
             <!--TotalCompensationForProductionToGrid-->
-            <Label Grid.Column="0" Grid.Row="11" Text="Compensation for production to grid"/>
+            <Label Grid.Column="0" Grid.Row="11" Text="{x:Static trans:AppResources.Compensation_For_Production_To_Grid}"/>
             <Label Grid.Column="1" Grid.Row="11" Text="{Binding RoiStats.TotalCompensationForProductionToGrid}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="11" Text="{Binding RoiStats.Currency}"/>
             <!--TotalSavedEnergyTaxReductionProductionToGrid-->
-            <Label Grid.Column="0" Grid.Row="12" Text="Saved energy tax"/>
+            <Label Grid.Column="0" Grid.Row="12" Text="{x:Static trans:AppResources.Saved_Energy_Tax}"/>
             <Label Grid.Column="1" Grid.Row="12" Text="{Binding RoiStats.TotalSavedEnergyTaxReductionProductionToGrid}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="12" Text="{Binding RoiStats.Currency}"/>
             <BoxView Margin="0,4" Grid.ColumnSpan="3" Grid.Row="13" HeightRequest="1" />
             <!--SumPurchased-->
-            <Label Grid.Column="0" Grid.Row="14" Text="Sum:" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="14" Text="{x:Static trans:AppResources.Sum}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="14" Text="{Binding RoiStats.SumProductionSold}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Margin="0,0,0,8" Grid.Column="2" Grid.Row="14" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
 
 
             <!--TotalProductionOwnUse-->
-            <Label Grid.Column="0" Grid.Row="15" Text="Production own use"/>
+            <Label Grid.Column="0" Grid.Row="15" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Production_Own_Use}"/>
             <Label Grid.Column="1" Grid.Row="15" Text="{Binding RoiStats.TotalProductionOwnUse}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="15" Text="{Binding RoiStats.Unit}"/>
             <!--Battery Used-->
-            <Label Grid.Column="0" Grid.Row="16" Text="Battery used"/>
+            <Label Grid.Column="0" Grid.Row="16" Text="{x:Static trans:AppResources.Battery_used}"/>
             <Label Grid.Column="1" Grid.Row="16" Text="{Binding RoiStats.TotalBatteryUsed}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="16" Text="{Binding RoiStats.Unit}"/>
             <!--ProductionOwnUseProfit-->
-            <Label Grid.Column="0" Grid.Row="17" Text="Saved cost"/>
+            <Label Grid.Column="0" Grid.Row="17" Text="{x:Static trans:AppResources.Saved_Cost}"/>
             <Label Grid.Column="1" Grid.Row="17" Text="{Binding RoiStats.TotalProductionOwnUseProfit}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="17" Text="{Binding RoiStats.Currency}"/>
             <!--ProductionOwnUseProfit-->
-            <Label Grid.Column="0" Grid.Row="18" Text="Saved cost battery"/>
+            <Label Grid.Column="0" Grid.Row="18" Text="{x:Static trans:AppResources.Saved_Cost_Battery}"/>
             <Label Grid.Column="1" Grid.Row="18" Text="{Binding RoiStats.TotalBatteryUsedProfit}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="18" Text="{Binding RoiStats.Currency}"/>
             <!--TotalSavedTransferFeeProductionOwnUse-->
-            <Label Grid.Column="0" Grid.Row="19" Text="Saved transfer fee"/>
+            <Label Grid.Column="0" Grid.Row="19" Text="{x:Static trans:AppResources.Saved_Transfer_Fee}"/>
             <Label Grid.Column="1" Grid.Row="19" Text="{Binding RoiStats.TotalSavedTransferFeeProductionOwnUse}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="19" Text="{Binding RoiStats.Currency}"/>
             <!--TotalSavedTransferFeeProductionOwnUse-->
-            <Label Grid.Column="0" Grid.Row="20" Text="Saved transfer fee battery"/>
+            <Label Grid.Column="0" Grid.Row="20" Text="{x:Static trans:AppResources.Saved_Transfer_Fee_Battery}"/>
             <Label Grid.Column="1" Grid.Row="20" Text="{Binding RoiStats.TotalSavedTransferFeeBatteryUse}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="20" Text="{Binding RoiStats.Currency}"/>
             <!--TotalSavedEnergyTaxProductionOwnUse-->
-            <Label Grid.Column="0" Grid.Row="21" Text="Saved energy tax"/>
+            <Label Grid.Column="0" Grid.Row="21" Text="{x:Static trans:AppResources.Saved_Energy_Tax}"/>
             <Label Grid.Column="1" Grid.Row="21" Text="{Binding RoiStats.TotalSavedEnergyTaxProductionOwnUse}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="21" Text="{Binding RoiStats.Currency}"/>
             <!--TotalSavedEnergyTaxProductionOwnUse-->
-            <Label Grid.Column="0" Grid.Row="22" Text="Saved energy tax battery"/>
+            <Label Grid.Column="0" Grid.Row="22" Text="{x:Static trans:AppResources.Saved_Energy_Tax_Battery}"/>
             <Label Grid.Column="1" Grid.Row="22" Text="{Binding RoiStats.TotalSavedEnergyTaxBatteryUse}" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="22" Text="{Binding RoiStats.Currency}"/>
             <BoxView  Margin="0,4" Grid.ColumnSpan="3" Grid.Row="23" HeightRequest="1" />
             <!--SumPurchased-->
-            <Label Grid.Column="0" Grid.Row="24" Text="Sum:" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="24" Text="{x:Static trans:AppResources.Sum}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="24" Text="{Binding RoiStats.SumProductionOwnUseAndBattery}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Margin="0,0,0,8" Grid.Column="2" Grid.Row="24" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
 
 
             <!--TotalSaved-->
-            <Label Grid.Column="0" Grid.Row="25" Text="Total production (sold/own use)" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="25" Text="{x:Static trans:AppResources.Total_Production_Sold_Own_Use}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="25" Text="{Binding RoiStats.TotalSaved}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="25" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
             <!--TotalProduction-->
-            <Label Grid.Column="0" Grid.Row="26" Text="Total production" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="26" Text="{x:Static trans:AppResources.Total_Produced}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="26" Text="{Binding RoiStats.TotalProduction}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="26" Text="{Binding RoiStats.Unit}" FontAttributes="Bold" />
             <!--Intr Index -->
-            <Label Grid.Column="0" Grid.Row="27" Text="Total interest" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="27" Text="{x:Static trans:AppResources.Total_Interest}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="27" Text="{Binding RoiStats.TotalInterest}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="27" Text="{Binding RoiStats.Currency}" FontAttributes="Bold"/>
             <!--Production Index -->
-            <Label Grid.Column="0" Grid.Row="28" Text="Production index (prod/day/ins. kWh)" FontAttributes="Bold"/>
+            <Label Grid.Column="0" Grid.Row="28" Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Day_ins_KWh}" FontAttributes="Bold"/>
             <Label Grid.Column="1" Grid.Row="28" Text="{Binding RoiStats.ProductionIndex}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
             <Label Grid.Column="2" Grid.Row="28" Text="{Binding RoiStats.Unit}" FontAttributes="Bold"/>
         </Grid>

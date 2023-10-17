@@ -10,6 +10,7 @@ public class Program
 	{
 		// if you want to use a different Application Delegate class from "AppDelegate"
 		// yoan specify it here.
+
 		UIApplication.Main(args, null, typeof(AppDelegate));
 	}
 }

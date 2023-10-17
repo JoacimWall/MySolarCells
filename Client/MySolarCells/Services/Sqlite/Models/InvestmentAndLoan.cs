@@ -10,10 +10,28 @@ public class InvestmentAndLoan : ObservableObject
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvestmentAndLoanId { get; set; }
+    private string description;
     [Required]
-    public string Description { get; set; }
+    public string Description
+    {
+        get => description;
+        set
+        {
+            SetProperty(ref description, value);
+           
+        }
+    }
+private DateTime fromDate = DateTime.Today;
     [Required]
-    public DateTime FromDate { get; set; } = DateTime.Today;
+    public DateTime FromDate
+    {
+        get => fromDate;
+        set
+        {
+            SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));
+           
+        }
+    }
     [Required]
     public int Investment { get; set; } = 0;
     [Required]

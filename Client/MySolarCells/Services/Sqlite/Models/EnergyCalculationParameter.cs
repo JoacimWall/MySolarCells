@@ -5,15 +5,16 @@ public class EnergyCalculationParameter : ObservableObject
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int EnergyCalculationParameterId { get; set; }
-    [Required]
+    
     private DateTime fromDate = DateTime.Today;
+    [Required]
     public DateTime FromDate
     {
-        get { return fromDate; }
+        get => fromDate;
         set
         {
-            SetProperty(ref fromDate, value);
-            OnPropertyChanged(nameof(Name));
+            SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));
+
         }
     }
     [Required]  //Nätnytta 0.078 kr/kWh
@@ -44,10 +45,17 @@ public class EnergyCalculationParameter : ObservableObject
     [Required]
     public int HomeId { get; set; }
 
+   
+    private string displayName;
     [NotMapped]
-    public string Name
+    public string DisplayName
     {
-        get { return FromDate.ToShortDateString(); }
+        get { return displayName; }
+        set
+        {
+            SetProperty(ref displayName, value);
+            
+        }
     }
 
     private bool showFixedPrice;

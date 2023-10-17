@@ -57,21 +57,21 @@ public class KostalService : IInverterServiceInterface
     public async Task<Result<List<InverterSite>>> GetPickerOne()
     {
         //SITES
-        string query = "query SITES_LIST_FIRST { sites(first: 1) { nodes { id name      inclination __typename    } __typename  } }";
+        string query = "query SITES_LIST_FIRST { sites(first: 1) { nodes { id name   installationDate   inclination __typename    } __typename  } }";
         KostalUserRoleGraphQlRequest graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "SITES_LIST_FIRST", query = query, variables = new KostalUserRoleEmptyVariables() };
         var resultSites = await this.restClient.ExecutePostAsync<KostalUserRoleSitesResponse>(string.Empty, graphQlRequest);
         sitesResponse = resultSites.Model;
         var returnlist = new List<InverterSite>();
         foreach (var item in sitesResponse.data.sites.nodes)
         {
-            returnlist.Add(new InverterSite { Id = item.id.ToString(), Name = item.name.ToString() });
+            returnlist.Add(new InverterSite { Id = item.id.ToString(), Name = item.name.ToString(), InstallationDate = Convert.ToDateTime( item.installationDate) });
         }
         return new Result<List<InverterSite>>(returnlist);
     }
     public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
         //FETCH_LIST_DEVICE_IDS_OF_SITE
-        var query = "query FETCH_LIST_DEVICE_IDS_OF_SITE($id: Long!) {  site(id: $id) {    id    name    currency    purchaseCompensation    feedInCompensation    dataSources {      id      name      status      metadata {        id        key        value        __typename      }      devices {        id        name        type        uniqueIdentifier        metadata {          id          key          value          __typename        }        __typename      }      mostRecentDataSourceLogEntry {        timestamp        __typename      }      __typename    }    __typename  }}";
+        var query = "query FETCH_LIST_DEVICE_IDS_OF_SITE($id: Long!) {  site(id: $id) {    id    name  installationDate  currency    purchaseCompensation    feedInCompensation    dataSources {      id      name      status      metadata {        id        key        value        __typename      }      devices {        id        name        type        uniqueIdentifier        metadata {          id          key          value          __typename        }        __typename      }      mostRecentDataSourceLogEntry {        timestamp        __typename      }      __typename    }    __typename  }}";
         var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_LIST_DEVICE_IDS_OF_SITE", query = query, variables = new KostalUserRoleListDeviceVariables { id = Convert.ToInt32(inverterSite.Id) } };
         var resultDevice = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceResponse>(string.Empty, graphQlRequest);
         deviceResponse = resultDevice.Model;
@@ -311,6 +311,7 @@ public class KostalUserRoleNode
     public int id { get; set; }
     public string name { get; set; }
     public object inclination { get; set; }
+    public string installationDate { get; set; }
     public string __typename { get; set; }
 }
 
@@ -371,6 +372,7 @@ public class KostalUserRoleDeviceSite
 {
     public int id { get; set; }
     public string name { get; set; }
+    public string installationDate { get; set; }
     public object currency { get; set; }
     public object purchaseCompensation { get; set; }
     public object feedInCompensation { get; set; }

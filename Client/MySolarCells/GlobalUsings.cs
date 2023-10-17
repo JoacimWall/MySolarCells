@@ -20,6 +20,7 @@ global using EFCore.BulkExtensions;
 global using Microsoft.Extensions.Logging;
 
 // ___ MySolarCells -----------
+global using MySolarCells.Messages;
 global using MySolarCells.Resources.Translations;
 global using MySolarCells.Helpers;
 global using MySolarCells.Resources.Styles;

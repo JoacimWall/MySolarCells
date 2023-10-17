@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using MySolarCells.Services.Sqlite.Models;
 
 namespace MySolarCells.ViewModels.OnBoarding;
@@ -25,6 +26,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         {
             AddInvestLon();
         }
+
     }
 
     public ICommand AddInestlonCommand => new Command( () =>  AddInvestLon());

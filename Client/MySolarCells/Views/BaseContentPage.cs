@@ -16,7 +16,7 @@ public class BaseContentPage : ContentPage
         Shell.SetNavBarIsVisible(this, false);
         Shell.SetBackButtonBehavior(this, new BackButtonBehavior { IsVisible = false });
         //döljer warnings då vi kräver IOS 12.4 så det är lugnt  
-
+        this.HideSoftInputOnTapped = true;
       
         On<iOS>().SetUseSafeArea(true);
         

@@ -45,7 +45,7 @@
 		<!--DEBUG ON DEVICE-->
 		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
 		<!--DEBUG ON SIMULATOR-->
-		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
@@ -63,6 +63,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="23.1.40" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="23.1.40" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="23.1.40" />
 	</ItemGroup>
 	<!-- Translation -->
 	<ItemGroup>
@@ -94,6 +95,7 @@
 		<None Remove="Platforms\Android\Resources\xml\" />
 		<None Remove="Platforms\Android\Resources\xml\provider_paths.xml" />
 		<None Remove="Services\GridSupplier\" />
+		<None Remove="Messages\" />
 	</ItemGroup>
 	<ItemGroup>
 		<BundleResource Include="MultiLingualExtensionSettings.json" />
@@ -106,6 +108,7 @@
 	<ItemGroup>
 	  <Folder Include="Platforms\Android\Resources\xml\" />
 	  <Folder Include="Services\GridSupplier\" />
+	  <Folder Include="Messages\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />

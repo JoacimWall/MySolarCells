@@ -40,6 +40,8 @@ public class Energy
     [Required]
     public double UnitPriceVatSold { get; set; } = 0;
     [Required]
+    public string PriceLevel { get; set; } = "";
+    [Required]
     public int ElectricitySupplierProductionSold { get; set; } = 0;
     [Required]
     public int InverterTypProductionOwnUse { get; set; } = 0;

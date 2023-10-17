@@ -5,12 +5,12 @@
                         x:Class="MySolarCells.Views.OnBoarding.ElectricitySupplierView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles" 
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:ElectricitySupplierViewModel">
     <Shell.TitleView >
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto" >
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="White" Text="{x:Static trans:AppResources.Grid_Supplier}" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Grid_Supplier}" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" IsVisible="{Binding ShowHomePicker}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
@@ -24,26 +24,26 @@
     </Shell.TitleView>
     <ScrollView>
         <Grid RowSpacing="4" ColumnSpacing="4" Margin="16,8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Row="0" Margin="0,16" Grid.ColumnSpan="3" FontSize="17" HorizontalTextAlignment="Center" Text="Pick the grid supplier from the list below"
+            <Label Grid.Row="0" Margin="0,16" Grid.ColumnSpan="3" FontSize="17" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Pick_The_Grid_Supplier_Intro_Text}"
             VerticalOptions="Center"  HorizontalOptions="Center" />
 
-            <Label  Grid.Row="1" Grid.ColumnSpan="3" Text="Pick the brand of your grid supplier" />
+            <Label  Grid.Row="1" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Grid_Supplier}" />
             <Picker Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding GridSupplierModels}" SelectedItem="{Binding SelectedGridSupplierModel}" ItemDisplayBinding="{Binding ItemTitle}"/>
             <Label  Grid.Row="3" Grid.ColumnSpan="3" Margin="0,16" Text="{Binding GuideText}" />
             <VerticalStackLayout Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3">
-                 <!--Navigate to url-->
+                <!--Navigate to url-->
                 <Button IsVisible="{Binding ShowNavigateUrl}" Text="{x:Static trans:AppResources.Goto_Tibber_Api_Site}" Command="{Binding GoToNavigateUrlCommand}"/>
-                 <!--UserName-->
-                <Label IsVisible="{Binding ShowUserName}" Text="Username" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+                <!--UserName-->
+                <Label IsVisible="{Binding ShowUserName}" Text="{x:Static trans:AppResources.Username}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
                 <Entry IsVisible="{Binding ShowUserName}" Text="{Binding UserName}" />
                 <!--Password-->
-                <Label IsVisible="{Binding ShowPassword}" Text="Password" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+                <Label IsVisible="{Binding ShowPassword}" Text="{x:Static trans:AppResources.Password}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
                 <Entry IsVisible="{Binding ShowPassword}" Text="{Binding Password}" IsPassword="True"  />
-                 <!--Api URL-->
-                <Label IsVisible="{Binding ShowApiUrl}" Text="API url" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+                <!--Api URL-->
+                <Label IsVisible="{Binding ShowApiUrl}" Text="{x:Static trans:AppResources.Api_Url}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
                 <Entry IsVisible="{Binding ShowApiUrl}" Text="{Binding ApiUrl}"   />
-                 <!--Api Key-->
-                <Label IsVisible="{Binding ShowApiKey}" Text="API key" HorizontalTextAlignment="Start" HorizontalOptions="Start"  />
+                <!--Api Key-->
+                <Label IsVisible="{Binding ShowApiKey}" Text="{x:Static trans:AppResources.Api_Key}" HorizontalTextAlignment="Start" HorizontalOptions="Start"  />
                 <Entry IsVisible="{Binding ShowApiKey}" Text="{Binding ApiKey}"   />
             </VerticalStackLayout>
             <!--Test connection to API-->
@@ -53,8 +53,10 @@
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Select_The_Home_You_Want_To_Analyze}" IsVisible="{Binding ShowHomePicker}"/>
             <Picker Grid.Row="7" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" ItemsSource="{Binding Homes}" SelectedItem="{Binding SelecteddHome}" ItemDisplayBinding="{Binding Name}"/>
             <!--Install date-->
-            <Label  Grid.Row="8" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Year}" IsVisible="{Binding ShowHomePicker}"/>
-            <DatePicker Grid.Row="9" Grid.ColumnSpan="3" Date="{Binding InstallDate}" IsVisible="{Binding ShowHomePicker}"/>
+            <Label  Grid.Row="8" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Install_Year}" IsVisible="{Binding ShowHomePicker}"/>
+            <Picker Grid.Row="9" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" SelectedItem="{Binding InstallDate}" ItemsSource="{Binding InstallYears}" ItemDisplayBinding="{Binding ItemTitle}"  />
+               
+           
             <!--ImportOnlySpotPrice-->
             <HorizontalStackLayout IsVisible="{Binding ShowHomePicker}" Grid.Row="10"  Grid.ColumnSpan="3">
                 <CheckBox IsChecked="{Binding ImportOnlySpotPrice}" VerticalOptions="Center" HorizontalOptions="Start"/>

@@ -10,7 +10,7 @@
                         x:DataType="vm:InvestmentAndLoanViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Investment/Lon" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
@@ -27,28 +27,28 @@
           ColumnDefinitions="Auto,*,Auto">
 
             <Label Grid.Row="0" Grid.ColumnSpan="3" FontSize="17"
-            Text="Here you can enter the investment and any loans taken out for your installation"
+            Text="{x:Static trans:AppResources.Investment_Loan_Intro_Text}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Text="Investment/lon:" />
+            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment_slash_Loan}" />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndloan}" ItemDisplayBinding="{Binding Description}"/>
              <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddInestlonCommand}"/>
             <!--Description-->
-            <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
+            <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
             <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Description}" />
             <!--FromDate-->
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="Date"/>
-            <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Date="{Binding SelectedInvestmentAndloan.FromDate}" />
+            <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInvestmentAndloan.FromDate}" />
 
             <!--Investment-->
-            <Label Grid.Row="8" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Investment"
+            <Label Grid.Row="8" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment}"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
             <Entry Grid.Row="9" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Investment}" />
 
             <!--Loan-->
-            <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Lon (press 'Add' for adding interest information)"
+            <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Loan_Press_Add_For_Adding_Interest_Information}"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
             <Entry Grid.Row="11" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Loan}" />
              <!--Amortization-->
@@ -57,16 +57,16 @@
             <Entry Grid.Row="12" Grid.ColumnSpan="2" Text="{Binding SelectedInvestmentAndlon.Amortization}" />-->
 
             <!--Inerest picker-->
-            <Label Margin="0,0,0,-6" Grid.Row="13" Grid.ColumnSpan="3" Text="Interest:" />
+            <Label Margin="0,0,0,-6" Grid.Row="13" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest}" />
             <Picker Margin="0" Grid.Row="14" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndloan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
             <Button Grid.Row="14"  Grid.Column="3" Text="Add" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
-            <Label Grid.Row="15" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Description"
+            <Label Grid.Row="15" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}"
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
             <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
             <!--FromDate iterest-->
             <Label  Grid.Row="17" Grid.ColumnSpan="3" Text="Date"/>
-            <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Date="{Binding SelectedInterest.FromDate}" />
+            <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInterest.FromDate}" />
 
             <!--Investment-->
             <Label Grid.Row="19" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Interest"

@@ -1,6 +1,6 @@
 ﻿namespace MySolarCells.Services.Sqlite.Models;
 
-public class InvestmentAndLoanInterest
+public class InvestmentAndLoanInterest : ObservableObject
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -9,8 +9,17 @@ public class InvestmentAndLoanInterest
     public string Description { get; set; }
     [Required]
     public float Interest { get; set; } = 0;
+    private DateTime fromDate = DateTime.Today;
     [Required]
-    public DateTime FromDate { get; set; } = DateTime.Today;
+    public DateTime FromDate
+    {
+        get =>  fromDate;
+        set
+        {
+            SetProperty(ref fromDate, new DateTime(value.Year,value.Month,1));
+            
+        }
+    } 
     //FK's
     [Required]
     public int InvestmentAndLoanId { get; set; }
@@ -18,6 +27,6 @@ public class InvestmentAndLoanInterest
     [NotMapped]
     public string Name
     {
-        get { return FromDate.ToShortDateString(); }
+        get { return FromDate.ToString("yyyy-MM"); }
     }
 }

@@ -7,4 +7,6 @@ public partial class EnergyCalculationParameterView : BaseContentPage
 		InitializeComponent();
         BindingContext = vm;
     }
+
+   
 }

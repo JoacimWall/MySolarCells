@@ -26,17 +26,20 @@ public class ElectricitySupplierViewModel : BaseViewModel
             }
 
         }
-        //if (MySolarCellsGlobals.SelectedHome != null && MySolarCellsGlobals.SelectedHome.HomeId != 0)
-        //{
-        //    TibberAccessToken = StringHelper.Decrypt(MySolarCellsGlobals.SelectedHome.ApiKey, AppConstants.Secretkey);
-        //}
+
+        for (int i = DateTime.Now.Year; i > DateTime.Now.AddYears(-20).Year; i--)
+            InstallYears.Add(new PickerItem { ItemTitle = i.ToString(), ItemValue = i });
+
+
+       
+
+
 
     }
     public ICommand GoToNavigateUrlCommand => new Command(async () => await GoToNavigateUrl());
     public ICommand TestConnectionCommand => new Command(async () => await TestConnection());
     public ICommand SaveCommand => new Command(async () => await SaveHome());
-
-
+    
     private async Task TestConnection()
     {
         //this.gridSupplierService.Init(this.tibberAccessToken);
@@ -64,6 +67,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
             if (Homes.Count > 0)
             {
                 SelecteddHome = Homes.First();
+                InstallDate = InstallYears.First();
                 ShowHomePicker = true;
             }
             else
@@ -91,7 +95,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         homeExist.Name = selecteddHome.Name;
         homeExist.SubSystemEntityId = selecteddHome.SubSystemEntityId.ToString();
         homeExist.ElectricitySupplier = selecteddHome.ElectricitySupplier;
-        homeExist.FromDate = new DateTime(installDate.Year, installDate.Month, installDate.Day);
+        homeExist.FromDate = new DateTime(installDate.ItemValue, 1, 1);
 
         //TODO:Do we neeed more info from tibber homes
 
@@ -165,7 +169,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         get => selecteddHome;
         set { SetProperty(ref selecteddHome, value); }
     }
-
+    
     private string guideText;
     public string GuideText
     {
@@ -234,8 +238,14 @@ public class ElectricitySupplierViewModel : BaseViewModel
         set { SetProperty(ref showNavigateUrl, value); }
     }
     
-    private DateTime installDate = new DateTime(DateTime.Now.Year, 1, 1);
-    public DateTime InstallDate
+    private ObservableCollection<PickerItem> installYears = new ObservableCollection<PickerItem>();
+    public ObservableCollection<PickerItem> InstallYears
+    {
+        get => installYears;
+        set { SetProperty(ref installYears, value); }
+    }
+    private PickerItem installDate;
+    public PickerItem InstallDate
     {
         get => installDate;
         set { SetProperty(ref installDate, value); }

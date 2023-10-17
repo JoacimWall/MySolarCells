@@ -15,10 +15,23 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
             selectedParameters = parameters.Last();
         }
         else //Add default first one
-        AddParameters();
+            AddParameters();
     }
-    public ICommand AddParametersCommand => new Command( () =>  AddParameters());
+    public ICommand AddParametersCommand => new Command(() => AddParameters());
+    public ICommand ShowDatePickerCommand => new Command(() => ShowDatePickerDlg());
 
+    private void ShowDatePickerDlg()
+    {
+        ShowDatePicker = false;
+        ShowDatePicker = true;
+
+    }
+    private bool showDatePicker;
+    public bool ShowDatePicker
+    {
+        get => showDatePicker;
+        set { SetProperty(ref showDatePicker, value); }
+    }
     private void AddParameters()
     {
         Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter { HomeId = MySolarCellsGlobals.SelectedHome.HomeId, FromDate = MySolarCellsGlobals.SelectedHome.FromDate });
@@ -64,9 +77,21 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
     public Services.Sqlite.Models.EnergyCalculationParameter SelectedParameters
     {
         get => selectedParameters;
-        set { SetProperty(ref selectedParameters, value); }
+        set
+        {
+            SetProperty(ref selectedParameters, value);
+            //SelectedFromDate = value.FromDate;
+        }
     }
-    
+    //private DateTime selectedFromDate = DateTime.Today;
+    //public DateTime SelectedFromDate
+    //{
+    //    get { return selectedFromDate; }
+    //    set
+    //    {
+    //        SetProperty(ref selectedFromDate, value);
+    //    }
+    //}
 
 }
 

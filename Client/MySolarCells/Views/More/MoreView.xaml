@@ -12,14 +12,11 @@
         <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
 
             <VerticalStackLayout Grid.Row="1"  Grid.ColumnSpan="3">
-                <Button Margin="0,16"  Text="Export Excel" Command="{Binding ExportExcelCommand}"/>
-                <Button Margin="0,16"  Text="Electricity supplier" Command="{Binding ElectricitySupplierCommand}"/>
-                <Button Margin="0,16"  Text="Inverter settings" Command="{Binding InverterSettingsCommand}"/>
-                <Button Margin="0,16"  Text="Calc parameters" Command="{Binding ShowCalcParametersCommand}"/>
-                <Button Margin="0,16"  Text="Invest And Lon" Command="{Binding ShowInvestAndLonCommand}"/>
-
-
-
+                <Button Margin="0,16"  Text="{x:Static trans:AppResources.Export_To_Excel}" Command="{Binding ExportExcelCommand}"/>
+                <Button Margin="0,16"  Text="{x:Static trans:AppResources.Grid_Electricity_Supplier}" Command="{Binding ElectricitySupplierCommand}"/>
+                <Button Margin="0,16"  Text="{x:Static trans:AppResources.Inverter}" Command="{Binding InverterSettingsCommand}"/>
+                <Button Margin="0,16"  Text="{x:Static trans:AppResources.Calculation_Parameters}" Command="{Binding ShowCalcParametersCommand}"/>
+                <Button Margin="0,16"  Text="{x:Static trans:AppResources.My_Investment_And_Loan}" Command="{Binding ShowInvestAndLonCommand}"/>
 
             </VerticalStackLayout>
 
