@@ -69,6 +69,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Semibold.ttf" />
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" />
+		<EmbeddedResource Include="Resources\EmbeddedImages\smart_home_with_solar_panels.jpg" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Condition=" '$(EnableDefaultEmbeddedResourceItems)' == 'true' " Update="Resources\Translations\AppResources.resx">
@@ -96,6 +97,9 @@
 		<None Remove="Platforms\Android\Resources\xml\provider_paths.xml" />
 		<None Remove="Services\GridSupplier\" />
 		<None Remove="Messages\" />
+		<None Remove="Converters\" />
+		<None Remove="Resources\EmbeddedImages\" />
+		<None Remove="Resources\EmbeddedImages\smart_home_with_solar_panels.jpg" />
 	</ItemGroup>
 	<ItemGroup>
 		<BundleResource Include="MultiLingualExtensionSettings.json" />
@@ -109,6 +113,8 @@
 	  <Folder Include="Platforms\Android\Resources\xml\" />
 	  <Folder Include="Services\GridSupplier\" />
 	  <Folder Include="Messages\" />
+	  <Folder Include="Converters\" />
+	  <Folder Include="Resources\EmbeddedImages\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />

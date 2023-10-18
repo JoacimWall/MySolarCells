@@ -297,4 +297,10 @@
   <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
     <value>Kontobrugere skal generere en API-nøgle på kontoniveau fra https://monitoring.solaredge.com</value>
   <comment>Need review</comment></data>
+  <data name="Shortcuts" xml:space="preserve">
+    <value>Genveje</value>
+  <comment>Need review</comment></data>
+  <data name="Tools_And_Features" xml:space="preserve">
+    <value>Værktøjer og funktioner</value>
+  <comment>Need review</comment></data>
 </root>

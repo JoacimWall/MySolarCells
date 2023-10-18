@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="MySolarCells.Controls.MenuGridItemView"
+              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.Energy"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:control="clr-namespace:MySolarCells.Controls">
+    <ContentView.Content>
+
+        <Grid HeightRequest="100" RowDefinitions="2*, *">
+
+            <Border Grid.RowSpan="2"
+                    BackgroundColor="{x:Static theming:AppColors.Gray100Color}"
+                    StrokeShape="RoundRectangle 10,10,10,10" />
+
+            <!--<Frame x:Name="IsNewLabel"
+                   Margin="10,8,10,0"
+                   Padding="1,1,1,1"
+                   BackgroundColor="{x:Static theming:AppColors.Primary100Color}"
+                   BorderColor="Transparent"
+                   CornerRadius="8"
+                   HasShadow="False"
+                   HeightRequest="17"
+                   HorizontalOptions="Start"
+                   IsVisible="False"
+                   VerticalOptions="Start"
+                   WidthRequest="38">
+                <Label HorizontalTextAlignment="Center"
+                       Style="{StaticResource LabelStyleNormalMicroWhite}"
+                       Text="{Binding Source={x:Static trans:AppResources.New}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.Upper}}" />
+            </Frame>-->
+
+            <Label x:Name="IconLabelExternal"
+                   Margin="0,11,10,0"
+                   HorizontalOptions="End"
+                   FontFamily="AppIconsFont"
+                   VerticalOptions="Start" />
+
+            <Label x:Name="IconLabel"
+                   Margin="0,20,0,0"
+                   FontSize="40"
+                   FontFamily="AppIconsFont"
+                   HorizontalTextAlignment="Center" />
+
+            <Label x:Name="title"
+                   Grid.Row="1"
+                   Margin="0,5,0,0"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Start" />
+
+        </Grid>
+    </ContentView.Content>
+</ContentView>

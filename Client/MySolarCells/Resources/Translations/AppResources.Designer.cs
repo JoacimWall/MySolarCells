@@ -733,6 +733,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shortcuts.
+        /// </summary>
+        public static string Shortcuts {
+            get {
+                return ResourceManager.GetString("Shortcuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account users should generate an Account Level API Key from https://monitoring.solaredge.com.
         /// </summary>
         public static string SolarEdge_Intro_Guide_Text {
@@ -792,6 +801,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Tibber_Guide_Text {
             get {
                 return ResourceManager.GetString("Tibber_Guide_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools and features.
+        /// </summary>
+        public static string Tools_And_Features {
+            get {
+                return ResourceManager.GetString("Tools_And_Features", resourceCulture);
             }
         }
         

@@ -358,5 +358,11 @@
 <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
     <value>Account users should generate an Account Level API Key from https://monitoring.solaredge.com</value>
   <comment>Need review</comment></data>
+<data name="Shortcuts" xml:space="preserve">
+    <value>Shortcuts</value>
+  <comment>Need review</comment></data>
+<data name="Tools_And_Features" xml:space="preserve">
+    <value>Tools and features</value>
+  <comment>Need review</comment></data>
 
 </root>

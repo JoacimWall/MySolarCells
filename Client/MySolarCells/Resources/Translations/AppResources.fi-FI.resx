@@ -298,4 +298,10 @@
   <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
     <value>Tilin käyttäjien tulee luoda tilitason API-avain osoitteessa https://monitoring.solaredge.com</value>
   <comment>Need review</comment></data>
+  <data name="Shortcuts" xml:space="preserve">
+    <value>Pikanäppäimet</value>
+  <comment>Need review</comment></data>
+  <data name="Tools_And_Features" xml:space="preserve">
+    <value>Työkalut ja ominaisuudet</value>
+  <comment>Need review</comment></data>
 </root>

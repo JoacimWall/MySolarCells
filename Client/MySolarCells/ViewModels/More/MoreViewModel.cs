@@ -8,7 +8,7 @@ public class MoreViewModel : BaseViewModel
     public MoreViewModel(IRoiService roiService)
     {
         this.roiService = roiService;
-
+        Home = MySolarCellsGlobals.SelectedHome;
     }
 
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
@@ -66,7 +66,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A2"].Text = AppResources.Purchased;
             worksheet.Range["A2"].CellStyle.Font.Bold = true;
             worksheet.Range["A3"].Text = AppResources.kWh;
-            worksheet.Range["A4"].Text = AppResources.Currency ;
+            worksheet.Range["A4"].Text = AppResources.Currency;
             worksheet.Range["A5"].Text = AppResources.Transfer_Fee;
             worksheet.Range["A6"].Text = AppResources.Energy_Tax;
             worksheet.Range["A7"].Text = AppResources.Amount;
@@ -121,7 +121,7 @@ public class MoreViewModel : BaseViewModel
             Single productionindex = -1; //used for geting the first month with production
             double totalProducedSaved = 0;
             bool firstRound = true;
-            bool skipAfirstRound = true; 
+            bool skipAfirstRound = true;
             string prefixValue = "";
             for (char prefix = 'A'; prefix <= 'Z';)
             {
@@ -242,7 +242,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A39"].CellStyle.Font.Bold = true;
             worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["B36"].Value = Math.Round(((toalInvestLon- totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
+            worksheet.Range["B36"].Value = Math.Round(((toalInvestLon - totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
             worksheet.Range["B37"].Value = toalInvestLon.ToString();
             worksheet.Range["B38"].Value = Math.Round(totalProducedSaved, 0).ToString();
             worksheet.Range["B39"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();
@@ -297,12 +297,12 @@ public class MoreViewModel : BaseViewModel
 
 
 
-MemoryStream ms = new MemoryStream();
-workbook.SaveAs(ms);
+            MemoryStream ms = new MemoryStream();
+            workbook.SaveAs(ms);
             ms.Position = 0;
-         
+
             var saveService = Helpers.ServiceHelper.GetService<ISaveAndView>();
-await saveService.SaveAndView("report.xls", "", ms);
+            await saveService.SaveAndView("report.xls", "", ms);
             return true;
             //Saves the memory stream as a file.
             //SaveService saveService = new SaveService();
@@ -311,10 +311,41 @@ await saveService.SaveAndView("report.xls", "", ms);
     }
 
     private async Task ShowInvestAndLon()
-{
-    await GoToAsync(nameof(InvestmentAndLoanView));
-}
+    {
+        await GoToAsync(nameof(InvestmentAndLoanView));
+    }
+    private Services.Sqlite.Models.Home home;
+    public Services.Sqlite.Models.Home Home
+    {
+        get => MySolarCellsGlobals.SelectedHome;
+        set
+        {
+            SetProperty(ref home, value);
 
+        }
+    }
     
+    public string HomeImageUrl
+    {
+        get => "MySolarCells.Resources.EmbeddedImages.smart_home_with_solar_panels.jpg";
+        
+    }
+    public string ElectricitySupplierText
+    {
+        get => ((ElectricitySupplier)home.ElectricitySupplier).ToString();
+
+    }
+    public string InverterText
+    {
+        get
+        {
+            using var dbContext = new MscDbContext();
+            var inverter = dbContext.Inverter.FirstOrDefault(x => x.HomeId == Home.HomeId);
+
+           return ((InverterTyp)inverter.InverterTyp).ToString();
+        }
+
+    }
+
 }
 

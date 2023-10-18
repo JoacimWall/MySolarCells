@@ -8,6 +8,7 @@ public partial class App : Application
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNTI3NEAzMjMzMmUzMDJlMzBkR2xabUJjTnZ2Q3hQMnMrVVhobURpbDBMNzErbTMzYm15dmowZERRbUtFPQ==");
         this.settingsService = settingsService;
+        MySolarCellsGlobals.App = this;
         MainPage = new StartupShell();
 
 
