@@ -234,7 +234,7 @@ public class EnergyChartService : IEnergyChartService
         }
 
 
-        var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd, false);
+        var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd);
 
 
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)

@@ -1,1 +1,11 @@
-{"MasterLanguageCode":"en-US","TranslationService":1,"ExportFileType":2,"ExportMasterFileOnExport":true,"TranslationServiceMsoftEndpoint":"","TranslationServiceMsoftLocation":"","TranslationServiceMsoftKey":""}
+﻿{
+"MasterLanguageCode":"en-US",
+"TranslationService":1,
+"ExportFileType":2,
+"ExportMasterFileOnExport":true,
+"TranslationServiceMsoftEndpoint":"",
+"TranslationServiceMsoftLocation":"",
+"TranslationServiceMsoftKey":"",
+"AndroidResourcesOutPutFolder":"/Users/joacimwall/GitRepos/VsVim/Android",
+"IosResourcesOutPutFolder":"/Users/joacimwall/GitRepos/VsVim/Ios"
+}

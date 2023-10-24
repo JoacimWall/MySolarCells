@@ -14,7 +14,7 @@
     Shell.FlyoutBehavior="Disabled"
     Title="MySolarCells">
 
-    <Shell.Resources>
+    <!--<Shell.Resources>
         <ResourceDictionary>
             <Style x:Key="BaseStyle" TargetType="Element">
                 <Setter Property="Shell.BackgroundColor" Value="{x:Static theming:AppColors.Primary500Color}" />
@@ -34,7 +34,7 @@
             <Style BasedOn="{StaticResource BaseStyle}" TargetType="Tab" />
             <Style BasedOn="{StaticResource BaseStyle}" TargetType="ShellItem" />
         </ResourceDictionary>
-    </Shell.Resources>
+    </Shell.Resources>-->
 
     <TabBar x:Name="MyTabbar">
 

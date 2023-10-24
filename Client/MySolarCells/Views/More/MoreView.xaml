@@ -7,7 +7,8 @@
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
-                        xmlns:control="clr-namespace:MySolarCells.Controls">
+                        xmlns:control="clr-namespace:MySolarCells.Controls"
+                        x:DataType="vm:MoreViewModel">
 
     <ScrollView x:Name="TheScrollView" Margin="0" >
         <Grid Margin="8,8" Grid.Row="0" ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, Auto,Auto, Auto, Auto"  >
