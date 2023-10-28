@@ -103,10 +103,10 @@ public class RoiService : IRoiService
             SumProductionSold = Math.Round(sumRoi.Sum(x => x.SumProductionSold), 2),
             SumProductionBatteryChargeFakeSold = Math.Round(sumRoi.Sum(x => x.SumProductionBatteryChargeFakeSold), 2),
             SumProductionOwnUseAndBattery = Math.Round(sumRoi.Sum(x => x.SumProductionOwnUseAndBattery), 2),
-
+            SumProductionSoldAndOwnUseAndBattery = Math.Round(sumRoi.Sum(x => x.SumProductionSoldAndOwnUseAndBattery), 2),
             TotalSaved = Math.Round(sumRoi.Sum(x => x.TotalSaved), 2),
             TotalProduction = Math.Round(sumRoi.Sum(x => x.TotalProduction), 2),
-
+            TotalConsumption = Math.Round(sumRoi.Sum(x => x.TotalConsumption), 2),
             //fun Facts
             ProductionIndex = Math.Round(sumRoi.Sum(x => x.ProductionIndex), 2)
 
@@ -148,10 +148,10 @@ public class RoiService : IRoiService
 
                     //Battery Charged
                     item.BatteryCharge = item.ProductionSold;
-                    if (calcParams.UseSpotPrice)
-                        item.BatteryChargeProfitFake = item.BatteryCharge * item.UnitPriceSold;
-                    else
-                        item.BatteryChargeProfitFake = item.BatteryCharge * calcParams.FixedPriceKwh;
+                    //if (calcParams.UseSpotPrice)
+                    //    item.BatteryChargeProfitFake = item.BatteryCharge * item.UnitPriceSold;
+                    //else
+                    //    item.BatteryChargeProfitFake = item.BatteryCharge * calcParams.FixedPriceKwh;
 
                     item.ProductionSold = 0;
                     item.ProductionSoldProfit = 0;
@@ -169,11 +169,6 @@ public class RoiService : IRoiService
                     //Miinska een anvädning profit med batteri
                     item.Purchased = 0;
                     item.PurchasedCost = 0;
-
-
-
-
-
 
                 }
             }
@@ -209,12 +204,12 @@ public class RoiService : IRoiService
             roiStats.TotalBatteryUsedProfit = Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2);
         else
             roiStats.TotalBatteryUsedProfit = Math.Round(roiStats.TotalBatteryUsed * calcParams.FixedPriceKwh, 2);
-        //Battery Used
+        //Battery Charge
         roiStats.TotalBatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
-        if (calcParams.UseSpotPrice)
-            roiStats.TotalBatteryChargeProfitFake = Math.Round(energy.Sum(x => x.BatteryChargeProfitFake), 2);
-        else
-            roiStats.TotalBatteryChargeProfitFake = Math.Round(roiStats.TotalBatteryCharge * calcParams.FixedPriceKwh, 2);
+        //if (calcParams.UseSpotPrice)
+        //    roiStats.TotalBatteryChargeProfitFake = Math.Round(energy.Sum(x => x.BatteryChargeProfitFake), 2);
+        //else
+        //    roiStats.TotalBatteryChargeProfitFake = Math.Round(roiStats.TotalBatteryCharge * calcParams.FixedPriceKwh, 2);
 
         //Calc
         roiStats.TotalCompensationForProductionToGrid = Math.Round(roiStats.TotalProductionSold * calcParams.ProdCompensationElectricityLowload, 2);
@@ -246,6 +241,7 @@ public class RoiService : IRoiService
         roiStats.SumProductionBatteryChargeFakeSold = Math.Round(roiStats.TotalBatteryChargeProfitFake + roiStats.TotalCompensationForProductionToGridChargeBatteryFake + roiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid, 2);
         roiStats.SumProductionOwnUseAndBattery = Math.Round(roiStats.TotalProductionOwnUseProfit + roiStats.TotalSavedTransferFeeProductionOwnUse + roiStats.TotalSavedEnergyTaxProductionOwnUse + roiStats.TotalBatteryUsedProfit + roiStats.TotalSavedTransferFeeBatteryUse + roiStats.TotalSavedEnergyTaxBatteryUse, 2);
 
+        roiStats.SumProductionSoldAndOwnUseAndBattery = Math.Round((roiStats.SumProductionSold + roiStats.SumProductionOwnUseAndBattery), 2);
 
         //Ränta
         var resultRanta = await GetInterest(start, end);
@@ -254,7 +250,10 @@ public class RoiService : IRoiService
 
         roiStats.TotalSaved = Math.Round(roiStats.SumProductionSold + roiStats.SumProductionOwnUseAndBattery - roiStats.TotalInterest, 2);
 
-        roiStats.TotalProduction = Math.Round(roiStats.TotalProductionSold + roiStats.TotalProductionOwnUse + roiStats.TotalBatteryUsed, 2);
+        roiStats.TotalProduction = Math.Round(roiStats.TotalProductionSold + roiStats.TotalProductionOwnUse + roiStats.TotalBatteryCharge, 2);
+        roiStats.TotalConsumption = Math.Round(roiStats.TotalPurchased + roiStats.TotalProductionOwnUse + roiStats.TotalBatteryUsed, 2);
+
+
         //Production Index amount of production per installed kWh
         var soloarFirstDate = energy.FirstOrDefault(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0);
         if (soloarFirstDate != null)
@@ -307,6 +306,7 @@ public class RoiSimulate
 {
     public bool DoSimulate { get; set; }
     public double MaxBatteryPower { get; set; } = 10;
+    public double ChargeLoss { get; set; } = 0.05;
     public double CurrentBatteryPower { get; set; }
 }
 public class ReportRoiStats
@@ -382,9 +382,11 @@ public class RoiStats
     public double SumProductionSold { get; set; } = 0;
     public double SumProductionBatteryChargeFakeSold { get; set; } = 0;
     public double SumProductionOwnUseAndBattery { get; set; } = 0;
-
+    public double SumProductionSoldAndOwnUseAndBattery { get; set; } = 0;
+    
     public double TotalSaved { get; set; } = 0;
     public double TotalProduction { get; set; } = 0;
+    public double TotalConsumption { get; set; } = 0;
 
     //fun Facts
     public double ProductionIndex { get; set; } = 0;

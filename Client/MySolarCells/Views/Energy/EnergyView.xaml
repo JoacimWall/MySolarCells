@@ -28,7 +28,7 @@
         <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
             <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ChartData="{Binding ChartDataRequest}"
-                                    GraphDataChangedCommand="{Binding ReloadGraphDataCommand}"
+                                    GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ShowRoiSimulate="False"
                                     />
              <Label VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="20" Margin="8,8,8,8" Text="{Binding ProductionChartTitle}"/>
             <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">

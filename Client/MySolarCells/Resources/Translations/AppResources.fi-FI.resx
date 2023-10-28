@@ -304,4 +304,70 @@
   <data name="Tools_And_Features" xml:space="preserve">
     <value>Työkalut ja ominaisuudet</value>
   <comment>Need review</comment></data>
+  <data name="Sold" xml:space="preserve">
+    <value>myyty</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use" xml:space="preserve">
+    <value>Omassa käytössä</value>
+  <comment>Need review</comment></data>
+  <data name="Consumption" xml:space="preserve">
+    <value>Kulutus</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Purchased" xml:space="preserve">
+    <value>Ostettu yhteensä</value>
+  <comment>Need review</comment></data>
+  <data name="Production_And_Consumption" xml:space="preserve">
+    <value>Tuotanto ja kulutus</value>
+  <comment>Need review</comment></data>
+  <data name="Today" xml:space="preserve">
+    <value>Tänään</value>
+  <comment>Need review</comment></data>
+  <data name="Day" xml:space="preserve">
+    <value>Päivä</value>
+  <comment>Need review</comment></data>
+  <data name="Week" xml:space="preserve">
+    <value>Viikko</value>
+  <comment>Need review</comment></data>
+  <data name="Month" xml:space="preserve">
+    <value>Kuukausi</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate_Battery" xml:space="preserve">
+    <value>Simuloi akkua</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate" xml:space="preserve">
+    <value>Simuloida</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Kwh" xml:space="preserve">
+    <value>Akku kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Costs_And_Rvenues" xml:space="preserve">
+    <value>Kustannukset ja tulot</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Profit_Sold" xml:space="preserve">
+    <value>Tuotantovoitto myyty</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Grid_Compensation" xml:space="preserve">
+    <value>Tuotantoverkon korvaus</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Saved_Energy_Tax" xml:space="preserve">
+    <value>Tuotannosta säästyi energiavero</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Cost" xml:space="preserve">
+    <value>Omassa käytössä säästyi kustannuksissa</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
+    <value>Omaan käyttöön tallennettu siirtomaksu</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
+    <value>Omaan käyttöön säästetty energiavero</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Cost" xml:space="preserve">
+    <value>Ostohinta</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Transfer_Fee" xml:space="preserve">
+    <value>Oston siirtomaksu</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Energy_Tax" xml:space="preserve">
+    <value>Osta energiavero</value>
+  <comment>Need review</comment></data>
 </root>

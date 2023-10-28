@@ -268,16 +268,16 @@
     <value>Sparad kostnad</value>
   <comment>Need review</comment></data>
   <data name="Saved_Cost_Battery" xml:space="preserve">
-    <value>Sparad kostnad batteri</value>
+    <value>Batteri sparad kostnad</value>
   <comment>Need review</comment></data>
   <data name="Saved_Transfer_Fee" xml:space="preserve">
     <value>Sparad övergångsavgift</value>
   <comment>Need review</comment></data>
   <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
-    <value>Sparat överföringsavgiftsbatteri</value>
+    <value>Batteri Sparad överföringsavgift</value>
   <comment>Need review</comment></data>
   <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
-    <value>Sparat energiskattebatteri</value>
+    <value>Batteri sparad energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Total_Production_Sold_Own_Use" xml:space="preserve">
     <value>Total produktion (såld/egen användning)</value>
@@ -302,5 +302,71 @@
   <comment>Need review</comment></data>
   <data name="Tools_And_Features" xml:space="preserve">
     <value>Verktyg och funktioner</value>
+  <comment>Need review</comment></data>
+  <data name="Sold" xml:space="preserve">
+    <value>Såld</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use" xml:space="preserve">
+    <value>Eget bruk</value>
+  <comment>Need review</comment></data>
+  <data name="Consumption" xml:space="preserve">
+    <value>Konsumtion</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Purchased" xml:space="preserve">
+    <value>Totalt köpt</value>
+  <comment>Need review</comment></data>
+  <data name="Production_And_Consumption" xml:space="preserve">
+    <value>Produktion och konsumtion</value>
+  <comment>Need review</comment></data>
+  <data name="Today" xml:space="preserve">
+    <value>I dag</value>
+  <comment>Need review</comment></data>
+  <data name="Day" xml:space="preserve">
+    <value>Dag</value>
+  <comment>Need review</comment></data>
+  <data name="Week" xml:space="preserve">
+    <value>Vecka</value>
+  <comment>Need review</comment></data>
+  <data name="Month" xml:space="preserve">
+    <value>Månad</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate_Battery" xml:space="preserve">
+    <value>Simulera batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate" xml:space="preserve">
+    <value>Simulera</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Kwh" xml:space="preserve">
+    <value>Batteri kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Costs_And_Rvenues" xml:space="preserve">
+    <value>Kostnader och intäkter</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Profit_Sold" xml:space="preserve">
+    <value>Produktionsvinst såld</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Grid_Compensation" xml:space="preserve">
+    <value>Ersättning för produktionsnät</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Saved_Energy_Tax" xml:space="preserve">
+    <value>Produktionsbesparing energiskatt</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Cost" xml:space="preserve">
+    <value>Egen användning sparad kostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
+    <value>Egen användning sparad överföringsavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
+    <value>Egen användning sparad energiskatt</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Cost" xml:space="preserve">
+    <value>Inköp kostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Transfer_Fee" xml:space="preserve">
+    <value>Inköp överföringsavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Energy_Tax" xml:space="preserve">
+    <value>Inköp energiskatt</value>
   <comment>Need review</comment></data>
 </root>

@@ -364,5 +364,77 @@
 <data name="Tools_And_Features" xml:space="preserve">
     <value>Tools and features</value>
   <comment>Need review</comment></data>
+<data name="Sold" xml:space="preserve">
+    <value>Sold</value>
+  <comment>Need review</comment></data>
+<data name="Own_Use" xml:space="preserve">
+    <value>Own use</value>
+  <comment>Need review</comment></data>
+<data name="Consumption" xml:space="preserve">
+    <value>Consumption</value>
+  <comment>Need review</comment></data>
+<data name="Total_Purchased" xml:space="preserve">
+    <value>Total purchased</value>
+  <comment>Need review</comment></data>
+<data name="Production_And_Consumption" xml:space="preserve">
+    <value>Production And consumption</value>
+  <comment>Need review</comment></data>
+<data name="Today" xml:space="preserve">
+    <value>Today</value>
+  <comment>Need review</comment></data>
+<data name="Day" xml:space="preserve">
+    <value>Day</value>
+  <comment>Need review</comment></data>
+<data name="Week" xml:space="preserve">
+    <value>Week</value>
+  <comment>Need review</comment></data>
+<data name="Month" xml:space="preserve">
+    <value>Month</value>
+  <comment>Need review</comment></data>
+<data name="Year" xml:space="preserve">
+    <value>Year</value>
+  <comment>Need review</comment></data>
+<data name="Simulate_Battery" xml:space="preserve">
+    <value>Simulate battery</value>
+  <comment>Need review</comment></data>
+<data name="Simulate" xml:space="preserve">
+    <value>Simulate</value>
+  <comment>Need review</comment></data>
+<data name="Battery_Kwh" xml:space="preserve">
+    <value>Battery kWh</value>
+  <comment>Need review</comment></data>
+<data name="Production_And_Consumption" xml:space="preserve">
+    <value>Production And consumption</value>
+  <comment>Need review</comment></data>
+<data name="Costs_And_Rvenues" xml:space="preserve">
+    <value>Costs and revenues</value>
+  <comment>Need review</comment></data>
+<data name="Production_Profit_Sold" xml:space="preserve">
+    <value>Production profit sold</value>
+  <comment>Need review</comment></data>
+<data name="Production_Grid_Compensation" xml:space="preserve">
+    <value>Production grid compensation</value>
+  <comment>Need review</comment></data>
+<data name="Production_Saved_Energy_Tax" xml:space="preserve">
+    <value>Production saved energy tax</value>
+  <comment>Need review</comment></data>
+<data name="Own_Use_Saved_Cost" xml:space="preserve">
+    <value>Own use saved cost</value>
+  <comment>Need review</comment></data>
+<data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
+    <value>Own Use Saved Transfer Fee</value>
+  <comment>Need review</comment></data>
+<data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
+    <value>Own use saved energy tax</value>
+  <comment>Need review</comment></data>
+<data name="Purchase_Cost" xml:space="preserve">
+    <value>Purchase cost</value>
+  <comment>Need review</comment></data>
+<data name="Purchase_Transfer_Fee" xml:space="preserve">
+    <value>Purchase transfer fee</value>
+  <comment>Need review</comment></data>
+<data name="Purchase_Energy_Tax" xml:space="preserve">
+    <value>Purchase energy tax</value>
+  <comment>Need review</comment></data>
 
 </root>

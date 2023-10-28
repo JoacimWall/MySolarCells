@@ -83,15 +83,15 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A13"].CellStyle.Font.Bold = true;
             worksheet.Range["A13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            worksheet.Range["A14"].Text = AppResources.If_Battery_Is_Not_Used;
-            worksheet.Range["A14"].CellStyle.Font.Bold = true;
-            worksheet.Range["A15"].Text = AppResources.kWh;
-            worksheet.Range["A16"].Text = AppResources.Currency;
-            worksheet.Range["A17"].Text = AppResources.Production_To_Grid;
-            worksheet.Range["A18"].Text = AppResources.Energy_Tax;
-            worksheet.Range["A19"].Text = AppResources.Amount;
-            worksheet.Range["A19"].CellStyle.Font.Bold = true;
-            worksheet.Range["A19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            //worksheet.Range["A14"].Text = AppResources.If_Battery_Is_Not_Used;
+            //worksheet.Range["A14"].CellStyle.Font.Bold = true;
+            //worksheet.Range["A15"].Text = AppResources.kWh;
+            //worksheet.Range["A16"].Text = AppResources.Currency;
+            //worksheet.Range["A17"].Text = AppResources.Production_To_Grid;
+            //worksheet.Range["A18"].Text = AppResources.Energy_Tax;
+            //worksheet.Range["A19"].Text = AppResources.Amount;
+            //worksheet.Range["A19"].CellStyle.Font.Bold = true;
+            //worksheet.Range["A19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
             worksheet.Range["A20"].Text = AppResources.Production_Own_Use;
             worksheet.Range["A20"].CellStyle.Font.Bold = true;
@@ -171,13 +171,13 @@ public class MoreViewModel : BaseViewModel
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.TotalBatteryCharge.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.TotalBatteryChargeProfitFake.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.TotalCompensationForProductionToGridChargeBatteryFake.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "18"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "19"].Value = result.Model[index].RoiStats.SumProductionBatteryChargeFakeSold.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Font.Bold = true;
-                    worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+                    //worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.TotalBatteryCharge.ToString();
+                    //worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.TotalBatteryChargeProfitFake.ToString();
+                    //worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.TotalCompensationForProductionToGridChargeBatteryFake.ToString();
+                    //worksheet.Range[prefixValue + c.ToString() + "18"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid.ToString();
+                    //worksheet.Range[prefixValue + c.ToString() + "19"].Value = result.Model[index].RoiStats.SumProductionBatteryChargeFakeSold.ToString();
+                    //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Font.Bold = true;
+                    //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
                     worksheet.Range[prefixValue + c.ToString() + "21"].Value = result.Model[index].RoiStats.TotalProductionOwnUse.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "22"].Value = result.Model[index].RoiStats.TotalBatteryUsed.ToString();

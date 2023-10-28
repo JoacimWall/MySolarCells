@@ -99,13 +99,13 @@ public class EnergyChartService : IEnergyChartService
                 prodSoldExist.Value = prodSoldExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.ProductionSold) : Convert.ToSingle(item.ProductionSoldProfit + (item.ProductionSold * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))));
             }
             //BatteryCharge
-            var batteryChargeExist = listBatteryCharge.FirstOrDefault(x => x.Label == entryLabel);
-            if (batteryChargeExist == null)
-                listBatteryCharge.Add(new ChartEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryCharge) : Convert.ToSingle(item.BatteryChargeProfitFake + (item.BatteryCharge * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))), Color = batteryChargeColor, Label = entryLabel });
-            else
-            {
-                batteryChargeExist.Value = batteryChargeExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryCharge) : Convert.ToSingle(item.BatteryChargeProfitFake + (item.BatteryCharge * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))));
-            }
+            //var batteryChargeExist = listBatteryCharge.FirstOrDefault(x => x.Label == entryLabel);
+            //if (batteryChargeExist == null)
+            //    listBatteryCharge.Add(new ChartEntry { Value = chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryCharge) : Convert.ToSingle(item.BatteryChargeProfitFake + (item.BatteryCharge * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))), Color = batteryChargeColor, Label = entryLabel });
+            //else
+            //{
+            //    batteryChargeExist.Value = batteryChargeExist.Value + (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh ? Convert.ToSingle(item.BatteryCharge) : Convert.ToSingle(item.BatteryChargeProfitFake + (item.BatteryCharge * (calcparms.ProdCompensationElectricityLowload + calcparms.TaxReduction))));
+            //}
             //Production Used
             var prodUsedExist = listProductionUsed.FirstOrDefault(x => x.Label == entryLabel);
             if (prodUsedExist == null)
@@ -235,6 +235,7 @@ public class EnergyChartService : IEnergyChartService
 
 
         var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd);
+        //var stats = await roiService.CalculateTotals(chartDataRequest.FilterStart, chartDataRequest.FilterEnd);
 
 
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)

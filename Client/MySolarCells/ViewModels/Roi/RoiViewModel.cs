@@ -9,6 +9,12 @@ public class RoiViewModel : BaseViewModel
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;
 
+        WeakReferenceMessenger.Default.Register<RefreshRoiViewMessage>(this, async (r, m) =>
+        {
+            await ReloadData();
+
+        });
+
     }
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadData());
     public ICommand SyncCommand => new Command(async () => await Sync());
@@ -32,9 +38,16 @@ public class RoiViewModel : BaseViewModel
     {
         using var dlg = DialogService.GetProgress("");
         await Task.Delay(200);
-        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, new RoiSimulate { DoSimulate = true });
+        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, roiSimulate);
         //RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
         return true;
+    }
+    
+    private RoiSimulate roiSimulate = new RoiSimulate();
+    public RoiSimulate RoiSimulate
+    {
+        get { return roiSimulate; }
+        set { SetProperty(ref roiSimulate, value); }
     }
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest

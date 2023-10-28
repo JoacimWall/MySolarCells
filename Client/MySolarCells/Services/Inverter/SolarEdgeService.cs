@@ -221,7 +221,7 @@ public class SolarEdgeService : IInverterServiceInterface
                         energyExist.PurchasedCost = energyExist.Purchased * energyExist.UnitPriceBuy;
                         energyExist.ProductionSoldProfit = energyExist.ProductionSold * energyExist.UnitPriceSold;
                         energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
-                        energyExist.BatteryChargeProfitFake = energyExist.BatteryCharge * energyExist.UnitPriceSold;
+                        //energyExist.BatteryChargeProfitFake = energyExist.BatteryCharge * energyExist.UnitPriceSold;
                         energyExist.BatteryUsedProfit = energyExist.BatteryUsed * energyExist.UnitPriceBuy;
                         
                         eneryList.Add(energyExist);

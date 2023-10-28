@@ -303,4 +303,70 @@
   <data name="Tools_And_Features" xml:space="preserve">
     <value>Verktøy og funksjoner</value>
   <comment>Need review</comment></data>
+  <data name="Sold" xml:space="preserve">
+    <value>Solgt</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use" xml:space="preserve">
+    <value>Eget bruk</value>
+  <comment>Need review</comment></data>
+  <data name="Consumption" xml:space="preserve">
+    <value>Forbruk</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Purchased" xml:space="preserve">
+    <value>Totalt kjøpt</value>
+  <comment>Need review</comment></data>
+  <data name="Production_And_Consumption" xml:space="preserve">
+    <value>Produksjon og forbruk</value>
+  <comment>Need review</comment></data>
+  <data name="Today" xml:space="preserve">
+    <value>I dag</value>
+  <comment>Need review</comment></data>
+  <data name="Day" xml:space="preserve">
+    <value>Dag</value>
+  <comment>Need review</comment></data>
+  <data name="Week" xml:space="preserve">
+    <value>Uke</value>
+  <comment>Need review</comment></data>
+  <data name="Month" xml:space="preserve">
+    <value>Måned</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate_Battery" xml:space="preserve">
+    <value>Simuler batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Simulate" xml:space="preserve">
+    <value>Simuler</value>
+  <comment>Need review</comment></data>
+  <data name="Battery_Kwh" xml:space="preserve">
+    <value>Batteri kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Costs_And_Rvenues" xml:space="preserve">
+    <value>Kostnader og inntekter</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Profit_Sold" xml:space="preserve">
+    <value>Produksjonsoverskudd solgt</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Grid_Compensation" xml:space="preserve">
+    <value>Produksjonsnettkompensasjon</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Saved_Energy_Tax" xml:space="preserve">
+    <value>Produksjon spart energiavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Cost" xml:space="preserve">
+    <value>Egen bruk spart kostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
+    <value>Egen bruk Lagret overføringsgebyr</value>
+  <comment>Need review</comment></data>
+  <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
+    <value>Egenbruk spart energiavgift</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Cost" xml:space="preserve">
+    <value>Kjøpskostnad</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Transfer_Fee" xml:space="preserve">
+    <value>Kjøp overføringsgebyr</value>
+  <comment>Need review</comment></data>
+  <data name="Purchase_Energy_Tax" xml:space="preserve">
+    <value>Kjøp energiavgift</value>
+  <comment>Need review</comment></data>
 </root>

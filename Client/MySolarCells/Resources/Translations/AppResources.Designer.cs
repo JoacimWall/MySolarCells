@@ -121,6 +121,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Battery kWh.
+        /// </summary>
+        public static string Battery_Kwh {
+            get {
+                return ResourceManager.GetString("Battery_Kwh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Battery transfer fee.
         /// </summary>
         public static string Battery_Transfer_Fee {
@@ -175,6 +184,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Consumption.
+        /// </summary>
+        public static string Consumption {
+            get {
+                return ResourceManager.GetString("Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cost.
         /// </summary>
         public static string Cost {
@@ -184,11 +202,29 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Costs and revenues.
+        /// </summary>
+        public static string Costs_And_Rvenues {
+            get {
+                return ResourceManager.GetString("Costs_And_Rvenues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SEK.
         /// </summary>
         public static string Currency {
             get {
                 return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Day {
+            get {
+                return ResourceManager.GetString("Day", resourceCulture);
             }
         }
         
@@ -463,6 +499,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        public static string Month {
+            get {
+                return ResourceManager.GetString("Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More.
         /// </summary>
         public static string More {
@@ -513,6 +558,42 @@ namespace MySolarCells.Resources.Translations {
         public static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own use.
+        /// </summary>
+        public static string Own_Use {
+            get {
+                return ResourceManager.GetString("Own_Use", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own use saved cost.
+        /// </summary>
+        public static string Own_Use_Saved_Cost {
+            get {
+                return ResourceManager.GetString("Own_Use_Saved_Cost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own use saved energy tax.
+        /// </summary>
+        public static string Own_Use_Saved_Energy_Tax {
+            get {
+                return ResourceManager.GetString("Own_Use_Saved_Energy_Tax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own Use Saved Transfer Fee.
+        /// </summary>
+        public static string Own_Use_Saved_Transfer_Fee {
+            get {
+                return ResourceManager.GetString("Own_Use_Saved_Transfer_Fee", resourceCulture);
             }
         }
         
@@ -571,6 +652,24 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Production And consumption.
+        /// </summary>
+        public static string Production_And_Consumption {
+            get {
+                return ResourceManager.GetString("Production_And_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production grid compensation.
+        /// </summary>
+        public static string Production_Grid_Compensation {
+            get {
+                return ResourceManager.GetString("Production_Grid_Compensation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Production index (prod/day/ins. kWh).
         /// </summary>
         public static string Production_Index_Desc_Prod_Day_ins_KWh {
@@ -585,6 +684,24 @@ namespace MySolarCells.Resources.Translations {
         public static string Production_Own_Use {
             get {
                 return ResourceManager.GetString("Production_Own_Use", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production profit sold.
+        /// </summary>
+        public static string Production_Profit_Sold {
+            get {
+                return ResourceManager.GetString("Production_Profit_Sold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production saved energy tax.
+        /// </summary>
+        public static string Production_Saved_Energy_Tax {
+            get {
+                return ResourceManager.GetString("Production_Saved_Energy_Tax", resourceCulture);
             }
         }
         
@@ -612,6 +729,33 @@ namespace MySolarCells.Resources.Translations {
         public static string Profit {
             get {
                 return ResourceManager.GetString("Profit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purchase cost.
+        /// </summary>
+        public static string Purchase_Cost {
+            get {
+                return ResourceManager.GetString("Purchase_Cost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purchase energy tax.
+        /// </summary>
+        public static string Purchase_Energy_Tax {
+            get {
+                return ResourceManager.GetString("Purchase_Energy_Tax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purchase transfer fee.
+        /// </summary>
+        public static string Purchase_Transfer_Fee {
+            get {
+                return ResourceManager.GetString("Purchase_Transfer_Fee", resourceCulture);
             }
         }
         
@@ -742,11 +886,38 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Simulate.
+        /// </summary>
+        public static string Simulate {
+            get {
+                return ResourceManager.GetString("Simulate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simulate battery.
+        /// </summary>
+        public static string Simulate_Battery {
+            get {
+                return ResourceManager.GetString("Simulate_Battery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account users should generate an Account Level API Key from https://monitoring.solaredge.com.
         /// </summary>
         public static string SolarEdge_Intro_Guide_Text {
             get {
                 return ResourceManager.GetString("SolarEdge_Intro_Guide_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sold.
+        /// </summary>
+        public static string Sold {
+            get {
+                return ResourceManager.GetString("Sold", resourceCulture);
             }
         }
         
@@ -801,6 +972,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Tibber_Guide_Text {
             get {
                 return ResourceManager.GetString("Tibber_Guide_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        public static string Today {
+            get {
+                return ResourceManager.GetString("Today", resourceCulture);
             }
         }
         
@@ -877,6 +1057,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total purchased.
+        /// </summary>
+        public static string Total_Purchased {
+            get {
+                return ResourceManager.GetString("Total_Purchased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transfer fee.
         /// </summary>
         public static string Transfer_Fee {
@@ -909,6 +1098,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Validate {
             get {
                 return ResourceManager.GetString("Validate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Week.
+        /// </summary>
+        public static string Week {
+            get {
+                return ResourceManager.GetString("Week", resourceCulture);
             }
         }
         

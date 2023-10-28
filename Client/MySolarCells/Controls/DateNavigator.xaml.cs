@@ -2,66 +2,21 @@
 
 public partial class DateNavigator : ContentView
 {
-	public DateNavigator()
-	{
-		InitializeComponent();
-	}
+    public DateNavigator()
+    {
+        InitializeComponent();
+        SimulateSettings.IsVisible = false;
+        ROISimulateOn.IsToggled = false;
+        ShowSimulateButton.IsVisible = true;
+    }
 
-    //public static readonly BindableProperty TodayCommandProperty = BindableProperty.Create(nameof(TodayCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty DayCommandProperty = BindableProperty.Create(nameof(DayCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty WeekCommandProperty = BindableProperty.Create(nameof(WeekCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty MonthCommandProperty = BindableProperty.Create(nameof(MonthCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty YearCommandProperty = BindableProperty.Create(nameof(YearCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty BackCommandProperty = BindableProperty.Create(nameof(BackCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty ForwardCommandProperty = BindableProperty.Create(nameof(ForwardCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty ShowUnitCommandProperty = BindableProperty.Create(nameof(ShowUnitCommand), typeof(ICommand), typeof(DateNavigator), null);
-    //public static readonly BindableProperty ShowCurrencyCommandProperty = BindableProperty.Create(nameof(ShowCurrencyCommand), typeof(ICommand), typeof(DateNavigator), null);
     public static readonly BindableProperty GraphDataChangedCommandProperty = BindableProperty.Create(nameof(GraphDataChangedCommand), typeof(ICommand), typeof(DateNavigator), null);
     public ICommand GraphDataChangedCommand
     {
         get { return (ICommand)GetValue(GraphDataChangedCommandProperty); }
         set { SetValue(GraphDataChangedCommandProperty, value); }
     }
-    //public ICommand DayCommand
-    //{
-    //    get { return (ICommand)GetValue(DayCommandProperty); }
-    //    set { SetValue(DayCommandProperty, value); }
-    //}
-    //public ICommand WeekCommand
-    //{
-    //    get { return (ICommand)GetValue(WeekCommandProperty); }
-    //    set { SetValue(WeekCommandProperty, value); }
-    //}
-    //public ICommand MonthCommand
-    //{
-    //    get { return (ICommand)GetValue(MonthCommandProperty); }
-    //    set { SetValue(MonthCommandProperty, value); }
-    //}
-    //public ICommand YearCommand
-    //{
-    //    get { return (ICommand)GetValue(YearCommandProperty); }
-    //    set { SetValue(YearCommandProperty, value); }
-    //}
-    //public ICommand BackCommand
-    //{
-    //    get { return (ICommand)GetValue(BackCommandProperty); }
-    //    set { SetValue(BackCommandProperty, value); }
-    //}
-    //public ICommand ForwardCommand
-    //{
-    //    get { return (ICommand)GetValue(ForwardCommandProperty); }
-    //    set { SetValue(ForwardCommandProperty, value); }
-    //}
-    //public ICommand ShowUnitCommand
-    //{
-    //    get { return (ICommand)GetValue(ShowUnitCommandProperty); }
-    //    set { SetValue(ShowUnitCommandProperty, value); }
-    //}
-    //public ICommand ShowCurrencyCommand
-    //{
-    //    get { return (ICommand)GetValue(ShowCurrencyCommandProperty); }
-    //    set { SetValue(ShowCurrencyCommandProperty, value); }
-    //}
+
 
     public static BindableProperty ChartDataProperty = BindableProperty.Create(propertyName: nameof(ChartData),
     returnType: typeof(ChartDataRequest), declaringType: typeof(ContentView),
@@ -74,7 +29,7 @@ public partial class DateNavigator : ContentView
             SetValue(ChartDataProperty, value);
         }
     }
-    
+
 
     public static BindableProperty ShowUnitCurrencySeletorProperty = BindableProperty.Create(propertyName: nameof(ShowUnitCurrencySeletor),
     returnType: typeof(bool), declaringType: typeof(ContentView),
@@ -99,7 +54,50 @@ public partial class DateNavigator : ContentView
         control.CurrencyButton.IsVisible = value;
     }
 
-   
+    public static BindableProperty RoiSimulateProperty = BindableProperty.Create(propertyName: nameof(RoiSimulate),
+    returnType: typeof(RoiSimulate), declaringType: typeof(ContentView),
+    defaultValue: new RoiSimulate(), defaultBindingMode: BindingMode.TwoWay, propertyChanged: RoiSimulatePropertyChanged);
+
+    public RoiSimulate RoiSimulate
+    {
+        get { return (RoiSimulate)GetValue(RoiSimulateProperty); }
+        set
+        {
+            SetValue(RoiSimulateProperty, value);
+        }
+    }
+    private static void RoiSimulatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (DateNavigator)bindable;
+        var value = (RoiSimulate)newValue;
+        control.ROISimulateBatteryKwh.Text = value.MaxBatteryPower.ToString();
+        //control.CurrencyButton.IsVisible = value;
+    }
+
+    public static BindableProperty ShowRoiSimulateProperty = BindableProperty.Create(propertyName: nameof(ShowRoiSimulate),
+     returnType: typeof(bool), declaringType: typeof(ContentView),
+     defaultValue: true, defaultBindingMode: BindingMode.TwoWay, propertyChanged: ShowRoiSimulatePropertyChanged);
+
+    private static void ShowRoiSimulatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (DateNavigator)bindable;
+        var value = (bool)newValue;
+        control.ShowSimulateButton.IsVisible = value;
+       
+    }
+
+    public bool ShowRoiSimulate
+    {
+        get
+        {
+            return (bool)GetValue(ShowRoiSimulateProperty);
+        }
+        set
+        {
+            SetValue(ShowRoiSimulateProperty, value);
+            ShowSimulateButton.IsVisible = value;
+        }
+    }
 
     void Back_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
     {
@@ -131,7 +129,7 @@ public partial class DateNavigator : ContentView
 
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
-        
+
     }
 
     void Forward_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
@@ -164,7 +162,7 @@ public partial class DateNavigator : ContentView
 
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
-        
+
     }
 
     void Today_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
@@ -174,14 +172,14 @@ public partial class DateNavigator : ContentView
         ChartData.ChartDataRange = ChartDataRange.Today;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
-        
+
     }
     void Day_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
     {
         ChartData.ChartDataRange = ChartDataRange.Day;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
-        
+
     }
     void Week_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
     {
@@ -216,5 +214,42 @@ public partial class DateNavigator : ContentView
         ChartData.ChartDataUnit = ChartDataUnit.Currency;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
+    }
+
+    private bool simSettingsIsVisible = false;
+    void ShowSimulate_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    {
+        if (simSettingsIsVisible)
+        {
+            simSettingsIsVisible = false;
+            SimulateSettings.IsVisible = false;
+        }
+        else
+        {
+            simSettingsIsVisible = true;
+            SimulateSettings.IsVisible = true;
+        }
+    }
+
+    void ROISimulateBatteryKwh_TextChanged(System.Object sender, Microsoft.Maui.Controls.TextChangedEventArgs e)
+    {
+        RoiSimulate.MaxBatteryPower = Convert.ToDouble(e.NewTextValue);
+    }
+    private bool simSettingsIsOn = false;
+    void ROISimulateOn_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
+    {
+        if (simSettingsIsOn)
+        {
+            simSettingsIsOn = false;
+            ROISimulateOn.IsToggled = false;
+            RoiSimulate.DoSimulate = false;
+        }
+        else
+        {
+            simSettingsIsOn = true;
+            ROISimulateOn.IsToggled = true;
+            RoiSimulate.DoSimulate = true;
+        }
+        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 }

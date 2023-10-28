@@ -247,7 +247,12 @@ public class EnergyViewModel : BaseViewModel
 
         }
     }
-
+    private RoiSimulate roiSimulate = new RoiSimulate();
+    public RoiSimulate RoiSimulate
+    {
+        get { return roiSimulate; }
+        set { SetProperty(ref roiSimulate, value); }
+    }
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest
     {
