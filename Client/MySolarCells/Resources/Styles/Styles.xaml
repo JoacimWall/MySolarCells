@@ -346,7 +346,7 @@
                     </VisualState>
                     <VisualState x:Name="On">
                         <VisualState.Setters>
-                            <Setter Property="OnColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.PrimaryAccentColor}, Dark={x:Static theming:AppColors.Gray200Color}}" />
+                            <Setter Property="OnColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray300Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />
                             <Setter Property="ThumbColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
                         </VisualState.Setters>
                     </VisualState>
