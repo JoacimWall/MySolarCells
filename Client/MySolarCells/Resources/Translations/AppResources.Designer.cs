@@ -67,6 +67,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add battery.
+        /// </summary>
+        public static string Add_Battery {
+            get {
+                return ResourceManager.GetString("Add_Battery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -774,6 +783,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Refresh {
             get {
                 return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove battery.
+        /// </summary>
+        public static string Remove_Battery {
+            get {
+                return ResourceManager.GetString("Remove_Battery", resourceCulture);
             }
         }
         

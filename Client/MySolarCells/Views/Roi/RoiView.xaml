@@ -44,10 +44,12 @@
                 <!--Battery Used-->
                 <Label Text="{x:Static trans:AppResources.Battery_used}"/>
                 <BoxView Margin="0,4" HeightRequest="1" />
-                 <!--Produced-->
+                <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Production}"/>
-                 <!--Produced-->
+                <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Consumption}"/>
+                <!--Balance_Production_Consumption-->
+                <Label Text="{x:Static trans:AppResources.Sum}"/>
                 <!-- COSTS AND REVENUES-->
                 <Label  Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Costs_And_Rvenues}"/>
                 <!--TotalProductionSoldProfit-->
@@ -68,18 +70,21 @@
                 <Label Text="{x:Static trans:AppResources.Saved_Transfer_Fee_Battery}"/>
                 <!--TotalSavedEnergyTaxBatteryUse-->
                 <Label Text="{x:Static trans:AppResources.Saved_Energy_Tax_Battery}"/>
-                
+
                 <!--TotalPurchasedCost-->
                 <Label Text="{x:Static trans:AppResources.Purchase_Cost}"/>
                 <!--TotalTransferFeePurchased-->
                 <Label Text="{x:Static trans:AppResources.Purchase_Transfer_Fee}"/>
                 <!--TotalTaxPurchased-->
                 <Label Text="{x:Static trans:AppResources.Purchase_Energy_Tax}"/>
-                 <BoxView Margin="0,4" HeightRequest="1" />
-                  <!--Produced-->
+                <BoxView Margin="0,4" HeightRequest="1" />
+                <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Production}"/>
-                 <!--Produced-->
+                <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Consumption}"/>
+                <!--Balance_Production_Consumption-->
+                <Label Text="{x:Static trans:AppResources.Sum}"/>
+
             </VerticalStackLayout >
             <!--Value-->
             <VerticalStackLayout Grid.Row="2" Grid.Column="1" >
@@ -90,9 +95,10 @@
                 <Label Text="{Binding RoiStats.TotalPurchased}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.TotalBatteryUsed}" HorizontalTextAlignment="End"/>
                 <BoxView Margin="0,4" HeightRequest="1" />
-                 <!--SumProductionOwnUseAndBattery-->
+                <!--SumProductionOwnUseAndBattery-->
                 <Label Text="{Binding RoiStats.TotalProduction}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.TotalConsumption}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                <Label Text="{Binding RoiStats.TotalBalanceProductionKwhMinusConsumptionKwh}" FontAttributes="Bold" HorizontalTextAlignment="End" />
 
                 <Label  Margin="0,16,0,0"  FontSize="17" FontAttributes="Bold" Text=" "/>
                 <Label Text="{Binding RoiStats.TotalProductionSoldProfit}" HorizontalTextAlignment="End"/>
@@ -107,10 +113,11 @@
                 <Label Text="{Binding RoiStats.TotalPurchasedCost}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.TotalTransferFeePurchased}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.TotalTaxPurchased}" HorizontalTextAlignment="End"/>
-                 <BoxView Margin="0,4" HeightRequest="1" />
-                 <Label Text="{Binding RoiStats.SumProductionSoldAndOwnUseAndBattery}" HorizontalTextAlignment="End"/>
+                <BoxView Margin="0,4" HeightRequest="1" />
+                <Label Text="{Binding RoiStats.SumProductionSoldAndOwnUseAndBattery}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.SumPurchased}" HorizontalTextAlignment="End"/>
-                
+                <Label Text="{Binding RoiStats.TotalBalanceProductionProfitMinusConsumptionCost}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+
             </VerticalStackLayout>
 
             <!--Unit-->
@@ -122,8 +129,9 @@
                 <Label Text="{Binding RoiStats.Unit}" />
                 <Label Text="{Binding RoiStats.Unit}" />
                 <BoxView Margin="0,4" HeightRequest="1" />
-                 <Label Text="{Binding RoiStats.Unit}" />
-                 <Label Text="{Binding RoiStats.Unit}" />
+                <Label Text="{Binding RoiStats.Unit}" />
+                <Label Text="{Binding RoiStats.Unit}" />
+                <Label Text="{Binding RoiStats.Unit}" />
                 <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text=" "/>
                 <Label Text="{Binding RoiStats.Currency}"/>
                 <Label Text="{Binding RoiStats.Currency}"/>
@@ -137,13 +145,14 @@
                 <Label Text="{Binding RoiStats.Currency}"/>
                 <Label Text="{Binding RoiStats.Currency}"/>
                 <Label Text="{Binding RoiStats.Currency}"/>
-                 <BoxView Margin="0,4" HeightRequest="1" />
+                <BoxView Margin="0,4" HeightRequest="1" />
+                <Label Text="{Binding RoiStats.Currency}"/>
                 <Label Text="{Binding RoiStats.Currency}"/>
                 <Label Text="{Binding RoiStats.Currency}"/>
             </VerticalStackLayout>
 
 
-          
+
             <!--TotalProduction-->
             <!--<Label Text="{x:Static trans:AppResources.Total_Produced_And_Saved}" FontAttributes="Bold"/>-->
             <!--TotalSaved-->
@@ -163,8 +172,8 @@
 
             <!--
                 <Label Text="{Binding RoiStats.TotalSaved}" FontAttributes="Bold" HorizontalTextAlignment="End"/>-->
-           
-           
+
+
 
 
 

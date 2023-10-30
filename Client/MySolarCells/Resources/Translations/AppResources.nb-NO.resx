@@ -369,4 +369,13 @@
   <data name="Purchase_Energy_Tax" xml:space="preserve">
     <value>Kjøp energiavgift</value>
   <comment>Need review</comment></data>
+  <data name="Add_Battery" xml:space="preserve">
+    <value>Legg til batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Remove_Battery" xml:space="preserve">
+    <value>Ta ut batteriet</value>
+  <comment>Need review</comment></data>
+  <data name="Balance_Production_Consumption" xml:space="preserve">
+    <value>Balanse (produksjon - forbruk)</value>
+  <comment>Need review</comment></data>
 </root>

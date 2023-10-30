@@ -42,7 +42,7 @@
                 <TapGestureRecognizer Tapped="Day_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-       <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
+        <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,0,0,0">
             <Label Padding="4,0,4,0"     TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Week}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
@@ -91,18 +91,25 @@
                 <TapGestureRecognizer Tapped="ShowSimulate_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Padding="4" x:Name="SimulateSettings" Grid.ColumnSpan="6"  Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray400Color}"  Margin="-2,0"  
+        <Border Padding="4" x:Name="SimulateSettings" Grid.ColumnSpan="9"  Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray400Color}"  Margin="-2,0"  
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,6,6,6">
-            <VerticalStackLayout Spacing="4">
-                <HorizontalStackLayout Spacing="4">
-                    <Switch x:Name="ROISimulateOn" Toggled="ROISimulateOn_Toggled" />
-                     <Label  Text="{x:Static trans:AppResources.Simulate_Battery}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
-                </HorizontalStackLayout>
-                <Label  Text="{x:Static trans:AppResources.Battery_Kwh}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-                <Entry x:Name="ROISimulateBatteryKwh" Grid.Row="1"  TextChanged="ROISimulateBatteryKwh_TextChanged" />
+            <Grid Padding="4" RowDefinitions="Auto,Auto,20,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="4">
+                <!--simulate-->
+                <Switch x:Name="ROISimulateOn" Toggled="ROISimulateOn_Toggled" />
+                <Label Margin="-10,0,0,0" Grid.Column="1" Text="{x:Static trans:AppResources.Simulate}" VerticalTextAlignment="Center"/>
+                <!--Add Battery-->
+                <Switch x:Name="ROIAddBatterySwith" Grid.Column="2" Toggled="ROIAddBatterySwith_Toggled" />
+                <Label Margin="0,0,0,0" Grid.Column="3" Text="{x:Static trans:AppResources.Add_Battery}" VerticalTextAlignment="Center"/>
+                <!--Remove Battery-->
+                <Switch x:Name="ROIRemoveBatterySwitch" Grid.Row="1" Grid.Column="2" Toggled="ROIRemoveBatterySwitch_Toggled" />
+                <Label Margin="0,0,0,0" Grid.Row="1" Grid.Column="3" Text="{x:Static trans:AppResources.Remove_Battery}" VerticalTextAlignment="Center"/>
 
-            </VerticalStackLayout>
+                <!--Battery capacity-->
+                <Label Grid.Row="1"  Text="{x:Static trans:AppResources.Battery_Kwh}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
+                <Entry Grid.Row="2"  x:Name="ROISimulateBatteryKwh" TextChanged="ROISimulateBatteryKwh_TextChanged" />
+
+            </Grid>
 
         </Border>
     </Grid>

@@ -32,22 +32,22 @@
             <Label  Grid.Row="3" Grid.ColumnSpan="3" Margin="0,16" Text="{Binding GuideText}" />
             <VerticalStackLayout Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3">
                 <!--Navigate to url-->
-                <Button IsVisible="{Binding ShowNavigateUrl}" Text="{x:Static trans:AppResources.Goto_Tibber_Api_Site}" Command="{Binding GoToNavigateUrlCommand}"/>
+                <Button Margin="0,0,0,8" IsVisible="{Binding ShowNavigateUrl}" Text="{x:Static trans:AppResources.Goto_Tibber_Api_Site}" Command="{Binding GoToNavigateUrlCommand}"/>
                 <!--UserName-->
                 <Label IsVisible="{Binding ShowUserName}" Text="{x:Static trans:AppResources.Username}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-                <Entry IsVisible="{Binding ShowUserName}" Text="{Binding UserName}" />
+                <Entry Margin="0,0,0,8" IsVisible="{Binding ShowUserName}" Text="{Binding UserName}" />
                 <!--Password-->
                 <Label IsVisible="{Binding ShowPassword}" Text="{x:Static trans:AppResources.Password}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-                <Entry IsVisible="{Binding ShowPassword}" Text="{Binding Password}" IsPassword="True"  />
+                <Entry Margin="0,0,0,8" IsVisible="{Binding ShowPassword}" Text="{Binding Password}" IsPassword="True"  />
                 <!--Api URL-->
                 <Label IsVisible="{Binding ShowApiUrl}" Text="{x:Static trans:AppResources.Api_Url}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-                <Entry IsVisible="{Binding ShowApiUrl}" Text="{Binding ApiUrl}"   />
+                <Entry Margin="0,0,0,8" IsVisible="{Binding ShowApiUrl}" Text="{Binding ApiUrl}"   />
                 <!--Api Key-->
                 <Label IsVisible="{Binding ShowApiKey}" Text="{x:Static trans:AppResources.Api_Key}" HorizontalTextAlignment="Start" HorizontalOptions="Start"  />
-                <Entry IsVisible="{Binding ShowApiKey}" Text="{Binding ApiKey}"   />
+                <Entry Margin="0,0,0,8" IsVisible="{Binding ShowApiKey}" Text="{Binding ApiKey}"   />
             </VerticalStackLayout>
             <!--Test connection to API-->
-            <Button Grid.Row="5"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
+            <Button Margin="0,8,0,8" Grid.Row="5"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
 
             <!--Homes-->
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Select_The_Home_You_Want_To_Analyze}" IsVisible="{Binding ShowHomePicker}"/>
