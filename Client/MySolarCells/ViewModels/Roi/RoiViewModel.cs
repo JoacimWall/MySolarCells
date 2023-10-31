@@ -38,7 +38,7 @@ public class RoiViewModel : BaseViewModel
     {
         using var dlg = DialogService.GetProgress("");
         await Task.Delay(200);
-        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, roiSimulate);
+        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
         //RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
         return true;
     }

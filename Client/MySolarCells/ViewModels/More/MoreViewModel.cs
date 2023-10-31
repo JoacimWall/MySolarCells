@@ -154,20 +154,20 @@ public class MoreViewModel : BaseViewModel
                     worksheet.Range[prefixValue + c.ToString() + "2"].Text = result.Model[index].FromDate.ToString("MMM").ToUpper();
                     worksheet.Range[prefixValue + c.ToString() + "2"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "2"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
-                    worksheet.Range[prefixValue + c.ToString() + "3"].Value = result.Model[index].RoiStats.TotalPurchased.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "3"].Value = result.Model[index].RoiStats.Purchased.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "3"].NumberFormat = "###,##";
-                    worksheet.Range[prefixValue + c.ToString() + "4"].Value = result.Model[index].RoiStats.TotalPurchasedCost.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "5"].Value = result.Model[index].RoiStats.TotalTransferFeePurchased.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "6"].Value = result.Model[index].RoiStats.TotalTaxPurchased.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "7"].Value = result.Model[index].RoiStats.SumPurchased.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "4"].Value = result.Model[index].RoiStats.PurchasedCost.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "5"].Value = result.Model[index].RoiStats.PurchasedTransferFeeCost.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "6"].Value = result.Model[index].RoiStats.PurchasedTaxCost.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "7"].Value = result.Model[index].RoiStats.SumPurchasedCost.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "7"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "7"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "9"].Value = result.Model[index].RoiStats.TotalProductionSold.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "10"].Value = result.Model[index].RoiStats.TotalProductionSoldProfit.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "11"].Value = result.Model[index].RoiStats.TotalCompensationForProductionToGrid.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "12"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxReductionProductionToGrid.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "13"].Value = result.Model[index].RoiStats.SumProductionSold.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "9"].Value = result.Model[index].RoiStats.ProductionSold.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "10"].Value = result.Model[index].RoiStats.ProductionSoldProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "11"].Value = result.Model[index].RoiStats.ProductionSoldGridCompensationProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "12"].Value = result.Model[index].RoiStats.ProductionSoldTaxReductionProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "13"].Value = result.Model[index].RoiStats.SumProductionSoldProfit.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
@@ -179,21 +179,21 @@ public class MoreViewModel : BaseViewModel
                     //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Font.Bold = true;
                     //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "21"].Value = result.Model[index].RoiStats.TotalProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "22"].Value = result.Model[index].RoiStats.TotalBatteryUsed.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "23"].Value = result.Model[index].RoiStats.TotalProductionOwnUseProfit.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "24"].Value = result.Model[index].RoiStats.TotalBatteryUsedProfit.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "25"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "26"].Value = result.Model[index].RoiStats.TotalSavedTransferFeeBatteryUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "27"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxProductionOwnUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "28"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxBatteryUse.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "29"].Value = result.Model[index].RoiStats.SumProductionOwnUseAndBattery.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "21"].Value = result.Model[index].RoiStats.ProductionOwnUse.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "22"].Value = result.Model[index].RoiStats.BatteryUsed.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "23"].Value = result.Model[index].RoiStats.ProductionOwnUseSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "24"].Value = result.Model[index].RoiStats.BatteryUsedSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "25"].Value = result.Model[index].RoiStats.ProductionOwnUseTransferFeeSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "26"].Value = result.Model[index].RoiStats.BatteryUseTransferFeeSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "27"].Value = result.Model[index].RoiStats.ProductionOwnUseEnergyTaxSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "28"].Value = result.Model[index].RoiStats.BatteryUseEnergyTaxSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "29"].Value = result.Model[index].RoiStats.SumProductionOwnUseAndBatterySaved.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "29"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "29"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    worksheet.Range[prefixValue + c.ToString() + "31"].Value = result.Model[index].RoiStats.TotalProduction.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "32"].Value = result.Model[index].RoiStats.TotalInterest.ToString();
-                    worksheet.Range[prefixValue + c.ToString() + "33"].Value = result.Model[index].RoiStats.TotalSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "31"].Value = result.Model[index].RoiStats.SumAllProduction.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "32"].Value = result.Model[index].RoiStats.InterestCost.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "33"].Value = result.Model[index].RoiStats.BalanceProfitAndSaved_Minus_InterestCost.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "33"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "33"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
@@ -201,8 +201,8 @@ public class MoreViewModel : BaseViewModel
 
 
 
-                    totalProducedSaved = totalProducedSaved + result.Model[index].RoiStats.TotalSaved;
-                    if (productionindex == -1 && result.Model[index].RoiStats.TotalProduction > 0)
+                    totalProducedSaved = totalProducedSaved + result.Model[index].RoiStats.BalanceProfitAndSaved_Minus_InterestCost;
+                    if (productionindex == -1 && result.Model[index].RoiStats.SumAllProduction > 0)
                         productionindex = 1;
                     else if (productionindex > 0)
                     {

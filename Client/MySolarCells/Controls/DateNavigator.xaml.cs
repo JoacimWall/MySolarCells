@@ -8,7 +8,7 @@ public partial class DateNavigator : ContentView
         SimulateSettings.IsVisible = false;
         ROISimulateOn.IsToggled = false;
         ShowSimulateButton.IsVisible = true;
-        //ROISimulateAddBattery.IsToggled = true;
+       
     }
 
     public static readonly BindableProperty GraphDataChangedCommandProperty = BindableProperty.Create(nameof(GraphDataChangedCommand), typeof(ICommand), typeof(DateNavigator), null);
@@ -84,7 +84,7 @@ public partial class DateNavigator : ContentView
         var control = (DateNavigator)bindable;
         var value = (bool)newValue;
         control.ShowSimulateButton.IsVisible = value;
-       
+
     }
 
     public bool ShowRoiSimulate
@@ -250,10 +250,11 @@ public partial class DateNavigator : ContentView
             simSettingsIsOn = true;
             //ROISimulateOn.IsToggled = true;
             RoiSimulate.DoSimulate = true;
+
         }
         WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
-    private bool simSettingsAddbattery = true;
+    private bool simSettingsAddbattery = false;
     void ROIAddBatterySwith_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
     {
         if (simSettingsAddbattery)
@@ -267,7 +268,9 @@ public partial class DateNavigator : ContentView
             simSettingsAddbattery = true;
             //ROIAddBatterySwith.IsToggled = true;
             RoiSimulate.AddBattery = true;
+           
         }
+        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
     private bool simSettingsRemoveBattery = false;
     void ROIRemoveBatterySwitch_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
@@ -285,5 +288,6 @@ public partial class DateNavigator : ContentView
             //ROIRemoveBatterySwitch.IsToggled = true;
             RoiSimulate.RemoveBattery = true;
         }
+        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 }

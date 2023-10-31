@@ -203,11 +203,13 @@ public class SolarEdgeService : IInverterServiceInterface
                         energyExist.InverterTypProductionOwnUse = (int)InverterTyp.SolarEdge;
                         energyExist.ElectricitySupplierPurchased = (int)InverterTyp.SolarEdge;
                         energyExist.ElectricitySupplierProductionSold = (int)InverterTyp.SolarEdge;
-                        energyExist.ProductionSoldSynced = true;
-                        energyExist.ProductionOwnUseSynced = true;
-                        energyExist.PurchasedSynced = true;
-                        energyExist.BatterySynced = true;
-
+                        if (energyExist.Timestamp < end.AddHours(-1))
+                        {
+                            energyExist.ProductionSoldSynced = true;
+                            energyExist.ProductionOwnUseSynced = true;
+                            energyExist.PurchasedSynced = true;
+                            energyExist.BatterySynced = true;
+                        }
                         energyExist.Purchased = sumes[i].Purchased > 0 ? Convert.ToDouble(sumes[i].Purchased / 1000)  : 0;
                         energyExist.ProductionOwnUse = sumes[i].SelfConsumption > 0 ? Convert.ToDouble(sumes[i].SelfConsumption / 1000) : 0;
                         energyExist.ProductionSold = sumes[i].FeedIn > 0 ? Convert.ToDouble(sumes[i].FeedIn / 1000) : 0;
