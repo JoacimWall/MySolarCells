@@ -61,7 +61,15 @@
                         </chart:NumericalAxis.Title>
                     </chart:NumericalAxis>
                 </chart:SfCartesianChart.YAxes>
+                 <chart:StackingColumnSeries ItemsSource="{Binding DataUsed}"
+                                XBindingPath="Label"
+                                YBindingPath="Value"
+                                GroupingLabel="Test"
+                                EnableTooltip="True"
+                                CornerRadius="0,0,0,0"
+                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
 
+                </chart:StackingColumnSeries>
                 <chart:StackingColumnSeries ItemsSource="{Binding DataSold}"
                                 XBindingPath="Label"
                                 YBindingPath="Value"
@@ -71,15 +79,7 @@
                                 PaletteBrushes="{Binding PaletteBrushesProductionSold}">
                 </chart:StackingColumnSeries>
 
-                <chart:StackingColumnSeries ItemsSource="{Binding DataUsed}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                GroupingLabel="Test"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
-
-                </chart:StackingColumnSeries>
+               
 
                  <chart:StackingColumnSeries ItemsSource="{Binding DataBatteryCharge}"
                                 XBindingPath="Label"

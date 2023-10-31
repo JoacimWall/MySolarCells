@@ -24,7 +24,7 @@
                            Margin="8,0,8,0"
                            FontAttributes="Bold"
                          FontSize="17"
-                           Text="{Binding Source={x:Static trans:AppResources.Grid_Supplier}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.Upper}}" />
+                           Text="{x:Static trans:AppResources.Grid_Supplier}" />
                     
                      <Label 
                            Margin="8,0,8,0"
@@ -34,7 +34,7 @@
                            Margin="8,0,8,0"
                            FontAttributes="Bold"
                          FontSize="17"
-                           Text="{Binding Source={x:Static trans:AppResources.Inverter}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.Upper}}" />
+                           Text="{x:Static trans:AppResources.Inverter}" />
 
                      <Label 
                            Margin="8,0,8,0"
@@ -52,7 +52,7 @@
                            Grid.ColumnSpan="2"
                            Margin="8,16,8,4"
                            FontAttributes="Bold" FontSize="19"
-                           Text="{Binding Source={x:Static trans:AppResources.Tools_And_Features}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.Upper}}" />
+                           Text="{x:Static trans:AppResources.Tools_And_Features}" />
             <FlexLayout Grid.Row="3" Grid.ColumnSpan="2"
                                     Margin="0,0,0,8"
                                     Padding="0"
