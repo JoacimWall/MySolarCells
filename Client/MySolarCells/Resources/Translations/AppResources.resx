@@ -442,7 +442,7 @@
 <data name="Remove_Battery" xml:space="preserve">
     <value>Remove battery</value>
   <comment>Need review</comment></data>
-<data name="Balance_Production_Consumption" xml:space="preserve">
-    <value>Balance (production - consumption)</value>
+<data name="Balance_Production_Minus_Consumption" xml:space="preserve">
+    <value>Balance (production minus consumption)</value>
   <comment>Need review</comment></data>
 </root>

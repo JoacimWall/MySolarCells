@@ -49,7 +49,7 @@
                 <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Consumption}"/>
                 <!--Balance_Production_Consumption-->
-                <Label Text="{x:Static trans:AppResources.Sum}"/>
+                <Label Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
                 <!-- COSTS AND REVENUES-->
                 <Label  Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Costs_And_Rvenues}"/>
                 <!--TotalProductionSoldProfit-->
@@ -83,7 +83,7 @@
                 <!--Produced-->
                 <Label Text="{x:Static trans:AppResources.Consumption}"/>
                 <!--Balance_Production_Consumption-->
-                <Label Text="{x:Static trans:AppResources.Sum}"/>
+                <Label Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
 
             </VerticalStackLayout >
             <!--Value-->

@@ -103,6 +103,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Balance (production minus consumption).
+        /// </summary>
+        public static string Balance_Production_Minus_Consumption {
+            get {
+                return ResourceManager.GetString("Balance_Production_Minus_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Battery charge.
         /// </summary>
         public static string Battery_Charge {

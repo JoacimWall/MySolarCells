@@ -375,7 +375,7 @@
   <data name="Remove_Battery" xml:space="preserve">
     <value>Ta ut batteriet</value>
   <comment>Need review</comment></data>
-  <data name="Balance_Production_Consumption" xml:space="preserve">
-    <value>Balanse (produksjon - forbruk)</value>
+  <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
+    <value>Balanse (produksjon minus forbruk)</value>
   <comment>Need review</comment></data>
 </root>
