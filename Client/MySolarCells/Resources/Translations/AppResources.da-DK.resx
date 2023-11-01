@@ -45,9 +45,6 @@
   <data name="Production" xml:space="preserve">
     <value>Produktion</value>
   <comment>Need review</comment></data>
-  <data name="Grid_Supplier" xml:space="preserve">
-    <value>Netleverandør</value>
-  <comment>Need review</comment></data>
   <data name="Save" xml:space="preserve">
     <value>Gemme</value>
   <comment>Need review</comment></data>
@@ -81,9 +78,6 @@
   <data name="Tibber_Guide_Text" xml:space="preserve">
     <value>For at bruge Tibber skal du bruge din private API-nøgle. Det kan du få ved at klikke på knappen nedenfor og logge ind.</value>
   <comment>Need review</comment></data>
-  <data name="Import_Data_From_Grid_Supplier" xml:space="preserve">
-    <value>Importer data fra netleverandør.</value>
-  <comment>Need review</comment></data>
   <data name="Saved_Rows_Amount" xml:space="preserve">
     <value>Gemte rækker {0}</value>
   <comment>Need review</comment></data>
@@ -95,9 +89,6 @@
   <comment>Need review</comment></data>
   <data name="My_Description" xml:space="preserve">
     <value>Min beskrivelse</value>
-  <comment>Need review</comment></data>
-  <data name="My_Investment_And_Loan" xml:space="preserve">
-    <value>Min investering og lån</value>
   <comment>Need review</comment></data>
   <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
     <value>Der er ingen data at vise på denne dato</value>
@@ -189,17 +180,8 @@
   <data name="Export_To_Excel" xml:space="preserve">
     <value>Eksporter til Excel</value>
   <comment>Need review</comment></data>
-  <data name="Grid_Electricity_Supplier" xml:space="preserve">
-    <value>Net elleverandør</value>
-  <comment>Need review</comment></data>
   <data name="Install_Year" xml:space="preserve">
     <value>Installationsår</value>
-  <comment>Need review</comment></data>
-  <data name="Pick_The_Brand_Of_Your_Grid_Supplier" xml:space="preserve">
-    <value>Vælg mærket på din netleverandør</value>
-  <comment>Need review</comment></data>
-  <data name="Pick_The_Grid_Supplier_Intro_Text" xml:space="preserve">
-    <value>Vælg mærket på din netleverandør</value>
   <comment>Need review</comment></data>
   <data name="Username" xml:space="preserve">
     <value>Brugernavn</value>
@@ -383,5 +365,53 @@
   <comment>Need review</comment></data>
   <data name="Generating_Report_Please_Wait" xml:space="preserve">
     <value>Genererer rapport, vent venligst</value>
+  <comment>Need review</comment></data>
+  <data name="Back" xml:space="preserve">
+    <value>Tilbage</value>
+  <comment>Need review</comment></data>
+  <data name="The_Login_Failed_Check_That_You_Entered_The_Correct_Information" xml:space="preserve">
+    <value>Login mislykkedes, tjek at du har indtastet de rigtige oplysninger</value>
+  <comment>Need review</comment></data>
+  <data name="Tax_Reduction_Discription" xml:space="preserve">
+    <value>Afgiftsnedsættelse (produceret/kWh til net)</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Tax_Comsumption" xml:space="preserve">
+    <value>Energiafgift (forbrug)</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Factors" xml:space="preserve">
+    <value>Beregningsfaktorer</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
+    <value>Beregningsfaktorer for omkostninger og indtægter relateret til solcelleproduktion.</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Installed_Panels_Kwh" xml:space="preserve">
+    <value>Samlet installerede paneler (kWh)</value>
+  <comment>Need review</comment></data>
+  <data name="Application_Version" xml:space="preserve">
+    <value>Applikationsversion</value>
+  <comment>Need review</comment></data>
+  <data name="Support_And_Feedback" xml:space="preserve">
+    <value>Support og feedback</value>
+  <comment>Need review</comment></data>
+  <data name="Add" xml:space="preserve">
+    <value>Tilføje</value>
+  <comment>Need review</comment></data>
+  <data name="Interest_Saved" xml:space="preserve">
+    <value>Renter sparet</value>
+  <comment>Need review</comment></data>
+  <data name="Electricity_Supplier" xml:space="preserve">
+    <value>Elleverandør</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Electricity_Supplier" xml:space="preserve">
+    <value>Importer data fra elleverandør.</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Brand_Of_Your_Electricity_Supplier" xml:space="preserve">
+    <value>Vælg din elleverandørs mærke</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Electricity_Supplier_Intro_Text" xml:space="preserve">
+    <value>Vælg din elleverandørs mærke</value>
+  <comment>Need review</comment></data>
+  <data name="Investment_And_Loan" xml:space="preserve">
+    <value>Investering og lån</value>
   <comment>Need review</comment></data>
 </root>

@@ -8,43 +8,24 @@
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls">
     <ContentView.Content>
+         <Border 
+                    BackgroundColor="{x:Static theming:AppColors.Gray400Color}"
+                    StrokeShape="RoundRectangle 8,8,8,8" >
+        <Grid Margin="1" HeightRequest="100" RowDefinitions="2*, *" BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
 
-        <Grid HeightRequest="100" RowDefinitions="2*, *">
-
-            <Border Grid.RowSpan="2"
-                    BackgroundColor="{x:Static theming:AppColors.Gray100Color}"
-                    StrokeShape="RoundRectangle 10,10,10,10" />
-
-            <!--<Frame x:Name="IsNewLabel"
-                   Margin="10,8,10,0"
-                   Padding="1,1,1,1"
-                   BackgroundColor="{x:Static theming:AppColors.Primary100Color}"
-                   BorderColor="Transparent"
-                   CornerRadius="8"
-                   HasShadow="False"
-                   HeightRequest="17"
-                   HorizontalOptions="Start"
-                   IsVisible="False"
-                   VerticalOptions="Start"
-                   WidthRequest="38">
-                <Label HorizontalTextAlignment="Center"
-                       Style="{StaticResource LabelStyleNormalMicroWhite}"
-                       Text="{Binding Source={x:Static trans:AppResources.New}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.Upper}}" />
-            </Frame>-->
-
-            <Label x:Name="IconLabelExternal"
+            <Label x:Name="IconLabelExternal" Style="{StaticResource LabelEntryTitleStyle}"
                    Margin="0,11,10,0"
                    HorizontalOptions="End"
                    FontFamily="AppIconsFont"
                    VerticalOptions="Start" />
 
-            <Label x:Name="IconLabel"
+            <Label x:Name="IconLabel" Style="{StaticResource LabelEntryTitleStyle}"
                    Margin="0,20,0,0"
                    FontSize="40"
                    FontFamily="AppIconsFont"
                    HorizontalTextAlignment="Center" />
 
-            <Label x:Name="title"
+            <Label x:Name="title" Style="{StaticResource LabelEntryTitleStyle}"
                    Grid.Row="1"
                    Margin="0,5,0,0"
                    HorizontalOptions="Center"
@@ -52,5 +33,6 @@
                    VerticalOptions="Start" />
 
         </Grid>
+        </Border>
     </ContentView.Content>
 </ContentView>

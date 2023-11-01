@@ -7,8 +7,8 @@ public class InverterViewModel : BaseViewModel
     public InverterViewModel()
     {
 
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
+        //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
+        //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
         using var dbContext = new MscDbContext();
@@ -28,6 +28,9 @@ public class InverterViewModel : BaseViewModel
                 }
             }
 
+            UserName = inverter.UserName;
+            Password = StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey); 
+            ApiKey = StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey); 
         }
     }
 
@@ -49,7 +52,7 @@ public class InverterViewModel : BaseViewModel
             return;
         }
         SitesNodes = new ObservableCollection<InverterSite>(resultSites.Model);
-
+        
         SelectedSiteNode = SitesNodes.First();
         ShowSiteNodePicker = true;
     }

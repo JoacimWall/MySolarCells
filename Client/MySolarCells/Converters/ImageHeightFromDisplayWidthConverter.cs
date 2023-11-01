@@ -46,6 +46,8 @@ public class ImageHeightFromDisplayWidthConverter : IValueConverter
             if (parameter.ToString() == "Width_Dev_2_Margin_16")
                 return (width / 2) - 16;
 
+            if (parameter.ToString() == "Width_Dev_2_Margin_32")
+                return (width / 2) -32;
             return width;
 
         }

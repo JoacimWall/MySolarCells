@@ -9,6 +9,8 @@ public class MoreViewModel : BaseViewModel
     {
         this.roiService = roiService;
         Home = MySolarCellsGlobals.SelectedHome;
+        AppInfoVersion =  AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
+
     }
 
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
@@ -22,11 +24,10 @@ public class MoreViewModel : BaseViewModel
         await GoToAsync(nameof(ElectricitySupplierView));
     }
 
-   
 
     private async Task ShowInverterSettings()
     {
-        await GoToAsync(nameof(EnergyCalculationParameterView));
+        await GoToAsync(nameof(InverterView));
     }
 
     private async Task ShowCalcParameters()
@@ -348,6 +349,11 @@ public class MoreViewModel : BaseViewModel
         }
 
     }
-
+    private string _appInfoVersion;
+    public String AppInfoVersion
+    {
+        get { return _appInfoVersion; }
+        set { SetProperty(ref _appInfoVersion, value); }
+    }
 }
 

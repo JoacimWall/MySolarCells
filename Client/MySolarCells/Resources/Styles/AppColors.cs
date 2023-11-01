@@ -133,7 +133,10 @@ public static class AppColors
     public static Color WhiteColor = Color.FromArgb("#ffffff");
 
     public static Color Gray900Color = Color.FromArgb("#1A1A1A");
+    public static Color Gray800Color = Color.FromArgb("#737373");
     public static Color Gray700Color = Color.FromArgb("#878787");
+       
+    public static Color Gray500Color = Color.FromArgb("#a3a3a3");
     public static Color Gray400Color = Color.FromArgb("#BBBBBB");
     public static Color Gray300Color = Color.FromArgb("#DEDEDE");
     public static Color Gray200Color = Color.FromArgb("#EAEAEA");

@@ -35,9 +35,11 @@ public class KostalService : IInverterServiceInterface
         var loginResult = await this.restClient.ExecutePostAsync<KostalLoginResponse>(string.Empty, graphQlRequest);
         if (!loginResult.WasSuccessful)
             return new Result<InverterLoginResponse>(loginResult.ErrorMessage);
+        else if (loginResult.Model == null || loginResult.Model.Data == null || loginResult.Model.Data.loginUser == null)
+            return new Result<InverterLoginResponse>(AppResources.The_Login_Failed_Check_That_You_Entered_The_Correct_Information);
         else
         {
-             this.inverterLoginResponse = new InverterLoginResponse
+            this.inverterLoginResponse = new InverterLoginResponse
             {
                 token = loginResult.Model.Data.loginUser.accessToken.token,
                 expiresIn = loginResult.Model.Data.loginUser.accessToken.expiresIn,
@@ -64,7 +66,7 @@ public class KostalService : IInverterServiceInterface
         var returnlist = new List<InverterSite>();
         foreach (var item in sitesResponse.data.sites.nodes)
         {
-            returnlist.Add(new InverterSite { Id = item.id.ToString(), Name = item.name.ToString(), InstallationDate = Convert.ToDateTime( item.installationDate) });
+            returnlist.Add(new InverterSite { Id = item.id.ToString(), Name = item.name.ToString(), InstallationDate = Convert.ToDateTime(item.installationDate) });
         }
         return new Result<List<InverterSite>>(returnlist);
     }
@@ -76,7 +78,7 @@ public class KostalService : IInverterServiceInterface
         var resultDevice = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceResponse>(string.Empty, graphQlRequest);
         deviceResponse = resultDevice.Model;
         var device = deviceResponse.data.site.dataSources.First().devices.FirstOrDefault(x => x.type == "INVERTER");
-        return new Result<GetInverterResponse>( new GetInverterResponse { InverterId= device.id.ToString(), Name = device.name });
+        return new Result<GetInverterResponse>(new GetInverterResponse { InverterId = device.id.ToString(), Name = device.name });
     }
 
     public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
@@ -85,13 +87,13 @@ public class KostalService : IInverterServiceInterface
         using var dbContext = new MscDbContext();
         var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
-        var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey),"","") ;
-         inverterLoginResponse = loginResult.Model;
+        var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
+        inverterLoginResponse = loginResult.Model;
 
         try
         {
 
-            
+
             int batch100 = 0;
             string processingDateFrom;
             string processingDateTo;
@@ -122,10 +124,10 @@ public class KostalService : IInverterServiceInterface
                     nextStart = end;
                 }
 
-                
+
                 var dataSelector = new KostalUserRoleDateSelector { from = processingDateFrom, to = processingDateTo, fromTimeOfDay = "00:00:00", toTimeOfDay = "23:59:59" };
                 var query = "query FETCH_DEVICE_DATA($deviceIds: [Long!]!, $dataTypes: [String!]!, $dateSelector: TimeSpanSelectorInput!, $padWithNull: Boolean = true, $byTimeInterval: AggregationInterval!, $byDevice: Boolean = true, $statistic: AggregationStatistic = SUM) {  deviceData(deviceIds: $deviceIds, dataTypes: $dataTypes, dateSelector: $dateSelector, padWithNull: $padWithNull) {    aggregate(byDevice: $byDevice, byTimeInterval: $byTimeInterval, statistic: $statistic) {      timeSeries {        points {          timestamp          value          __typename        }        __typename      }      __typename    }    __typename  }}";
-                 var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new KostalUserRoleProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
+                var graphQlRequest = new KostalUserRoleGraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new KostalUserRoleProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
                 var resultDay = await this.restClient.ExecutePostAsync<KostalUserRoleDeviceProductionResponse>(string.Empty, graphQlRequest);
                 dayProduction = resultDay.Model;
                 List<KostalUserRolePoint> listPoints = new List<KostalUserRolePoint>();
@@ -148,7 +150,7 @@ public class KostalService : IInverterServiceInterface
                     if (energyExist != null)
                     {
                         if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
-                        { 
+                        {
                             energyExist.ProductionOwnUse = (Convert.ToDouble(listPoints[i].value.Value) / 1000) - Convert.ToDouble(energyExist.ProductionSold);
                             //Only add if price over zero
                             if (energyExist.UnitPriceBuy > 0)
@@ -237,7 +239,7 @@ public class KostalService : IInverterServiceInterface
         //}
 
 
-      
+
     }
 }
 //Response

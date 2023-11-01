@@ -7,92 +7,92 @@
              x:Class="MySolarCells.Controls.DateNavigator">
     <Grid  ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" Padding="0" ColumnSpacing="0">
 
-        <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="0,0"  
+        <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="0,0"  
                     StrokeThickness="2" >
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="25,25,25,25" />
             </Border.StrokeShape>
-            <Label  Margin="0,0,6,3"  FontSize="29" TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text=" - " InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+            <Label  Margin="0,0,6,4"  FontSize="29" TextColor="{x:Static theming:AppColors.Gray500Color}" HeightRequest="25" Text=" - " InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Back_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="3" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" 
+        <Border Grid.Column="3" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="3,0" 
                     StrokeThickness="2" >
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="25,25,25,25" />
             </Border.StrokeShape>
-            <Label  Margin="0,0,6,3"  FontSize="23" TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text=" + " InputTransparent="True" BackgroundColor="Transparent" HorizontalTextAlignment="Center" />
+            <Label  Margin="0,0,6,3"  FontSize="23" TextColor="{x:Static theming:AppColors.Gray500Color}" HeightRequest="25" Text=" + " InputTransparent="True" BackgroundColor="Transparent" HorizontalTextAlignment="Center" />
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Forward_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="4" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="3,0" BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" 
+        <Border Grid.Column="4" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="3,0" BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" 
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,6,6,6" >
-            <Label Padding="4,0,4,0" Margin="0" TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" BackgroundColor="Transparent" Text="{x:Static trans:AppResources.Today}" InputTransparent="True"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0" Margin="0" TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" BackgroundColor="Transparent" Text="{x:Static trans:AppResources.Today}" InputTransparent="True"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Today_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="5" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0,-2,0" BackgroundColor="{Binding ChartDataRequest.DayBackgrundColor}"
+        <Border Grid.Column="5" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="2,0,-2,0" BackgroundColor="{Binding ChartDataRequest.DayBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,0,6,0" >
-            <Label Padding="4,0,4,0" TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Day}" InputTransparent="True" VerticalOptions="Center" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0" TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Day}" InputTransparent="True" VerticalOptions="Center" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Day_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
+        <Border Grid.Column="6" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="-2,0" BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,0,0,0">
-            <Label Padding="4,0,4,0"     TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Week}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"     TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Week}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Week_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="7" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.MonthBackgrundColor}"
+        <Border Grid.Column="7" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.MonthBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,0,0,0">
-            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Month}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Month}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Month_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Grid.Column="8" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.YearBackgrundColor}"
+        <Border Grid.Column="8" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.YearBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,6,0,6">
-            <Label Padding="4,0,4,0"   TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Year}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"   TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Year}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Year_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border x:Name="UnitButton"  Grid.Column="7" Grid.Row="1"  Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0,-1,0" BackgroundColor="{Binding ChartDataRequest.KwhBackgrundColor}"
+        <Border x:Name="UnitButton"  Grid.Column="7" Grid.Row="1"  Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="2,0,-1,0" BackgroundColor="{Binding ChartDataRequest.KwhBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,0,6,0" >
-            <Label Padding="4,0,4,0"     TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="kWh" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"     TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="kWh" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Unit_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border x:Name="CurrencyButton"   Grid.Column="8" Grid.Row="1" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.CurrencyBackgrundColor}"
+        <Border x:Name="CurrencyButton"   Grid.Column="8" Grid.Row="1" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="-2,0"  BackgroundColor="{Binding ChartDataRequest.CurrencyBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 0,6,0,6">
-            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="SEK" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="SEK" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Currency_Tapped" />
             </Border.GestureRecognizers>
         </Border>
         <!-- Simulate  show-->
-        <Border x:Name="ShowSimulateButton" Grid.Column="0" Grid.Row="0" Stroke="{x:Static theming:AppColors.Gray400Color}" Padding="0" Margin="2,0" BackgroundColor="{Binding RoiSimulate.ShowSimulateBackgrundColor}"
+        <Border x:Name="ShowSimulateButton" Grid.Column="0" Grid.Row="0" Stroke="{x:Static theming:AppColors.Gray500Color}" Padding="0" Margin="2,0" BackgroundColor="{Binding RoiSimulate.ShowSimulateBackgrundColor}"
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,6,6,6">
-            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray700Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Simulate}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Padding="4,0,4,0"    TextColor="{x:Static theming:AppColors.Gray800Color}" HeightRequest="25" Text="{x:Static trans:AppResources.Simulate}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="ShowSimulate_Tapped" />
             </Border.GestureRecognizers>
         </Border>
-        <Border Padding="4" x:Name="SimulateSettings" Grid.ColumnSpan="9"  Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray400Color}"  Margin="-2,0"  
+        <Border Padding="4" x:Name="SimulateSettings" Grid.ColumnSpan="9"  Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray500Color}"  Margin="-2,0"  
                     StrokeThickness="2"
                     StrokeShape="RoundRectangle 6,6,6,6">
             <Grid Padding="4" RowDefinitions="Auto,Auto,20,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8">

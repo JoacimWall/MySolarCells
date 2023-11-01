@@ -8,51 +8,60 @@
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
+                        Shell.NavBarIsVisible="True"
                         x:DataType="vm:MoreViewModel">
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
+            <!--<Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
+            </Border>-->
 
+        </Grid>
+
+    </Shell.TitleView>
     <ScrollView x:Name="TheScrollView" Margin="0" >
-        <Grid Margin="8,8" Grid.Row="0" ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, Auto,Auto, Auto, Auto"  >
+        <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, Auto,Auto, Auto, Auto"  >
             <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto">
                 <Image Margin="0,0,0,0"
                    Aspect="AspectFit"
                    BackgroundColor="Transparent"
                    Source="{Binding HomeImageUrl, Converter={StaticResource StringToImageSourceConverter}}"
                    WidthRequest="100" HeightRequest="100" />
-
                 <VerticalStackLayout Grid.Column="1">
-                     <Label 
+                    <Label 
                            Margin="8,0,8,0"
-                           FontAttributes="Bold"
-                         FontSize="17"
-                           Text="{x:Static trans:AppResources.Grid_Supplier}" />
-                    
-                     <Label 
-                           Margin="8,0,8,0"
+                           FontSize="16" Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static trans:AppResources.Electricity_Supplier}" />
+
+                    <Label 
+                           Margin="8,0,8,0" Style="{StaticResource LabelBaseStyle}"
                            Text="{Binding ElectricitySupplierText}" />
 
                     <Label 
                            Margin="8,0,8,0"
-                           FontAttributes="Bold"
-                         FontSize="17"
+                           FontSize="16" Style="{StaticResource LabelEntryTitleStyle}"
                            Text="{x:Static trans:AppResources.Inverter}" />
 
-                     <Label 
+                    <Label 
                            Margin="8,0,8,0"
-                           Text="{Binding InverterText}" />
+                           Text="{Binding InverterText}" Style="{StaticResource LabelBaseStyle}"/>
 
                 </VerticalStackLayout>
             </Grid>
-           
 
 
-           
 
 
-            <Label Grid.Row="2"
-                           Grid.ColumnSpan="2"
-                           Margin="8,16,8,4"
-                           FontAttributes="Bold" FontSize="19"
-                           Text="{x:Static trans:AppResources.Tools_And_Features}" />
+
+
+            <Label Grid.Row="2" Grid.ColumnSpan="2" Margin="8,16,8,0" Style="{StaticResource LabelEntryTitleStyle}" FontSize="17"
+                   Text="{x:Static trans:AppResources.Tools_And_Features}" />
+
             <FlexLayout Grid.Row="3" Grid.ColumnSpan="2"
                                     Margin="0,0,0,8"
                                     Padding="0"
@@ -61,8 +70,8 @@
                                     JustifyContent="SpaceAround"
                                     Wrap="Wrap">
 
-                <!--  Erbjudande  -->
-                <control:MenuGridItemView Margin="0,2"
+                <!--  Export_To_Excel  -->
+                <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Export_file}"
                         IsVisible="True"
@@ -71,18 +80,18 @@
                         <TapGestureRecognizer Command="{Binding ExportExcelCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-                <!--  Artikelbib  -->
-                <control:MenuGridItemView Margin="0,2"
+                <!--  Grid_Electricity_Supplier  -->
+                <control:MenuGridItemView Margin="0,0,0,3"
                             WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                             FontIcon="{x:Static theming:IconFont.Power}"
                             IsVisible="True"
-                            TitleText="{Binding Source={x:Static trans:AppResources.Grid_Electricity_Supplier}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
-                <control:MenuGridItemView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ElectricitySupplierCommand}" />
-                </control:MenuGridItemView.GestureRecognizers>
+                            TitleText="{Binding Source={x:Static trans:AppResources.Electricity_Supplier}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
+                    <control:MenuGridItemView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ElectricitySupplierCommand}" />
+                    </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-                <!--  checklist  -->
-                <control:MenuGridItemView Margin="0,2"
+                <!--  Inverter  -->
+                <control:MenuGridItemView Margin="0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Inverter}"
                         TitleText="{Binding Source={x:Static trans:AppResources.Inverter}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
@@ -90,8 +99,8 @@
                         <TapGestureRecognizer Command="{Binding InverterSettingsCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-                <!--  Vikt längd  -->
-                <control:MenuGridItemView Margin="0,2"
+                <!--  Calculation_Parameters  -->
+                <control:MenuGridItemView Margin="0,3"
                             WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                             FontIcon="{x:Static theming:IconFont.Bargraph}"
                             IsVisible="True"
@@ -100,12 +109,12 @@
                         <TapGestureRecognizer Command="{Binding ShowCalcParametersCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-                <!--  Timmer  -->
+                <!--  My_Investment_And_Loan  -->
                 <control:MenuGridItemView Margin="0,2"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Money}"
                         IsVisible="True"
-                        TitleText="{Binding Source={x:Static trans:AppResources.My_Investment_And_Loan}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
+                        TitleText="{Binding Source={x:Static trans:AppResources.Investment_And_Loan}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
                     <control:MenuGridItemView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowInvestAndLonCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
@@ -126,12 +135,25 @@
 
 
             </FlexLayout>
+
+            <Border Margin="0,20" Grid.Row="4" Grid.ColumnSpan="2" BackgroundColor="{x:Static theming:AppColors.Gray400Color}"
+                      StrokeShape="RoundRectangle 8,8,8,8">
+                <VerticalStackLayout  Spacing="0" Margin="1" BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                    <!--App version-->
+                    <Label Margin="16,16,16,4" FontSize="18" Text="{x:Static trans:AppResources.Application_Version}" HorizontalTextAlignment="Start" />
+                    <Label Margin="16,0,16,0" HorizontalTextAlignment="Start" Text="{Binding AppInfoVersion}" />
+                     <!--Support and feedback-->
+                    <Label Margin="16,16,16,4" FontSize="18" Text="{x:Static trans:AppResources.Support_And_Feedback}" HorizontalTextAlignment="Start" />
+                    <Label Margin="16,0,16,16" HorizontalTextAlignment="Start" Text="vinterwall@gmail.com" />
+
+                </VerticalStackLayout>
+            </Border>
             <ActivityIndicator Grid.RowSpan="6" />
-            <Label x:Name="CalcWithDev2Ctl"
+            <Label x:Name="CalcWithDev2Ctl" 
                    Grid.Row="0"
                    Grid.RowSpan="2"
                    IsVisible="false"
-                   WidthRequest="{Binding Converter={StaticResource ImageHeightFromDisplayWidthConverter}, ConverterParameter='Width_Dev_2_Margin_16'}" />
+                   WidthRequest="{Binding Converter={StaticResource ImageHeightFromDisplayWidthConverter}, ConverterParameter='Width_Dev_2_Margin_32'}" />
         </Grid>
     </ScrollView>
 </views:BaseContentPage>

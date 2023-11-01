@@ -2,6 +2,7 @@
 <views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
                         xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                         x:Class="MySolarCells.Views.OnBoarding.InvestmentAndLoanView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
@@ -9,9 +10,16 @@
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:InvestmentAndLoanViewModel">
     <Shell.TitleView>
-        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" HorizontalTextAlignment="Center"/>
-            <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.WhiteColor}"  HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="2" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Back}" BackgroundColor="Transparent" ></Button>
+            </Border>
+            <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
@@ -23,55 +31,61 @@
 
     </Shell.TitleView>
     <ScrollView>
-        <Grid RowSpacing="8" ColumnSpacing="4" Margin="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid Style="{StaticResource GridBasePage}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="Auto,*,Auto">
 
-            <Label Grid.Row="0" Grid.ColumnSpan="3" FontSize="17"
-            Text="{x:Static trans:AppResources.Investment_Loan_Intro_Text}"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            <Label Margin="0" Grid.Row="0" Grid.ColumnSpan="3" FontSize="17" Style="{StaticResource LabelBaseStyle}"
+            Text="{x:Static trans:AppResources.Investment_Loan_Intro_Text}" VerticalOptions="Center" HorizontalTextAlignment="Center" />
 
-            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment_slash_Loan}" />
+            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource LabelEntryTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}"  />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndloan}" ItemDisplayBinding="{Binding Description}"/>
-             <Button  Grid.Row="3"  Grid.Column="3" Text="Add" Command="{Binding AddInestlonCommand}"/>
+            <Button  Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInestlonCommand}"/>
             <!--Description-->
-            <Label Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}"
-            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Label Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Description}" />
             <!--FromDate-->
-            <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="Date"/>
+            <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInvestmentAndloan.FromDate}" />
 
             <!--Investment-->
-            <Label Grid.Row="8" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment}"
-            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="9" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Investment}" />
+            <Label Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Entry Grid.Row="9" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndloan.Investment}" >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0" MaximumValue="1000000" MaximumDecimalPlaces="0" />
+                </Entry.Behaviors>
+            </Entry>
 
             <!--Loan-->
-            <Label Grid.Row="10" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Loan_Press_Add_For_Adding_Interest_Information}"
-            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="11" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Loan}" />
-             <!--Amortization-->
+            <Label Grid.Row="10" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Loan_Press_Add_For_Adding_Interest_Information}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Entry Grid.Row="11" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndloan.Loan}" >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0" MaximumValue="1000000" MaximumDecimalPlaces="0" />
+                </Entry.Behaviors>
+            </Entry>
+            <!--Amortization-->
             <!--<Label Grid.Row="11" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="Amortization" 
             HorizontalTextAlignment="Start" HorizontalOptions="Start" />
             <Entry Grid.Row="12" Grid.ColumnSpan="2" Text="{Binding SelectedInvestmentAndlon.Amortization}" />-->
 
             <!--Inerest picker-->
-            <Label Margin="0,0,0,-6" Grid.Row="13" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest}" />
+            <Label Margin="0,0,0,-6" Grid.Row="13" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest_Saved}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Margin="0" Grid.Row="14" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndloan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
-            <Button Grid.Row="14"  Grid.Column="3" Text="Add" Command="{Binding AddInterestCommand}"/>
+            <Button Grid.Row="14"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
-            <Label Grid.Row="15" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}"
-            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Label Grid.Row="15" Margin="0,0,0,-4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
             <!--FromDate iterest-->
-            <Label  Grid.Row="17" Grid.ColumnSpan="3" Text="Date"/>
+            <Label Margin="0,0,0,0" Grid.Row="17" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}"/>
             <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInterest.FromDate}" />
 
             <!--Investment-->
-            <Label Grid.Row="19" Margin="0,0,0,-6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest}"
-            HorizontalTextAlignment="Start" HorizontalOptions="Start" />
-            <Entry Grid.Row="20" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Interest}" />
+            <Label Grid.Row="19" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Entry Grid.Row="20" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInterest.Interest}" >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
+                </Entry.Behaviors>
+
+            </Entry>
 
             <!--Skip save-->
             <!--<Button Grid.Row="22"  Grid.ColumnSpan="3" IsVisible="{Binding IsOnbordingMode}" Text="Skip" Command="{Binding SkipCommand}"/>-->

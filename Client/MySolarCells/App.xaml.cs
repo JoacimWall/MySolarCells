@@ -69,4 +69,52 @@ public partial class App : Application
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.InActive;
     }
+    //private void SetupAppColors()
+    //{
+    //    Dictionary<TmColors, Color> colorConfig = new Dictionary<TmColors, Color>
+    //    {
+    //        //{ TmColors.Primary800Color, Color.FromArgb("#451C69") },
+    //        //{ TmColors.Primary500Color, Color.FromArgb("#562483") },
+    //        //{ TmColors.Primary400Color, Color.FromArgb("#9D81BB") },
+    //        //{ TmColors.Primary200Color, Color.FromArgb("#F1EEF4") },
+    //        //{ TmColors.Primary100Color, Color.FromArgb("#F8F6FA") },
+    //        //{ TmColors.PrimaryAccentColor, Color.FromArgb("#F5E500") },
+
+    //        //{ TmColors.SignalGreenColor, Color.FromArgb("#2BDB8C") },
+    //        //{ TmColors.SignalYellowColor, Color.FromArgb("#F5E500") },
+    //        //{ TmColors.SignalRedColor, Color.FromArgb("#FF675C") },
+    //        //{ TmColors.SignalBlueColor, Color.FromArgb("#005EAB") },
+    //        //{ TmColors.SignalOrangeColor, Color.FromArgb("#F4A528") },
+
+    //        //Dessa är redan korrekt default
+    //        //colorConfig.Add(TmtColors.BlackColor, Color.FromArgb("#000000"));
+    //        //colorConfig.Add(TmtColors.WhiteColor, Color.FromArgb("#ffffff"));
+    //        //colorConfig.Add(TmtColors.SuccessColor, Color.FromArgb("#3D9642"));
+    //        //colorConfig.Add(TmtColors.TransparentColor, Color.FromRgba(0, 0, 0, 0));
+
+    //        //colorConfig.Add(TmtColors.Gray900Color, Color.FromArgb("#1A1A1A"));
+    //        //colorConfig.Add(TmtColors.Gray700Color, Color.FromArgb("#878787"));
+    //        //colorConfig.Add(TmtColors.Gray400Color, Color.FromArgb("#BBBBBB"));
+    //        //colorConfig.Add(TmtColors.Gray300Color, Color.FromArgb("#DEDEDE"));
+    //        //colorConfig.Add(TmtColors.Gray200Color, Color.FromArgb("#EAEAEA"));
+    //        //colorConfig.Add(TmtColors.Gray100Color, Color.FromArgb("#FAFAFA"));
+
+    //        //Ska dessa ligga med ska de då heta detta
+    //        //public static readonly Color Cyan500Color = Color.FromArgb("#19D5E5");
+    //        //public static readonly Color Red500Color = Color.FromArgb("#E11D16");
+    //        //public static readonly Color Gold500Color = Color.FromArgb("#BA9748");
+
+    //        ////----------------  Controls colors check TietoEvryMauiStyles.xaml  ----------------------//
+    //        //{ TmColors.TemplateTaskButtonTextColor, Color.FromArgb("#000000") },
+    //        //{ TmColors.StatusbarBackgroundColor, Color.FromArgb("#562483") },
+    //        //{ TmColors.StatusbarTextColor, Color.FromArgb("#ffffff") },
+    //        //{ TmColors.PageBackgroundColor, Color.FromArgb("#ffffff") },
+    //        //{ TmColors.DefaultTextColor, Color.FromArgb("#000000") },
+    //        //{ TmColors.TmButtonValidBackgroundColor, Color.FromArgb("#562483") },
+    //        //{ TmColors.TmButtonInValidBackgroundColor, Color.FromArgb("#F1EEF4") }
+    //    };
+
+    //    AppColors.Init(colorConfig);
+
+    //}
 }

@@ -46,9 +46,6 @@
   <data name="Production" xml:space="preserve">
     <value>Tuotanto</value>
   <comment>Need review</comment></data>
-  <data name="Grid_Supplier" xml:space="preserve">
-    <value>Verkon toimittaja</value>
-  <comment>Need review</comment></data>
   <data name="Save" xml:space="preserve">
     <value>Tallentaa</value>
   <comment>Need review</comment></data>
@@ -82,9 +79,6 @@
   <data name="Tibber_Guide_Text" xml:space="preserve">
     <value>Tarvitset yksityisen API-avaimesi käyttääksesi Tibberiä. Saat sen napsauttamalla alla olevaa painiketta ja kirjautumalla sisään.</value>
   <comment>Need review</comment></data>
-  <data name="Import_Data_From_Grid_Supplier" xml:space="preserve">
-    <value>Tuo tiedot verkon toimittajalta.</value>
-  <comment>Need review</comment></data>
   <data name="Saved_Rows_Amount" xml:space="preserve">
     <value>Tallennetut rivit {0}</value>
   <comment>Need review</comment></data>
@@ -96,9 +90,6 @@
   <comment>Need review</comment></data>
   <data name="My_Description" xml:space="preserve">
     <value>Minun kuvaukseni</value>
-  <comment>Need review</comment></data>
-  <data name="My_Investment_And_Loan" xml:space="preserve">
-    <value>Sijoitukseni ja lainani</value>
   <comment>Need review</comment></data>
   <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
     <value>Tälle päivälle ei ole näytettävää dataa</value>
@@ -190,17 +181,8 @@
   <data name="Export_To_Excel" xml:space="preserve">
     <value>Vie Exceliin</value>
   <comment>Need review</comment></data>
-  <data name="Grid_Electricity_Supplier" xml:space="preserve">
-    <value>Verkkosähkön toimittaja</value>
-  <comment>Need review</comment></data>
   <data name="Install_Year" xml:space="preserve">
     <value>Asennusvuosi</value>
-  <comment>Need review</comment></data>
-  <data name="Pick_The_Brand_Of_Your_Grid_Supplier" xml:space="preserve">
-    <value>Valitse verkkotoimittajasi merkki</value>
-  <comment>Need review</comment></data>
-  <data name="Pick_The_Grid_Supplier_Intro_Text" xml:space="preserve">
-    <value>Valitse verkkotoimittajasi merkki</value>
   <comment>Need review</comment></data>
   <data name="Username" xml:space="preserve">
     <value>Käyttäjätunnus</value>
@@ -384,5 +366,53 @@
   <comment>Need review</comment></data>
   <data name="Generating_Report_Please_Wait" xml:space="preserve">
     <value>Raporttia luodaan, ole hyvä ja odota</value>
+  <comment>Need review</comment></data>
+  <data name="Back" xml:space="preserve">
+    <value>Takaisin</value>
+  <comment>Need review</comment></data>
+  <data name="The_Login_Failed_Check_That_You_Entered_The_Correct_Information" xml:space="preserve">
+    <value>Kirjautuminen epäonnistui, tarkista, että annoit oikeat tiedot</value>
+  <comment>Need review</comment></data>
+  <data name="Tax_Reduction_Discription" xml:space="preserve">
+    <value>Veronalennus (tuotettu/kWh verkkoon)</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Tax_Comsumption" xml:space="preserve">
+    <value>Energiavero (kulutus)</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Factors" xml:space="preserve">
+    <value>Laskentatekijät</value>
+  <comment>Need review</comment></data>
+  <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
+    <value>Laskentatekijät aurinkokennojen tuotantoon liittyville kustannuksille ja tuloille.</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Installed_Panels_Kwh" xml:space="preserve">
+    <value>Asennetut paneelit yhteensä (kWh)</value>
+  <comment>Need review</comment></data>
+  <data name="Application_Version" xml:space="preserve">
+    <value>Sovellusversio</value>
+  <comment>Need review</comment></data>
+  <data name="Support_And_Feedback" xml:space="preserve">
+    <value>Tuki ja palaute</value>
+  <comment>Need review</comment></data>
+  <data name="Add" xml:space="preserve">
+    <value>Lisätä</value>
+  <comment>Need review</comment></data>
+  <data name="Interest_Saved" xml:space="preserve">
+    <value>Korot säästyivät</value>
+  <comment>Need review</comment></data>
+  <data name="Electricity_Supplier" xml:space="preserve">
+    <value>Sähkön toimittaja</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Electricity_Supplier" xml:space="preserve">
+    <value>Tuo tiedot sähköntoimittajalta.</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Brand_Of_Your_Electricity_Supplier" xml:space="preserve">
+    <value>Valitse sähköntoimittajasi merkki</value>
+  <comment>Need review</comment></data>
+  <data name="Pick_The_Electricity_Supplier_Intro_Text" xml:space="preserve">
+    <value>Valitse sähköntoimittajasi merkki</value>
+  <comment>Need review</comment></data>
+  <data name="Investment_And_Loan" xml:space="preserve">
+    <value>Investointi ja laina</value>
   <comment>Need review</comment></data>
 </root>

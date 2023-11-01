@@ -77,7 +77,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     private void AddInvestLon()
     {
-        InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.My_Investment_And_Loan, HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
+        InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.Investment_And_Loan, HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
         SelectedInvestmentAndloan = InvestmentAndLoans.Last();
 
     }

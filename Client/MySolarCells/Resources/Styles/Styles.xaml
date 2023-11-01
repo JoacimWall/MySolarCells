@@ -29,6 +29,11 @@
         <Setter Property="StrokeShape" Value="Rectangle"/>
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>
+     <Style x:Key="GridBasePage" TargetType="Grid">
+        <Setter Property="Margin" Value="16" />
+         <Setter Property="RowSpacing" Value="4" />
+         <Setter Property="ColumnSpacing" Value="4" />
+    </Style>
 
     <Style TargetType="BoxView">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />
@@ -129,6 +134,7 @@
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray400Color}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+         <Setter Property="Margin" Value="0,0,0,4"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -142,6 +148,12 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
+     <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="ValidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.BlackColor}, Dark={x:Static theming:AppColors.WhiteColor}}" />
+        </Style>
 
     <Style TargetType="Frame">
         <Setter Property="HasShadow" Value="False" />
@@ -171,7 +183,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Label">
+    <Style x:Key="LabelBaseStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
@@ -189,7 +201,12 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-
+    <Style x:Key="LabelEntryTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
+         <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="Margin" Value="0,0,0,-4" />
+         <Setter Property="FontSize" Value="13" />
+        
+    </Style>
     <Style TargetType="ListView">
         <Setter Property="SeparatorColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray400Color}}" />
         <Setter Property="RefreshControlColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />

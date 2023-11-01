@@ -24,7 +24,9 @@ public class ElectricitySupplierViewModel : BaseViewModel
                     break;
                 }
             }
-
+            SelecteddHome = home;
+            ApiKey = StringHelper.Decrypt(selecteddHome.ApiKey, AppConstants.Secretkey);
+            //TestConnection();
         }
 
         for (int i = DateTime.Now.Year; i > DateTime.Now.AddYears(-20).Year; i--)

@@ -59,7 +59,7 @@ public class TibberService : IGridSupplierInterface
 
         var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
         if (!result.WasSuccessful)
-            return new Result<GridSupplierLoginResponse>(result.ErrorMessage);
+            return new Result<GridSupplierLoginResponse>(result.ErrorMessage != null ? result.ErrorMessage : AppResources.The_Login_Failed_Check_That_You_Entered_The_Correct_Information );
         else
         {
             gridSupplierLoginResponse = new GridSupplierLoginResponse { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() };

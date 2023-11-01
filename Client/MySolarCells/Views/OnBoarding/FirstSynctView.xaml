@@ -9,56 +9,56 @@
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:FirstSyncViewModel">
-     <Shell.TitleView>
-        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Import_Data}" HorizontalTextAlignment="Center"/>
-            <!--<Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Import_Data}"  Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.WhiteColor}"  HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
-                
-                <Button Padding="4" Margin="2" IsVisible="{Binding ShowSiteNodePicker}" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="Save" BackgroundColor="Transparent" />
-            </Border>-->
+                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Back}" BackgroundColor="Transparent" ></Button>
+            </Border>
 
         </Grid>
 
     </Shell.TitleView>
-     <ScrollView>
-    <Grid RowSpacing="8" ColumnSpacing="4" Margin="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
-       
-        <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
+    <ScrollView>
+        <Grid Style="{StaticResource GridBasePage}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto">
+
+            <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17"
             Text="{x:Static trans:AppResources.First_Import_Intro_Text}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-        <Button Margin="0,16" Grid.Row="2" IsEnabled="{Binding StartbuttonEnable}" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Start}" Command="{Binding SyncCommand}"/>
+            <Button Margin="0,16" Grid.Row="2" IsEnabled="{Binding StartbuttonEnable}" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Start}" Command="{Binding SyncCommand}"/>
 
 
-        <!--  Nedan är de som visas när vi laddar upp boken till backend  -->
-        <Label Grid.Row="4"
+            <!--  Nedan är de som visas när vi laddar upp boken till backend  -->
+            <Label Grid.Row="4"
                        Grid.ColumnSpan="3"
                        Margin="0,32,0,0"
                        FontSize="21"
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center"
                        IsVisible="{Binding ShowProgressStatus}"
-                       
+                       Style="{StaticResource LabelBaseStyle}"
                        Text="{Binding ProgressStatus}" />
 
-        <Label Grid.Row="5"
+            <Label Grid.Row="5"
                        Grid.ColumnSpan="3"
                        Margin="0,8,0,16"
                        FontSize="17"
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center"
                        IsVisible="{Binding ShowProgressStatus}"
+                       Style="{StaticResource LabelBaseStyle}"
                        Text="{Binding ProgressSubStatus}" />
 
 
 
-        <!--  Progress  -->
-        <ctl:ProgressBar Grid.Row="6" Grid.ColumnSpan="3" Margin="16,16,16,16"
+            <!--  Progress  -->
+            <ctl:ProgressBar Grid.Row="6" Grid.ColumnSpan="3" Margin="0,16"
                                  AlternativeTextColor="{x:Static theming:AppColors.Primary500Color}"
                                  BarBackgroundColor="{x:Static theming:AppColors.Gray400Color}" 
                                  GradientEndColor="{x:Static theming:AppColors.Primary800Color}" 
@@ -71,14 +71,14 @@
                                  ShowProcentText="True"
                                            />
 
-        <!--  Cancel  -->
-        <!--<Button Grid.Row="7"
+            <!--  Cancel  -->
+            <!--<Button Grid.Row="7"
                                      Grid.ColumnSpan="3"
                                      Margin="15,10,15,0"
                                      Command="{Binding CancelCommand}"
                                      IsVisible="{Binding ShowProgressStatus}"
                                      Text="{x:Static trans:AppResources.Cancel}" />-->
 
-    </Grid>
-     </ScrollView>
+        </Grid>
+    </ScrollView>
 </views:BaseContentPage>

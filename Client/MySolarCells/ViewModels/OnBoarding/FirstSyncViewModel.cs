@@ -34,7 +34,7 @@ public class FirstSyncViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLoanDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus =  AppResources.Import_Data_From_Grid_Supplier;
+            ProgressStatus =  AppResources.Import_Data_From_Electricity_Supplier;
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount,"0");
             await Task.Delay(200);
             var result = await this.gridSupplierService.Sync(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);

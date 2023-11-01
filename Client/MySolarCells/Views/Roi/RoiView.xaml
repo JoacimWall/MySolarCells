@@ -7,6 +7,7 @@
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
+                        
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:RoiViewModel">
     <Shell.TitleView>
@@ -24,9 +25,9 @@
 
     </Shell.TitleView>
     <ScrollView>
-        <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+        <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
-            <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"
+            <control:DateNavigator Margin="0,8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"
                                GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}" RoiSimulate="{Binding RoiSimulate, Mode=TwoWay}" ShowRoiSimulate="True"/>
 
             <!--Title-->
@@ -50,6 +51,9 @@
                 <Label Text="{x:Static trans:AppResources.Consumption}"/>
                 <!--Balance_Production_Consumption-->
                 <Label Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
+
+
+
                 <!-- COSTS AND REVENUES-->
                 <Label  Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Costs_And_Rvenues}"/>
                 <!--TotalProductionSoldProfit-->
@@ -88,7 +92,7 @@
             </VerticalStackLayout >
             <!--Value-->
             <VerticalStackLayout Grid.Row="2" Grid.Column="1" >
-                <Label FontSize="17" FontAttributes="Bold" Text=" "/>
+                <Label FontSize="17"  Text=" "/>
                 <Label Text="{Binding RoiStats.ProductionSold}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.BatteryCharge}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.ProductionOwnUse}" HorizontalTextAlignment="End"/>
@@ -96,11 +100,12 @@
                 <Label Text="{Binding RoiStats.BatteryUsed}" HorizontalTextAlignment="End"/>
                 <BoxView Margin="0,4" HeightRequest="1" />
                 <!--SumProductionOwnUseAndBattery-->
-                <Label Text="{Binding RoiStats.SumAllProduction}" FontAttributes="Bold" HorizontalTextAlignment="End"/>
-                <Label Text="{Binding RoiStats.SumAllConsumption}" FontAttributes="Bold" HorizontalTextAlignment="End" />
-                <Label Text="{Binding RoiStats.BalanceProduction_Minus_Consumption}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                <Label Text="{Binding RoiStats.SumAllProduction}"  HorizontalTextAlignment="End"/>
+                <Label Text="{Binding RoiStats.SumAllConsumption}"  HorizontalTextAlignment="End" />
+                <Label Text="{Binding RoiStats.BalanceProduction_Minus_Consumption}"  HorizontalTextAlignment="End" />
 
-                <Label  Margin="0,16,0,0"  FontSize="17" FontAttributes="Bold" Text=" "/>
+                <!-- COSTS AND REVENUES-->
+                <Label  Margin="0,16,0,0"  FontSize="17"  Text=" "/>
                 <Label Text="{Binding RoiStats.ProductionSoldProfit}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.ProductionSoldGridCompensationProfit}" HorizontalTextAlignment="End" />
                 <Label Text="{Binding RoiStats.ProductionSoldTaxReductionProfit}" HorizontalTextAlignment="End"/>
@@ -116,7 +121,7 @@
                 <BoxView Margin="0,4" HeightRequest="1" />
                 <Label Text="{Binding RoiStats.SumAllProductionSoldAndSaved}" HorizontalTextAlignment="End"/>
                 <Label Text="{Binding RoiStats.SumPurchasedCost}" HorizontalTextAlignment="End"/>
-                <Label Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost}" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                <Label Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost}"  HorizontalTextAlignment="End" />
 
             </VerticalStackLayout>
 
