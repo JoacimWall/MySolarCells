@@ -378,4 +378,10 @@
   <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
     <value>Balanse (produksjon minus forbruk)</value>
   <comment>Need review</comment></data>
+  <data name="Battery" xml:space="preserve">
+    <value>Batteri</value>
+  <comment>Need review</comment></data>
+  <data name="Generating_Report_Please_Wait" xml:space="preserve">
+    <value>Genererer rapport, vennligst vent</value>
+  <comment>Need review</comment></data>
 </root>

@@ -23,7 +23,7 @@
 		<ApplicationId>com.walltech.mysolarcells.beta</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
-		<ApplicationVersion>8</ApplicationVersion>
+		<ApplicationVersion>9</ApplicationVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">25.0</SupportedOSPlatformVersion>
@@ -48,8 +48,8 @@
 		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.0-rc.2.9511" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.2.23480.1" />
@@ -69,7 +69,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Semibold.ttf" />
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" />
-		<EmbeddedResource Include="Resources\EmbeddedImages\smart_home_with_solar_panels.jpg" />
+		<EmbeddedResource Include="Resources\EmbeddedImages\house_with_solar_cells.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Condition=" '$(EnableDefaultEmbeddedResourceItems)' == 'true' " Update="Resources\Translations\AppResources.resx">
@@ -88,20 +88,6 @@
 	<!-- Build Properties must be defined within these property groups to ensure successful publishing
        to the Mac App Store. See: https://aka.ms/maui-publish-app-store#define-build-properties-in-your-project-file -->
 	<ItemGroup>
-		<None Remove="MultiLingualExtensionSettings.json" />
-		<None Remove="Resources\Fonts\mysolarcells.ttf" />
-		<None Remove="Resources\Images\money.svg" />
-		<None Remove="Resources\Images\dots.svg" />
-		<None Remove="Resources\Images\chart.svg" />
-		<None Remove="Platforms\Android\Resources\xml\" />
-		<None Remove="Platforms\Android\Resources\xml\provider_paths.xml" />
-		<None Remove="Services\GridSupplier\" />
-		<None Remove="Messages\" />
-		<None Remove="Converters\" />
-		<None Remove="Resources\EmbeddedImages\" />
-		<None Remove="Resources\EmbeddedImages\smart_home_with_solar_panels.jpg" />
-	</ItemGroup>
-	<ItemGroup>
 		<BundleResource Include="MultiLingualExtensionSettings.json" />
 		<BundleResource Include="Resources\Fonts\mysolarcells.ttf" />
 		<BundleResource Include="Resources\Images\money.svg" />
@@ -109,13 +95,6 @@
 		<BundleResource Include="Resources\Images\chart.svg" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Platforms\Android\Resources\xml\" />
-	  <Folder Include="Services\GridSupplier\" />
-	  <Folder Include="Messages\" />
-	  <Folder Include="Converters\" />
-	  <Folder Include="Resources\EmbeddedImages\" />
-	</ItemGroup>
 	<ItemGroup>
 	  <AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />
 	</ItemGroup>

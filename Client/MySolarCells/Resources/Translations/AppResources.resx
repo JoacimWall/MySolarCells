@@ -445,4 +445,10 @@
 <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
     <value>Balance (production minus consumption)</value>
   <comment>Need review</comment></data>
+<data name="Battery" xml:space="preserve">
+    <value>Battery</value>
+  <comment>Need review</comment></data>
+<data name="Generating_Report_Please_Wait" xml:space="preserve">
+    <value>Generating report please wait</value>
+  <comment>Need review</comment></data>
 </root>

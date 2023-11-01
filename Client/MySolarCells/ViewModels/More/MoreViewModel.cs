@@ -14,13 +14,15 @@ public class MoreViewModel : BaseViewModel
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
     public ICommand ShowCalcParametersCommand => new Command(async () => await ShowCalcParameters());
     public ICommand ElectricitySupplierCommand => new Command(async () => await ShowElectricitySupplier());
+    public ICommand ExportExcelCommand => new Command(async () => await ExportExcel(MySolarCellsGlobals.SelectedHome.HomeId));
+    public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
 
     private async Task ShowElectricitySupplier()
     {
         await GoToAsync(nameof(ElectricitySupplierView));
     }
 
-    public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
+   
 
     private async Task ShowInverterSettings()
     {
@@ -32,11 +34,11 @@ public class MoreViewModel : BaseViewModel
         await GoToAsync(nameof(EnergyCalculationParameterView));
     }
 
-    public ICommand ExportExcelCommand => new Command(async () => await ExportExcel(MySolarCellsGlobals.SelectedHome.HomeId));
-
+   
     private async Task<bool> ExportExcel(int homeId)
     {
-        using var dlg = DialogService.GetProgress("");
+        using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
+        await Task.Delay(200);
         using var dbContext = new MscDbContext();
         var result = await this.roiService.GenerateTotalPermonthReport();
 
@@ -327,7 +329,7 @@ public class MoreViewModel : BaseViewModel
     
     public string HomeImageUrl
     {
-        get => "MySolarCells.Resources.EmbeddedImages.smart_home_with_solar_panels.jpg";
+        get => "MySolarCells.Resources.EmbeddedImages.house_with_solar_cells.png";
         
     }
     public string ElectricitySupplierText

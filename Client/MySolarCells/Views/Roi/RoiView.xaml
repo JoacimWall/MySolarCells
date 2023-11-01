@@ -27,7 +27,7 @@
         <Grid Margin="8" ColumnSpacing="4" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
             <Label Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}" HorizontalTextAlignment="Center" FontSize="22"/>
             <control:DateNavigator Margin="8" Grid.Row="1" Grid.ColumnSpan="3" HorizontalOptions="End" ShowUnitCurrencySeletor="False"
-                               GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}" RoiSimulate="{Binding RoiSimulate, Mode=OneWayToSource}" ShowRoiSimulate="True"/>
+                               GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}" RoiSimulate="{Binding RoiSimulate, Mode=TwoWay}" ShowRoiSimulate="True"/>
 
             <!--Title-->
             <VerticalStackLayout Grid.Row="2" Grid.Column="0">

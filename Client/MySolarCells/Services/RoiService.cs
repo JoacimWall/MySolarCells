@@ -314,11 +314,17 @@ public class RoiService : IRoiService
 }
 public class RoiSimulate: ObservableObject
 {
+    public Color ShowSimulateBackgrundColor { get { return DoSimulate ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+
     private bool doSimulate;
     public bool DoSimulate
     {
         get => doSimulate;
-        set { SetProperty(ref doSimulate, value);}
+        set
+        {
+            SetProperty(ref doSimulate, value);
+            OnPropertyChanged(nameof(ShowSimulateBackgrundColor));
+        }
     }
 
     private bool addBattery;

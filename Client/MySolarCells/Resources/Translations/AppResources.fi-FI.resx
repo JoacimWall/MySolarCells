@@ -379,4 +379,10 @@
   <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
     <value>Saldo (tuotanto miinus kulutus)</value>
   <comment>Need review</comment></data>
+  <data name="Battery" xml:space="preserve">
+    <value>Akku</value>
+  <comment>Need review</comment></data>
+  <data name="Generating_Report_Please_Wait" xml:space="preserve">
+    <value>Raporttia luodaan, ole hyvä ja odota</value>
+  <comment>Need review</comment></data>
 </root>

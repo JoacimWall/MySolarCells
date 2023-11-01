@@ -112,6 +112,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Battery.
+        /// </summary>
+        public static string Battery {
+            get {
+                return ResourceManager.GetString("Battery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Battery charge.
         /// </summary>
         public static string Battery_Charge {
@@ -306,6 +315,15 @@ namespace MySolarCells.Resources.Translations {
         public static string From_Date {
             get {
                 return ResourceManager.GetString("From_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating report please wait.
+        /// </summary>
+        public static string Generating_Report_Please_Wait {
+            get {
+                return ResourceManager.GetString("Generating_Report_Please_Wait", resourceCulture);
             }
         }
         

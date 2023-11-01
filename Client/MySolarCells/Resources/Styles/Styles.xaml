@@ -10,11 +10,12 @@
     <!--  Converters  -->
     <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     <toolkit:TextCaseConverter x:Key="TextCaseConverter" />
-     <!--  Local converters  -->
-     <converters:ImageHeightFromDisplayWidthConverter x:Key="ImageHeightFromDisplayWidthConverter" />
-     <converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter" />
-    
-     <Style TargetType="ActivityIndicator">
+    <toolkit:DoubleToIntConverter x:Key="DoubleToIntConverter" />
+    <!--  Local converters  -->
+    <converters:ImageHeightFromDisplayWidthConverter x:Key="ImageHeightFromDisplayWidthConverter" />
+    <converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter" />
+
+    <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray400Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
     </Style>
 
