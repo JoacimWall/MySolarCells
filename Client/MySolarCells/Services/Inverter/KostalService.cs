@@ -198,48 +198,7 @@ public class KostalService : IInverterServiceInterface
         }
 
 
-        // old code
-
-        //var dateMissingValue = dbContext.Energy.Where(x => x.InverterTypProductionOwnUse == (int)InverterTyp.Unknown);
-        //string processingDateFrom;
-        //string processingDateTo;
-        //string currentProcessDate = string.Empty;
-        //DeviceProductionResponse dayProduction = new DeviceProductionResponse();
-        //foreach (var hourValue in dateMissingValue)
-        //{
-        //    //hämtar ut intervall
-        //    processingDateFrom = new DateTime(hourValue.Timestamp.Year, hourValue.Timestamp.Month, hourValue.Timestamp.Day).ToString("yyyy-MM-dd");
-        //    processingDateTo = new DateTime(hourValue.Timestamp.Year, hourValue.Timestamp.Month, hourValue.Timestamp.Day).AddDays(1).ToString("yyyy-MM-dd");
-        //    //Kollar ifall vi ska hämta 24 timmar till
-        //    if (currentProcessDate != processingDateFrom)
-        //    {
-        //        currentProcessDate = processingDateFrom;
-        //        //get values from Kostal 
-        //        //FETCH_DEVICE_DATA
-        //        var deviceIds = new List<int>();
-        //        deviceIds.Add(Convert.ToInt32(inverter.SubSystemEntityId));
-        //        var dataTypes = new List<string>();
-        //        dataTypes.Add("ac_hourly_yield");
-        //        var dataSelector = new DateSelector { from = processingDateFrom, to = processingDateTo, fromTimeOfDay = "00:00:00", toTimeOfDay = "23:59:59" };
-        //        query = "query FETCH_DEVICE_DATA($deviceIds: [Long!]!, $dataTypes: [String!]!, $dateSelector: TimeSpanSelectorInput!, $padWithNull: Boolean = true, $byTimeInterval: AggregationInterval!, $byDevice: Boolean = true, $statistic: AggregationStatistic = SUM) {  deviceData(deviceIds: $deviceIds, dataTypes: $dataTypes, dateSelector: $dateSelector, padWithNull: $padWithNull) {    aggregate(byDevice: $byDevice, byTimeInterval: $byTimeInterval, statistic: $statistic) {      timeSeries {        points {          timestamp          value          __typename        }        __typename      }      __typename    }    __typename  }}";
-        //        graphQlRequest = new GraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new ProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
-        //        var resultDay = await this.restClient.ExecutePostAsync<DeviceProductionResponse>(string.Empty, graphQlRequest);
-        //        dayProduction = resultDay.Model;
-        //    }
-        //    var prod = dayProduction.data.deviceData.aggregate.timeSeries.First().points.FirstOrDefault(x => x.timestamp == hourValue.Timestamp);
-        //    if (prod.value.HasValue && prod.value.Value > 0)
-        //    {
-        //        hourValue.ProductionOwnUse = (prod.value.Value / 1000) - hourValue.ProductionSold;
-        //        hourValue.ProductionOwnUseProfit = hourValue.ProductionOwnUse * hourValue.UnitPriceBuy;
-
-        //    }
-        //    hourValue.InverterTypProductionOwnUse = (int)InverterTyp.Kostal;
-        //    await dbContext.SaveChangesAsync();
-
-        //}
-
-
-
+        
     }
 }
 //Response

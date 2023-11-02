@@ -23,6 +23,20 @@ public static class DateHelper
         result.ThisYearhEnd = new DateTime(result.ThisMonthStart.Year, 12, 31).AddDays(1);
         return result;
     }
+    private static readonly DateTime Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    /// <summary>Get extra long current timestamp</summary>
+    public static long DateTimeToMillis(DateTime date)
+    {
+        return (long)((date - Jan1St1970).TotalMilliseconds);
+    }
+    public static DateTime MillisToDateTime(long milis)
+    {
+        //double ticks = double.Parse(milis);
+        TimeSpan time = TimeSpan.FromMilliseconds(milis);
+        DateTime startdate = Jan1St1970 + time;
+        return startdate;
+    }
+    
 }
 public class RelatedDateResult
 {
@@ -41,3 +55,4 @@ public class RelatedDateResult
 
 
 }
+

@@ -10,7 +10,9 @@ public class FirstSyncViewModel : BaseViewModel
         using var dbContext = new MscDbContext();
         this.gridSupplierService = ServiceHelper.GetGridSupplierService(dbContext.Home.First().ElectricitySupplier); ;
         this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
-
+        //DateTime dateTime = new DateTime(2023, 11, 1);
+        //long milliseconds = DateHelper.DateTimeToMillis(dateTime);
+        //DateTime dattest = DateHelper.MillisToDateTime(milliseconds);
     }
 
     public ICommand SyncCommand => new Command(async () => await Sync());

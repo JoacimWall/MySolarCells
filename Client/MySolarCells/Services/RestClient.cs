@@ -9,6 +9,7 @@ namespace MySolarCells.Services;
 public interface IRestClient
 {
     Task<Result<T>> ExecutePostAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Tuple<Result<T>, HttpResponseHeaders>> ExecutePostReturnResponseHeadersAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Result<bool>> ExecutePostBoolAsync(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Result<T>> ExecuteGetAsync<T>(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Result<bool>> ExecuteDeleteBoolAsync(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
@@ -326,6 +327,94 @@ public class RestClient : IRestClient
             return new Result<T>(ex.Message);
         }
     }
+    public async Task<Tuple<Result<T>, HttpResponseHeaders>> ExecutePostReturnResponseHeadersAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
+    {
+        try
+        {
+            //This so only run this when needded 
+            if (!initIsDone)
+                ReInit();
+            if (InternetConnectionHelper.InternetAccess())
+            {
+                StringContent content = new StringContent("");
+                if (data != null) //, Encoding.UTF8, "application/json")
+                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+                if (parameters != null)
+                    quary = AddParamters(quary, parameters);
+
+                //Logger
+                DateTime logTime = DateTime.Now;
+
+
+                var result = await this.client.PostAsync(quary, content).ConfigureAwait(false);
+
+                if (this.logTimeToDebugWindows)
+                    LogExecuteTime(logTime, quary);
+
+                using (var stream = await result.Content.ReadAsStreamAsync())
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var resultmodel = new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
+                        return new Tuple<Result<T>, HttpResponseHeaders>(resultmodel, result.Headers);
+                        
+                    }
+                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                       
+                        if (autoLogInOnUnauthorized)
+                        {
+                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
+                            var resultLogin = await generic.SilentLogin(true);
+                            if (resultLogin)
+                                return await ExecutePostReturnResponseHeadersAsync<T>(quary, data, null, false);
+                        }
+                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("User_Need_To_Log_In_Again"),null);
+                    }
+                    else if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("Current_API_Not_Found_On_Server"), null);
+                    }
+                    else if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    {
+                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error"), null);
+                       
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var resultmodel = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(resultmodel), null);
+                           
+                        }
+                        catch (Exception ex)
+                        {
+                            var logdic = new Dictionary<string, string>();
+                            logdic.Add("Info", "Error in ExecutePostAsync");
+                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
+                            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result), null);
+                        }
+                        
+                    }
+                }
+
+
+            }
+            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("No_Internet"), null);
+           
+        }
+        catch (Exception ex)
+        {
+            var logdic = new Dictionary<string, string>();
+            logdic.Add("Info", "Error in ExecutePostAsync");
+            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
+            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(ex.Message), null);
+         
+        }
+
+    }
     public async Task<Result<T>> ExecutePostAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
     {
         try
@@ -356,10 +445,11 @@ public class RestClient : IRestClient
                     if (result.IsSuccessStatusCode)
                     {
                         return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
+
                     }
                     else if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                       
+
                         if (autoLogInOnUnauthorized)
                         {
                             var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
@@ -390,7 +480,7 @@ public class RestClient : IRestClient
                             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                             return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
                         }
-                        
+
                     }
                 }
 
@@ -407,6 +497,7 @@ public class RestClient : IRestClient
         }
 
     }
+
     public async Task<Result<bool>> ExecutePostBoolAsync(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
     {
         try
