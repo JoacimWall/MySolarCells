@@ -487,4 +487,10 @@
 <data name="Add" xml:space="preserve">
     <value>Add</value>
   <comment>Need review</comment></data>
+<data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More" xml:space="preserve">
+    <value>Importing data from your inverter ended as it only allows {0} days of sync per day. You now have data up to {1}</value>
+<comment>Need review</comment></data>
+<data name="Import_Of_Production_Done" xml:space="preserve">
+    <value>Import of production done</value>
+  <comment>Need review</comment></data>
 </root>

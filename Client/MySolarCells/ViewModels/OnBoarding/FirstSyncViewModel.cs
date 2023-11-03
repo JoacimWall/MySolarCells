@@ -71,12 +71,19 @@ public class FirstSyncViewModel : BaseViewModel
                CalculateProgress(currentDay, totalhoursInv);
            });
             var result = await this.inverterService.Sync(inverter.FromDate, progress, 0);
-            if (!result)
+            if (!result.WasSuccessful)
             {
+                if (result.Model != null && !string.IsNullOrEmpty(result.Model.Message))
+                    await DialogService.ShowAlertAsync(result.Model.Message, AppResources.My_Solar_Cells, AppResources.Ok);
+
                 await DialogService.ShowAlertAsync(AppResources.Error_Import_Data_From_Inverter, AppResources.My_Solar_Cells, AppResources.Ok);
+
             }
             else
             {
+                if (result.Model != null && !string.IsNullOrEmpty(result.Model.Message))
+                    await DialogService.ShowAlertAsync(result.Model.Message, AppResources.My_Solar_Cells, AppResources.Ok);
+
                 SettingsService.OnboardingStatus = OnboardingStatusEnum.OnboardingDone;
                 App.Current.MainPage = new AppShell();
             }

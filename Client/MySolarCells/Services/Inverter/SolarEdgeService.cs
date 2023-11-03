@@ -59,7 +59,7 @@ public class SolarEdgeService : IInverterServiceInterface
     }
 
     
-    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
+    public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
         using var dbContext = new MscDbContext();
@@ -253,15 +253,19 @@ public class SolarEdgeService : IInverterServiceInterface
                 await dbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
-            return true;
+            
         }
         catch (Exception ex)
         {
-            return false;
+            return new Result<DataSyncResponse>(ex.Message);
         }
 
 
-        return true;
+        return new Result<DataSyncResponse>(new DataSyncResponse
+        {
+            SyncState = DataSyncState.ProductionSync,
+            Message = AppResources.Import_Of_Production_Done
+        }, true);
 
 
 

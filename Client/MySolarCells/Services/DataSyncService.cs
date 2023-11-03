@@ -66,8 +66,11 @@ public class DataSyncService : IDataSyncService
             CalculateProgress(currentDay, totalhoursInv);
         });
         var resultInverter = await this.inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
-        if (!resultInverter)
+        if (!resultInverter.WasSuccessful)
         {
+            if (resultInverter.Model != null && string.IsNullOrEmpty( resultInverter.Model.Message))
+                return new Result<BoolModel>(resultInverter.Model.Message);
+
             return new Result<BoolModel>("Error import solar own use and calculate profit");
          
         }

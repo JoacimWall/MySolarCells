@@ -64,7 +64,7 @@ public class RestClient : IRestClient
                 client.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
 
-        
+
 
         this.initIsDone = true;
     }
@@ -72,11 +72,11 @@ public class RestClient : IRestClient
     {
         try
         {
-                foreach (var header in defaultRequestHeaders)
-                {
-                    this.client.DefaultRequestHeaders.Remove(header.Key);
-                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
+            foreach (var header in defaultRequestHeaders)
+            {
+                this.client.DefaultRequestHeaders.Remove(header.Key);
+                client.DefaultRequestHeaders.Add(header.Key, header.Value);
+            }
             return new Result<bool>(true);
         }
         catch (Exception e)
@@ -121,12 +121,12 @@ public class RestClient : IRestClient
                 using (var stream = await result.Content.ReadAsStreamAsync())
                 {
                     if (result.IsSuccessStatusCode)
-                    { 
+                    {
                         if (typeof(T).Name == "Boolean")
                         {
                             return new Result<T>(true);
                         }
-                         else if (typeof(T) == new BoolModel().GetType())
+                        else if (typeof(T) == new BoolModel().GetType())
                         {
                             var answer = new BoolModel { ApiResponse = await JsonSerializer.DeserializeAsync<bool>(stream, jsonOptions) };
                             //"rememberMe": true
@@ -169,7 +169,7 @@ public class RestClient : IRestClient
                             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                             return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
                         }
-                        
+
                     }
                 }
 
@@ -240,7 +240,7 @@ public class RestClient : IRestClient
                             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                             return new Result<bool>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
                         }
-                       
+
                     }
                 }
 
@@ -358,11 +358,11 @@ public class RestClient : IRestClient
                     {
                         var resultmodel = new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
                         return new Tuple<Result<T>, HttpResponseHeaders>(resultmodel, result.Headers);
-                        
+
                     }
                     else if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                       
+
                         if (autoLogInOnUnauthorized)
                         {
                             var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
@@ -370,7 +370,7 @@ public class RestClient : IRestClient
                             if (resultLogin)
                                 return await ExecutePostReturnResponseHeadersAsync<T>(quary, data, null, false);
                         }
-                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("User_Need_To_Log_In_Again"),null);
+                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("User_Need_To_Log_In_Again"), null);
                     }
                     else if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
@@ -379,7 +379,7 @@ public class RestClient : IRestClient
                     else if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
                     {
                         return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error"), null);
-                       
+
                     }
                     else
                     {
@@ -387,7 +387,7 @@ public class RestClient : IRestClient
                         {
                             var resultmodel = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
                             return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(resultmodel), null);
-                           
+
                         }
                         catch (Exception ex)
                         {
@@ -396,14 +396,14 @@ public class RestClient : IRestClient
                             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                             return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result), null);
                         }
-                        
+
                     }
                 }
 
 
             }
             return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("No_Internet"), null);
-           
+
         }
         catch (Exception ex)
         {
@@ -411,7 +411,7 @@ public class RestClient : IRestClient
             logdic.Add("Info", "Error in ExecutePostAsync");
             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
             return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(ex.Message), null);
-         
+
         }
 
     }
@@ -444,7 +444,13 @@ public class RestClient : IRestClient
                 {
                     if (result.IsSuccessStatusCode)
                     {
-                        return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
+
+                        if (typeof(T) == typeof(string))
+                            return new Result<T>(result.Content.ReadAsStringAsync().Result);
+                        else
+                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
+
+
 
                     }
                     else if (result.StatusCode == HttpStatusCode.Unauthorized)
@@ -531,7 +537,7 @@ public class RestClient : IRestClient
                     }
                     else if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                     
+
                         if (autoLogInOnUnauthorized)
                         {
                             var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
@@ -562,7 +568,7 @@ public class RestClient : IRestClient
                             MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                             return new Result<bool>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
                         }
-                        
+
                     }
                 }
 
@@ -608,10 +614,10 @@ public class RestClient : IRestClient
                         LogExecuteTime(logTime, quary);
 
                     using (var stream = await result.Content.ReadAsStreamAsync())
-                                       {
+                    {
                         if (result.IsSuccessStatusCode)
                         {
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream,jsonOptions));
+                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
                         }
                         else if (result.StatusCode == HttpStatusCode.Unauthorized)
                         {
@@ -645,7 +651,7 @@ public class RestClient : IRestClient
                                 MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
                                 return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
                             }
-                            
+
                         }
                     }
                 }
@@ -676,7 +682,7 @@ public class RestClient : IRestClient
     //    return true;
     //}
 
-    
+
     #endregion
     #region Private
     private string AddParamters(string quary, Dictionary<string, string> parameters)
@@ -740,5 +746,5 @@ public class ApiSettings
     public string BaseUrl { get; set; }
     public Dictionary<string, string> defaultRequestHeaders { get; set; }
     public string Enviroment { get; set; }
- 
+
 }

@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Acr.UserDialogs;
+using Syncfusion.XlsIO.FormatParser.FormatTokens;
 using Syncfusion.XlsIO.Parser.Biff_Records.MsoDrawing;
 
 namespace MySolarCells.Services.Inverter;
@@ -45,12 +48,12 @@ public class HuaweiService : IInverterServiceInterface
         var body = new HuaweiLoginRequest { userName = userName.Trim(), systemCode = password.Trim() };
         var loginResult = await this.restClient.ExecutePostReturnResponseHeadersAsync<HuaweiLoginResponse>("/thirdData/login", body);
         if (!loginResult.Item1.WasSuccessful || !loginResult.Item1.Model.success)
-            return new Result<InverterLoginResponse>(loginResult.Item1.ErrorMessage == null ? loginResult.Item1.Model.message.ToString():loginResult.Item1.ErrorMessage);
+            return new Result<InverterLoginResponse>(loginResult.Item1.ErrorMessage == null ? loginResult.Item1.Model.message.ToString() : loginResult.Item1.ErrorMessage);
         else
         {
             this.inverterLoginResponse = new InverterLoginResponse
             {
-                token = loginResult.Item2.FirstOrDefault(x => x.Key=="xsrf-token").Value.First().ToString(),
+                token = loginResult.Item2.FirstOrDefault(x => x.Key == "xsrf-token").Value.First().ToString(),
                 expiresIn = 0,
                 tokenType = "",
             };
@@ -85,7 +88,7 @@ public class HuaweiService : IInverterServiceInterface
     }
     public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
-        HuaweiDevListRequest body = new HuaweiDevListRequest {  stationCodes = inverterSite.Id };
+        HuaweiDevListRequest body = new HuaweiDevListRequest { stationCodes = inverterSite.Id };
         var resultDevice = await this.restClient.ExecutePostAsync<HuaweiDevicesResponse>("/thirdData/getDevList", body);
         if (!resultDevice.WasSuccessful || !resultDevice.Model.success)
             return new Result<GetInverterResponse>(resultDevice.ErrorMessage == null ? resultDevice.Model.message.ToString() : resultDevice.ErrorMessage);
@@ -102,9 +105,9 @@ public class HuaweiService : IInverterServiceInterface
         }
         return new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Id, Name = inverterSite.InverterName });
     }
-    
 
-    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
+
+    public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
         using var dbContext = new MscDbContext();
@@ -118,13 +121,13 @@ public class HuaweiService : IInverterServiceInterface
 
 
             int batch100 = 0;
-            
+
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
             List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
             var datehelp = DateHelper.GetRelatedDates(DateTime.Now);
             DateTime end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             DateTime nextStart = new DateTime();
-
+            start = new DateTime(start.Year, start.Month, start.Day);
             HuaweiProductionResponse dayProduction = new HuaweiProductionResponse();
 
             while (start < end)
@@ -134,23 +137,40 @@ public class HuaweiService : IInverterServiceInterface
                 nextStart = start.AddDays(1);
                 var body = new HuaweiProductioRequest { stationCodes = inverter.SubSystemEntityId, collectTime = datemillis };
                 var resultDay = await this.restClient.ExecutePostAsync<HuaweiProductionResponse>("/thirdData/getKpiStationHour", body);
+
+
+                //Result<HuaweiProductionResponse> resultDay = new Result<HuaweiProductionResponse>("sdasd");
+
                 if (!resultDay.WasSuccessful || !resultDay.Model.success)
                 {
                     if (resultDay.Model.failCode == 407)
-                        return true;
+                    {
+                        return new Result<DataSyncResponse>(new DataSyncResponse
+                        {
+                            SyncState = DataSyncState.ProductionSync,
+                            Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More, "24", start.ToShortDateString())
+                        });
+                    }
+                    //error
+                    return new Result<DataSyncResponse>(new DataSyncResponse
+                    {
+                        SyncState = DataSyncState.ProductionSync,
+                        Message = resultDay.ErrorMessage == null ? resultDay.Model.message.ToString() : resultDay.ErrorMessage
+                    }, false);
 
-                    return false;
-                   
                 }
+
+
+
                 dayProduction = resultDay.Model;
                 List<HuaweiPoint> listPoints = new List<HuaweiPoint>();
-                var dataList =  JsonSerializer.Deserialize<List<HuaweiProductionData>>(resultDay.Model.data, jsonOptions);
-               
-                foreach (var item in dataList)
+                //var dataList = JsonSerializer.Deserialize<List<HuaweiProductionData>>(resultDay.Model.data, jsonOptions);
+
+                foreach (var item in dayProduction.data)
                 {
                     listPoints.Add(new HuaweiPoint { timestamp = DateHelper.MillisToDateTime(item.collectTime.Value), value = item.dataItemMap.inverter_power, __typename = "totalprod" });
                 }
-               
+
                 var producedI = listPoints.Count;
 
                 for (int i = 0; i < producedI; i++)
@@ -201,18 +221,22 @@ public class HuaweiService : IInverterServiceInterface
                 await dbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
-            return true;
+            
         }
         catch (Exception ex)
         {
-            return false;
+            return new Result<DataSyncResponse>(ex.Message);
         }
 
 
-        return true;
+        return new Result<DataSyncResponse>(new DataSyncResponse
+        {
+            SyncState = DataSyncState.ProductionSync,
+            Message = AppResources.Import_Of_Production_Done 
+        }, true);
 
 
-      
+
     }
 }
 //Response
@@ -310,8 +334,9 @@ public class HuaweiProductionData
 
 public class HuaweiProductionResponse
 {
-    //List<HuaweiProductionData>
-    public string data { get; set; }
+    [JsonPropertyName("data")]
+    [JsonConverter(typeof(SingleOrArrayConverter<HuaweiProductionData>))]
+    public List<HuaweiProductionData> data { get; set; }
     public int failCode { get; set; }
     public object message { get; set; }
     //public Params @params { get; set; }
@@ -353,6 +378,150 @@ public class HuaweiPoint
 }
 
 
+public class SingleOrArrayConverter<TItem> : SingleOrArrayConverter<List<TItem>, TItem>
+{
+    public SingleOrArrayConverter() : this(true) { }
+    public SingleOrArrayConverter(bool canWrite) : base(canWrite) { }
+}
+
+public class SingleOrArrayConverterFactory : JsonConverterFactory
+{
+    public bool CanWrite { get; }
+
+    public SingleOrArrayConverterFactory() : this(true) { }
+
+    public SingleOrArrayConverterFactory(bool canWrite) => CanWrite = canWrite;
+
+    public override bool CanConvert(Type typeToConvert)
+    {
+        var itemType = GetItemType(typeToConvert);
+        if (itemType == null)
+            return false;
+        if (itemType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(itemType))
+            return false;
+        if (typeToConvert.GetConstructor(Type.EmptyTypes) == null || typeToConvert.IsValueType)
+            return false;
+        return true;
+    }
+
+    public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+    {
+        var itemType = GetItemType(typeToConvert);
+        var converterType = typeof(SingleOrArrayConverter<,>).MakeGenericType(typeToConvert, itemType);
+        return (JsonConverter)Activator.CreateInstance(converterType, new object[] { CanWrite });
+    }
+
+    static Type GetItemType(Type type)
+    {
+        // Quick reject for performance
+        if (type.IsPrimitive || type.IsArray || type == typeof(string))
+            return null;
+        while (type != null)
+        {
+            if (type.IsGenericType)
+            {
+                var genType = type.GetGenericTypeDefinition();
+                if (genType == typeof(List<>))
+                    return type.GetGenericArguments()[0];
+                // Add here other generic collection types as required, e.g. HashSet<> or ObservableCollection<> or etc.
+            }
+            type = type.BaseType;
+        }
+        return null;
+    }
+}
+
+public class SingleOrArrayConverter<TCollection, TItem> : JsonConverter<TCollection> where TCollection : class, ICollection<TItem>, new()
+{
+    public SingleOrArrayConverter() : this(true) { }
+    public SingleOrArrayConverter(bool canWrite) => CanWrite = canWrite;
+
+    public bool CanWrite { get; }
+
+    public override TCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        switch (reader.TokenType)
+        {
+            case JsonTokenType.Null:
+                return null;
+            case JsonTokenType.StartArray:
+                var list = new TCollection();
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonTokenType.EndArray)
+                        break;
+                    list.Add(JsonSerializer.Deserialize<TItem>(ref reader, options));
+                }
+                return list;
+            default:
+                return null; //new TCollection { JsonSerializer.Deserialize<TItem>(ref reader, options) };
+        }
+    }
+
+    public override void Write(Utf8JsonWriter writer, TCollection value, JsonSerializerOptions options)
+    {
+        if (CanWrite && value.Count == 1)
+        {
+            JsonSerializer.Serialize(writer, value.First(), options);
+        }
+        else
+        {
+            writer.WriteStartArray();
+            foreach (var item in value)
+                JsonSerializer.Serialize(writer, item, options);
+            writer.WriteEndArray();
+        }
+    }
+}
+//public class SingleOrArrayConverter<T> : JsonConverter<string>
+//{
+//    //public override bool CanConvert(Type objectType)
+//    //{
+//    //    return (objectType == typeof(List<T>));
+//    //}
+
+//    //public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+//    //{
+//    //    JToken token = JToken.Load(reader);
+//    //    if (token.Type == JTokenType.Array)
+//    //    {
+//    //        return token.ToObject<List<T>>();
+//    //    }
+//    //    if (token.Type == JTokenType.Null)
+//    //    {
+//    //        return null;
+//    //    }
+//    //    return new List<T> { token.ToObject<T>() };
+//    //}
+//    //public override bool CanWrite
+//    //{
+//    //    get { return false; }
+//    //}
+
+//    //public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+//    //{
+//    //    throw new NotImplementedException();
+//    //}
+
+//    public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+//    {
+//        JToken token = JToken.Load(reader);
+//        if (token.Type == JTokenType.Array)
+//        {
+//            return token.ToObject<List<T>>();
+//        }
+//        if (token.Type == JTokenType.Null)
+//        {
+//            return null;
+//        }
+//        return new List<T> { token.ToObject<T>() };
+//    }
+
+//    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}
 
 
 

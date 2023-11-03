@@ -436,6 +436,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import of production done.
+        /// </summary>
+        public static string Import_Of_Production_Done {
+            get {
+                return ResourceManager.GetString("Import_Of_Production_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import only spot prices.
         /// </summary>
         public static string Import_Only_Spot_Prices {
@@ -450,6 +459,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Import_Only_Spot_Prices_Desc {
             get {
                 return ResourceManager.GetString("Import_Only_Spot_Prices_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing data from your inverter ended as it only allows {0} days of sync per day. You now have data up to {1}.
+        /// </summary>
+        public static string Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More {
+            get {
+                return ResourceManager.GetString("Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More", resourceCulture);
             }
         }
         

@@ -47,6 +47,11 @@
 		<!--DEBUG ON SIMULATOR-->
 		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
 	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
+		<RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+		<!--<SelfContained>true</SelfContained>-->
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
