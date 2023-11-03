@@ -13,6 +13,10 @@ public class EnergyViewModel : BaseViewModel
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
+
+        DateTime dateTime = new DateTime(2023, 4, 8);
+        long milliseconds = DateHelper.DateTimeToMillis(dateTime);
+        DateTime dattest = DateHelper.MillisToDateTime(1680926400000);
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());

@@ -27,14 +27,14 @@ public static class DateHelper
     /// <summary>Get extra long current timestamp</summary>
     public static long DateTimeToMillis(DateTime date)
     {
-        return (long)((date - Jan1St1970).TotalMilliseconds);
+        return (long)((date.ToUniversalTime() - Jan1St1970).TotalMilliseconds);
     }
     public static DateTime MillisToDateTime(long milis)
     {
         //double ticks = double.Parse(milis);
         TimeSpan time = TimeSpan.FromMilliseconds(milis);
         DateTime startdate = Jan1St1970 + time;
-        return startdate;
+        return startdate.ToLocalTime();
     }
     
 }

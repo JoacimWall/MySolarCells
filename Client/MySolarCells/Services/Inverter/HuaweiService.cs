@@ -129,7 +129,7 @@ public class HuaweiService : IInverterServiceInterface
             DateTime nextStart = new DateTime();
             start = new DateTime(start.Year, start.Month, start.Day);
             HuaweiProductionResponse dayProduction = new HuaweiProductionResponse();
-
+            int countApiRequests = 0;
             while (start < end)
             {
                 //Get 24 hours per request
@@ -145,11 +145,13 @@ public class HuaweiService : IInverterServiceInterface
                 {
                     if (resultDay.Model.failCode == 407)
                     {
+                        MySolarCellsGlobals.ConsoleWriteLineDebug("Antal Huawei " + countApiRequests.ToString());
                         return new Result<DataSyncResponse>(new DataSyncResponse
                         {
                             SyncState = DataSyncState.ProductionSync,
                             Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More, "24", start.ToShortDateString())
-                        });
+                            
+                        }); 
                     }
                     //error
                     return new Result<DataSyncResponse>(new DataSyncResponse
@@ -159,7 +161,7 @@ public class HuaweiService : IInverterServiceInterface
                     }, false);
 
                 }
-
+                countApiRequests ++;
 
 
                 dayProduction = resultDay.Model;
@@ -182,6 +184,9 @@ public class HuaweiService : IInverterServiceInterface
                     {
                         if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
                         {
+                            if ((listPoints[i].value.Value - energyExist.ProductionSold) < 0)
+                                MySolarCellsGlobals.ConsoleWriteLineDebug("minus prod");
+
                             energyExist.ProductionOwnUse = Convert.ToDouble(listPoints[i].value.Value - energyExist.ProductionSold);
                             //Only add if price over zero
                             if (energyExist.UnitPriceBuy > 0)
