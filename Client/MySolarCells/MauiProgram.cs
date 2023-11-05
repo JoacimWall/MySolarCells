@@ -1,19 +1,26 @@
 ﻿namespace MySolarCells;
 
 using CommunityToolkit.Maui;
+using MySolarCells.Jobs;
+using Shiny;
+using Shiny.Jobs;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
-
 public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
+        builder.Services.AddDbContext<MscDbContext>(
+            options => options.UseSqlite($"Filename={GetDataBasePath()}", x => x.MigrationsAssembly(nameof(MySolarCellsSQLite))));
+        
+
+        builder
+            .UseMauiApp<App>()
             .ConfigureSyncfusionCore()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
+            .UseShiny()
             .ConfigureServices()
             .ConfigureViewModels()
             .ConfigureViews()
@@ -24,8 +31,24 @@ public static class MauiProgram
                 fonts.AddFont("mysolarcells.ttf", "AppIconsFont");
             });
 
+      
+       
+       
+        var job = new JobInfo(
+                  "DalySync",
+                  typeof(JobDalySync),
+                  BatteryNotLow: true,
+                  DeviceCharging: false,
+                  RunOnForeground: true,
+                  RequiredInternetAccess: true ? InternetAccess.Any : InternetAccess.None
+              );
+        //builder.Services.AddJob(typeof(JobDalySync));
+       
+       
+
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 
         MySolarCellsGlobals.ConsoleWriteLineDebug("CacheDirectory   " + FileSystem.CacheDirectory);
         MySolarCellsGlobals.ConsoleWriteLineDebug("AppDataDirectory   " + FileSystem.AppDataDirectory);
@@ -33,7 +56,43 @@ public static class MauiProgram
         var app = builder.Build();
         //we must initialize our service helper before using it
         ServiceHelper.Initialize(app.Services);
+
+        //using var dbContext = new MscDbContext();
+        //MySolarCellsGlobals.SelectedHome = dbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
+
         return app;
 	}
+    public static string GetDataBasePath()
+    {
+        string databasePath ="";
+        string databaseName = "Db_v_1.db3";
+        if (DeviceInfo.Platform == DevicePlatform.Android)
+        {
+            databasePath = Path.Combine(FileSystem.AppDataDirectory, databaseName);
+        }
+        else if (DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            SQLitePCL.Batteries_V2.Init();
+            databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
+        }
+        else if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+        {
+            databasePath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
+            if (!Directory.Exists(databasePath))
+            {
+                Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
+                Directory.CreateDirectory("MySolarCells");
+            }
+        }
+        
+       
+
+        var dbPath = Path.Combine(databasePath, "Db_v_1.db3");
+
+#if DEBUG
+       MySolarCellsGlobals.ConsoleWriteLineDebug("DataBasePath   " + dbPath);
+#endif
+        return dbPath;
+    }
 }
 

@@ -82,9 +82,6 @@
  <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   <comment>Need review</comment></data>
- <data name="ROI" xml:space="preserve">
-    <value>ROI</value>
-  <comment>Need review</comment></data>
  <data name="More" xml:space="preserve">
     <value>More</value>
   <comment>Need review</comment></data>
@@ -175,9 +172,6 @@
 <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   <comment>Need review</comment></data>
-<data name="Production" xml:space="preserve">
-    <value>Production</value>
-  <comment>Need review</comment></data>
 <data name="Production_To_Grid" xml:space="preserve">
     <value>Production to grid</value>
   <comment>Need review</comment></data>
@@ -253,9 +247,6 @@
 <data name="Export_To_Excel" xml:space="preserve">
     <value>Export to Excel</value>
   <comment>Need review</comment></data>
-<data name="Electricity_Supplier" xml:space="preserve">
-    <value>Electricity supplier</value>
-  <comment>Need review</comment></data>
 <data name="Install_Year" xml:space="preserve">
     <value>Install year</value>
   <comment>Need review</comment></data>
@@ -267,9 +258,6 @@
   <comment>Need review</comment></data>
 <data name="Username" xml:space="preserve">
     <value>Username</value>
-  <comment>Need review</comment></data>
-<data name="Password" xml:space="preserve">
-    <value>Password</value>
   <comment>Need review</comment></data>
 <data name="Api_Url" xml:space="preserve">
     <value>Api url</value>
@@ -325,9 +313,6 @@
 <data name="Saved_Energy_Tax" xml:space="preserve">
     <value>Saved energy tax</value>
   <comment>Need review</comment></data>
-<data name="Production_Own_Use" xml:space="preserve">
-    <value>Production own use</value>
-  <comment>Need review</comment></data>
 <data name="Battery_used" xml:space="preserve">
     <value>Battery used</value>
   <comment>Need review</comment></data>
@@ -342,9 +327,6 @@
   <comment>Need review</comment></data>
 <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
     <value>Saved transfer fee battery</value>
-  <comment>Need review</comment></data>
-<data name="Saved_Energy_Tax" xml:space="preserve">
-    <value>Saved energy tax</value>
   <comment>Need review</comment></data>
 <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
     <value>Saved energy tax battery</value>
@@ -385,9 +367,6 @@
 <data name="Total_Purchased" xml:space="preserve">
     <value>Total purchased</value>
   <comment>Need review</comment></data>
-<data name="Production_And_Consumption" xml:space="preserve">
-    <value>Production And consumption</value>
-  <comment>Need review</comment></data>
 <data name="Today" xml:space="preserve">
     <value>Today</value>
   <comment>Need review</comment></data>
@@ -399,9 +378,6 @@
   <comment>Need review</comment></data>
 <data name="Month" xml:space="preserve">
     <value>Month</value>
-  <comment>Need review</comment></data>
-<data name="Year" xml:space="preserve">
-    <value>Year</value>
   <comment>Need review</comment></data>
 <data name="Simulate_Battery" xml:space="preserve">
     <value>Simulate battery</value>
@@ -459,9 +435,6 @@
   <comment>Need review</comment></data>
 <data name="Generating_Report_Please_Wait" xml:space="preserve">
     <value>Generating report please wait</value>
-  <comment>Need review</comment></data>
-<data name="Back" xml:space="preserve">
-    <value>Back</value>
   <comment>Need review</comment></data>
 <data name="The_Login_Failed_Check_That_You_Entered_The_Correct_Information" xml:space="preserve">
     <value>The login failed, check that you entered the correct information</value>

@@ -3,17 +3,17 @@
 public class ElectricitySupplierViewModel : BaseViewModel
 {
     IGridSupplierInterface gridSupplierService;
-    private MscDbContext dbContext = new MscDbContext();
-    public ElectricitySupplierViewModel()
+    private readonly MscDbContext mscDbContext;
+    public ElectricitySupplierViewModel(MscDbContext mscDbContext)
     {
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Tibber.ToString(), ItemValue = (int)ElectricitySupplier.Tibber });
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Unknown.ToString(), ItemValue = (int)ElectricitySupplier.Unknown });
-        using var dbContext = new MscDbContext();
-        var home = dbContext.Home.FirstOrDefault();
+        this.mscDbContext = mscDbContext;
+        var home = this.mscDbContext.Home.FirstOrDefault();
         if (home == null)
         {
             selectedGridSupplierModel = GridSupplierModels.First();
-        }
+        }   
         else
         {
             foreach (var item in GridSupplierModels)
@@ -85,11 +85,11 @@ public class ElectricitySupplierViewModel : BaseViewModel
     {
 
         //check if Home exist in db
-        var homeExist = await dbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selecteddHome.SubSystemEntityId.ToString());
+        var homeExist = await this.mscDbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selecteddHome.SubSystemEntityId.ToString());
         if (homeExist == null)
         {
             homeExist = new Services.Sqlite.Models.Home();
-            await dbContext.Home.AddAsync(homeExist);
+            await this.mscDbContext.Home.AddAsync(homeExist);
         }
 
         homeExist.ImportOnlySpotPrice = importOnlySpotPrice;
@@ -101,7 +101,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
 
         //TODO:Do we neeed more info from tibber homes
 
-        await dbContext.SaveChangesAsync();
+        await this.mscDbContext.SaveChangesAsync();
 
 
         SettingsService.SelectedHomeId = homeExist.HomeId;

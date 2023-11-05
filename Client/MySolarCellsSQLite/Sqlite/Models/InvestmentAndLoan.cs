@@ -1,4 +1,6 @@
-﻿namespace MySolarCells.Services.Sqlite.Models;
+﻿
+
+namespace MySolarCells.Services.Sqlite.Models;
 
 public class InvestmentAndLoan : ObservableObject
 {

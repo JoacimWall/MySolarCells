@@ -6,8 +6,8 @@ namespace MySolarCells.Services.GridSupplier;
 
 public class TibberService : IGridSupplierInterface
 {
-
-    private IRestClient restClient;
+    private readonly MscDbContext mscDbContext;
+    private readonly IRestClient restClient;
     public string GuideText => AppResources.Tibber_Guide_Text;
     public string DefaultApiUrl => "";
     public string NavigationUrl => "https://developer.tibber.com/settings/access-token";
@@ -21,9 +21,10 @@ public class TibberService : IGridSupplierInterface
     public bool ShowNavigateUrl => true;
 
     private GridSupplierLoginResponse gridSupplierLoginResponse;
-    public TibberService(IRestClient restClient)
+    public TibberService(IRestClient restClient, MscDbContext mscDbContext)
     {
         this.restClient = restClient;
+        this.mscDbContext = mscDbContext;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
 
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://api.tibber.com/v1-beta/gql", defaultRequestHeaders = defaultRequestHeaders };
@@ -110,7 +111,7 @@ public class TibberService : IGridSupplierInterface
             bool importOnlySpotPrice = MySolarCellsGlobals.SelectedHome.ImportOnlySpotPrice;
             List<Energy> eneryInsertList = new List<Energy>();
             List<Energy> eneryUpdateList = new List<Energy>();
-            using var dbContext = new MscDbContext();
+            
             //DateTime start = MySolarCellsGlobals.SelectedHome.FromDate;
             var dates = Helpers.DateHelper.GetRelatedDates(DateTime.Today);
             DateTime end = dates.BaseDate.AddDays(1);
@@ -172,7 +173,7 @@ public class TibberService : IGridSupplierInterface
                     Energy energyExist = null;
                     if (existCheckDb)
                     {
-                        energyExist = await dbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+                        energyExist = await this.mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
                         if (energyExist == null)
                         {
                             existCheckDb = false;
@@ -250,8 +251,8 @@ public class TibberService : IGridSupplierInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await dbContext.BulkInsertAsync(eneryInsertList);
-                        await dbContext.BulkUpdateAsync(eneryUpdateList);
+                        await this.mscDbContext.BulkInsertAsync(eneryInsertList);
+                        await this.mscDbContext.BulkUpdateAsync(eneryUpdateList);
                         eneryInsertList = new List<Energy>();
                         eneryUpdateList = new List<Energy>();
                     }
@@ -269,15 +270,15 @@ public class TibberService : IGridSupplierInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await dbContext.BulkInsertAsync(eneryInsertList);
-                await dbContext.BulkUpdateAsync(eneryUpdateList);
+                await this.mscDbContext.BulkInsertAsync(eneryInsertList);
+                await this.mscDbContext.BulkUpdateAsync(eneryUpdateList);
                 eneryInsertList = new List<Energy>();
                 eneryUpdateList = new List<Energy>();
 
             }
 
             //Fill all null productions so that we don't have to loop throw then on more time.
-            var emptyEnergyExist = dbContext.Energy.Where(x => x.ElectricitySupplierProductionSold == (int)InverterTyp.Unknown && x.HomeId == homeId);
+            var emptyEnergyExist = this.mscDbContext.Energy.Where(x => x.ElectricitySupplierProductionSold == (int)InverterTyp.Unknown && x.HomeId == homeId);
             foreach (var enery in emptyEnergyExist)
             {
                 batch100++;
@@ -290,29 +291,20 @@ public class TibberService : IGridSupplierInterface
                 eneryInsertList.Add(enery);
                 if (batch100 == 100)
                 {
-                    //await Task.Delay(100); //Så att GUI hinner uppdatera
-                    //progress.Report(progressStartNr);
-
                     batch100 = 0;
-                    await dbContext.BulkUpdateAsync(eneryInsertList);
+                    await this.mscDbContext.BulkUpdateAsync(eneryInsertList);
                     eneryInsertList = new List<Energy>();
                 }
             }
 
             if (eneryInsertList.Count > 0)
             {
-                //await Task.Delay(100); //Så att GUI hinner uppdatera
-                //progress.Report(progressStartNr);
-
+ 
                 batch100 = 0;
-                await dbContext.BulkUpdateAsync(eneryInsertList);
+                await this.mscDbContext.BulkUpdateAsync(eneryInsertList);
                 eneryInsertList = new List<Energy>();
 
             }
-
-
-
-
             //-------- Sync future prices spot ---------------------
            GraphQlRequestTibber graphQlRequestTibberPrice = new GraphQlRequestTibber
             {
@@ -328,8 +320,6 @@ public class TibberService : IGridSupplierInterface
                 return false;
             else
             {
-                //eneryInsertList = new List<Energy>();
-                //eneryUpdateList = new List<Energy>();
                 List<TibberPrice> listPrice = new List<TibberPrice>();
                if (result.Model.data.viewer.home.currentSubscription.priceInfo.today.Count > 0)
                     listPrice.AddRange(result.Model.data.viewer.home.currentSubscription.priceInfo.today);
@@ -338,7 +328,7 @@ public class TibberService : IGridSupplierInterface
                
                 foreach (var priceItem in listPrice)
                 {
-                    var existPrice = await dbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == priceItem.startsAt && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+                    var existPrice = await this.mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == priceItem.startsAt && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
                     if (existPrice == null)
                     {
                         existPrice = new Energy
@@ -348,23 +338,19 @@ public class TibberService : IGridSupplierInterface
                             Currency = priceItem.currency,
                             Timestamp = priceItem.startsAt
                         };
-                        //eneryInsertList.Add(existPrice);
-                        dbContext.Energy.Add(existPrice);
+                        this.mscDbContext.Energy.Add(existPrice);
                     }
-                    //else
-                    //    eneryUpdateList.Add(existPrice);
-                    //only update when vat is = 0. else pick prices from consumtions import
+                     //only update when vat is = 0. else pick prices from consumtions import
                     if (existPrice.UnitPriceVatBuy == 0)
                     {
                         existPrice.UnitPriceBuy = priceItem.total;
                         existPrice.UnitPriceSold = priceItem.energy;
                     }
                     existPrice.PriceLevel = priceItem.level;
-                    await dbContext.SaveChangesAsync();
+                    await this.mscDbContext.SaveChangesAsync();
 
                 }
-                //await dbContext.BulkUpdateAsync(eneryInsertList);
-                //await dbContext.BulkUpdateAsync(eneryUpdateList);
+
             }
             return true;
 

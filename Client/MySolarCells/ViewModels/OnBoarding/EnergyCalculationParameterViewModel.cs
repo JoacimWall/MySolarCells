@@ -5,10 +5,11 @@ namespace MySolarCells.ViewModels.OnBoarding;
 
 public class EnergyCalculationParameterViewModel : BaseViewModel
 {
-    MscDbContext dbContext = new MscDbContext();
-    public EnergyCalculationParameterViewModel()
+    private readonly MscDbContext mscDbContext;
+    public EnergyCalculationParameterViewModel(MscDbContext mscDbContext)
     {
-        var list = dbContext.EnergyCalculationParameter.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
+        this.mscDbContext = mscDbContext;
+        var list = this.mscDbContext.EnergyCalculationParameter.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
         if (list != null && list.Count > 0)
         {
             Parameters = new ObservableCollection<Services.Sqlite.Models.EnergyCalculationParameter>(list);
@@ -35,7 +36,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
     private void AddParameters()
     {
         Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter { HomeId = MySolarCellsGlobals.SelectedHome.HomeId, FromDate = MySolarCellsGlobals.SelectedHome.FromDate });
-        dbContext.EnergyCalculationParameter.Add(Parameters.Last());
+        this.mscDbContext.EnergyCalculationParameter.Add(Parameters.Last());
         SelectedParameters = Parameters.Last();
     }
 
@@ -45,7 +46,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
     {
         try
         {
-            await this.dbContext.SaveChangesAsync();
+            await this.mscDbContext.SaveChangesAsync();
             if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
             {
                 await GoBack();

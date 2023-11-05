@@ -4,10 +4,12 @@ namespace MySolarCells.ViewModels.More;
 
 public class MoreViewModel : BaseViewModel
 {
-    private IRoiService roiService;
-    public MoreViewModel(IRoiService roiService)
+    private readonly IRoiService roiService;
+    private readonly MscDbContext mscDbContext;
+    public MoreViewModel(IRoiService roiService, MscDbContext mscDbContext)
     {
         this.roiService = roiService;
+        this.mscDbContext = mscDbContext;
         Home = MySolarCellsGlobals.SelectedHome;
         AppInfoVersion =  AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
 
@@ -40,7 +42,7 @@ public class MoreViewModel : BaseViewModel
     {
         using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
-        using var dbContext = new MscDbContext();
+        
         var result = await this.roiService.GenerateTotalPermonthReport();
 
 
@@ -229,7 +231,7 @@ public class MoreViewModel : BaseViewModel
 
                 firstRound = false;
             }
-            var invest = await dbContext.InvestmentAndLon.Where(x => x.HomeId == homeId).ToListAsync();
+            var invest = await this.mscDbContext.InvestmentAndLon.Where(x => x.HomeId == homeId).ToListAsync();
             int toalInvestLon = 0;
             foreach (var item in invest)
             {
@@ -252,7 +254,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["B39"].CellStyle.Font.Bold = true;
             worksheet.Range["B39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            var parmas = await dbContext.EnergyCalculationParameter.Where(x => x.HomeId == homeId).ToListAsync();
+            var parmas = await this.mscDbContext.EnergyCalculationParameter.Where(x => x.HomeId == homeId).ToListAsync();
             var indexParm = 0;
 
             //rubriker
@@ -342,8 +344,8 @@ public class MoreViewModel : BaseViewModel
     {
         get
         {
-            using var dbContext = new MscDbContext();
-            var inverter = dbContext.Inverter.FirstOrDefault(x => x.HomeId == Home.HomeId);
+           
+            var inverter = this.mscDbContext.Inverter.FirstOrDefault(x => x.HomeId == Home.HomeId);
 
            return ((InverterTyp)inverter.InverterTyp).ToString();
         }

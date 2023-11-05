@@ -8,6 +8,7 @@ namespace MySolarCells.Services.Inverter;
 public class HomeAssistentInverterService : IInverterServiceInterface
 {
     private HttpClient restClient;
+    private readonly MscDbContext mscDbContext;
     private InverterLoginResponse inverterLoginResponse;
     private readonly JsonSerializerOptions jsonOptions;
 
@@ -38,9 +39,9 @@ public class HomeAssistentInverterService : IInverterServiceInterface
         testc.DefaultRequestHeaders.Add("Connection", "keep-alive");
         return testc;
     }
-    public HomeAssistentInverterService()
+    public HomeAssistentInverterService(MscDbContext mscDbContext)
     {
-        
+        this.mscDbContext = mscDbContext;
         jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -104,8 +105,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
-        using var dbContext = new MscDbContext();
-        var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+        
+        var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
         var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
         inverterLoginResponse = loginResult.Model;
@@ -213,7 +214,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await dbContext.BulkUpdateAsync(eneryList);
+                await this.mscDbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
            

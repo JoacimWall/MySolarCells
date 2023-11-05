@@ -4,7 +4,8 @@ namespace MySolarCells.Services.Inverter;
 
 public class SolarEdgeService : IInverterServiceInterface
 {
-    private IRestClient restClient;
+    private readonly IRestClient restClient;
+    private readonly MscDbContext mscDbContext;
     private InverterLoginResponse inverterLoginResponse;
 
 
@@ -18,9 +19,10 @@ public class SolarEdgeService : IInverterServiceInterface
 
     public bool ShowApiKey => true;
 
-    public SolarEdgeService(IRestClient restClient)
+    public SolarEdgeService(IRestClient restClient, MscDbContext mscDbContext)
     {
         this.restClient = restClient;
+        this.mscDbContext = mscDbContext;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
         this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://monitoringapi.solaredge.com", defaultRequestHeaders = defaultRequestHeaders };
         this.restClient.ReInit();
@@ -61,9 +63,7 @@ public class SolarEdgeService : IInverterServiceInterface
     
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-
-        using var dbContext = new MscDbContext();
-        var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+         var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         ////LOGIN
         var loginResult = await TestConnection("", "", "", StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
 
@@ -196,7 +196,7 @@ public class SolarEdgeService : IInverterServiceInterface
                 {
                     progressStartNr++;
                     batch100++;
-                    var energyExist = dbContext.Energy.FirstOrDefault(x => x.Timestamp == sumes[i].TimeStamp);
+                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == sumes[i].TimeStamp);
                     if (energyExist != null)
                     {
 
@@ -235,7 +235,7 @@ public class SolarEdgeService : IInverterServiceInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await dbContext.BulkUpdateAsync(eneryList);
+                        await this.mscDbContext.BulkUpdateAsync(eneryList);
                         eneryList = new List<Sqlite.Models.Energy>();
                     }
 
@@ -250,7 +250,7 @@ public class SolarEdgeService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await dbContext.BulkUpdateAsync(eneryList);
+                await this.mscDbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
             

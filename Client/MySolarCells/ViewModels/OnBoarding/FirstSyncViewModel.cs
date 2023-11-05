@@ -4,12 +4,12 @@ public class FirstSyncViewModel : BaseViewModel
 {
     private readonly IGridSupplierInterface gridSupplierService;
     private IInverterServiceInterface inverterService;
-    //private bool keepUploading = true;
-    public FirstSyncViewModel()
+    private readonly MscDbContext mscDbContext;
+    public FirstSyncViewModel(MscDbContext mscDbContext)
     {
-        using var dbContext = new MscDbContext();
-        this.gridSupplierService = ServiceHelper.GetGridSupplierService(dbContext.Home.First().ElectricitySupplier); ;
-        this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
+        this.mscDbContext = mscDbContext;
+        this.gridSupplierService = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.First().ElectricitySupplier); ;
+        this.inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.First().InverterTyp);
         //DateTime dateTime = new DateTime(2023, 11, 1);
         //long milliseconds = DateHelper.DateTimeToMillis(dateTime);
         //DateTime dattest = DateHelper.MillisToDateTime(milliseconds);
@@ -58,8 +58,8 @@ public class FirstSyncViewModel : BaseViewModel
             ProgressStatus = AppResources.Import_Data_From_Inverter;
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
-            using var dbContext = new MscDbContext();
-            var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+            
+            var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
 
             var differenceInverter = DateTime.Now - inverter.FromDate;
 

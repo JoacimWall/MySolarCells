@@ -3,11 +3,13 @@
 public partial class App : Application
 {
     private readonly ISettingsService settingsService;
-    public App(ISettingsService settingsService)
+    private readonly MscDbContext mscDbContext;
+    public App(ISettingsService settingsService, MscDbContext mscDbContext )
     {
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNTI3NEAzMjMzMmUzMDJlMzBkR2xabUJjTnZ2Q3hQMnMrVVhobURpbDBMNzErbTMzYm15dmowZERRbUtFPQ==");
         this.settingsService = settingsService;
+        this.mscDbContext = mscDbContext;
         MySolarCellsGlobals.App = this;
         MainPage = new StartupShell();
 
@@ -47,14 +49,14 @@ public partial class App : Application
         //then we don't want the Initnavigation to do the same thing. the app crash on IOS works on Android  
         //if (((Shell)(App.Current.MainPage)).CurrentPage is StartupView)
         await initApp(false);
-        using var dbContext = new MscDbContext();
-        MySolarCellsGlobals.SelectedHome = dbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
+        
+        MySolarCellsGlobals.SelectedHome = this.mscDbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
     }
     protected override async void OnResume()
     {
-        using var dbContext = new MscDbContext();
-        MySolarCellsGlobals.SelectedHome = dbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
+        //using var dbContext = new MscDbContext();
+        MySolarCellsGlobals.SelectedHome = this.mscDbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
 
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;

@@ -10,17 +10,18 @@ public interface ISettingsService
 
 public class SettingsService : ISettingsService
 {
-    private MscDbContext dbContext = new MscDbContext();
-    public SettingsService()
+    
+    private readonly MscDbContext mscDbContext;
+    public SettingsService(MscDbContext mscDbContext)
     {
-
+        this.mscDbContext = mscDbContext;
     }
     
     public OnboardingStatusEnum OnboardingStatus
     {
         get
         {
-            var exist = dbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
             if (exist == null)
                 return OnboardingStatusEnum.Unknown;
             else
@@ -28,19 +29,19 @@ public class SettingsService : ISettingsService
         }
         set
         {
-            var exist = dbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
             if (exist == null)
-                dbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
+                this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
             else
                 exist.IntValue = (int)value;
-            dbContext.SaveChanges();
+            this.mscDbContext.SaveChanges();
         }
     }
     public int SelectedHomeId
     {
         get
         {
-            var exist = dbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
             if (exist == null)
                 return 0;
             else
@@ -48,12 +49,19 @@ public class SettingsService : ISettingsService
         }
         set
         {
-            var exist = dbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
-            if (exist == null)
-                dbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(SelectedHomeId), IntValue = (int)value });
-            else
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
+            if (exist == null && value != 0)
+            {
+                this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(SelectedHomeId), IntValue = (int)value });
+                this.mscDbContext.SaveChanges();
+            }
+            else if (exist != null)
+            {
                 exist.IntValue = (int)value;
-            dbContext.SaveChanges();
+                this.mscDbContext.SaveChanges();
+            }
+
+            
         }
     }
    

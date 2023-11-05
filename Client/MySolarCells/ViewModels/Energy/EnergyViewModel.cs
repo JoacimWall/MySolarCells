@@ -1,4 +1,6 @@
 ﻿
+using MySolarCells.Jobs;
+using Shiny.Jobs;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -9,14 +11,18 @@ public class EnergyViewModel : BaseViewModel
     private readonly IEnergyChartService energyChartService;
    
     private IDataSyncService dataSyncService;
+   
     public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService)
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
+        
 
         DateTime dateTime = new DateTime(2023, 4, 8);
         long milliseconds = DateHelper.DateTimeToMillis(dateTime);
         DateTime dattest = DateHelper.MillisToDateTime(1680926400000);
+
+       
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());

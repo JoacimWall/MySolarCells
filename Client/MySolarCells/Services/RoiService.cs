@@ -16,8 +16,10 @@ public interface IRoiService
 
 public class RoiService : IRoiService
 {
-    public RoiService()
+    private readonly MscDbContext mscDbContext;
+    public RoiService(MscDbContext mscDbContext)
     {
+        this.mscDbContext = mscDbContext;
     }
     //This function should can prpduce wrong if the cahnge of calulation parameters in the middel of the date span 
 
@@ -124,16 +126,14 @@ public class RoiService : IRoiService
     #region Private
     private async Task<RoiStats> CalculateTotalsInternal(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
     {
-        using var dbContext = new MscDbContext();
-
-
+        
         List<Sqlite.Models.Energy> energy;
         RoiStats roiStats = new RoiStats();
         //roiStats.RoiStatsLines = new List<RoiStatsLine>();
 
-        var calcParams = dbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
 
-        energy = await dbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
+        energy = await this.mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
         if (roiSimulate.DoSimulate && roiSimulate.AddBattery)
         {
@@ -283,8 +283,8 @@ public class RoiService : IRoiService
         float interest = 0;
 
 
-        using var dbContext = new MscDbContext();
-        var result = dbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+       
+        var result = this.mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
             investmentTot = investmentTot + item.Investment + item.Loan;

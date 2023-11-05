@@ -25,9 +25,9 @@ public static class ServiceHelper
         switch (electricitySupplier)
         {
             case (int)ElectricitySupplier.Unknown:
-                return new TibberService(ServiceHelper.GetService<IRestClient>());
+                return new TibberService(ServiceHelper.GetService<IRestClient>(), ServiceHelper.GetService<MscDbContext>());
             case (int)ElectricitySupplier.Tibber:
-                return new TibberService(ServiceHelper.GetService<IRestClient>());
+                return new TibberService(ServiceHelper.GetService<IRestClient>(), ServiceHelper.GetService<MscDbContext>());
            
 
             default:
@@ -42,13 +42,13 @@ public static class ServiceHelper
         switch (inverterModel)
         {
             case (int)InverterTyp.Kostal:
-                return new KostalService(ServiceHelper.GetService<IRestClient>());
+                return new KostalService(ServiceHelper.GetService<IRestClient>() ,ServiceHelper.GetService<MscDbContext>());
             case (int)InverterTyp.Huawei:
-                return new HuaweiService(ServiceHelper.GetService<IRestClient>());
+                return new HuaweiService(ServiceHelper.GetService<IRestClient>(), ServiceHelper.GetService<MscDbContext>());
             case (int)InverterTyp.HomeAssistent:
-                return new HomeAssistentInverterService();
+                return new HomeAssistentInverterService( ServiceHelper.GetService<MscDbContext>());
             case (int)InverterTyp.SolarEdge:
-                return new SolarEdgeService(ServiceHelper.GetService<IRestClient>());
+                return new SolarEdgeService(ServiceHelper.GetService<IRestClient>(), ServiceHelper.GetService<MscDbContext>());
 
             default:
                 return null;

@@ -69,6 +69,8 @@
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="23.1.43" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="23.1.43" />
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="23.1.43" />
+		<PackageReference Include="Shiny.Jobs" Version="3.1.1" />
+		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.1.1" />
 	</ItemGroup>
 	<!-- Translation -->
 	<ItemGroup>
@@ -102,6 +104,15 @@
 
 	<ItemGroup>
 	  <AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Jobs\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Jobs\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\MySolarCellsSQLite\MySolarCellsSQLite.csproj" />
 	</ItemGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
 		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>

@@ -13,7 +13,8 @@ namespace MySolarCells.Services.Inverter;
 
 public class HuaweiService : IInverterServiceInterface
 {
-    private IRestClient restClient;
+    private readonly IRestClient restClient;
+    private readonly MscDbContext mscDbContext;
     private InverterLoginResponse inverterLoginResponse;
     private HuaweiSiteResponse sitesResponse;
     private HuaweiDevicesResponse deviceResponse;
@@ -29,9 +30,10 @@ public class HuaweiService : IInverterServiceInterface
     public bool ShowApiKey => false;
     private readonly JsonSerializerOptions jsonOptions;
 
-    public HuaweiService(IRestClient restClient)
+    public HuaweiService(IRestClient restClient, MscDbContext mscDbContext)
     {
         this.restClient = restClient;
+        this.mscDbContext = mscDbContext;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
         jsonOptions = new JsonSerializerOptions
         {
@@ -110,18 +112,16 @@ public class HuaweiService : IInverterServiceInterface
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
-        using var dbContext = new MscDbContext();
-        var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+        
+        var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
         var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
         inverterLoginResponse = loginResult.Model;
+        var returValue = new Result<DataSyncResponse>(new DataSyncResponse { SyncState = DataSyncState.ProductionSync, Message = AppResources.Import_Of_Production_Done}, true);
 
         try
         {
-
-
             int batch100 = 0;
-
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
             List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
             var datehelp = DateHelper.GetRelatedDates(DateTime.Now);
@@ -146,20 +146,21 @@ public class HuaweiService : IInverterServiceInterface
                     if (resultDay.Model.failCode == 407)
                     {
                         MySolarCellsGlobals.ConsoleWriteLineDebug("Antal Huawei " + countApiRequests.ToString());
-                        return new Result<DataSyncResponse>(new DataSyncResponse
+                        returValue= new Result<DataSyncResponse>(new DataSyncResponse
                         {
                             SyncState = DataSyncState.ProductionSync,
                             Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More, "24", start.ToShortDateString())
                             
-                        }); 
+                        });
+                        break;
                     }
                     //error
-                    return new Result<DataSyncResponse>(new DataSyncResponse
+                    returValue=  new Result<DataSyncResponse>(new DataSyncResponse
                     {
                         SyncState = DataSyncState.ProductionSync,
                         Message = resultDay.ErrorMessage == null ? resultDay.Model.message.ToString() : resultDay.ErrorMessage
                     }, false);
-
+                    break;
                 }
                 countApiRequests ++;
 
@@ -179,7 +180,7 @@ public class HuaweiService : IInverterServiceInterface
                 {
                     progressStartNr++;
                     batch100++;
-                    var energyExist = dbContext.Energy.FirstOrDefault(x => x.Timestamp == listPoints[i].timestamp);
+                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == listPoints[i].timestamp);
                     if (energyExist != null)
                     {
                         if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
@@ -208,7 +209,7 @@ public class HuaweiService : IInverterServiceInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await dbContext.BulkUpdateAsync(eneryList);
+                        await this.mscDbContext.BulkUpdateAsync(eneryList);
                         eneryList = new List<Sqlite.Models.Energy>();
                     }
 
@@ -223,7 +224,7 @@ public class HuaweiService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await dbContext.BulkUpdateAsync(eneryList);
+                await this.mscDbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
             
@@ -232,16 +233,7 @@ public class HuaweiService : IInverterServiceInterface
         {
             return new Result<DataSyncResponse>(ex.Message);
         }
-
-
-        return new Result<DataSyncResponse>(new DataSyncResponse
-        {
-            SyncState = DataSyncState.ProductionSync,
-            Message = AppResources.Import_Of_Production_Done 
-        }, true);
-
-
-
+        return returValue;
     }
 }
 //Response

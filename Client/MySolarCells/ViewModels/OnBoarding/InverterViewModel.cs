@@ -3,16 +3,17 @@
 public class InverterViewModel : BaseViewModel
 {
     private InverterLoginResponse inverterLoginResponse;
+    private readonly MscDbContext mscDbContext;
     IInverterServiceInterface InverterService;
-    public InverterViewModel()
+    public InverterViewModel(MscDbContext mscDbContext)
     {
-
+        this.mscDbContext = mscDbContext;
         //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
-        using var dbContext = new MscDbContext();
-        var inverter = dbContext.Inverter.FirstOrDefault();
+       
+        var inverter = this.mscDbContext.Inverter.FirstOrDefault();
         if (inverter == null)
         {
             SelectedInverterModel = InverterModels.First();
@@ -70,9 +71,9 @@ public class InverterViewModel : BaseViewModel
             return;
         }
 
-        using var dbContext = new MscDbContext();
+        
         //check if Home exist in db
-        var InverterExist = await dbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.InverterId.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
+        var InverterExist = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.InverterId.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
         if (InverterExist == null)
         {
             InverterExist = new Services.Sqlite.Models.Inverter
@@ -88,8 +89,8 @@ public class InverterViewModel : BaseViewModel
                 ApiKey = StringHelper.Encrypt(this.inverterLoginResponse.token, AppConstants.Secretkey)
             };
             //TODO:Do we neeed more info from Inverter
-            await dbContext.Inverter.AddAsync(InverterExist);
-            await dbContext.SaveChangesAsync();
+            await this.mscDbContext.Inverter.AddAsync(InverterExist);
+            await this.mscDbContext.SaveChangesAsync();
         }
         else
         {

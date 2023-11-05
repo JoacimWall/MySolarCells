@@ -8,16 +8,17 @@ public interface IEnergyChartService
 public class EnergyChartService : IEnergyChartService
 {
     private readonly IRoiService roiService;
-    public EnergyChartService(IRoiService roiService)
+    private readonly MscDbContext mscDbContext;
+    public EnergyChartService(IRoiService roiService, MscDbContext mscDbContext)
     {
         this.roiService = roiService;
+        this.mscDbContext = mscDbContext;
     }
     public async Task<Result<ChartDataResult>> GetChartData(ChartDataRequest chartDataRequest)
     {
-        using var dbContext = new MscDbContext();
         ChartDataResult result = new ChartDataResult();
         string entryLabel = string.Empty;
-        var calcparms = await dbContext.EnergyCalculationParameter.FirstAsync();
+        var calcparms = await this.mscDbContext.EnergyCalculationParameter.FirstAsync();
 
         // ------ Create 4 serices ---------------
         //Production Sold
@@ -45,7 +46,7 @@ public class EnergyChartService : IEnergyChartService
         Color priceSellColor = Color.Parse("#46a80d");
 
         int devPrice = 0;
-        var dataRows = await dbContext.Energy.Where(x => x.Timestamp >= chartDataRequest.FilterStart && x.Timestamp < chartDataRequest.FilterEnd).ToListAsync();
+        var dataRows = await this.mscDbContext.Energy.Where(x => x.Timestamp >= chartDataRequest.FilterStart && x.Timestamp < chartDataRequest.FilterEnd).ToListAsync();
         if (dataRows != null && dataRows.Count == 0)
             return new Result<ChartDataResult>("No records", ErrorCodes.NoEnergyEntryOnCurrentDate);
         foreach (var item in dataRows)

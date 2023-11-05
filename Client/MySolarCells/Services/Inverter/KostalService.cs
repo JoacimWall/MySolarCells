@@ -2,7 +2,8 @@
 
 public class KostalService : IInverterServiceInterface
 {
-    private IRestClient restClient;
+    private readonly IRestClient restClient;
+    private readonly MscDbContext mscDbContext;
     private InverterLoginResponse inverterLoginResponse;
     private KostalUserRoleSitesResponse sitesResponse;
     private KostalUserRoleDeviceResponse deviceResponse;
@@ -17,9 +18,10 @@ public class KostalService : IInverterServiceInterface
 
     public bool ShowApiKey => false;
 
-    public KostalService(IRestClient restClient)
+    public KostalService(IRestClient restClient, MscDbContext mscDbContext)
     {
         this.restClient = restClient;
+        this.mscDbContext = mscDbContext;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
         defaultRequestHeaders.Add("White-Label-Access-Key", "bf8c1e86-b23f-49f6-9156-a1e6a08895d7");
 
@@ -84,8 +86,8 @@ public class KostalService : IInverterServiceInterface
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
-        using var dbContext = new MscDbContext();
-        var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+       
+        var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
         var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
         inverterLoginResponse = loginResult.Model;
@@ -146,7 +148,7 @@ public class KostalService : IInverterServiceInterface
                 {
                     progressStartNr++;
                     batch100++;
-                    var energyExist = dbContext.Energy.FirstOrDefault(x => x.Timestamp == listPoints[i].timestamp);
+                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == listPoints[i].timestamp);
                     if (energyExist != null)
                     {
                         if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
@@ -172,7 +174,7 @@ public class KostalService : IInverterServiceInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await dbContext.BulkUpdateAsync(eneryList);
+                        await this.mscDbContext.BulkUpdateAsync(eneryList);
                         eneryList = new List<Sqlite.Models.Energy>();
                     }
 
@@ -187,7 +189,7 @@ public class KostalService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await dbContext.BulkUpdateAsync(eneryList);
+                await this.mscDbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<Sqlite.Models.Energy>();
             }
             return new Result<DataSyncResponse>(new DataSyncResponse

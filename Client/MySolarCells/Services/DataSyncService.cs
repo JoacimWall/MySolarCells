@@ -11,19 +11,20 @@ public class DataSyncService : IDataSyncService
 {
     private readonly IGridSupplierInterface gridSupplierInterface;
     private readonly IInverterServiceInterface inverterService;
-    public DataSyncService()
+    private readonly MscDbContext mscDbContext;
+    public DataSyncService(MscDbContext mscDbContext)
     {
-        using var dbContext = new MscDbContext();
-        this.gridSupplierInterface = ServiceHelper.GetGridSupplierService(dbContext.Home.First().ElectricitySupplier);
-        this.inverterService = ServiceHelper.GetInverterService(dbContext.Inverter.First().InverterTyp);
+        this.mscDbContext= mscDbContext;
+        this.gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.First().ElectricitySupplier);
+        this.inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.First().InverterTyp);
     }
 
     public async Task<Result<BoolModel>> Sync()
     {
        
-        using var dbContext = new MscDbContext();
+      
         //Get last Sync Time
-        var lastSyncTime = dbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
         var difference = DateTime.Now - lastSyncTime.Timestamp;
 
         var days = difference.Days;
@@ -55,7 +56,7 @@ public class DataSyncService : IDataSyncService
         await Task.Delay(200);
 
         // var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        lastSyncTime = dbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
+        lastSyncTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
         var differenceInverter = DateTime.Now - lastSyncTime.Timestamp;
 
         var daysInv = differenceInverter.Days;
@@ -82,7 +83,7 @@ public class DataSyncService : IDataSyncService
 
 
     }
-        private void CalculateProgress(long completed, long total)
+    private void CalculateProgress(long completed, long total)
     {
         var comp = Convert.ToDouble(completed);
         var tot = Convert.ToDouble(total);

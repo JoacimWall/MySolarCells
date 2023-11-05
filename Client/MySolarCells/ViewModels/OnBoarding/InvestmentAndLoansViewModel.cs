@@ -6,12 +6,12 @@ namespace MySolarCells.ViewModels.OnBoarding;
 
 public class InvestmentAndLoanViewModel : BaseViewModel
 {
-
-    public InvestmentAndLoanViewModel()
+    private readonly MscDbContext mscDbContext;
+    public InvestmentAndLoanViewModel(MscDbContext mscDbContext)
     {
 
-        using var dbContext = new MscDbContext();
-        var result = dbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        this.mscDbContext = mscDbContext;
+        var result = this.mscDbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         foreach (var item in result)
         {
             InvestmentAndLoans.Add(item);
@@ -36,12 +36,12 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     private async Task Save()
     {
-        using var dbContext = new MscDbContext();
+        
         if (selectedInvestmentAndloan.InvestmentAndLoanId == 0)
-            dbContext.InvestmentAndLon.Add(selectedInvestmentAndloan);
+            this.mscDbContext.InvestmentAndLon.Add(selectedInvestmentAndloan);
         else //update
         {
-            var dbEntity = dbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLoanId == selectedInvestmentAndloan.InvestmentAndLoanId);
+            var dbEntity = this.mscDbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLoanId == selectedInvestmentAndloan.InvestmentAndLoanId);
             dbEntity.FromDate = selectedInvestmentAndloan.FromDate;
             dbEntity.Investment = selectedInvestmentAndloan.Investment;
             dbEntity.Description = selectedInvestmentAndloan.Description;
@@ -50,7 +50,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
         }
-        await dbContext.SaveChangesAsync();
+        await this.mscDbContext.SaveChangesAsync();
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
         {
             await GoBack();

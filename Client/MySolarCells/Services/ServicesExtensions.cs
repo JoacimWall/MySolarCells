@@ -1,4 +1,7 @@
-﻿namespace MySolarCells.Services;
+﻿using Shiny.Jobs;
+using Shiny.Support.Repositories;
+
+namespace MySolarCells.Services;
 
 public static class ServicesExtensions
 {
@@ -11,6 +14,9 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();
         builder.Services.AddSingleton<IDataSyncService, DataSyncService>();
         builder.Services.AddSingleton<ISaveAndView, SaveService>();
+        //builder.Services.AddSingleton<IJobManager, JobManager>();
+        //builder.Services.AddSingleton<IRepository, Repository>();
+        
         //Transient
         builder.Services.AddTransient<IRestClient, RestClient>();
 
