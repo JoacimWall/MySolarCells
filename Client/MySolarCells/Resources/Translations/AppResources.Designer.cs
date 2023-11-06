@@ -427,6 +427,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import data from electricity supplier Done.
+        /// </summary>
+        public static string Import_Data_From_Electricity_Supplier_Done {
+            get {
+                return ResourceManager.GetString("Import_Data_From_Electricity_Supplier_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import data from inverter.
         /// </summary>
         public static string Import_Data_From_Inverter {
@@ -1044,6 +1053,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Start {
             get {
                 return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step {0} of {1} {2}.
+        /// </summary>
+        public static string Step_Nr_of_Nr_InfoText {
+            get {
+                return ResourceManager.GetString("Step_Nr_of_Nr_InfoText", resourceCulture);
             }
         }
         

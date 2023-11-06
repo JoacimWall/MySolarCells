@@ -1,20 +1,78 @@
-﻿namespace MySolarCells;
+﻿using MySolarCells.Services.Sqlite;
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.EventArgs;
+
+namespace MySolarCells;
 
 public partial class App : Application
 {
     private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
-    public App(ISettingsService settingsService, MscDbContext mscDbContext )
+    private readonly IDataSyncService dataSyncService;
+    public App(ISettingsService settingsService, IDataSyncService dataSyncService,MscDbContext mscDbContext )
     {
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNTI3NEAzMjMzMmUzMDJlMzBkR2xabUJjTnZ2Q3hQMnMrVVhobURpbDBMNzErbTMzYm15dmowZERRbUtFPQ==");
         this.settingsService = settingsService;
+        this.dataSyncService = dataSyncService;
         this.mscDbContext = mscDbContext;
         MySolarCellsGlobals.App = this;
+
+        // Local Notification tap event listener
+        //LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
+        //LocalNotificationCenter.Current.NotificationReceived += Current_NotificationReceived;
+        //LocalNotificationCenter.Current.No += Current_NotificationReceived;
+
+
         MainPage = new StartupShell();
 
 
     }
+
+    //private async void Current_NotificationReceived(NotificationEventArgs e)
+    //{
+    //    if (this.settingsService.OnboardingStatus != OnboardingStatusEnum.OnboardingDone)
+    //        return;
+    //    mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+    //    {
+    //        LogTitle = "backgrund job started",
+    //        CreateDate = DateTime.Now,
+    //        LogDetails = "",
+    //        LogTyp = (int)LogTyp.Info
+    //    });
+    //    await mscDbContext.SaveChangesAsync();
+    //    var result = await this.dataSyncService.Sync().ConfigureAwait(false);
+       
+    //        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+    //        {
+    //            LogTitle = "backgrund sync job done.",
+    //            CreateDate = DateTime.Now,
+    //            LogDetails = "",
+    //            LogTyp = result.WasSuccessful ? (int)LogTyp.Info : (int)LogTyp.Error
+    //        });
+    //    await mscDbContext.SaveChangesAsync();
+    //    //create new
+    //    //var notification = new NotificationRequest
+    //    //{
+    //    //    Silent = true,
+    //    //    NotificationId = 100,
+    //    //    Title = "Test",
+    //    //    Description = "Test Description",
+    //    //    ReturningData = "Dummy data", // Returning data when tapped on notification.
+    //    //    Schedule =
+    //    //            {
+    //    //                NotifyTime = DateTime.Now.AddSeconds(30) // Used for Scheduling local notification, if not specified notification will show immediately.
+    //    //            }
+    //    //};
+    //    //await LocalNotificationCenter.Current.Show(notification);
+
+    //}
+
+    //private void OnNotificationActionTapped(NotificationActionEventArgs e)
+    //{
+       
+    //}
+
     private async Task<bool> initApp(bool fromResume)
     {
         //this.settingsService.OnboardingStatus = OnboardingStatusEnum.OnboardingDone;
@@ -41,7 +99,9 @@ public partial class App : Application
                     App.Current.MainPage = new AppShell();//
                 break;
         }
-       
+
+      
+           
         return true;
     }
     protected async override void OnStart()
@@ -52,6 +112,7 @@ public partial class App : Application
         
         MySolarCellsGlobals.SelectedHome = this.mscDbContext.Home.FirstOrDefault(x => x.HomeId == this.settingsService.SelectedHomeId);
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
+       // await SyncData();
     }
     protected override async void OnResume()
     {
@@ -60,6 +121,7 @@ public partial class App : Application
 
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
+        // SyncData();
 
     }
     protected override async void OnSleep()
@@ -71,6 +133,16 @@ public partial class App : Application
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.InActive;
     }
+    //private async Task SyncData()
+    //{
+    //    var currentHour = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Hour);
+    //    if (this.settingsService.LastDataSync < currentHour)
+    //    {
+    //        var result = await this.dataSyncService.Sync();
+
+    //    }
+
+    //}
     //private void SetupAppColors()
     //{
     //    Dictionary<TmColors, Color> colorConfig = new Dictionary<TmColors, Color>

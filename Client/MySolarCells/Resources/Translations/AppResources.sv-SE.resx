@@ -418,6 +418,12 @@
     <value>Importen av data från din växelriktare avslutades eftersom den bara tillåter {0} frågor/dygn. 1 fråga motsvarar synkronisering av en dag. Du har nu data upp till {1}</value>
   <comment>Need review</comment></data>
   <data name="Import_Of_Production_Done" xml:space="preserve">
-    <value>Import of production done</value>
-  <comment>New</comment></data>
+    <value>Import av produktion gjord</value>
+  <comment>Need review</comment></data>
+  <data name="Import_Data_From_Electricity_Supplier_Done" xml:space="preserve">
+    <value>Importera data från elleverantör Klar</value>
+  <comment>Need review</comment></data>
+  <data name="Step_Nr_of_Nr_InfoText" xml:space="preserve">
+    <value>Steg {0} av {1} {2}</value>
+  <comment>Need review</comment></data>
 </root>

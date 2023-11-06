@@ -7,7 +7,7 @@ namespace MySolarCells.Services.GridSupplier
 	{
         Task<Result<GridSupplierLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey);
         Task<Result<List<Home>>> GetPickerOne();
-        Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr);
+        Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr);
 
         string GuideText { get; }
         string DefaultApiUrl { get; }

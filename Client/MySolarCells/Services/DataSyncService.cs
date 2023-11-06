@@ -2,7 +2,7 @@
 namespace MySolarCells.Services;
 public interface IDataSyncService
 {
-    Task<Result<BoolModel>> Sync();
+    Task<Result<DataSyncResponse>> Sync();
 
 
 }
@@ -11,18 +11,38 @@ public class DataSyncService : IDataSyncService
 {
     private readonly IGridSupplierInterface gridSupplierInterface;
     private readonly IInverterServiceInterface inverterService;
+    private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
-    public DataSyncService(MscDbContext mscDbContext)
+    public DataSyncService(ISettingsService settingsService,MscDbContext mscDbContext)
     {
+        this.settingsService = settingsService;
         this.mscDbContext= mscDbContext;
         this.gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.First().ElectricitySupplier);
         this.inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.First().InverterTyp);
     }
 
-    public async Task<Result<BoolModel>> Sync()
+    public async Task<Result<DataSyncResponse>> Sync()
     {
-       
-      
+        var currentHour = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Hour);
+        if (this.settingsService.LastDataSync > currentHour)
+        {
+            mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+            {
+                LogTitle = "Sync not started allready has all data for prev hour",
+                CreateDate = DateTime.Now,
+                LogDetails = "",
+                LogTyp = (int)LogTyp.Info
+            });
+            return new Result<DataSyncResponse>(new DataSyncResponse { Message = "Sync not started allready has all data for prev hour" }, true);
+        }
+
+        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+        {
+            LogTitle = "Sync started",
+            CreateDate = DateTime.Now,
+            LogDetails = "",
+            LogTyp = (int)LogTyp.Info
+        });
         //Get last Sync Time
         var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
         var difference = DateTime.Now - lastSyncTime.Timestamp;
@@ -36,7 +56,7 @@ public class DataSyncService : IDataSyncService
             CalculateProgress(currentDay, totalhours);
         });
 
-        await Task.Delay(200);
+        //await Task.Delay(200);
         //keepUploading = true;
 
         //ShowProgressStatus = true;
@@ -44,10 +64,8 @@ public class DataSyncService : IDataSyncService
         //ProgressSubStatus = "saved rows 0";
         await Task.Delay(200);
         var result = await this.gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
-        if (!result)
-        {
-            return new Result<BoolModel>("Error import consumation and sold production.");
-        }
+        if (!result.WasSuccessful)
+            return result;
 
 
         //ShowProgressStatus = true;
@@ -67,20 +85,18 @@ public class DataSyncService : IDataSyncService
             CalculateProgress(currentDay, totalhoursInv);
         });
         var resultInverter = await this.inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
-        if (!resultInverter.WasSuccessful)
+       
+
+        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
         {
-
-            return new Result<BoolModel>("Error import solar own use and calculate profit");
-
-        }
-        else
-        {
-            if (resultInverter.Model != null && !string.IsNullOrEmpty(resultInverter.Model.Message))
-                return new Result<BoolModel>(resultInverter.Model.Message);
-
-        }
-        return new Result<BoolModel>(new BoolModel { });
-
+            LogTitle = "Sync done",
+            CreateDate = DateTime.Now,
+            LogDetails = "",
+            LogTyp = result.WasSuccessful ? (int)LogTyp.Info : (int)LogTyp.Error
+        });
+        if (resultInverter.WasSuccessful)
+            this.settingsService.LastDataSync = DateTime.Now;
+        return resultInverter;
 
     }
     private void CalculateProgress(long completed, long total)

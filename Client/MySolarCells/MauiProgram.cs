@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Maui;
 using MySolarCells.Jobs;
+using Plugin.LocalNotification;
 using Shiny;
 using Shiny.Jobs;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -31,18 +32,12 @@ public static class MauiProgram
                 fonts.AddFont("mysolarcells.ttf", "AppIconsFont");
             });
 
-      
-       
-       
-        var job = new JobInfo(
-                  "DalySync",
-                  typeof(JobDalySync),
-                  BatteryNotLow: true,
-                  DeviceCharging: false,
-                  RunOnForeground: true,
-                  RequiredInternetAccess: true ? InternetAccess.Any : InternetAccess.None
-              );
-        //builder.Services.AddJob(typeof(JobDalySync));
+        if (DeviceInfo.Platform != DevicePlatform.MacCatalyst)
+            builder.UseLocalNotification();
+
+
+        var job = new JobInfo("DalySync",typeof(JobDalySync),BatteryNotLow: true,DeviceCharging: false,RunOnForeground: false,RequiredInternetAccess: true ? InternetAccess.Any : InternetAccess.None);
+        builder.Services.AddJob(job);
        
        
 

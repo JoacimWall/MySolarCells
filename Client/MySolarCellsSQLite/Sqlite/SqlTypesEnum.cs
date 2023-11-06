@@ -14,3 +14,11 @@ public enum InverterTyp
     SolarEdge = 4
 }
 
+public enum LogTyp
+{
+    Info = 0,
+    Warning =1,
+    Error = 2,
+}
+
+

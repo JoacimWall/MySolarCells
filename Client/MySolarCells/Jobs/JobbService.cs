@@ -3,19 +3,35 @@ namespace MySolarCells.Jobs;
 
 public class JobDalySync : IJob
 {
-    public JobDalySync()
+    private readonly IDataSyncService dataSyncService;
+    private readonly MscDbContext mscDbContext;
+    private readonly ISettingsService settingsService;
+    public JobDalySync(IDataSyncService dataSyncService,ISettingsService settingsService, MscDbContext mscDbContext)
     {
+        this.dataSyncService = dataSyncService;
+        this.settingsService = settingsService;
+        this.mscDbContext = mscDbContext;
     }
 
     public async Task Run(JobInfo jobInfo, CancellationToken cancelToken)
     {
-        for (var i = 0; i < 10; i++)
+        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
         {
-            if (cancelToken.IsCancellationRequested)
-                break;
+            LogTitle = "Sync stated from bakgrund job",
+            CreateDate = DateTime.Now,
+            LogDetails = "",
+            LogTyp = (int)LogTyp.Info 
+        });
+        if (this.settingsService.OnboardingStatus != OnboardingStatusEnum.OnboardingDone)
+            return;
 
-            await Task.Delay(1000, cancelToken).ConfigureAwait(false);
-        }
+       
+            var result = await this.dataSyncService.Sync();
+
+       
+
+
+
     }
     
 }

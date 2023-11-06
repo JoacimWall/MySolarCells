@@ -101,7 +101,7 @@ public class TibberService : IGridSupplierInterface
         }
         
     }
-    public async Task<bool> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
+    public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
         try
         {
@@ -317,7 +317,7 @@ public class TibberService : IGridSupplierInterface
            };
             var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibberPrice);
             if (!result.WasSuccessful)
-                return false;
+                return new Result<DataSyncResponse>(result.ErrorMessage);
             else
             {
                 List<TibberPrice> listPrice = new List<TibberPrice>();
@@ -352,12 +352,12 @@ public class TibberService : IGridSupplierInterface
                 }
 
             }
-            return true;
 
+            return new Result<DataSyncResponse>(new DataSyncResponse { Message = AppResources.Import_Data_From_Electricity_Supplier_Done, SyncState = DataSyncState.ElectricySync });
         }
         catch (Exception ex)
         {
-            return false;
+            return new Result<DataSyncResponse>(ex.Message);
         }
     }
 

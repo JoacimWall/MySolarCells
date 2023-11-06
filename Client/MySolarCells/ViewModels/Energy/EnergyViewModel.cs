@@ -1,6 +1,4 @@
-﻿
-using MySolarCells.Jobs;
-using Shiny.Jobs;
+﻿using Shiny.Jobs;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -9,27 +7,29 @@ namespace MySolarCells.ViewModels.Energy;
 public class EnergyViewModel : BaseViewModel
 {
     private readonly IEnergyChartService energyChartService;
-   
-    private IDataSyncService dataSyncService;
-   
-    public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService)
+    private readonly IDataSyncService dataSyncService;
+    private readonly MscDbContext mscDbContext;
+    private readonly IJobManager jobManager;
+    public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService, MscDbContext mscDbContext,IJobManager jobManager)
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
+        this.mscDbContext = mscDbContext;
+        this.jobManager = jobManager;
         
+        //DateTime dateTime = new DateTime(2023, 4, 8);
+        //long milliseconds = DateHelper.DateTimeToMillis(dateTime);
+        //DateTime dattest = DateHelper.MillisToDateTime(1680926400000);
 
-        DateTime dateTime = new DateTime(2023, 4, 8);
-        long milliseconds = DateHelper.DateTimeToMillis(dateTime);
-        DateTime dattest = DateHelper.MillisToDateTime(1680926400000);
 
-       
+
     }
     public ICommand SyncCommand => new Command(async () => await Sync());
     public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadGraph());
 
     private async Task Sync()
     {
-        using var dlg = DialogService.GetProgress("");
+        //using var dlg = DialogService.GetProgress("");
         var result = await this.dataSyncService.Sync();
         if (!result.WasSuccessful)
         {
@@ -146,17 +146,6 @@ public class EnergyViewModel : BaseViewModel
         if (resultSeries.Model.ChartSeriesProductionUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesProductionUsed)
                 DataUsed.Add(item);
-
-
-
-
-
-
-
-
-       
-
-       
         
         if (ChartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
             ProductionChartXtitle = "kWh";
@@ -164,12 +153,60 @@ public class EnergyViewModel : BaseViewModel
             ProductionChartXtitle = "SEK";
 
         PriceChartXtitle = "SEK";
+        IsRefreshing = false;
         return true;
     }
     public async override Task OnAppearingAsync()
     {
         if (FirstTimeAppearing)
+        {
             await ReloadGraph(true);
+            //var jobs = this.jobManager.GetJobs();
+            //await this.jobManager.RunAll();
+            //if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+            //{
+            //    await LocalNotificationCenter.Current.RequestNotificationPermission();
+
+            //    //var notification = new NotificationRequest
+            //    //{
+            //    //    Silent = true,
+            //    //    NotificationId = 100,
+            //    //    Title = "Test",
+            //    //    Description = "Test Description",
+            //    //    ReturningData = "Dummy data", // Returning data when tapped on notification.
+            //    //    Schedule =
+            //    //    {
+            //    //        NotifyTime = DateTime.Now.AddSeconds(30) // Used for Scheduling local notification, if not specified notification will show immediately.
+            //    //    }
+            //    //};
+            //    //await LocalNotificationCenter.Current.Show(notification);
+            //}
+            //else
+            //{
+            //       //var notification = new NotificationRequest
+            //       // {
+            //       //     Silent = true,
+            //       //     NotificationId = 100,
+            //       //     Title = "Test",
+            //       //     Description = "Test Description",
+            //       //     ReturningData = "Dummy data", // Returning data when tapped on notification.
+            //       //     Schedule =
+            //       // {
+            //       //     NotifyTime = DateTime.Now.AddSeconds(30) // Used for Scheduling local notification, if not specified notification will show immediately.
+            //       // }
+            //       // };
+            //       // await LocalNotificationCenter.Current.Show(notification);
+
+
+
+
+            //}
+        }
+        else
+        {
+          
+
+        }
 
 
 

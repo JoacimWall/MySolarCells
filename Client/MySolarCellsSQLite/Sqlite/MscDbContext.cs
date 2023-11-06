@@ -60,5 +60,6 @@ public class MscDbContext : DbContext
     public DbSet<InvestmentAndLoan> InvestmentAndLon { get; set; }
     public DbSet<InvestmentAndLoanInterest> InvestmentAndLonInterest { get; set; }
     public DbSet<Preferences> Preferences { get; set; }
+    public DbSet<Log> Log { get; set; }
 }
 

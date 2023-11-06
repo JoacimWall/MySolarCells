@@ -1,4 +1,5 @@
-﻿using Syncfusion.XlsIO;
+﻿using System.Collections.ObjectModel;
+using Syncfusion.XlsIO;
 
 namespace MySolarCells.ViewModels.More;
 
@@ -36,8 +37,27 @@ public class MoreViewModel : BaseViewModel
     {
         await GoToAsync(nameof(EnergyCalculationParameterView));
     }
-
-   
+    public async override Task OnAppearingAsync()
+    {
+        //Show log
+        logText.Clear();
+       
+        var logs = this.mscDbContext.Log.OrderByDescending(x => x.CreateDate);
+        //await this.mscDbContext.Log.ExecuteDelete(x => x.);
+        foreach (var item in logs)
+        {
+            logText.Add(item.CreateDate.ToString() + " " + item.LogTitle);
+        }
+        OnPropertyChanged(nameof(LogText)); 
+        base.OnAppearingAsync();
+    }
+    private ObservableCollection<string> logText = new ObservableCollection<string>();
+    public ObservableCollection<string> LogText
+    {
+        get { return logText; }
+        set { SetProperty(ref logText, value); }
+    }
+    
     private async Task<bool> ExportExcel(int homeId)
     {
         using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
@@ -346,8 +366,19 @@ public class MoreViewModel : BaseViewModel
         {
            
             var inverter = this.mscDbContext.Inverter.FirstOrDefault(x => x.HomeId == Home.HomeId);
-
+            inverterModelText = inverter.Name;
+            OnPropertyChanged(nameof(InverterModelText));
            return ((InverterTyp)inverter.InverterTyp).ToString();
+        }
+
+    }
+    private string inverterModelText = "";
+    public string InverterModelText
+    {
+        get
+        {
+
+            return inverterModelText; 
         }
 
     }

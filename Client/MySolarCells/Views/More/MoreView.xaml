@@ -50,14 +50,12 @@
                     <Label 
                            Margin="8,0,8,0"
                            Text="{Binding InverterText}" Style="{StaticResource LabelBaseStyle}"/>
+                     <Label 
+                           Margin="8,0,8,0"
+                           Text="{Binding InverterModelText}" Style="{StaticResource LabelBaseStyle}"/>
 
                 </VerticalStackLayout>
             </Grid>
-
-
-
-
-
 
             <Label Grid.Row="2" Grid.ColumnSpan="2" Margin="8,16,8,0" Style="{StaticResource LabelEntryTitleStyle}" FontSize="17"
                    Text="{x:Static trans:AppResources.Tools_And_Features}" />
@@ -148,6 +146,13 @@
 
                 </VerticalStackLayout>
             </Border>
+            <VerticalStackLayout Grid.Row="5" Grid.ColumnSpan="2" BindableLayout.ItemsSource="{Binding LogText}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
             <ActivityIndicator Grid.RowSpan="6" />
             <Label x:Name="CalcWithDev2Ctl" 
                    Grid.Row="0"

@@ -36,15 +36,14 @@ public class FirstSyncViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLoanDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus =  AppResources.Import_Data_From_Electricity_Supplier;
+            ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText,"1","2", AppResources.Import_Data_From_Electricity_Supplier);
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount,"0");
             await Task.Delay(200);
             var result = await this.gridSupplierService.Sync(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);
-            if (!result)
+            if (!result.WasSuccessful)
             {
-
-                await DialogService.ShowAlertAsync("Error import consumation and sold production.", AppResources.My_Solar_Cells, AppResources.Ok);
-
+                await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
+                return;
             }
             else
             {
@@ -55,7 +54,7 @@ public class FirstSyncViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.FirstImportElectricitySupplierIsDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus = AppResources.Import_Data_From_Inverter;
+            ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText, "2", "2", AppResources.Import_Data_From_Inverter);
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
             
@@ -77,7 +76,7 @@ public class FirstSyncViewModel : BaseViewModel
                     await DialogService.ShowAlertAsync(result.Model.Message, AppResources.My_Solar_Cells, AppResources.Ok);
 
                 await DialogService.ShowAlertAsync(AppResources.Error_Import_Data_From_Inverter, AppResources.My_Solar_Cells, AppResources.Ok);
-
+                return;
             }
             else
             {

@@ -43,7 +43,7 @@
 	</ItemGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
 		<!--DEBUG ON DEVICE-->
-		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<!--DEBUG ON SIMULATOR-->
 		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
 	</PropertyGroup>
@@ -71,6 +71,7 @@
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="23.1.43" />
 		<PackageReference Include="Shiny.Jobs" Version="3.1.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.1.1" />
+		<PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 	</ItemGroup>
 	<!-- Translation -->
 	<ItemGroup>

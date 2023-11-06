@@ -8,4 +8,8 @@ public partial class EnergyView : BaseContentPage
         BindingContext = vm;
 		//this.StatusbarBackgroundColor = AppColors.Primary800Color;
     }
+
+    void RefreshView_Refreshing(System.Object sender, System.EventArgs e)
+    {
+    }
 }
