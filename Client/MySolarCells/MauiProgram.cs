@@ -12,8 +12,8 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-        //builder.Services.AddDbContext<MscDbContext>(
-        //    options => options.UseSqlite($"Filename={GetDataBasePath()}", x => x.MigrationsAssembly(nameof(MySolarCellsSQLite))));
+        builder.Services.AddDbContext<MscDbContext>(
+            options => options.UseSqlite($"Filename={GetDataBasePath()}", x => x.MigrationsAssembly(nameof(MySolarCellsSQLite))));
         
 
         builder
@@ -22,9 +22,9 @@ public static class MauiProgram
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .UseShiny()
-            //.ConfigureServices()
-            //.ConfigureViewModels()
-           // .ConfigureViews()
+            .ConfigureServices()
+            .ConfigureViewModels()
+            .ConfigureViews()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -36,8 +36,8 @@ public static class MauiProgram
             builder.UseLocalNotification();
 
 
-        var job = new JobInfo("DalySync",typeof(JobDalySync),BatteryNotLow: true,DeviceCharging: false,RunOnForeground: false,RequiredInternetAccess: true ? InternetAccess.Any : InternetAccess.None);
-        builder.Services.AddJob(job);
+        //var job = new JobInfo("DalySync",typeof(JobDalySync),BatteryNotLow: true,DeviceCharging: false,RunOnForeground: false,RequiredInternetAccess: true ? InternetAccess.Any : InternetAccess.None);
+        //builder.Services.AddJob(job);
        
        
 
@@ -68,16 +68,22 @@ public static class MauiProgram
         else if (DeviceInfo.Platform == DevicePlatform.iOS)
         {
             SQLitePCL.Batteries_V2.Init();
+            //databasePath = Path.Combine(FileSystem.AppDataDirectory, databaseName);
             databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
         }
         else if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
         {
-            databasePath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
-            if (!Directory.Exists(databasePath))
-            {
-                Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
-                Directory.CreateDirectory("MySolarCells");
-            }
+            //Detta för att köra på mac som ios app
+            SQLitePCL.Batteries_V2.Init();
+            //databasePath = Path.Combine(FileSystem.AppDataDirectory, databaseName);
+            databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
+            //detta som mac catalyst local
+            //databasePath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
+            //if (!Directory.Exists(databasePath))
+            //{
+            //    Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
+            //    Directory.CreateDirectory("MySolarCells");
+            //}
         }
         
        

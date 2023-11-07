@@ -6,13 +6,13 @@ public class EnergyViewModel : BaseViewModel
     private readonly IEnergyChartService energyChartService;
     private readonly IDataSyncService dataSyncService;
     private readonly MscDbContext mscDbContext;
-    private readonly IJobManager jobManager;
-    public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService, MscDbContext mscDbContext,IJobManager jobManager)
+    //private readonly IJobManager jobManager;
+    public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService, MscDbContext mscDbContext) //,IJobManager jobManager
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
         this.mscDbContext = mscDbContext;
-        this.jobManager = jobManager;
+        //this.jobManager = jobManager;
         
         //DateTime dateTime = new DateTime(2023, 4, 8);
         //long milliseconds = DateHelper.DateTimeToMillis(dateTime);
@@ -152,7 +152,7 @@ public class EnergyViewModel : BaseViewModel
         if (FirstTimeAppearing)
         {
             await ReloadGraph(true);
-            await this.jobManager.RunAll();
+            //await this.jobManager.RunAll();
             //var jobs = this.jobManager.GetJobs();
             //await this.jobManager.RunAll();
             //if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)

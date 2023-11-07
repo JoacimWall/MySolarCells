@@ -9,13 +9,13 @@ public partial class App : Application
     private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
     private readonly IDataSyncService dataSyncService;
-    public App() //ISettingsService settingsService, IDataSyncService dataSyncService,MscDbContext mscDbContext
+    public App(ISettingsService settingsService, IDataSyncService dataSyncService, MscDbContext mscDbContext) //
     {
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNTI3NEAzMjMzMmUzMDJlMzBkR2xabUJjTnZ2Q3hQMnMrVVhobURpbDBMNzErbTMzYm15dmowZERRbUtFPQ==");
-        //this.settingsService = settingsService;
-        //this.dataSyncService = dataSyncService;
-        //this.mscDbContext = mscDbContext;
+        this.settingsService = settingsService;
+        this.dataSyncService = dataSyncService;
+        this.mscDbContext = mscDbContext;
         MySolarCellsGlobals.App = this;
 
         // Local Notification tap event listener
@@ -24,8 +24,8 @@ public partial class App : Application
         //LocalNotificationCenter.Current.No += Current_NotificationReceived;
 
 
-        // MainPage = new StartupShell();
-        MainPage = new ContentPage { BackgroundColor = Colors.MistyRose };
+         MainPage = new StartupShell();
+        //MainPage = new ContentPage { BackgroundColor = Colors.MistyRose };
 
     }
 
@@ -106,7 +106,7 @@ public partial class App : Application
     }
     protected async override void OnStart()
     {
-        return;
+        
         //then we don't want the Initnavigation to do the same thing. the app crash on IOS works on Android  
         //if (((Shell)(App.Current.MainPage)).CurrentPage is StartupView)
         await initApp(false);
