@@ -472,4 +472,20 @@
 <data name="Step_Nr_of_Nr_InfoText" xml:space="preserve">
     <value>Step {0} of {1} {2}</value>
   <comment>Need review</comment></data>
+<data name="Fun_Facts" xml:space="preserve">
+    <value>Fun facts</value>
+  <comment>Need review</comment></data>
+
+<data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
+    <value>Average purchased cost/kWh</value>
+  <comment>Need review</comment></data>
+<data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
+    <value>Average production sold profit/kWh</value>
+  <comment>Need review</comment></data>
+<data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
+    <value>Average production own use saved/Kwh</value>
+  <comment>Need review</comment></data>
+<data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
+    <value>Average battery used saved/Kwh</value>
+  <comment>Need review</comment></data>
 </root>

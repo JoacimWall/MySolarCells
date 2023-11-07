@@ -49,8 +49,7 @@ public class MscDbContext : DbContext
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
         modelBuilder.Entity<Preferences>().HasIndex(u => u.Name).IsUnique();
         //modelBuilder.Entity<TemplateType>().HasIndex(u => u.Type).IsUnique();
-        modelBuilder.Entity<InvestmentAndLoan>()
-            .HasMany(c => c.Interest);
+        modelBuilder.Entity<InvestmentAndLoan>().HasMany(c => c.Interest);
     }
 
     public DbSet<Home> Home { get; set; }

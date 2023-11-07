@@ -19,8 +19,8 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         if (InvestmentAndLoans != null && InvestmentAndLoans.Count > 0)
         {
             selectedInvestmentAndloan = InvestmentAndLoans.Last();
-            if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count > 0)
-                SelectedInterest = selectedInvestmentAndloan.Interest.Last();
+            //if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count > 0)
+            //    SelectedInterest = selectedInvestmentAndloan.Interest.Last();
         }
         else
         {
@@ -46,8 +46,8 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             dbEntity.Investment = selectedInvestmentAndloan.Investment;
             dbEntity.Description = selectedInvestmentAndloan.Description;
             dbEntity.Loan = selectedInvestmentAndloan.Loan;
-            //TODO:Se till att updatera ränta tabell också
-            dbEntity.Interest.First().Interest = SelectedInterest.Interest;
+            
+            //dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
         }
         await this.mscDbContext.SaveChangesAsync();
@@ -89,14 +89,19 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         set
         {
             SetProperty(ref investmentAndLoans, value);
-
+            
         }
     }
     private InvestmentAndLoan selectedInvestmentAndloan;
     public InvestmentAndLoan SelectedInvestmentAndloan
     {
         get => selectedInvestmentAndloan;
-        set { SetProperty(ref selectedInvestmentAndloan, value); }
+        set
+        {
+            SetProperty(ref selectedInvestmentAndloan, value);
+            if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count >0)
+                SelectedInterest = selectedInvestmentAndloan.Interest.Last();
+        }
     }
     private InvestmentAndLoanInterest selectedInterest;
     public InvestmentAndLoanInterest SelectedInterest

@@ -121,6 +121,42 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Average battery used saved/Kwh.
+        /// </summary>
+        public static string Average_Battery_Used_Saved_Per_Kwh {
+            get {
+                return ResourceManager.GetString("Average_Battery_Used_Saved_Per_Kwh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average production own use saved/Kwh.
+        /// </summary>
+        public static string Average_Production_Own_Use_Saved_Per_Kwh {
+            get {
+                return ResourceManager.GetString("Average_Production_Own_Use_Saved_Per_Kwh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average production sold profit/kWh.
+        /// </summary>
+        public static string Average_Production_Sold_Profit_Per_Kwh {
+            get {
+                return ResourceManager.GetString("Average_Production_Sold_Profit_Per_Kwh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average purchased cost/kWh.
+        /// </summary>
+        public static string Average_Purchased_Cost_Per_Kwh {
+            get {
+                return ResourceManager.GetString("Average_Purchased_Cost_Per_Kwh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         public static string Back {
@@ -378,6 +414,15 @@ namespace MySolarCells.Resources.Translations {
         public static string From_Date {
             get {
                 return ResourceManager.GetString("From_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fun facts.
+        /// </summary>
+        public static string Fun_Facts {
+            get {
+                return ResourceManager.GetString("Fun_Facts", resourceCulture);
             }
         }
         

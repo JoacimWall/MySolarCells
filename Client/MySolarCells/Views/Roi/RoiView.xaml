@@ -90,6 +90,15 @@
                     <!--Balance_Production_Consumption-->
                     <Label Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
 
+
+                    <!--FUN FACTS-->
+                    <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Fun_Facts}"/>
+                    <Label Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Day_ins_KWh}"/>
+                    <Label Text="{x:Static trans:AppResources.Average_Purchased_Cost_Per_Kwh}"/>
+                    <Label Text="{x:Static trans:AppResources.Average_Production_Sold_Profit_Per_Kwh}"/>
+                   <Label Text="{x:Static trans:AppResources.Average_Production_Own_Use_Saved_Per_Kwh}"/>
+                    <Label Text="{x:Static trans:AppResources.Average_Battery_Used_Saved_Per_Kwh}"/>
+  
                 </VerticalStackLayout >
                 <!--Value-->
                 <VerticalStackLayout Grid.Row="2" Grid.Column="1" >
@@ -124,6 +133,14 @@
                     <Label Text="{Binding RoiStats.SumPurchasedCost}" HorizontalTextAlignment="End"/>
                     <Label Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost}"  HorizontalTextAlignment="End" />
 
+                      <!--FUN FACTS-->
+                    <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text=" "/>
+                    <Label Text="{Binding RoiStats.FactsProductionIndex}" HorizontalTextAlignment="End"/>
+                    <Label Text="{Binding RoiStats.FactsPurchasedCostAveragePerKwhPurchased}" HorizontalTextAlignment="End"/>
+                    <Label Text="{Binding RoiStats.FactsProductionSoldAveragePerKwhProfit}" HorizontalTextAlignment="End"/>
+                    <Label Text="{Binding RoiStats.FactsProductionOwnUseAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
+                    <Label Text="{Binding RoiStats.FactsBatteryUsedAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
+  
                 </VerticalStackLayout>
 
                 <!--Unit-->
@@ -155,6 +172,15 @@
                     <Label Text="{Binding RoiStats.Currency}"/>
                     <Label Text="{Binding RoiStats.Currency}"/>
                     <Label Text="{Binding RoiStats.Currency}"/>
+
+                      <!--FUN FACTS-->
+                    <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text=" "/>
+                     <Label Text="{Binding RoiStats.Unit}" />
+                    <Label Text="{Binding RoiStats.Currency}"/>
+                    <Label Text="{Binding RoiStats.Currency}"/>
+                    <Label Text="{Binding RoiStats.Currency}"/>
+                    <Label Text="{Binding RoiStats.Currency}"/>
+                   
                 </VerticalStackLayout>
 
 

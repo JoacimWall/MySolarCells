@@ -26,7 +26,7 @@
     </Shell.TitleView>
     <ScrollView x:Name="TheScrollView" Margin="0" >
         <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, Auto,Auto, Auto, Auto"  >
-            <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto">
+            <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnSpacing="16" ColumnDefinitions="Auto,Auto">
                 <Image Margin="0,0,0,0"
                    Aspect="AspectFit"
                    BackgroundColor="Transparent"
