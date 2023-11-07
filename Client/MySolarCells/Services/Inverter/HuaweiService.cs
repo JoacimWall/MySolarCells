@@ -149,7 +149,7 @@ public class HuaweiService : IInverterServiceInterface
                         returValue= new Result<DataSyncResponse>(new DataSyncResponse
                         {
                             SyncState = DataSyncState.ProductionSync,
-                            Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More, "24", start.ToShortDateString())
+                            Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More, "24", countApiRequests.ToString(),start.ToShortDateString())
                             
                         });
                         break;

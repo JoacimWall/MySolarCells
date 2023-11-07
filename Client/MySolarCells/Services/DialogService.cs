@@ -95,7 +95,7 @@ public class DialogService : IDialogService
           UserDialogs.Instance.Toast(new ToastConfig(message)
                  .SetBackgroundColor(System.Drawing.Color.Gray)
                  .SetMessageTextColor(System.Drawing.Color.White)
-                 .SetDuration(TimeSpan.FromSeconds(3))
+                 .SetDuration(TimeSpan.FromSeconds(5))
                  .SetPosition(toastPosition)
 
 

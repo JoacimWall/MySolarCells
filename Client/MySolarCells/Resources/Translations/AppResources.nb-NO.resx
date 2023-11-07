@@ -414,9 +414,6 @@
   <data name="Investment_And_Loan" xml:space="preserve">
     <value>Investering og lån</value>
   <comment>Need review</comment></data>
-  <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More" xml:space="preserve">
-    <value>Importen av data fra omformeren ble avsluttet, da den bare tillater {0} dager med synkronisering per dag. Du har nå data opptil {1}</value>
-  <comment>Need review</comment></data>
   <data name="Import_Of_Production_Done" xml:space="preserve">
     <value>Import av produksjon utført</value>
   <comment>Need review</comment></data>
@@ -426,4 +423,7 @@
   <data name="Step_Nr_of_Nr_InfoText" xml:space="preserve">
     <value>Trinn {0} av {1} {2}</value>
   <comment>Need review</comment></data>
+  <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
+    <value>Import av data fra omformeren ble avsluttet, da den bare tillater {0} dager med synkronisering per dag. Du importerte {1} dager, har nå data på opptil {2}</value>
+<comment>Need review</comment></data>
 </root>

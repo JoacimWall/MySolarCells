@@ -31,7 +31,10 @@ public class RoiViewModel : BaseViewModel
         {
             await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
-
+        else
+        {
+            DialogService.ShowToast(result.Model.Message);
+        }
         await ReloadData(false);
         IsRefreshing = false;
     }

@@ -35,6 +35,10 @@ public class EnergyViewModel : BaseViewModel
         {
             await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
+        else
+        {
+             DialogService.ShowToast(result.Model.Message);
+        }
 
         await ReloadGraph();
     }
@@ -161,6 +165,7 @@ public class EnergyViewModel : BaseViewModel
         if (FirstTimeAppearing)
         {
             await ReloadGraph(true);
+            await this.jobManager.RunAll();
             //var jobs = this.jobManager.GetJobs();
             //await this.jobManager.RunAll();
             //if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)

@@ -472,11 +472,11 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Importing data from your inverter ended as it only allows {0} days of sync per day. You now have data up to {1}.
+        ///   Looks up a localized string similar to Importing data from your inverter ended as it only allows {0} days of sync per day. You impored {1} days, now have data up to {2}.
         /// </summary>
-        public static string Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More {
+        public static string Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More {
             get {
-                return ResourceManager.GetString("Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_and_More", resourceCulture);
+                return ResourceManager.GetString("Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More", resourceCulture);
             }
         }
         
