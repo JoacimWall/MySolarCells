@@ -9,20 +9,21 @@ public interface IDataSyncService
 
 public class DataSyncService : IDataSyncService
 {
-    private readonly IGridSupplierInterface gridSupplierInterface;
-    private readonly IInverterServiceInterface inverterService;
+    //private readonly IGridSupplierInterface gridSupplierInterface;
+    //private readonly IInverterServiceInterface inverterService;
     private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
     public DataSyncService(ISettingsService settingsService,MscDbContext mscDbContext)
     {
         this.settingsService = settingsService;
         this.mscDbContext= mscDbContext;
-        this.gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.First().ElectricitySupplier);
-        this.inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.First().InverterTyp);
     }
 
     public async Task<Result<DataSyncResponse>> Sync()
     {
+        var gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.FirstOrDefault().ElectricitySupplier);
+        var inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.FirstOrDefault().InverterTyp);
+
         var currentHour = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Hour);
         if (this.settingsService.LastDataSync > currentHour)
         {
@@ -63,7 +64,7 @@ public class DataSyncService : IDataSyncService
         //ProgressStatus = "Import consumation and sold production.";
         //ProgressSubStatus = "saved rows 0";
         await Task.Delay(200);
-        var result = await this.gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
+        var result = await gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
         if (!result.WasSuccessful)
             return result;
 
@@ -84,7 +85,7 @@ public class DataSyncService : IDataSyncService
         {
             CalculateProgress(currentDay, totalhoursInv);
         });
-        var resultInverter = await this.inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
+        var resultInverter = await inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
        
 
         mscDbContext.Log.Add(new Services.Sqlite.Models.Log

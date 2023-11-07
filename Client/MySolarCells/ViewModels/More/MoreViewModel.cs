@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Syncfusion.XlsIO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MySolarCells.ViewModels.More;
 
@@ -108,16 +109,6 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A13"].CellStyle.Font.Bold = true;
             worksheet.Range["A13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-            //worksheet.Range["A14"].Text = AppResources.If_Battery_Is_Not_Used;
-            //worksheet.Range["A14"].CellStyle.Font.Bold = true;
-            //worksheet.Range["A15"].Text = AppResources.kWh;
-            //worksheet.Range["A16"].Text = AppResources.Currency;
-            //worksheet.Range["A17"].Text = AppResources.Production_To_Grid;
-            //worksheet.Range["A18"].Text = AppResources.Energy_Tax;
-            //worksheet.Range["A19"].Text = AppResources.Amount;
-            //worksheet.Range["A19"].CellStyle.Font.Bold = true;
-            //worksheet.Range["A19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-
             worksheet.Range["A14"].Text = AppResources.Production_Own_Use;
             worksheet.Range["A14"].CellStyle.Font.Bold = true;
             worksheet.Range["A15"].Text = AppResources.kWh;
@@ -139,7 +130,16 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range["A27"].Text = AppResources.Result;
             worksheet.Range["A27"].CellStyle.Font.Bold = true;
             worksheet.Range["A27"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-            worksheet.Range["A1:A27"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
+
+            worksheet.Range["A28"].Text = AppResources.Fun_Facts;
+            worksheet.Range["A28"].CellStyle.Font.Bold = true;
+            worksheet.Range["A29"].Text = AppResources.Production_Index_Desc_Prod_Day_ins_KWh;
+            worksheet.Range["A30"].Text = AppResources.Average_Purchased_Cost_Per_Kwh;
+            worksheet.Range["A31"].Text = AppResources.Average_Production_Sold_Profit_Per_Kwh;
+            worksheet.Range["A32"].Text = AppResources.Average_Production_Own_Use_Saved_Per_Kwh;
+            worksheet.Range["A33"].Text = AppResources.Average_Battery_Used_Saved_Per_Kwh;
+           
+            worksheet.Range["A1:A33"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
             worksheet.Range["A1"].ColumnWidth = 36;
 
             int index = 0;
@@ -196,14 +196,6 @@ public class MoreViewModel : BaseViewModel
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "13"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-                    //worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.TotalBatteryCharge.ToString();
-                    //worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.TotalBatteryChargeProfitFake.ToString();
-                    //worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.TotalCompensationForProductionToGridChargeBatteryFake.ToString();
-                    //worksheet.Range[prefixValue + c.ToString() + "18"].Value = result.Model[index].RoiStats.TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid.ToString();
-                    //worksheet.Range[prefixValue + c.ToString() + "19"].Value = result.Model[index].RoiStats.SumProductionBatteryChargeFakeSold.ToString();
-                    //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Font.Bold = true;
-                    //worksheet.Range[prefixValue + c.ToString() + "19"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-
                     worksheet.Range[prefixValue + c.ToString() + "15"].Value = result.Model[index].RoiStats.ProductionOwnUse.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "16"].Value = result.Model[index].RoiStats.BatteryUsed.ToString();
                     worksheet.Range[prefixValue + c.ToString() + "17"].Value = result.Model[index].RoiStats.ProductionOwnUseSaved.ToString();
@@ -222,8 +214,15 @@ public class MoreViewModel : BaseViewModel
                     worksheet.Range[prefixValue + c.ToString() + "27"].CellStyle.Font.Bold = true;
                     worksheet.Range[prefixValue + c.ToString() + "27"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
+                    worksheet.Range[prefixValue + c.ToString() + "29"].Value = result.Model[index].RoiStats.FactsProductionIndex.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "30"].Value = result.Model[index].RoiStats.FactsPurchasedCostAveragePerKwhPurchased.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "31"].Value = result.Model[index].RoiStats.FactsProductionSoldAveragePerKwhProfit.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "32"].Value = result.Model[index].RoiStats.FactsProductionOwnUseAveragePerKwhSaved.ToString();
+                    worksheet.Range[prefixValue + c.ToString() + "33"].Value = result.Model[index].RoiStats.FactsBatteryUsedAveragePerKwhSaved.ToString();
+                   
                     //worksheet.Range[c.ToString() + "3:23"].HorizontalAlignment = ExcelHAlign.HAlignRight;
-
+                   
+                   
 
 
                     totalProducedSaved = totalProducedSaved + result.Model[index].RoiStats.BalanceProfitAndSaved_Minus_InterestCost;
