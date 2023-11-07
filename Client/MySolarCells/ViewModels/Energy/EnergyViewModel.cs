@@ -1,7 +1,4 @@
 ﻿using Shiny.Jobs;
-using SkiaSharp;
-using SkiaSharp.Views.Maui;
-
 namespace MySolarCells.ViewModels.Energy;
 
 public class EnergyViewModel : BaseViewModel
@@ -60,17 +57,7 @@ public class EnergyViewModel : BaseViewModel
         }
         
 
-        SKColor LineColor  = AppColors.Gray700Color.ToSKColor();
-        SKPaint YAxesPaint = new SKPaint
-        {
-            Style = SKPaintStyle.Fill,
-            Color = LineColor,
-            IsAntialias = true,
-            TextSize = 20,
-            Typeface = SkiaSharpHelper.OpenSansRegular
-        };
-
-
+       
         // ---------- Price Graph ---------------------------
         PriceChartTitle = resultSeries.Model.PriceChartTitle;
         //Price Buy
