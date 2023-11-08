@@ -12,8 +12,8 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-        builder.Services.AddDbContext<MscDbContext>(
-            options => options.UseSqlite($"Filename={GetDataBasePath()}", x => x.MigrationsAssembly(nameof(MySolarCellsSQLite))));
+        //builder.Services.AddDbContext<MscDbContext>(
+        //    options => options.UseSqlite($"Filename={GetDataBasePath()}", x => x.MigrationsAssembly(nameof(MySolarCellsSQLite))));
         
 
         builder
@@ -74,17 +74,17 @@ public static class MauiProgram
         else if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
         {
             //Detta för att köra på mac som ios app
-            //SQLitePCL.Batteries_V2.Init();
+            SQLitePCL.Batteries_V2.Init();
             //databasePath = Path.Combine(FileSystem.AppDataDirectory, databaseName);
-            //databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
+            databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
 
             //detta som mac catalyst local
-            databasePath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
-            if (!Directory.Exists(databasePath))
-            {
-                Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
-                Directory.CreateDirectory("MySolarCells");
-            }
+            //databasePath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
+            //if (!Directory.Exists(databasePath))
+            //{
+            //    Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
+            //    Directory.CreateDirectory("MySolarCells");
+            //}
         }
         
        

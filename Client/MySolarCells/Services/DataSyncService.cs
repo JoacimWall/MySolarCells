@@ -24,18 +24,7 @@ public class DataSyncService : IDataSyncService
         var gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.FirstOrDefault().ElectricitySupplier);
         var inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.FirstOrDefault().InverterTyp);
 
-        var currentHour = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Hour);
-        if (this.settingsService.LastDataSync > currentHour)
-        {
-            mscDbContext.Log.Add(new Services.Sqlite.Models.Log
-            {
-                LogTitle = "Sync not started allready has all data for prev hour",
-                CreateDate = DateTime.Now,
-                LogDetails = "",
-                LogTyp = (int)LogTyp.Info
-            });
-            return new Result<DataSyncResponse>(new DataSyncResponse { Message = "Sync not started allready has all data for prev hour" }, true);
-        }
+       
 
         mscDbContext.Log.Add(new Services.Sqlite.Models.Log
         {
@@ -46,6 +35,20 @@ public class DataSyncService : IDataSyncService
         });
         //Get last Sync Time
         var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var PevhourDatetime = DateTime.Now.AddHours(-1);   
+        var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Hour);
+        if (lastSyncTime.Timestamp >= prevHoleHour)
+        {
+            mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+            {
+                LogTitle = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More,
+                CreateDate = DateTime.Now,
+                LogDetails = "",
+                LogTyp = (int)LogTyp.Info
+            });
+            return new Result<DataSyncResponse>(new DataSyncResponse { Message = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More }, true);
+        }
+
         var difference = DateTime.Now - lastSyncTime.Timestamp;
 
         var days = difference.Days;
@@ -95,8 +98,8 @@ public class DataSyncService : IDataSyncService
             LogDetails = "",
             LogTyp = result.WasSuccessful ? (int)LogTyp.Info : (int)LogTyp.Error
         });
-        if (resultInverter.WasSuccessful)
-            this.settingsService.LastDataSync = DateTime.Now;
+        //if (resultInverter.WasSuccessful)
+        //    this.settingsService.LastDataSync = DateTime.Now;
         return resultInverter;
 
     }

@@ -427,4 +427,22 @@
   <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
     <value>Tietojen tuonti invertteristäsi päättyi, koska se sallii vain {0} päivää synkronoinnin päivässä. Toit {1} päivää, nyt tietoja on enintään {2}</value>
 <comment>Need review</comment></data>
+  <data name="Fun_Facts" xml:space="preserve">
+    <value>Hauskoja faktoja</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
+    <value>Keskimääräinen ostohinta/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
+    <value>Keskimääräinen myyntivoitto/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
+    <value>Keskimääräinen tuotannon oma käyttö säästetty/kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
+    <value>Keskimäärin käytetty akku säästetty/kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
+    <value>Synkronointi ei käynnistynyt, koska meillä on kaikki tiedot edelliseen täyteen tuntiin asti.</value>
+  <comment>Need review</comment></data>
 </root>

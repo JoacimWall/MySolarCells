@@ -9,6 +9,7 @@ public static class ServicesExtensions
     {
         //Singelton
         builder.Services.AddSingleton<IDialogService, DialogService>();
+        builder.Services.AddSingleton(new MscDbContext());
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<IRoiService, RoiService>();
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();

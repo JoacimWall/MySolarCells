@@ -426,4 +426,22 @@
   <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
     <value>Import af data fra din inverter er afsluttet, da den kun tillader {0} dages synkronisering pr. dag. Du har importeret {1} dage, har nu data op til {2}</value>
 <comment>Need review</comment></data>
+  <data name="Fun_Facts" xml:space="preserve">
+    <value>Sjove fakta</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
+    <value>Gennemsnitlig indkøbt pris/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
+    <value>Gennemsnitlig produktion solgt avance/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
+    <value>Gennemsnitlig produktion eget forbrug sparet/Kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
+    <value>Gennemsnitligt brugt batteri sparet/Kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
+    <value>Synkronisering er ikke startet, da vi har alle data op til den foregående hele time.</value>
+  <comment>Need review</comment></data>
 </root>

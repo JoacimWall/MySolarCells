@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public interface ISettingsService
 {
     OnboardingStatusEnum OnboardingStatus { get; set; }
     int SelectedHomeId { get; set; }
-    DateTime LastDataSync { get; set; }
+    //DateTime LastDataSync { get; set; }
 }
 
 public class SettingsService : ISettingsService
@@ -65,25 +63,25 @@ public class SettingsService : ISettingsService
             
         }
     }
-    public DateTime LastDataSync
-    {
-        get
-        {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
-            if (exist == null)
-                return DateTime.Now.AddHours(-1);
-            else
-                return exist.DateValue;
-        }
-        set
-        {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
-            if (exist == null)
-                this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(LastDataSync), DateValue =value });
-            else
-                exist.DateValue = value;
-            this.mscDbContext.SaveChanges();
-        }
-    }
+    //public DateTime LastDataSync
+    //{
+    //    get
+    //    {
+    //        var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
+    //        if (exist == null)
+    //            return DateTime.Now.AddHours(-1);
+    //        else
+    //            return exist.DateValue;
+    //    }
+    //    set
+    //    {
+    //        var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
+    //        if (exist == null)
+    //            this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(LastDataSync), DateValue =value });
+    //        else
+    //            exist.DateValue = value;
+    //        this.mscDbContext.SaveChanges();
+    //    }
+    //}
     
 }

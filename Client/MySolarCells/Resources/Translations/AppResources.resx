@@ -488,4 +488,8 @@
 <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
     <value>Average battery used saved/Kwh</value>
   <comment>Need review</comment></data>
+<data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
+    <value>Synchronization not started as we have all data up to the previous full hour.</value>
+  <comment>Need review</comment></data>
+
 </root>

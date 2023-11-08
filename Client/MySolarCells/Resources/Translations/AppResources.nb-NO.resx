@@ -426,4 +426,22 @@
   <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
     <value>Import av data fra omformeren ble avsluttet, da den bare tillater {0} dager med synkronisering per dag. Du importerte {1} dager, har nå data på opptil {2}</value>
 <comment>Need review</comment></data>
+  <data name="Fun_Facts" xml:space="preserve">
+    <value>Morsomme fakta</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
+    <value>Gjennomsnittlig innkjøpt kostnad/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
+    <value>Gjennomsnittlig produksjon solgt fortjeneste/kWh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
+    <value>Gjennomsnittlig produksjon egenbruk spart/Kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
+    <value>Gjennomsnittlig batteri brukt spart/Kwh</value>
+  <comment>Need review</comment></data>
+  <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
+    <value>Synkronisering ikke startet da vi har alle data opp til forrige hele time.</value>
+  <comment>Need review</comment></data>
 </root>

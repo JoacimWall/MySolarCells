@@ -1129,6 +1129,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Synchronization not started as we have all data up to the previous full hour..
+        /// </summary>
+        public static string Synchronization_Not_Started_As_We_Have_All_Data_And_More {
+            get {
+                return ResourceManager.GetString("Synchronization_Not_Started_As_We_Have_All_Data_And_More", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tax reduction.
         /// </summary>
         public static string Tax_Reduction {

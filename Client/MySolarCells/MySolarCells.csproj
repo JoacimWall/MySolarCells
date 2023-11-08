@@ -23,7 +23,7 @@
 		<ApplicationId>com.walltech.mysolarcells.beta</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
-		<ApplicationVersion>16</ApplicationVersion>
+		<ApplicationVersion>19</ApplicationVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">25.0</SupportedOSPlatformVersion>
@@ -45,7 +45,7 @@
 		<!--DEBUG ON DEVICE-->
 		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
 		<!--DEBUG ON SIMULATOR-->
-		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
+		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
 		<RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
@@ -174,7 +174,8 @@
 	</PropertyGroup>-->
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <CreatePackage>false</CreatePackage>
-	  <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.Debug.plist</CodesignEntitlements>
+	  <CodesignKey>Mac Developer</CodesignKey>
+	  <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <CreatePackage>false</CreatePackage>
