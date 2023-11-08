@@ -271,9 +271,6 @@
   <data name="Total_Interest" xml:space="preserve">
     <value>Kokonaiskorko</value>
   <comment>Need review</comment></data>
-  <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
-    <value>Tuotantoindeksi (tuote/päivä/tuumaa kWh)</value>
-  <comment>Need review</comment></data>
   <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
     <value>Käytä samaa kirjautumistunnusta kuin Kostal-sovelluksessa/Kostal-verkkoportaalissa</value>
   <comment>Need review</comment></data>
@@ -444,5 +441,8 @@
   <comment>Need review</comment></data>
   <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
     <value>Synkronointi ei käynnistynyt, koska meillä on kaikki tiedot edelliseen täyteen tuntiin asti.</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
+    <value>Tuotantoindeksi (tuote/päivä)</value>
   <comment>Need review</comment></data>
 </root>

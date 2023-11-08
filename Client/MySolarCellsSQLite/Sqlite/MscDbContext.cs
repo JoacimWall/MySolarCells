@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
 using MySolarCells.Services.Sqlite.Models;
 
@@ -29,27 +30,30 @@ public class MscDbContext : DbContext
     {
         //använd i app mode
         string fodlderPath = FileSystem.AppDataDirectory;
-        //if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
-        //    fodlderPath = Path.Combine(FileSystem.AppDataDirectory, "MySolarCells");
-
-        if (!Directory.Exists(fodlderPath))
+        string filename = "Db_v_1.db3";
+        if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
         {
-            Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
-            Directory.CreateDirectory("MySolarCells");
+            //detta som mac catalyst local
+            fodlderPath = Path.Combine(fodlderPath, "MySolarCells");
+            if (!Directory.Exists(fodlderPath))
+            {
+                Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
+                Directory.CreateDirectory("MySolarCells");
+            }
         }
-
-        var dbPath = Path.Combine(fodlderPath, "Db_v_1.db3");
         try
         {
-            optionsBuilder.UseSqlite($"Filename={dbPath}");
+            optionsBuilder.UseSqlite($"Filename={Path.Combine(fodlderPath, filename)}");
         }
         catch
         {
 
         }
-        //används för migrations bygga med console app
-        //optionsBuilder.UseSqlite("Data Source=MyDb.db");
+
+
+
     }
+
     //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //=> optionsBuilder.UseSqlite();
 

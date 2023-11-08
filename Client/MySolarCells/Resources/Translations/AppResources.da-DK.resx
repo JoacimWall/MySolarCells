@@ -270,9 +270,6 @@
   <data name="Total_Interest" xml:space="preserve">
     <value>Samlet rente</value>
   <comment>Need review</comment></data>
-  <data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
-    <value>Produktionsindeks (prod/dag/ins. kWh)</value>
-  <comment>Need review</comment></data>
   <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
     <value>Brug samme login som i kostal app/Kostal webportal login</value>
   <comment>Need review</comment></data>
@@ -443,5 +440,8 @@
   <comment>Need review</comment></data>
   <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
     <value>Synkronisering er ikke startet, da vi har alle data op til den foregående hele time.</value>
+  <comment>Need review</comment></data>
+  <data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
+    <value>Produktionsindeks (prod/dag)</value>
   <comment>Need review</comment></data>
 </root>

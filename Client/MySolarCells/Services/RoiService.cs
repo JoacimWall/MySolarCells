@@ -1,4 +1,6 @@
-﻿namespace MySolarCells.Services;
+﻿using MySolarCells.Services.Sqlite.Models;
+
+namespace MySolarCells.Services;
 
 public interface IRoiService
 {
@@ -107,16 +109,18 @@ public class RoiService : IRoiService
             BalanceProduction_Minus_Consumption = Math.Round(sumRoi.Sum(x => x.BalanceProduction_Minus_Consumption), 2),
             BalanceProductionProfit_Minus_ConsumptionCost = Math.Round(sumRoi.Sum(x => x.BalanceProductionProfit_Minus_ConsumptionCost), 2),
 
-            //fun Facts
-            FactsProductionIndex = Math.Round(sumRoi.Sum(x => x.FactsProductionIndex), 2),
-           
-
-
-
 
         };
-        //Devide per day
-        returnRoi.FactsProductionIndex = Math.Round(returnRoi.FactsProductionIndex / difference.TotalDays, 2);
+
+        //var soloarFirstDate = await mscDbContext.Energy.FirstOrDefaultAsync(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.Timestamp > start);
+        //if (soloarFirstDate != null)
+        //{
+        //    var enddate = end > DateTime.Now ? DateTime.Now : end;
+        //    var differenceProductionIndex = enddate - soloarFirstDate.Timestamp;
+        //    returnRoi.FactsProductionIndex = Math.Round(returnRoi.FactsProductionIndex / Convert.ToInt32(differenceProductionIndex.Value.TotalDays), 2);
+        //}
+        //Devided per day
+        returnRoi.FactsProductionIndex = Math.Round(returnRoi.SumAllProduction / difference.TotalDays, 2);
         returnRoi.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(returnRoi.SumPurchasedCost / returnRoi.Purchased, 2);
         returnRoi.FactsProductionSoldAveragePerKwhProfit = Math.Round(returnRoi.SumProductionSoldProfit / returnRoi.ProductionSold, 2);
         returnRoi.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(returnRoi.SumProductionOwnUseSaved / returnRoi.ProductionOwnUse, 2);
@@ -277,14 +281,7 @@ public class RoiService : IRoiService
 
 
         //Production Index amount of production per installed kWh
-        var soloarFirstDate = energy.FirstOrDefault(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0);
-        if (soloarFirstDate != null)
-        {
-            var enddate = end > DateTime.Now ? DateTime.Now : end;
-            var difference = enddate - soloarFirstDate.Timestamp;
-            roiStats.FactsProductionIndex = Math.Round((roiStats.SumAllProduction / Convert.ToInt32(difference.Value.TotalDays) / calcParams.TotalInstallKwhPanels), 2);
-        }
-
+        //.FactsProductionIndex = roiStats.SumAllProduction / calcParams.TotalInstallKwhPanels;
 
         roiStats.EnergyCalculationParameter = calcParams;
         return roiStats;

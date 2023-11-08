@@ -93,7 +93,7 @@
 
                     <!--FUN FACTS-->
                     <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Fun_Facts}"/>
-                    <Label Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Day_ins_KWh}"/>
+                    <Label Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Per_Day_KWh}"/>
                     <Label Text="{x:Static trans:AppResources.Average_Purchased_Cost_Per_Kwh}"/>
                     <Label Text="{x:Static trans:AppResources.Average_Production_Sold_Profit_Per_Kwh}"/>
                    <Label Text="{x:Static trans:AppResources.Average_Production_Own_Use_Saved_Per_Kwh}"/>

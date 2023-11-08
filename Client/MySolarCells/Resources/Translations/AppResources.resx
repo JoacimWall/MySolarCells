@@ -343,8 +343,8 @@
 <data name="Total_Interest" xml:space="preserve">
     <value>Total interest</value>
   <comment>Need review</comment></data>
-<data name="Production_Index_Desc_Prod_Day_ins_KWh" xml:space="preserve">
-    <value>Production index (prod/day/ins. kWh)</value>
+<data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
+    <value>Production index (prod/day)</value>
   <comment>Need review</comment></data>
 <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
     <value>Use the same login as in the kostal app/Kostal web portal login</value>
@@ -475,7 +475,6 @@
 <data name="Fun_Facts" xml:space="preserve">
     <value>Fun facts</value>
   <comment>Need review</comment></data>
-
 <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
     <value>Average purchased cost/kWh</value>
   <comment>Need review</comment></data>

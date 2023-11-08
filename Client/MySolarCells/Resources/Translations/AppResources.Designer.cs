@@ -832,11 +832,11 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Production index (prod/day/ins. kWh).
+        ///   Looks up a localized string similar to Production index (prod/day).
         /// </summary>
-        public static string Production_Index_Desc_Prod_Day_ins_KWh {
+        public static string Production_Index_Desc_Prod_Per_Day_KWh {
             get {
-                return ResourceManager.GetString("Production_Index_Desc_Prod_Day_ins_KWh", resourceCulture);
+                return ResourceManager.GetString("Production_Index_Desc_Prod_Per_Day_KWh", resourceCulture);
             }
         }
         

@@ -133,7 +133,7 @@ public class MoreViewModel : BaseViewModel
 
             worksheet.Range["A28"].Text = AppResources.Fun_Facts;
             worksheet.Range["A28"].CellStyle.Font.Bold = true;
-            worksheet.Range["A29"].Text = AppResources.Production_Index_Desc_Prod_Day_ins_KWh;
+            worksheet.Range["A29"].Text = AppResources.Production_Index_Desc_Prod_Per_Day_KWh;
             worksheet.Range["A30"].Text = AppResources.Average_Purchased_Cost_Per_Kwh;
             worksheet.Range["A31"].Text = AppResources.Average_Production_Sold_Profit_Per_Kwh;
             worksheet.Range["A32"].Text = AppResources.Average_Production_Own_Use_Saved_Per_Kwh;

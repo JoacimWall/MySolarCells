@@ -43,6 +43,7 @@ public class FirstSyncViewModel : BaseViewModel
             if (!result.WasSuccessful)
             {
                 await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
+                StartbuttonEnable = true;
                 return;
             }
             else
@@ -76,6 +77,7 @@ public class FirstSyncViewModel : BaseViewModel
                     await DialogService.ShowAlertAsync(result.Model.Message, AppResources.My_Solar_Cells, AppResources.Ok);
 
                 await DialogService.ShowAlertAsync(AppResources.Error_Import_Data_From_Inverter, AppResources.My_Solar_Cells, AppResources.Ok);
+                StartbuttonEnable = true;
                 return;
             }
             else
