@@ -26,7 +26,8 @@ public class EnergyViewModel : BaseViewModel
 
     private async Task Sync()
     {
-        //using var dlg = DialogService.GetProgress("");
+        using var dlg = DialogService.GetProgress(AppResources.Import_Data);
+        await Task.Delay(200);
         var result = await this.dataSyncService.Sync();
         if (!result.WasSuccessful)
         {
@@ -66,7 +67,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushPriceBuy = resultSeries.Model.ChartSeriesPriceBuy.First().Color;
         ColorPriceBuy = resultSeries.Model.ChartSeriesPriceBuy.First().Color;
         PaletteBrushesPriceBuy.Add(brushPriceBuy);
-        if (resultSeries.Model.ChartSeriesPriceBuy.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesPriceBuy.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesPriceBuy)
                 PriceBuy.Add(item);
 
@@ -76,7 +77,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushPriceSell = resultSeries.Model.ChartSeriesPriceSell.First().Color;
         ColorPriceSell = resultSeries.Model.ChartSeriesPriceSell.First().Color;
         PaletteBrushesPriceSell.Add(brushPriceSell);
-        if (resultSeries.Model.ChartSeriesPriceSell.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesPriceSell.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesPriceSell)
                 PriceSell.Add(item);
 
@@ -93,7 +94,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushProductionSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
         ColorSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
         PaletteBrushesProductionSold.Add(brushProductionSold);
-        if (resultSeries.Model.ChartSeriesProductionSold.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesProductionSold.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesProductionSold)
                 DataSold.Add(item);
 
@@ -103,7 +104,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushBatteryCharge = resultSeries.Model.ChartSeriesBatteryCharge.First().Color;
         ColorbatteryCharge = resultSeries.Model.ChartSeriesBatteryCharge.First().Color;
         PaletteBrushesBatteryCharge.Add(brushBatteryCharge); 
-        if (resultSeries.Model.ChartSeriesBatteryCharge.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesBatteryCharge.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesBatteryCharge)
                 DataBatteryCharge.Add(item);
 
@@ -114,7 +115,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushBatteryUsed = resultSeries.Model.ChartSeriesBatteryUsed.First().Color;
         ColorbatteryUsed = resultSeries.Model.ChartSeriesBatteryUsed.First().Color;
         PaletteBrushesBatteryUsed.Add(brushBatteryUsed);
-        if (resultSeries.Model.ChartSeriesBatteryUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesBatteryUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesBatteryUsed)
                 DataBatteryUsed.Add(item);
 
@@ -124,7 +125,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushConsumedGrid = resultSeries.Model.ChartSeriesConsumtionGrid.First().Color;
         ColorPurchased = resultSeries.Model.ChartSeriesConsumtionGrid.First().Color;
         PaletteBrushesPurchased.Add(brushConsumedGrid);
-        if (resultSeries.Model.ChartSeriesConsumtionGrid.Any(x => x.Value.HasValue && x.Value.Value > 0))
+       //if (resultSeries.Model.ChartSeriesConsumtionGrid.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesConsumtionGrid)
                 DataPurchased.Add(item);
         //-------- Production And Cosnumption Graph ------------------
@@ -134,7 +135,7 @@ public class EnergyViewModel : BaseViewModel
         Brush brushProdUsed = resultSeries.Model.ChartSeriesProductionUsed.First().Color;
         ColorUsed = resultSeries.Model.ChartSeriesProductionUsed.First().Color;
         PaletteBrushesProductionUsed.Add(brushProdUsed);
-        if (resultSeries.Model.ChartSeriesProductionUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
+        //if (resultSeries.Model.ChartSeriesProductionUsed.Any(x => x.Value.HasValue && x.Value.Value > 0))
             foreach (var item in resultSeries.Model.ChartSeriesProductionUsed)
                 DataUsed.Add(item);
         

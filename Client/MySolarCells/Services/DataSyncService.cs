@@ -33,11 +33,13 @@ public class DataSyncService : IDataSyncService
             LogDetails = "",
             LogTyp = (int)LogTyp.Info
         });
-        //Get last Sync Time
-        var lastSyncTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
+        //Get last Sync Time for grid supplier
+        var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var lastSyncInverterTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
+
         var PevhourDatetime = DateTime.Now.AddHours(-1);   
         var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Day, PevhourDatetime.Hour,0,0);
-        if (lastSyncTime.Timestamp >= prevHoleHour)
+        if (lastSyncTime.Timestamp >= prevHoleHour && lastSyncInverterTime.Timestamp >= prevHoleHour)
         {
             mscDbContext.Log.Add(new Services.Sqlite.Models.Log
             {
@@ -78,8 +80,7 @@ public class DataSyncService : IDataSyncService
         await Task.Delay(200);
 
         // var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        lastSyncTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
-        var differenceInverter = DateTime.Now - lastSyncTime.Timestamp;
+        var differenceInverter = DateTime.Now - lastSyncInverterTime.Timestamp;
 
         var daysInv = differenceInverter.Days;
         var hoursInv = differenceInverter.Hours;
@@ -88,7 +89,7 @@ public class DataSyncService : IDataSyncService
         {
             CalculateProgress(currentDay, totalhoursInv);
         });
-        var resultInverter = await inverterService.Sync(lastSyncTime.Timestamp, progress, 0);
+        var resultInverter = await inverterService.Sync(lastSyncInverterTime.Timestamp, progress, 0);
        
 
         mscDbContext.Log.Add(new Services.Sqlite.Models.Log
