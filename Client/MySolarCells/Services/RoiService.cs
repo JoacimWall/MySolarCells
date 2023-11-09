@@ -8,6 +8,7 @@ public interface IRoiService
     Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate);
     Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end);
     Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport();
+    RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi, TimeSpan difference);
 }
 
 public class RoiService : IRoiService
@@ -41,18 +42,8 @@ public class RoiService : IRoiService
 
         return await CalculateTotalsInternal(start, end, new RoiSimulate { });
     }
-
-    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
+    public RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi,TimeSpan difference)
     {
-        List<RoiStats> sumRoi = new List<RoiStats>();
-        var difference = end.Value - start.Value;
-        var current = start;
-        while (current < end)
-        {
-            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), roiSimulate);
-            sumRoi.Add(stats);
-            current = current.Value.AddDays(1);
-        }
         RoiStats returnRoi = new RoiStats
         {
             EnergyCalculationParameter = sumRoi.First().EnergyCalculationParameter,
@@ -77,8 +68,6 @@ public class RoiService : IRoiService
             //calc values
             ProductionSoldGridCompensationProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldGridCompensationProfit), 2),
 
-
-
             ProductionOwnUseTransferFeeSaved = Math.Round(sumRoi.Sum(x => x.ProductionOwnUseTransferFeeSaved), 2),
             BatteryUseTransferFeeSaved = Math.Round(sumRoi.Sum(x => x.BatteryUseTransferFeeSaved), 2),
             PurchasedTransferFeeCost = Math.Round(sumRoi.Sum(x => x.PurchasedTransferFeeCost), 2),
@@ -93,7 +82,6 @@ public class RoiService : IRoiService
             Investment = Math.Round(sumRoi.Sum(x => x.Investment), 2),
 
             ProductionSoldTaxReductionProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldTaxReductionProfit), 2),
-
 
             //Summ Saved
             SumPurchasedCost = Math.Round(sumRoi.Sum(x => x.SumPurchasedCost), 2),
@@ -112,13 +100,6 @@ public class RoiService : IRoiService
 
         };
 
-        //var soloarFirstDate = await mscDbContext.Energy.FirstOrDefaultAsync(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.Timestamp > start);
-        //if (soloarFirstDate != null)
-        //{
-        //    var enddate = end > DateTime.Now ? DateTime.Now : end;
-        //    var differenceProductionIndex = enddate - soloarFirstDate.Timestamp;
-        //    returnRoi.FactsProductionIndex = Math.Round(returnRoi.FactsProductionIndex / Convert.ToInt32(differenceProductionIndex.Value.TotalDays), 2);
-        //}
         //Devided per day
         returnRoi.FactsProductionIndex = Math.Round(returnRoi.SumAllProduction / difference.TotalDays, 2);
         returnRoi.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(returnRoi.SumPurchasedCost / returnRoi.Purchased, 2);
@@ -126,14 +107,21 @@ public class RoiService : IRoiService
         returnRoi.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(returnRoi.SumProductionOwnUseSaved / returnRoi.ProductionOwnUse, 2);
         returnRoi.FactsBatteryUsedAveragePerKwhSaved = Math.Round(returnRoi.SumBatteryUseSaved / returnRoi.BatteryUsed, 2);
 
-
-
-        //FactsPurchasedCostAveragePerKwhPurchased = Math.Round(sumRoi.Sum(x => x.FactsPurchasedCostAveragePerKwhPurchased), 2),
-        //    FactsProductionSoldAveragePerKwhProfit = Math.Round(sumRoi.Sum(x => x.FactsProductionSoldAveragePerKwhProfit), 2),
-        //    FactsProductionOwnUseAveragePerKwhSaved = Math.Round(sumRoi.Sum(x => x.FactsProductionOwnUseAveragePerKwhSaved), 2),
-        //    FactsBatteryUsedAveragePerKwhSaved = Math.Round(sumRoi.Sum(x => x.FactsBatteryUsedAveragePerKwhSaved), 2)
-
         return returnRoi;
+    }
+    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
+    {
+        List<RoiStats> sumRoi = new List<RoiStats>();
+        var difference = end.Value - start.Value;
+        var current = start;
+        while (current < end)
+        {
+            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), roiSimulate);
+            sumRoi.Add(stats);
+            current = current.Value.AddDays(1);
+        }
+       
+        return SummerizeToOneRoiStats(sumRoi,difference);
 
     }
     #region Private
