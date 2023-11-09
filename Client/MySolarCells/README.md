@@ -11,6 +11,6 @@ dotnet publish MySolarCells.csproj -f net8.0-maccatalyst -c Release -p:RuntimeId
 
 Data Folder
 Ifall installerad via TestFlight på Mac os
-/Users//Library/Containers/My Solar Cells/Data/Documents
-Dwbug maccatalyst
+/Users/joacimwall/Library/Containers/My Solar Cells/Data/Libary
+Debug maccatalyst
 /Users/joacimwall/Library/MySolarCells

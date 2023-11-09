@@ -25,7 +25,8 @@ public class RoiViewModel : BaseViewModel
     }
     private async Task Sync()
     {
-        
+        using var dlg = DialogService.GetProgress(AppResources.Import_Data);
+        await Task.Delay(200);
         var result = await this.dataSyncService.Sync();
         if (!result.WasSuccessful)
         {

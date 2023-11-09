@@ -34,9 +34,9 @@ public class DataSyncService : IDataSyncService
             LogTyp = (int)LogTyp.Info
         });
         //Get last Sync Time
-        var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var lastSyncTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
         var PevhourDatetime = DateTime.Now.AddHours(-1);   
-        var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Hour);
+        var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Day, PevhourDatetime.Hour,0,0);
         if (lastSyncTime.Timestamp >= prevHoleHour)
         {
             mscDbContext.Log.Add(new Services.Sqlite.Models.Log
