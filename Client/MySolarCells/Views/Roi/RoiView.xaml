@@ -48,7 +48,7 @@
                     <BoxView Margin="0,4" HeightRequest="1" />
                     <!--Produced-->
                     <Label Text="{x:Static trans:AppResources.Production}"/>
-                    <!--Produced-->
+                    <!--Consumption-->
                     <Label Text="{x:Static trans:AppResources.Consumption}"/>
                     <!--Balance_Production_Consumption-->
                     <Label Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
@@ -102,6 +102,7 @@
                 </VerticalStackLayout >
                 <!--Value-->
                 <VerticalStackLayout Grid.Row="2" Grid.Column="1" >
+                    <!--PRODUCTION AND CONSUMPTION-->
                     <Label FontSize="17"  Text=" "/>
                     <Label Text="{Binding RoiStats.ProductionSold}" HorizontalTextAlignment="End"/>
                     <Label Text="{Binding RoiStats.BatteryCharge}" HorizontalTextAlignment="End"/>
