@@ -35,7 +35,7 @@ public class RoiService : IRoiService
         //Get alla data from start to now per month
         while (current < dates.ThisMonthEnd)
         {
-            var stats = await CalculateTotalsInternal(current, current.AddMonths(1), new RoiSimulate());
+            var stats = await CalculateTotals(current, current.AddMonths(1), new RoiSimulate());
             //Calulate Intrest currnt month
             var resultInvestcalc = CalculateLonAndInterest(resultInvest, current);
             stats.Investment = resultInvestcalc.Item1;

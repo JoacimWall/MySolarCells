@@ -169,11 +169,7 @@ public class MoreViewModel : BaseViewModel
 
             if (isOverviewSheet)
             {
-                //double? avargeROIYearsLeft = 0;
-                //if (!valueMode)
-                //{
-                //    avargeROIYearsLeft = roiStats.Where(x => x.ROIYearsLeft.HasValue).Average(y => y.ROIYearsLeft);
-                //}
+                
                 worksheet.Range[c.ToString() + "36"].Value = valueMode ? roiStats[index].ROIYearsLeft.HasValue ? Math.Round(roiStats[index].ROIYearsLeft.Value,2).ToString():"":"";
                 worksheet.Range[c.ToString() + "37"].Value = valueMode ? roiStats[index].RoiStats.Investment.ToString():"";
                 worksheet.Range[c.ToString() + "38"].Value = valueMode ? roiStats[index].ProducedSaved.ToString(): roiStats.Sum(x => x.ProducedSaved).ToString();
@@ -217,33 +213,6 @@ public class MoreViewModel : BaseViewModel
 
         #endregion
 
-        #region ROI and investment part
-        //if (isOverviewSheet)
-        //{
-        //    //var invest = await this.mscDbContext.InvestmentAndLon.Where(x => x.HomeId == homeId).ToListAsync();
-        //    //int toalInvestLon = 0;
-        //    //foreach (var item in invest)
-        //    //{
-        //    //    toalInvestLon = toalInvestLon + item.Investment + item.Loan;
-        //    //}
-
-        //    worksheet.Range["A35"].Text = AppResources.ROI;
-        //    worksheet.Range["A35"].CellStyle.Font.Bold = true;
-        //    worksheet.Range["A36"].Text = AppResources.Years_Left_Until_ROI;
-        //    worksheet.Range["A37"].Text = AppResources.Total_Investment_And_Loan;
-        //    worksheet.Range["A38"].Text = AppResources.Total_Produced_And_Saved;
-        //    worksheet.Range["A39"].Text = AppResources.Left_Of_Investment_Cost;
-        //    worksheet.Range["A39"].CellStyle.Font.Bold = true;
-        //    worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-
-        //    worksheet.Range["B36"].Value = Math.Round(((toalInvestLon - totalProducedSaved) / (totalProducedSaved / productionindex) / 12), 2).ToString();
-        //    worksheet.Range["B37"].Value = toalInvestLon.ToString();
-        //    worksheet.Range["B38"].Value = Math.Round(totalProducedSaved, 0).ToString();
-        //    worksheet.Range["B39"].Value = (toalInvestLon - Math.Round(totalProducedSaved, 0)).ToString();
-        //    worksheet.Range["B39"].CellStyle.Font.Bold = true;
-        //    worksheet.Range["B39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-        //}
-        #endregion
 
         #region Calculation_Parameters
         if (!isOverviewSheet)
