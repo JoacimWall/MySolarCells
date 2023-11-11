@@ -45,5 +45,8 @@ private DateTime fromDate = DateTime.Today;
     [Required]
         public int HomeId { get; set; }
 
+    [NotMapped] //used for calulation of Amortization
+    public int? LoanLeft { get; set; }
+
 }
 

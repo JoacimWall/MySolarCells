@@ -7,8 +7,8 @@ public interface IRoiService
 
     Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate);
     Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end);
-    Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport();
-    RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi, TimeSpan difference);
+    Task<Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>> GenerateTotalPermonthReport();
+
 }
 
 public class RoiService : IRoiService
@@ -20,21 +20,70 @@ public class RoiService : IRoiService
     }
     //This function should can prpduce wrong if the cahnge of calulation parameters in the middel of the date span 
 
-
-    public async Task<Result<List<ReportRoiStats>>> GenerateTotalPermonthReport()
+    /// Return to collectins tuple 1 is for the overview summirized one Year  per row
+    /// The second tuple is all months summirzed per year 
+    public async Task<Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>> GenerateTotalPermonthReport()
     {
         List<ReportRoiStats> result = new List<ReportRoiStats>();
         var start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
         var dates = DateHelper.GetRelatedDates(DateTime.Today);
         var current = start.ThisMonthStart;
+
+        var resultInvest = this.mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        var firstProductionDay = this.mscDbContext.Energy.AsNoTracking().Where(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).First();
+
+        //Get alla data from start to now per month
         while (current < dates.ThisMonthEnd)
         {
-            var stats = await CalculateTotals(current, current.AddMonths(1), new RoiSimulate());
+            var stats = await CalculateTotalsInternal(current, current.AddMonths(1), new RoiSimulate());
+            //Calulate Intrest currnt month
+            var resultInvestcalc = CalculateLonAndInterest(resultInvest, current);
+            stats.Investment = resultInvestcalc.Item1;
+            stats.InterestCost = Math.Round(resultInvestcalc.Item2, 2);
+            //Correct balance with interest cost
+            stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
             result.Add(new ReportRoiStats { FromDate = current, RoiStats = stats });
             current = current.AddMonths(1);
         }
+        // --- Group all per year and get total ----
+        int year = result.First().FromDate.Year;
+        List<List<ReportRoiStats>> roiStatsGrpYearAll = new List<List<ReportRoiStats>>();
+        List<ReportRoiStats> roiStatsGrpYear = new List<ReportRoiStats>();
+        List<ReportRoiStats> roiStatsOvervView = new List<ReportRoiStats>();
+        double acumlimatedPodSavedAndMinusInterest = 0;
+        double? previusYearRoi = null;
+        for (int i = 0; i < result.Count; i++)
+        {
+            if (year == result[i].FromDate.Year)
+                roiStatsGrpYear.Add(result[i]);
 
-        return new Result<List<ReportRoiStats>>(result);
+            if (year != result[i].FromDate.Year || i == result.Count - 1)
+            {
+                TimeSpan timeSpanYear = roiStatsGrpYear.Last().FromDate - roiStatsGrpYear.First().FromDate;
+                ReportRoiStats newYearStats = new ReportRoiStats
+                {
+                    FromDate = roiStatsGrpYear.First().FromDate,
+                    RoiStats = SummerizeToOneRoiStats(roiStatsGrpYear.Select(x => x.RoiStats).ToList(), timeSpanYear)
+                };
+
+
+                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, roiStatsGrpYear);
+                acumlimatedPodSavedAndMinusInterest = resultRoi.Item1;
+                newYearStats.AcumulatedUntilCurrentYearProducedAndSaved = resultRoi.Item1;
+                newYearStats.ProducedSaved = resultRoi.Item2;
+                newYearStats.ROIYearsLeft = resultRoi.Item3;
+                previusYearRoi = newYearStats.ROIYearsLeft;
+                roiStatsOvervView.Add(newYearStats);
+
+                year = result[i].FromDate.Year;
+                roiStatsGrpYearAll.Add(roiStatsGrpYear);
+                roiStatsGrpYear = new List<ReportRoiStats>();
+                roiStatsGrpYear.Add(result[i]);
+            }
+        }
+
+
+        return new Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>(new Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>(roiStatsOvervView, roiStatsGrpYearAll));
     }
 
     public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end)
@@ -42,7 +91,23 @@ public class RoiService : IRoiService
 
         return await CalculateTotalsInternal(start, end, new RoiSimulate { });
     }
-    public RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi,TimeSpan difference)
+    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
+    {
+        List<RoiStats> sumRoi = new List<RoiStats>();
+        var difference = end.Value - start.Value;
+        var current = start;
+        while (current < end)
+        {
+            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), roiSimulate);
+            sumRoi.Add(stats);
+            current = current.Value.AddDays(1);
+        }
+
+        return SummerizeToOneRoiStats(sumRoi, difference);
+
+    }
+    #region Private
+    private RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi, TimeSpan difference)
     {
         RoiStats returnRoi = new RoiStats
         {
@@ -79,7 +144,8 @@ public class RoiService : IRoiService
 
             //intrest
             InterestCost = Math.Round(sumRoi.Sum(x => x.InterestCost), 2),
-            Investment = Math.Round(sumRoi.Sum(x => x.Investment), 2),
+
+            Investment = sumRoi.Last().Investment,
 
             ProductionSoldTaxReductionProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldTaxReductionProfit), 2),
 
@@ -90,7 +156,7 @@ public class RoiService : IRoiService
             SumBatteryUseSaved = Math.Round(sumRoi.Sum(x => x.SumBatteryUseSaved), 2),
             SumProductionOwnUseAndBatterySaved = Math.Round(sumRoi.Sum(x => x.SumProductionOwnUseAndBatterySaved), 2),
             SumAllProductionSoldAndSaved = Math.Round(sumRoi.Sum(x => x.SumAllProductionSoldAndSaved), 2),
-            BalanceProfitAndSaved_Minus_InterestCost = Math.Round(sumRoi.Sum(x => x.BalanceProfitAndSaved_Minus_InterestCost), 2),
+            //BalanceProfitAndSaved_Minus_InterestCost = Math.Round(sumRoi.Sum(x => x.BalanceProfitAndSaved_Minus_InterestCost), 2),
             SumAllProduction = Math.Round(sumRoi.Sum(x => x.SumAllProduction), 2),
             SumAllConsumption = Math.Round(sumRoi.Sum(x => x.SumAllConsumption), 2),
 
@@ -109,31 +175,11 @@ public class RoiService : IRoiService
 
         return returnRoi;
     }
-    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
-    {
-        List<RoiStats> sumRoi = new List<RoiStats>();
-        var difference = end.Value - start.Value;
-        var current = start;
-        while (current < end)
-        {
-            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), roiSimulate);
-            sumRoi.Add(stats);
-            current = current.Value.AddDays(1);
-        }
-       
-        return SummerizeToOneRoiStats(sumRoi,difference);
-
-    }
-    #region Private
     private async Task<RoiStats> CalculateTotalsInternal(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
     {
-
         List<Sqlite.Models.Energy> energy;
         RoiStats roiStats = new RoiStats();
-        //roiStats.RoiStatsLines = new List<RoiStatsLine>();
-
         var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
-
         energy = await this.mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
         if (roiSimulate.DoSimulate && roiSimulate.AddBattery)
@@ -147,18 +193,14 @@ public class RoiService : IRoiService
                     //Battery Charged
                     item.BatteryCharge = item.ProductionSold;
                     roiSimulate.CurrentBatteryPower = roiSimulate.CurrentBatteryPower + item.ProductionSold;
-
-
                     //Battery Charged
                     item.BatteryCharge = item.ProductionSold;
                     //if (calcParams.UseSpotPrice)
                     //    item.BatteryChargeProfitFake = item.BatteryCharge * item.UnitPriceSold;
                     //else
                     //    item.BatteryChargeProfitFake = item.BatteryCharge * calcParams.FixedPriceKwh;
-
                     item.ProductionSold = 0;
                     item.ProductionSoldProfit = 0;
-
                 }
                 //Check if battery has more charge then Purchased
                 if (item.Purchased > 0 && roiSimulate.CurrentBatteryPower > item.Purchased)
@@ -169,12 +211,9 @@ public class RoiService : IRoiService
                         item.BatteryUsedProfit = Math.Round(item.BatteryUsed * item.UnitPriceBuy, 2);
                     else
                         item.BatteryUsedProfit = Math.Round(item.BatteryUsed * calcParams.FixedPriceKwh, 2);
-
-
-                    //Miinska een anvädning profit med batteri
+                    //Minskad anvädning profit med batteri
                     item.Purchased = 0;
                     item.PurchasedCost = 0;
-
                 }
             }
         }
@@ -206,15 +245,9 @@ public class RoiService : IRoiService
 
                     item.BatteryUsed = 0;
                     item.BatteryUsedProfit = 0;
-
                 }
-
-
             }
-
-
         }
-
 
         //------------Purchased --------------------------------
         roiStats.Purchased = Math.Round(energy.Sum(x => x.Purchased), 2);
@@ -230,7 +263,7 @@ public class RoiService : IRoiService
         roiStats.ProductionSoldTaxReductionProfit = Math.Round(roiStats.ProductionSold * calcParams.TaxReduction, 2);
         roiStats.SumProductionSoldProfit = Math.Round(roiStats.ProductionSoldProfit + roiStats.ProductionSoldGridCompensationProfit + roiStats.ProductionSoldTaxReductionProfit, 2);
         //roiStats.FactsProductionSoldAveragePerKwhProfit = Math.Round(roiStats.SumProductionSoldProfit / roiStats.ProductionSold, 2);
-       
+
         //--------- Production Own use ---------------------------
         roiStats.ProductionOwnUse = Math.Round(energy.Sum(x => x.ProductionOwnUse), 2);
         roiStats.ProductionOwnUseSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2) : Math.Round(roiStats.ProductionOwnUse * calcParams.FixedPriceKwh, 2);
@@ -238,7 +271,7 @@ public class RoiService : IRoiService
         roiStats.ProductionOwnUseEnergyTaxSaved = Math.Round(roiStats.ProductionOwnUse * calcParams.EnergyTax, 2);
         roiStats.SumProductionOwnUseSaved = Math.Round(roiStats.ProductionOwnUseSaved + roiStats.ProductionOwnUseTransferFeeSaved + roiStats.ProductionOwnUseEnergyTaxSaved, 2);
         //roiStats.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(roiStats.SumProductionOwnUseSaved / roiStats.ProductionOwnUse, 2);
-     
+
         //---------- Battery Used -----------------------------------------
         roiStats.BatteryUsed = Math.Round(energy.Sum(x => x.BatteryUsed), 2);
         roiStats.BatteryUsedSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2) : Math.Round(roiStats.BatteryUsed * calcParams.FixedPriceKwh, 2);
@@ -257,13 +290,10 @@ public class RoiService : IRoiService
         roiStats.SumAllProduction = Math.Round(roiStats.ProductionSold + roiStats.ProductionOwnUse + roiStats.BatteryCharge, 2);
         roiStats.SumAllConsumption = Math.Round(roiStats.Purchased + roiStats.ProductionOwnUse + roiStats.BatteryUsed, 2);
 
-        //--------------------- Interest  -----------------------------------------
-        var resultRanta = await GetInterest(start, end);
-        roiStats.Investment = resultRanta.Item1;
-        roiStats.InterestCost = Math.Round(resultRanta.Item2, 2);
+
 
         // ---------------- Balance's ----------------------------------------
-        roiStats.BalanceProfitAndSaved_Minus_InterestCost = Math.Round(roiStats.SumAllProductionSoldAndSaved - roiStats.InterestCost, 2);
+        //roiStats.BalanceProfitAndSaved_Minus_InterestCost = Math.Round(roiStats.SumAllProductionSoldAndSaved - roiStats.InterestCost, 2);
         roiStats.BalanceProduction_Minus_Consumption = Math.Round(roiStats.SumAllProduction - roiStats.SumAllConsumption, 2);
         roiStats.BalanceProductionProfit_Minus_ConsumptionCost = Math.Round(roiStats.SumAllProductionSoldAndSaved - roiStats.SumPurchasedCost, 2);
 
@@ -275,39 +305,87 @@ public class RoiService : IRoiService
         return roiStats;
 
     }
-    //returns total invest and total Interest
-    private async Task<Tuple<int, float>> GetInterest(DateTime? start, DateTime? end)
+    private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportRoiStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportRoiStats> roiStatsGrpYear)
     {
-        int investmentTot = 0;
-        float interest = 0;
+        var currentYearResult = stats.RoiStats.SumAllProductionSoldAndSaved - stats.RoiStats.InterestCost;
+        acumlimatedPodSavedAndMinusInterest = acumlimatedPodSavedAndMinusInterest + currentYearResult;
+        var investmentLeft = stats.RoiStats.Investment - acumlimatedPodSavedAndMinusInterest;
 
-
-
-        var result = this.mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
-        foreach (var item in result)
+        double fakeProduction = 0;
+        //fal vi inte har ett första år då räknar vi inte ROI
+        double? roiLeft = Convert.ToDouble(investmentLeft / currentYearResult);
+        //simulera månader innan
+        if (firstProductionDay.Timestamp > stats.FromDate)
         {
-            investmentTot = investmentTot + item.Investment + item.Loan;
-        }
-
-        DateTime current = start.Value;
-        while (current < end)
-        {
-            foreach (var item in result)
+            var firstHoleMonth = roiStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
+            var tot = firstHoleMonth.RoiStats.SumAllProductionSoldAndSaved - firstHoleMonth.RoiStats.InterestCost;
+            var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
+            var refvalue = tot / devtal;
+            DateTime current = firstHoleMonth.FromDate.AddMonths(-1);
+            while (current >= stats.FromDate)
             {
-                if (item.Loan > 0 && item.Interest.Any(x => x.FromDate <= current))
-                {
-                    var interestCur = item.Interest.Where(x => x.FromDate <= current).OrderBy(o => o.FromDate).First();
-                    interest = interest + ((item.Loan * (interestCur.Interest / 100)) / 365);
-
-                }
-
+                fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
+                current = current.AddMonths(-1);
             }
 
-            current = current.AddDays(1);
+            roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
+
+
+        }
+        //Simulera månader fram till års skiftet
+        if (DateTime.Today < stats.FromDate.AddYears(1))
+        {
+            var firstHoleMonth = roiStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
+            var tot = firstHoleMonth.RoiStats.SumAllProductionSoldAndSaved - firstHoleMonth.RoiStats.InterestCost;
+            var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
+            var refvalue = tot / devtal;
+            DateTime current = firstHoleMonth.FromDate.AddMonths(1);
+            while (current < stats.FromDate.AddYears(1))
+            {
+                fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
+                current = current.AddMonths(1);
+            }
+
+            roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
+
+        }
+        if (previusYearRoi.HasValue && roiLeft.HasValue)
+            roiLeft = ((previusYearRoi.Value - 1) + roiLeft) / 2;
+
+        return new Tuple<double, double, double?>(acumlimatedPodSavedAndMinusInterest, currentYearResult, roiLeft);
+    }
+    //returns total invest, Loanleft and Interestcost
+    private Tuple<int, float> CalculateLonAndInterest(List<InvestmentAndLoan> investmentAndLoans, DateTime start)
+    {
+        int investmentTot = 0;
+        //float loanTotLeft = 0;
+        float interestTot = 0;
+
+        foreach (var item in investmentAndLoans)
+        {
+            if (start < item.FromDate)
+                continue;
+            //Summerize total investment 
+            investmentTot = investmentTot + item.Investment + item.Loan;
+
+            if (item.Loan > 0 && item.Interest.Any(x => x.FromDate <= start))
+            {
+                if (item.LoanLeft is null)
+                    item.LoanLeft = item.Loan;
+
+                var interestCur = item.Interest.Where(x => x.FromDate <= start).OrderBy(o => o.FromDate).First();
+
+                var curInterest = ((item.LoanLeft * (interestCur.Interest / 100)) / 12);
+
+                interestTot = interestTot + curInterest.Value;
+
+                item.LoanLeft = item.LoanLeft - interestCur.Amortization;
+            }
+
+
         }
 
-
-        return new Tuple<int, float>(investmentTot, interest);
+        return new Tuple<int, float>(investmentTot, interestTot);
     }
     #endregion
 }
@@ -365,6 +443,9 @@ public class RoiSimulate : ObservableObject
 public class ReportRoiStats
 {
     public DateTime FromDate { get; set; }
+    public double? ROIYearsLeft { get; set; } = 0;
+    public double AcumulatedUntilCurrentYearProducedAndSaved { get; set; } = 0;
+    public double ProducedSaved { get; set; } = 0;
     public RoiStats RoiStats { get; set; }
 
 }
@@ -406,12 +487,12 @@ public class RoiStats
     public double SumAllProductionSoldAndSaved { get; set; } = 0;
     public double SumAllProduction { get; set; } = 0;
     public double SumAllConsumption { get; set; } = 0;
-    //  ----------- intrest  ------------------------------------ 
+    //  ----------- Investment and Loan and intrest cost (ony set when calcualte totals from start to end )  ------------------------------------ 
     public double InterestCost { get; set; } = 0;
     public double Investment { get; set; } = 0;
-
+    //public double LoanLeft { get; set; } = 0;
     //Balance
-    public double BalanceProfitAndSaved_Minus_InterestCost { get; set; } = 0;
+    //public double BalanceProfitAndSaved_Minus_InterestCost { get; set; } = 0;
     public double BalanceProduction_Minus_Consumption { get; set; } = 0;
     public double BalanceProductionProfit_Minus_ConsumptionCost { get; set; } = 0;
 
@@ -432,4 +513,42 @@ public class RoiStats
     // public double TotalCompensationForProductionToGridChargeBatteryFake { get; set; } = 0;
     //public double TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid { get; set; } = 0;
     //public double SumProductionBatteryChargeFakeSold { get; set; } = 0;
+}
+public static class SnittProductionMonth
+{
+    public static double GetSnitMonth(int month, double installedKwh)
+    {
+        switch (month)
+        {
+            case 1:
+                return 13.9 * installedKwh;
+            case 2:
+                return 32.3 * installedKwh;
+            case 3:
+                return 85.05 * installedKwh;
+            case 4:
+                return 120.75 * installedKwh;
+            case 5:
+                return 137.95 * installedKwh;
+            case 6:
+                return 136.55 * installedKwh;
+            case 7:
+                return 134.9 * installedKwh;
+            case 8:
+                return 115.65 * installedKwh;
+            case 9:
+                return 89.9 * installedKwh;
+            case 10:
+                return 54.05 * installedKwh;
+            case 11:
+                return 19.6 * installedKwh;
+            case 12:
+                return 9.6 * installedKwh;
+            default:
+                return 0;
+
+        }
+
+    }
+
 }

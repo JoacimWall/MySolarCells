@@ -490,5 +490,8 @@
 <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
     <value>Synchronization not started as we have all data up to the previous full hour.</value>
   <comment>Need review</comment></data>
+<data name="Amortization" xml:space="preserve">
+    <value>Amortization</value>
+  <comment>Need review</comment></data>
 
 </root>

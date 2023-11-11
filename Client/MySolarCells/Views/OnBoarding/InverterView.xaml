@@ -10,21 +10,21 @@
                         x:DataType="vm:InverterViewModel">
      <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Inverter}" HorizontalTextAlignment="Center" Style="{StaticResource LabelBaseStyle}"/>
-             <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.WhiteColor}"  HeightRequest="30" Padding="0" Margin="0,8"  
+            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Inverter}" HorizontalTextAlignment="Center" Style="{StaticResource LabelBaseStyle}"/>
+             <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Back}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
             </Border>
-            <Border Grid.Column="2" IsVisible="{Binding ShowSiteNodePicker}" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+            <Border Grid.Column="2" IsVisible="{Binding ShowSiteNodePicker}" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
                  <!--Save Home-->
-                <Button Padding="4" Margin="2"  Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Save}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" />
+                <Button Padding="4" Margin="2"  Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" />
             </Border>
 
         </Grid>

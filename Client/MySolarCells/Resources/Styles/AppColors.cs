@@ -159,10 +159,10 @@ public static class AppColors
     //Här ska vi endast lägga till ifall det är så att det inte går att
     //ha detta i en style i ovan nämnda fil;
     public static Color TemplateTaskButtonTextColor = Color.FromArgb("#000000");
-    public static Color PageBackgroundColor = Color.FromArgb("#ffffff");
+    public static Color PageBackgroundColor = Color.FromArgb("#FAFAFA");
     public static Color DefaultTextColor = Color.FromArgb("#000000");
-    public static Color StatusbarBackgroundColor = Color.FromArgb("#2B0B98");
-    public static Color StatusbarTextColor = Color.FromArgb("#000000");
+    public static Color StatusbarBackgroundColor = Color.FromArgb("#FAFAFA");
+    public static Color StatusbarTextColor = Color.FromArgb("#2B0B98");
     public static Color TmButtonValidBackgroundColor = Color.FromArgb("#FF675C");
     public static Color TmButtonInValidBackgroundColor = Color.FromArgb("#FF675C");
 }

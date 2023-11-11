@@ -7,7 +7,16 @@ namespace MySolarCells.Services.Sqlite;
 
 public class MscDbContext : DbContext
 {
+    //---------- THIS CODE SHOULD BE ENABLE WEHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
     // Constructor with no argument/empty is required and it is used when adding/removing migrations from class library
+    //public MscDbContext()
+    //{
+    //}
+    //protected override void OnConfiguring(DbContextOptionsBuilder options)
+    //        => options.UseSqlite();
+
+
+    //---------- THIS CODE SHOULD BE ENABLE WEHEN WE RUN THE APP -------------------------------
     public MscDbContext()
     {
         SQLitePCL.Batteries_V2.Init();
@@ -21,11 +30,7 @@ public class MscDbContext : DbContext
 
         }
     }
-    //public MscDbContext(DbContextOptions<MscDbContext> options)  : base(options)
-    //{
-    //    //Database.EnsureCreated();
-    //    Database.Migrate();
-    //}
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //använd i app mode
@@ -54,8 +59,7 @@ public class MscDbContext : DbContext
 
     }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //=> optionsBuilder.UseSqlite();
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

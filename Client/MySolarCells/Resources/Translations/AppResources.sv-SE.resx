@@ -444,4 +444,7 @@
   <data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
     <value>Produktionsindex (prod/dag)</value>
   <comment>Need review</comment></data>
+  <data name="Amortization" xml:space="preserve">
+    <value>Amortering</value>
+  <comment>Need review</comment></data>
 </root>

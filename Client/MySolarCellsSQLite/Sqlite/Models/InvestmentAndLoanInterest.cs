@@ -6,7 +6,7 @@ public class InvestmentAndLoanInterest : ObservableObject
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvestmentAndLoanInterestId { get; set; }
     [Required]
-    public string Description { get; set; }
+    public string Description { get; set; } = "";
     [Required]
     public float Interest { get; set; } = 0;
     private DateTime fromDate = DateTime.Today;
@@ -19,7 +19,9 @@ public class InvestmentAndLoanInterest : ObservableObject
             SetProperty(ref fromDate, new DateTime(value.Year,value.Month,1));
             
         }
-    } 
+    }
+    [Required]
+    public int Amortization { get; set; } = 0;
     //FK's
     [Required]
     public int InvestmentAndLoanId { get; set; }

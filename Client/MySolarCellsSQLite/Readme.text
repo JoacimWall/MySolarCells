@@ -1,2 +1,7 @@
 ﻿Create a new Migration
+MAC
+dotnet ef migrations add AddAmortization --startup-project ../MySolarCellsSQLite --project ../MySolarCellsSQLite
+WINDOWS
+dotnet ef migrations add AddAmortization --startup-project ..\MySolarCellsSQLite --project ..\MySolarCellsSQLite
+
 dotnet tool install --global dotnet-ef --version 8.0.0-preview.2.23128.3

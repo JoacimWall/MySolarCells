@@ -85,6 +85,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amortization.
+        /// </summary>
+        public static string Amortization {
+            get {
+                return ResourceManager.GetString("Amortization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {

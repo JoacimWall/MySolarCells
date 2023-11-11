@@ -12,13 +12,13 @@
                         x:DataType="vm:MoreViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
-            <!--<Border Grid.Column="1" Stroke="{x:Static theming:AppColors.WhiteColor}" HeightRequest="30" Padding="0" Margin="0,8"  
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
+            <!--<Border Grid.Column="1" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
                     StrokeThickness="2" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
+                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
             </Border>-->
 
         </Grid>

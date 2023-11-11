@@ -404,20 +404,20 @@
 
     <Style TargetType="Page" ApplyToDerivedTypes="True">
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.WhiteColor}, Dark={x:Static theming:AppColors.BlackColor}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray100Color}, Dark={x:Static theming:AppColors.BlackColor}}" />
     </Style>
 
     <Style TargetType="Shell" ApplyToDerivedTypes="True">
-        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />
-        <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={x:Static theming:AppColors.Primary500Color}, Default={x:Static theming:AppColors.WhiteColor}}" />
-        <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.WhiteColor}, Dark={x:Static theming:AppColors.WhiteColor}}" />
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />
+        <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={x:Static theming:AppColors.Gray900Color}, Default={x:Static theming:AppColors.WhiteColor}}" />
+        <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />
         <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
-        <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.WhiteColor}, Dark={x:Static theming:AppColors.BlackColor}}" />
+        <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.BlackColor}}" />
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray500Color}, Dark={x:Static theming:AppColors.Gray200Color}}" />
     </Style>
 
     <Style TargetType="NavigationPage">
