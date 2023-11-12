@@ -313,7 +313,7 @@
     <value>Simulera batteri</value>
   <comment>Need review</comment></data>
   <data name="Simulate" xml:space="preserve">
-    <value>Sim..</value>
+    <value>Simulering</value>
   <comment>Need review</comment></data>
   <data name="Battery_Kwh" xml:space="preserve">
     <value>Batteri kWh</value>
@@ -446,5 +446,14 @@
   <comment>Need review</comment></data>
   <data name="Amortization" xml:space="preserve">
     <value>Amortering</value>
+  <comment>Need review</comment></data>
+  <data name="Prices" xml:space="preserve">
+    <value>Priser</value>
+  <comment>Need review</comment></data>
+  <data name="Buy_Transfer_Fee_Tax" xml:space="preserve">
+    <value>Köp (ink. allt)</value>
+  <comment>Need review</comment></data>
+  <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
+    <value>Sälj (ink. allt)</value>
   <comment>Need review</comment></data>
 </root>

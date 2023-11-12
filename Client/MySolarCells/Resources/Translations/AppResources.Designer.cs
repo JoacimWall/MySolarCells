@@ -247,6 +247,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buy (transfer fee/tax).
+        /// </summary>
+        public static string Buy_Transfer_Fee_Tax {
+            get {
+                return ResourceManager.GetString("Buy_Transfer_Fee_Tax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculation factors.
         /// </summary>
         public static string Calculation_Factors {
@@ -450,6 +459,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Goto_Tibber_Api_Site {
             get {
                 return ResourceManager.GetString("Goto_Tibber_Api_Site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid.
+        /// </summary>
+        public static string Grid {
+            get {
+                return ResourceManager.GetString("Grid", resourceCulture);
             }
         }
         
@@ -814,6 +832,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prices.
+        /// </summary>
+        public static string Prices {
+            get {
+                return ResourceManager.GetString("Prices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Production.
         /// </summary>
         public static string Production {
@@ -1057,6 +1084,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sell (tax red../net ben..).
+        /// </summary>
+        public static string Sell_Tax_Red_Net_Ben {
+            get {
+                return ResourceManager.GetString("Sell_Tax_Red_Net_Ben", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shortcuts.
         /// </summary>
         public static string Shortcuts {
@@ -1066,7 +1102,7 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sim...
+        ///   Looks up a localized string similar to Simulate.
         /// </summary>
         public static string Simulate {
             get {

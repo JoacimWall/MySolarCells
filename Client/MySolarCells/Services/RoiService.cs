@@ -391,8 +391,13 @@ public class RoiService : IRoiService
 }
 public class RoiSimulate : ObservableObject
 {
-    public Color ShowSimulateBackgrundColor { get { return DoSimulate ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+    //DOSIMULATE
+    public Color ShowSimulateBackgrundColor { get { return doSimulate ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color ShowSimulateBorderColor { get { return doSimulate ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color ShowSimulateTextColor { get { return doSimulate ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
+
+   
     private bool doSimulate;
     public bool DoSimulate
     {
@@ -401,20 +406,51 @@ public class RoiSimulate : ObservableObject
         {
             SetProperty(ref doSimulate, value);
             OnPropertyChanged(nameof(ShowSimulateBackgrundColor));
+            OnPropertyChanged(nameof(ShowSimulateBorderColor));
+            OnPropertyChanged(nameof(ShowSimulateTextColor));
         }
     }
+    //ADD Battery
+    public Color AddBatteryBackgrundColor { get { return addBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color AddBatteryBorderColor { get { return addBattery ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color AddBatteryTextColor { get { return addBattery ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
-    private bool addBattery;
+    private bool addBattery = true;
     public bool AddBattery
     {
         get => addBattery;
-        set { SetProperty(ref addBattery, value); }
+        set
+        {
+            SetProperty(ref addBattery, value);
+            removeBattery = !addBattery;
+            OnPropertyChanged(nameof(AddBatteryBackgrundColor));
+            OnPropertyChanged(nameof(AddBatteryBorderColor));
+            OnPropertyChanged(nameof(AddBatteryTextColor));
+            OnPropertyChanged(nameof(RemoveBatteryBackgrundColor));
+            OnPropertyChanged(nameof(RemoveBatteryBorderColor));
+            OnPropertyChanged(nameof(RemoveBatteryTextColor));
+        }
+
     }
+    //Remove battery
+    public Color RemoveBatteryBackgrundColor { get { return removeBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color RemoveBatteryBorderColor { get { return removeBattery ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color RemoveBatteryTextColor { get { return removeBattery ? AppColors.WhiteColor : AppColors.Gray900Color; } }
     private bool removeBattery;
     public bool RemoveBattery
     {
         get => removeBattery;
-        set { SetProperty(ref removeBattery, value); }
+        set
+        {
+            SetProperty(ref removeBattery, value);
+            addBattery = !removeBattery;
+            OnPropertyChanged(nameof(RemoveBatteryBackgrundColor));
+            OnPropertyChanged(nameof(RemoveBatteryBorderColor));
+            OnPropertyChanged(nameof(RemoveBatteryTextColor));
+            OnPropertyChanged(nameof(AddBatteryBackgrundColor));
+            OnPropertyChanged(nameof(AddBatteryBorderColor));
+            OnPropertyChanged(nameof(AddBatteryTextColor));
+        }
     }
     private double maxBatteryPower = 10;
     public double MaxBatteryPower

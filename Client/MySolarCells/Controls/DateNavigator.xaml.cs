@@ -6,7 +6,7 @@ public partial class DateNavigator : ContentView
     {
         InitializeComponent();
         SimulateSettings.IsVisible = false;
-        ROISimulateOn.IsToggled = false;
+        //ROISimulateOn.IsToggled = false;
         ShowSimulateButton.IsVisible = true;
         
         // ROISimulateBatteryKwh.SetBinding(Label.TextProperty, new Binding("MaxBatteryPower", source: RoiSimulate));
@@ -73,10 +73,10 @@ public partial class DateNavigator : ContentView
     {
         var control = (DateNavigator)bindable;
         var value = (RoiSimulate)newValue;
-        control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
-        control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
-        control.ROIAddBatterySwith.SetBinding(Switch.IsToggledProperty, new Binding("AddBattery", source: value));
-        control.ROIRemoveBatterySwitch.SetBinding(Switch.IsToggledProperty, new Binding("RemoveBattery", source: value));
+        //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
+        //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
+        //control.ROIAddBatterySwith.SetBinding(Switch.IsToggledProperty, new Binding("AddBattery", source: value));
+        //control.ROIRemoveBatterySwitch.SetBinding(Switch.IsToggledProperty, new Binding("RemoveBattery", source: value));
         control.ROISBatteryKwh.SetBinding(Microsoft.Maui.Controls.Slider.ValueProperty, new Binding("MaxBatteryPower", source: value));
         
     }
@@ -230,12 +230,27 @@ public partial class DateNavigator : ContentView
         {
             simSettingsIsVisible = false;
             SimulateSettings.IsVisible = false;
+            RoiSimulate.DoSimulate = false;
+            WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
         }
         else
         {
             simSettingsIsVisible = true;
             SimulateSettings.IsVisible = true;
+            RoiSimulate.DoSimulate = true;
+            WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
         }
+    }
+    
+    void AddBattery_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    {
+        RoiSimulate.AddBattery = !RoiSimulate.AddBattery;
+        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
+    }
+    void RmoveBattery_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    {
+        RoiSimulate.RemoveBattery = !RoiSimulate.RemoveBattery;
+        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 
     void ROISimulateBatteryKwh_TextChanged(System.Object sender, Microsoft.Maui.Controls.TextChangedEventArgs e)
@@ -245,42 +260,22 @@ public partial class DateNavigator : ContentView
   
     void ROISimulateOn_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
+        
     }
     
-    void ROIAddBatterySwith_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
-    {
-        //if (simSettingsAddbattery)
-        //{
-        //    simSettingsAddbattery = false;
-        //    //ROIAddBatterySwith.IsToggled = false;
-        //    RoiSimulate.AddBattery = false;
-        //}
-        //else
-        //{
-        //    simSettingsAddbattery = true;
-        //    //ROIAddBatterySwith.IsToggled = true;
-        //    RoiSimulate.AddBattery = true;
-           
-        //}
-        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
-    }
-    //private bool simSettingsRemoveBattery = false;
+    
+
     void ROIRemoveBatterySwitch_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
     {
-
-        //if (simSettingsRemoveBattery)
-        //{
-        //    simSettingsRemoveBattery = false;
-        //    //ROIRemoveBatterySwitch.IsToggled = false;
-        //    RoiSimulate.RemoveBattery = false;
-        //}
-        //else
-        //{
-        //    simSettingsRemoveBattery = true;
-        //    //ROIRemoveBatterySwitch.IsToggled = true;
-        //    RoiSimulate.RemoveBattery = true;
-        //}
         WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
+    private bool moreStackIsVisible = false;
+    void More_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    {
+
+        moreStackIsVisible = this.MoreStack.IsVisible = !moreStackIsVisible;
+    }
+
+   
+
 }

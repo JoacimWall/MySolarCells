@@ -15,6 +15,7 @@ public class BaseContentPage : ContentPage
         //https://www.nuget.org/packages/PureWeen.Maui.FixesAndWorkarounds kan fixa detta kanske
         Shell.SetNavBarIsVisible(this, false);
         Shell.SetBackButtonBehavior(this, new BackButtonBehavior { IsVisible = false });
+        
         //döljer warnings då vi kräver IOS 12.4 så det är lugnt  
         this.HideSoftInputOnTapped = true;
       

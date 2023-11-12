@@ -447,4 +447,13 @@
   <data name="Amortization" xml:space="preserve">
     <value>Amortisering</value>
   <comment>Need review</comment></data>
+  <data name="Prices" xml:space="preserve">
+    <value>Priser</value>
+  <comment>Need review</comment></data>
+  <data name="Buy_Transfer_Fee_Tax" xml:space="preserve">
+    <value>Kjøp (overføringsgebyr/avgift)</value>
+  <comment>Need review</comment></data>
+  <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
+    <value>Selg (skatterød../netto ben..)</value>
+  <comment>Need review</comment></data>
 </root>

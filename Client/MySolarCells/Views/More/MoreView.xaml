@@ -52,7 +52,7 @@
                            Text="{Binding InverterText}" Style="{StaticResource LabelBaseStyle}"/>
                      <Label 
                            Margin="8,0,8,0"
-                           Text="{Binding InverterModelText}" Style="{StaticResource LabelBaseStyle}"/>
+                           Text="{Binding InverterModelText}" Style="{StaticResource LabelBaseStyle}" LineBreakMode="TailTruncation"/>
 
                 </VerticalStackLayout>
             </Grid>

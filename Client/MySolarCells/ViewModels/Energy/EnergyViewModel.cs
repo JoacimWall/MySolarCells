@@ -94,8 +94,9 @@ public class EnergyViewModel : BaseViewModel
         Brush brushProductionSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
         ColorSold = resultSeries.Model.ChartSeriesProductionSold.First().Color;
         PaletteBrushesProductionSold.Add(brushProductionSold);
+        PaletteBrushesProductionSold.Add(brushPriceBuy);
         //if (resultSeries.Model.ChartSeriesProductionSold.Any(x => x.Value.HasValue && x.Value.Value > 0))
-            foreach (var item in resultSeries.Model.ChartSeriesProductionSold)
+        foreach (var item in resultSeries.Model.ChartSeriesProductionSold)
                 DataSold.Add(item);
 
         //Battery charge

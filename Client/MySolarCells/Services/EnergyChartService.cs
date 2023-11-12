@@ -1,4 +1,6 @@
-﻿namespace MySolarCells.Services;
+﻿using CoreVideo;
+
+namespace MySolarCells.Services;
 
 public interface IEnergyChartService
 {
@@ -241,18 +243,18 @@ public class EnergyChartService : IEnergyChartService
 
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
-            result.BatteryChargeTitle = string.Format("Battery {0}", stats.BatteryCharge);
-            result.ProductionSoldTile = string.Format("Sold {0}", stats.ProductionSold);
-            result.ProductionUsedTile = string.Format("Used {0}", stats.ProductionOwnUse);
+            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, stats.BatteryCharge);
+            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, stats.ProductionSold);
+            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, stats.ProductionOwnUse);
 
-            result.BatteryUsedTile = string.Format("Battery {0}", stats.BatteryUsed);
-            result.ConsumedGridTile = string.Format("Grid {0}", stats.Purchased);
+            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, stats.BatteryUsed);
+            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Purchased, stats.Purchased);
 
-            result.ProductionChartTitle = string.Format("Production {0} kWh", stats.SumAllProduction);
-            result.ConsumtionChartTitle = string.Format("Consumtion {0} kWh", stats.SumAllConsumption);
-            result.PriceChartTitle = "Prices";
-            result.PriceBuyTile = "Buy (transfer fee/tax)";
-            result.PriceSellTile = "Sell (tax red../net ben..)";
+            result.ProductionChartTitle = string.Format("{0} {1} kWh", AppResources.Production, stats.SumAllProduction);
+            result.ConsumtionChartTitle = string.Format("{0} {1} kWh", AppResources.Consumption, stats.SumAllConsumption);
+            result.PriceChartTitle = AppResources.Prices; // "Prices";
+            result.PriceBuyTile = AppResources.Buy_Transfer_Fee_Tax;// "Buy (transfer fee/tax)";
+            result.PriceSellTile = AppResources.Sell_Tax_Red_Net_Ben;// "Sell (tax red../net ben..)";
 
         }
         else
@@ -262,18 +264,19 @@ public class EnergyChartService : IEnergyChartService
             //double batteryUsed = stats.BatteryUsedSaved + stats.BatteryUseTransferFeeSaved + stats.BatteryUseEnergyTaxSaved;
             double batteryCharge = 0;
 
-            result.BatteryChargeTitle = string.Format("Battery {0}", batteryCharge);
-            result.ProductionSoldTile = string.Format("Sold {0}", stats.SumProductionSoldProfit);
-            result.ProductionUsedTile = string.Format("Used {0}", stats.SumProductionOwnUseSaved);
+            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, batteryCharge);
+            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, stats.SumProductionSoldProfit);
+            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, stats.SumProductionOwnUseSaved);
 
-            result.BatteryUsedTile = string.Format("Battery {0}", stats.SumBatteryUseSaved);
-            result.ConsumedGridTile = string.Format("Grid {0}", stats.SumPurchasedCost);
+            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, stats.SumBatteryUseSaved);
+            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Grid, stats.SumPurchasedCost);
 
-            result.ProductionChartTitle = string.Format("Production {0} Sek", Math.Round(stats.SumProductionSoldProfit + stats.SumProductionOwnUseSaved, 2));
-            result.ConsumtionChartTitle = string.Format("Consumtion {0} Sek", Math.Round(stats.SumPurchasedCost + stats.SumProductionOwnUseSaved + stats.SumBatteryUseSaved, 2));
-            result.PriceChartTitle = "Prices";
-            result.PriceBuyTile = "Buy (transfer fee/tax)";
-            result.PriceSellTile = "Sell (tax red../net ben..)";
+            result.ProductionChartTitle = string.Format("{0} {1} Sek",AppResources.Production, Math.Round(stats.SumProductionSoldProfit + stats.SumProductionOwnUseSaved, 2));
+            result.ConsumtionChartTitle = string.Format("{0} {1} Sek",AppResources.Consumption, Math.Round(stats.SumPurchasedCost + stats.SumProductionOwnUseSaved + stats.SumBatteryUseSaved, 2));
+            result.PriceChartTitle = AppResources.Prices; // "Prices";
+            result.PriceBuyTile = AppResources.Buy_Transfer_Fee_Tax;// "Buy (transfer fee/tax)";
+            result.PriceSellTile = AppResources.Sell_Tax_Red_Net_Ben;// "Sell (tax red../net ben..)";
+
         }
         result.ChartSeriesPriceBuy = lisPriceBuy;
         result.ChartSeriesPriceSell = lisPriceSold;
@@ -390,11 +393,27 @@ public class ChartDataRequest : ObservableObject
         {
             SetProperty(ref chartDataRange, value);
             OnPropertyChanged(nameof(TodayBackgrundColor));
+            OnPropertyChanged(nameof(TodayBorderColor));
+            OnPropertyChanged(nameof(TodayTextColor));
+
             OnPropertyChanged(nameof(DayBackgrundColor));
+            OnPropertyChanged(nameof(DayBorderColor));
+            OnPropertyChanged(nameof(DayTextColor));
+
             OnPropertyChanged(nameof(WeekBackgrundColor));
+            OnPropertyChanged(nameof(WeekBorderColor));
+            OnPropertyChanged(nameof(WeekTextColor));
+
             OnPropertyChanged(nameof(MonthBackgrundColor));
+            OnPropertyChanged(nameof(MonthBorderColor));
+            OnPropertyChanged(nameof(MonthTextColor));
+
             OnPropertyChanged(nameof(YearBackgrundColor));
+            OnPropertyChanged(nameof(YearBorderColor));
+            OnPropertyChanged(nameof(YearTextColor));
+
             SetFilterDates();
+            
         }
     }
     private ChartDataUnit chartDataUnit = ChartDataUnit.kWh;
@@ -408,7 +427,12 @@ public class ChartDataRequest : ObservableObject
         {
             SetProperty(ref chartDataUnit, value);
             OnPropertyChanged(nameof(KwhBackgrundColor));
+            OnPropertyChanged(nameof(KwhBorderColor));
+            OnPropertyChanged(nameof(KwhTextColor));
+
             OnPropertyChanged(nameof(CurrencyBackgrundColor));
+            OnPropertyChanged(nameof(CurrencyBorderColor));
+            OnPropertyChanged(nameof(CurrencyTextColor));
 
         }
     }
@@ -436,8 +460,8 @@ public class ChartDataRequest : ObservableObject
         set
         {
             SetProperty(ref timeStamp, value);
-            OnPropertyChanged(nameof(TimeStampTitle));
             SetFilterDates();
+           
         }
     }
     private void SetFilterDates()
@@ -468,28 +492,81 @@ public class ChartDataRequest : ObservableObject
             default:
                 break;
         }
+        OnPropertyChanged(nameof(TimeStampTitle));
+    }
 
+    public string TimeStampTitle
+    {
+        get
+        {
+            string returnstr = "";
+            if (FilterStart.Year != DateTime.Now.Year)
+                return timeStamp.ToShortDateString();
+
+            switch (chartDataRange)
+            {
+                case ChartDataRange.Today:
+                    returnstr = AppResources.Today;
+                    break;
+                case ChartDataRange.Day:
+                    returnstr = string.Format("{0} {1} {2}", FilterStart.ToString("ddd").ToUpper(), FilterStart.ToString("dd"), FilterStart.ToString("MMM").ToUpper());
+                    break;
+                case ChartDataRange.Week:
+                    returnstr = string.Format("{0}{1}{2}{3}{4}{5}{6}", FilterStart.ToString("dd"),"/", FilterStart.ToString("MMM").ToUpper(), "-", FilterEnd.ToString("dd"),"/", FilterEnd.ToString("MMM").ToUpper());
+                    break;
+                case ChartDataRange.Month:
+                    returnstr = FilterStart.ToString("MMMM").ToUpper();
+                    break;
+                case ChartDataRange.Year:
+                    returnstr = FilterStart.ToString("yyyy");
+                    break;
+                default:
+                    returnstr = timeStamp.ToShortDateString();
+                    break;
+            }
+            if (FilterStart.Year != DateTime.Now.Year)
+                returnstr = returnstr + " " + FilterStart.ToString("yyyy");
+
+            return returnstr;
+        }
     }
 
 
 
+    public Color TodayBackgrundColor { get { return chartDataRange == ChartDataRange.Today ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color TodayBorderColor { get { return chartDataRange == ChartDataRange.Today ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color TodayTextColor { get { return chartDataRange == ChartDataRange.Today ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+
+    public Color DayBackgrundColor { get { return chartDataRange == ChartDataRange.Day ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color DayBorderColor { get { return chartDataRange == ChartDataRange.Day ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color DayTextColor { get { return chartDataRange == ChartDataRange.Day ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+
+    public Color WeekBackgrundColor { get { return chartDataRange == ChartDataRange.Week ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color WeekBorderColor { get { return chartDataRange == ChartDataRange.Week ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color WeekTextColor { get { return chartDataRange == ChartDataRange.Week ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+
+    public Color MonthBackgrundColor { get { return chartDataRange == ChartDataRange.Month ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color MonthBorderColor { get { return chartDataRange == ChartDataRange.Month ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color MonthTextColor { get { return chartDataRange == ChartDataRange.Month ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+
+    public Color YearBackgrundColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color YearBorderColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color YearTextColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+
+    public Color MoreBackgrundColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color MoreBorderColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color MoreTextColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
 
-    public Color TodayBackgrundColor { get { return chartDataRange == ChartDataRange.Today ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+    public Color KwhBackgrundColor { get { return ChartDataUnit == ChartDataUnit.kWh ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color KwhBorderColor { get { return ChartDataUnit == ChartDataUnit.kWh ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color KwhTextColor { get { return ChartDataUnit == ChartDataUnit.kWh ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
-    public Color DayBackgrundColor { get { return chartDataRange == ChartDataRange.Day ? AppColors.Gray200Color : AppColors.TransparentColor; } }
+    public Color CurrencyBackgrundColor { get { return ChartDataUnit == ChartDataUnit.Currency ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
+    public Color CurrencyBorderColor { get { return ChartDataUnit == ChartDataUnit.Currency ? AppColors.Gray500Color : AppColors.TransparentColor; } }
+    public Color CurrencyTextColor { get { return ChartDataUnit == ChartDataUnit.Currency ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
-    public Color WeekBackgrundColor { get { return chartDataRange == ChartDataRange.Week ? AppColors.Gray200Color : AppColors.TransparentColor; } }
-
-    public Color MonthBackgrundColor { get { return chartDataRange == ChartDataRange.Month ? AppColors.Gray200Color : AppColors.TransparentColor; } }
-
-    public Color YearBackgrundColor { get { return chartDataRange == ChartDataRange.Year ? AppColors.Gray200Color : AppColors.TransparentColor; } }
-
-    public Color KwhBackgrundColor { get { return ChartDataUnit == ChartDataUnit.kWh ? AppColors.Gray200Color : AppColors.TransparentColor; } }
-
-    public Color CurrencyBackgrundColor { get { return ChartDataUnit == ChartDataUnit.Currency ? AppColors.Gray200Color : AppColors.TransparentColor; } }
-
-    public string TimeStampTitle { get { return timeStamp.ToLongDateString(); } }
+    
 }
 public enum ChartDataRange
 {

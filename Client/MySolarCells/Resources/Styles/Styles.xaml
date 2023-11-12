@@ -408,7 +408,7 @@
     </Style>
 
     <Style TargetType="Shell" ApplyToDerivedTypes="True">
-        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray100Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={x:Static theming:AppColors.Gray900Color}, Default={x:Static theming:AppColors.WhiteColor}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray900Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray200Color}, Dark={x:Static theming:AppColors.Gray900Color}}" />

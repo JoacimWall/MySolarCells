@@ -448,4 +448,13 @@
   <data name="Amortization" xml:space="preserve">
     <value>Poistot</value>
   <comment>Need review</comment></data>
+  <data name="Prices" xml:space="preserve">
+    <value>hinnat</value>
+  <comment>Need review</comment></data>
+  <data name="Buy_Transfer_Fee_Tax" xml:space="preserve">
+    <value>Osta (siirtomaksu/vero)</value>
+  <comment>Need review</comment></data>
+  <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
+    <value>Myy (tax red../net ben..)</value>
+  <comment>Need review</comment></data>
 </root>
