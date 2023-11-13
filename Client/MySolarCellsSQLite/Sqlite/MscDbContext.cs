@@ -9,11 +9,7 @@ public class MscDbContext : DbContext
 {
     //---------- THIS CODE SHOULD BE ENABLE WEHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
     // Constructor with no argument/empty is required and it is used when adding/removing migrations from class library
-    //public MscDbContext()
-    //{
-    //}
-    //protected override void OnConfiguring(DbContextOptionsBuilder options)
-    //        => options.UseSqlite();
+   
 
 
     //---------- THIS CODE SHOULD BE ENABLE WEHEN WE RUN THE APP -------------------------------
@@ -23,14 +19,14 @@ public class MscDbContext : DbContext
         try
         {
             //this.Database.EnsureCreated();
-            this.Database.Migrate();
+             this.Database.Migrate();
         }
         catch
         {
 
         }
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //använd i app mode
@@ -59,15 +55,17 @@ public class MscDbContext : DbContext
 
     }
 
-    
+    // ----------------------- ALLWAYS ENABLED --------------------------------
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //UniqueIndex
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
         modelBuilder.Entity<Models.Preferences>().HasIndex(u => u.Name).IsUnique();
-        //modelBuilder.Entity<TemplateType>().HasIndex(u => u.Type).IsUnique();
+        modelBuilder.Entity<EnergyCalculationParameter>().HasIndex(u => u.FromDate).IsUnique();
+        modelBuilder.Entity<InvestmentAndLoan>().HasIndex(u => u.FromDate).IsUnique();
         modelBuilder.Entity<InvestmentAndLoan>().HasMany(c => c.Interest);
+        modelBuilder.Entity<InvestmentAndLoanInterest>().HasIndex(u => new { u.FromDate, u.InvestmentAndLoanId }).IsUnique();
     }
 
     public DbSet<Home> Home { get; set; }

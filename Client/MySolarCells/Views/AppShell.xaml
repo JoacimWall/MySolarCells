@@ -44,7 +44,7 @@
                       Route="Energy" />
         <ShellContent Title="{Binding Source={x:Static trans:AppResources.ROI}}"
                       ContentTemplate="{DataTemplate roi:RoiView}"
-                      Icon="money.png"
+                      Icon="coins.png"
                       Route="ROI" />
        
          <ShellContent Title="{Binding Source={x:Static trans:AppResources.More}}"

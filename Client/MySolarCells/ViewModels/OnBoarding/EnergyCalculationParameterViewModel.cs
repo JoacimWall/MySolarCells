@@ -16,7 +16,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
             selectedParameters = parameters.Last();
         }
         else //Add default first one
-            AddParameters();
+            AddParameters(true);
     }
     public ICommand AddParametersCommand => new Command(() => AddParameters());
     public ICommand ShowDatePickerCommand => new Command(() => ShowDatePickerDlg());
@@ -33,9 +33,34 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         get => showDatePicker;
         set { SetProperty(ref showDatePicker, value); }
     }
-    private void AddParameters()
+    private void AddParameters(bool firstTime = false)
     {
-        Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter { HomeId = MySolarCellsGlobals.SelectedHome.HomeId, FromDate = MySolarCellsGlobals.SelectedHome.FromDate });
+        //Clone previus
+        if (firstTime)
+        {
+            Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter
+            {
+                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+                FromDate = MySolarCellsGlobals.SelectedHome.FromDate,
+            });
+        }
+        else
+        { 
+        var paramLast = Parameters.Last();
+        Parameters.Add(new Services.Sqlite.Models.EnergyCalculationParameter
+        {
+            HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+            FromDate = paramLast.FromDate.AddMonths(1),
+            EnergyTax = paramLast.EnergyTax,
+            FixedPriceKwh = paramLast.FixedPriceKwh,
+            ProdCompensationElectricityLowload = paramLast.ProdCompensationElectricityLowload,
+            TaxReduction = paramLast.TaxReduction,
+            TotalInstallKwhPanels = paramLast.TotalInstallKwhPanels,
+            TransferFee = paramLast.TransferFee,
+            UseSpotPrice = paramLast.UseSpotPrice
+
+        });
+        }
         this.mscDbContext.EnergyCalculationParameter.Add(Parameters.Last());
         SelectedParameters = Parameters.Last();
     }
