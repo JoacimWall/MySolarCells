@@ -9,7 +9,11 @@ public class MscDbContext : DbContext
 {
     //---------- THIS CODE SHOULD BE ENABLE WEHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
     // Constructor with no argument/empty is required and it is used when adding/removing migrations from class library
-   
+    //public MscDbContext()
+    //{
+    //}
+    //protected override void OnConfiguring(DbContextOptionsBuilder options)
+    //        => options.UseSqlite();
 
 
     //---------- THIS CODE SHOULD BE ENABLE WEHEN WE RUN THE APP -------------------------------

@@ -456,4 +456,10 @@
   <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
     <value>Selg (skatterød../netto ben..)</value>
   <comment>Need review</comment></data>
+  <data name="Grid" xml:space="preserve">
+    <value>Nett</value>
+  <comment>Need review</comment></data>
+  <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
+    <value>Tapte {0} sek. skattereduksjon, produksjon høyere enn forbruk.</value>
+  <comment>Need review</comment></data>
 </root>

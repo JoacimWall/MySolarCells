@@ -457,4 +457,10 @@
   <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
     <value>Myy (tax red../net ben..)</value>
   <comment>Need review</comment></data>
+  <data name="Grid" xml:space="preserve">
+    <value>Ruudukko</value>
+  <comment>Need review</comment></data>
+  <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
+    <value>Veronalennus jäi väliin {0} sekuntia, tuotanto suurempi kuin kulutus.</value>
+  <comment>Need review</comment></data>
 </root>

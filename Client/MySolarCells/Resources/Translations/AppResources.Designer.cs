@@ -697,6 +697,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missed {0} sec tax reduction, production higher than consumption..
+        /// </summary>
+        public static string Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption {
+            get {
+                return ResourceManager.GetString("Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Month.
         /// </summary>
         public static string Month {

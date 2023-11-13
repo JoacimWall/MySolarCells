@@ -1,6 +1,4 @@
-﻿using CoreVideo;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public interface IEnergyChartService
 {

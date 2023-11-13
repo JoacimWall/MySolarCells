@@ -81,7 +81,20 @@ public class RoiService : IRoiService
                 roiStatsGrpYear.Add(result[i]);
             }
         }
+        //Check differnt rouls per year calc
+        foreach (var item in roiStatsOvervView)
+        {
+            //In sweden you only get Taxraduction for the amount of kwh that you bay
+            if (item.RoiStats.ProductionSold > item.RoiStats.Purchased)
+            {
+                var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= item.FromDate);
 
+                var oldvalue = item.RoiStats.ProductionSoldTaxReductionProfit;
+                item.RoiStats.ProductionSoldTaxReductionProfit = Math.Round(item.RoiStats.Purchased * calcParams.TaxReduction, 2);
+                item.RoiStats.SumProductionSoldProfit = Math.Round((item.RoiStats.SumProductionSoldProfit - oldvalue) + item.RoiStats.ProductionSoldTaxReductionProfit,2);
+                item.RoiStats.ProductionSoldTaxReductionProfitComment = string.Format(AppResources.Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption, Math.Round(oldvalue - item.RoiStats.ProductionSoldTaxReductionProfit, 2).ToString());
+            }
+        }
 
         return new Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>(new Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>(roiStatsOvervView, roiStatsGrpYearAll));
     }
@@ -502,6 +515,7 @@ public class RoiStats
     public double ProductionSoldProfit { get; set; } = 0;
     public double ProductionSoldGridCompensationProfit { get; set; } = 0;
     public double ProductionSoldTaxReductionProfit { get; set; } = 0;
+    public string ProductionSoldTaxReductionProfitComment { get; set; } ="";
     public double SumProductionSoldProfit { get; set; } = 0;
     // ----------- ProductionOwnUse ---------------------
     public double ProductionOwnUse { get; set; } = 0;

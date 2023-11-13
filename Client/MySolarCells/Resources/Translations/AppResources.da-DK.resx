@@ -456,4 +456,10 @@
   <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
     <value>Sælg (skatterød../nettoben..)</value>
   <comment>Need review</comment></data>
+  <data name="Grid" xml:space="preserve">
+    <value>Gitter</value>
+  <comment>Need review</comment></data>
+  <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
+    <value>Mistet {0} sek. momsnedsættelse, produktion højere end forbrug.</value>
+  <comment>Need review</comment></data>
 </root>

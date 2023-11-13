@@ -505,5 +505,8 @@
 <data name="Grid" xml:space="preserve">
     <value>Grid</value>
   <comment>Need review</comment></data>
+<data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
+    <value>Missed {0} sec tax reduction, production higher than consumption.</value>
+  <comment>Need review</comment></data>
 
 </root>
