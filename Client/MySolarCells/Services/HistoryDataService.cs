@@ -20,7 +20,7 @@ public class HistoryDataService : IHistoryDataService
     }
     //This function should can prpduce wrong if the cahnge of calulation parameters in the middel of the date span 
 
-    /// Return to collectins tuple 1 is for the overview summirized one Year  per row
+    /// Return to collectins tuple 1 is for the overview summirized one Year per row
     /// The second tuple is all months summirzed per year 
     public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport()
     {

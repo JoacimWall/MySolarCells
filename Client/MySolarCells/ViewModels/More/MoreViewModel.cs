@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using MySolarCells.Services.Sqlite.Models;
 using Syncfusion.XlsIO;
 
@@ -152,7 +153,7 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range[c.ToString() + "13"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldTaxReductionProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldTaxReductionProfit).ToString();
             if (valueMode && !string.IsNullOrEmpty(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment))
             {
-                worksheet.Range[c.ToString() + "13"].AddThreadedComment(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment,DateTime.Now);
+                worksheet.Range[c.ToString() + "13"].AddThreadedComment(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment, DateTime.Now);
             }
             worksheet.Range[c.ToString() + "14"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseSaved).ToString();
             worksheet.Range[c.ToString() + "15"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseTransferFeeSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseTransferFeeSaved).ToString();
@@ -176,10 +177,10 @@ public class MoreViewModel : BaseViewModel
 
             if (isOverviewSheet)
             {
-                
-                worksheet.Range[c.ToString() + "36"].Value = valueMode ? roiStats[index].ROIYearsLeft.HasValue ? Math.Round(roiStats[index].ROIYearsLeft.Value,2).ToString():"":"";
-                worksheet.Range[c.ToString() + "37"].Value = valueMode ? roiStats[index].HistoryStats.Investment.ToString():"";
-                worksheet.Range[c.ToString() + "38"].Value = valueMode ? roiStats[index].ProducedSaved.ToString(): roiStats.Sum(x => x.ProducedSaved).ToString();
+
+                worksheet.Range[c.ToString() + "36"].Value = valueMode ? roiStats[index].ROIYearsLeft.HasValue ? Math.Round(roiStats[index].ROIYearsLeft.Value, 2).ToString() : "" : "";
+                worksheet.Range[c.ToString() + "37"].Value = valueMode ? roiStats[index].HistoryStats.Investment.ToString() : "";
+                worksheet.Range[c.ToString() + "38"].Value = valueMode ? roiStats[index].ProducedSaved.ToString() : roiStats.Sum(x => x.ProducedSaved).ToString();
                 worksheet.Range[c.ToString() + "39"].Value = valueMode ? Math.Round(roiStats[index].HistoryStats.Investment - roiStats[index].AcumulatedUntilCurrentYearProducedAndSaved, 0).ToString() : "";
                 worksheet.Range[c.ToString() + "39"].CellStyle.Font.Bold = true;
                 worksheet.Range[c.ToString() + "39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
@@ -213,7 +214,7 @@ public class MoreViewModel : BaseViewModel
 
 
         worksheet.Range[lastC + "2:" + lastC + "39"].CellStyle.Font.Bold = true;
-      
+
 
 
 
@@ -259,7 +260,7 @@ public class MoreViewModel : BaseViewModel
                 if (indexParm == parmas.Count)
                     break;
 
-                worksheet.Range[c.ToString() + "42"].Text = parmas[indexParm].FromDate.ToString("yyyy-MM");
+                worksheet.Range[c.ToString() + "42"].Value = parmas[indexParm].FromDate.ToString("yyyy-MM");
                 worksheet.Range[c.ToString() + "42"].CellStyle.Font.Bold = true;
                 worksheet.Range[c.ToString() + "42"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
                 //Nätnytta 0.078 kr/kWh
@@ -287,14 +288,68 @@ public class MoreViewModel : BaseViewModel
         #endregion
         return true;
     }
+
+
+
+    private async Task<bool> GenerateSavingEssitmateWorksheet(IWorksheet worksheet, List<EstimateRoi> estimateRois, int homeId)
+    {
+        //Disable gridlines in the worksheet
+        worksheet.IsGridLinesVisible = true;
+
+       
+        // public double AvargePriceSold { get; set; }
+        //public double AvargePrisOwnUse { get; set; }
+        //public double ProductionSold { get; set; }
+        //public double ProductionOwnUse { get; set; }
+        //public double YearSavingsSold { get; set; }
+        //public double YearSavingsOwnUse { get; set; }
+        //public double ReturnPercentage { get; set; }
+        //public double RemainingOnInvestment { get; set; }
+        worksheet.Range["A1"].Text = AppResources.Year;
+        worksheet.Range["B1"].Text = "AvargePriceSold";
+        worksheet.Range["C1"].Text = "AvargePrisOwnUse";
+        worksheet.Range["D1"].Text = "ProductionSold";
+        worksheet.Range["E1"].Text = "ProductionOwnUse";
+        worksheet.Range["F1"].Text = "YearSavingsSold";
+        worksheet.Range["G1"].Text = "YearSavingsOwnUse";
+        worksheet.Range["H1"].Text = "ReturnPercentage";
+        worksheet.Range["I1"].Text = "RemainingOnInvestment";
+
+
+        //worksheet.Range["A1:A32"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
+        //worksheet.Range["A1"].ColumnWidth = 36;
+        int index = 0;
+        for (int i = 2; i < estimateRois.Count + 2; i++)
+        {
+            worksheet.Range["A" + i.ToString()].Value = estimateRois[index].Year.ToString();
+            worksheet.Range["B" + i.ToString()].Value = estimateRois[index].AvargePriceSold.ToString();
+            worksheet.Range["C" + i.ToString()].Value = estimateRois[index].AvargePrisOwnUse.ToString();
+            worksheet.Range["D" + i.ToString()].Value = estimateRois[index].ProductionSold.ToString();
+            worksheet.Range["E" + i.ToString()].Value = estimateRois[index].ProductionOwnUse.ToString();
+            worksheet.Range["F" + i.ToString()].Value = estimateRois[index].YearSavingsSold.ToString();
+            worksheet.Range["G" + i.ToString()].Value = estimateRois[index].YearSavingsOwnUse.ToString();
+            worksheet.Range["H" + i.ToString()].Value = estimateRois[index].ReturnPercentage.ToString();
+            worksheet.Range["I" + i.ToString()].Value = estimateRois[index].RemainingOnInvestment.ToString();
+            index++;
+        }
+
+        //
+        worksheet.Range["A1:I1"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignRight;
+        worksheet.Range["A1:I1"].CellStyle.Font.Bold = true;
+        worksheet.Range["A1:I1"].CellStyle.Font.Size = 14;
+        worksheet.Range["A1:I1"].ColumnWidth = 20;
+
+
+        return true;
+    }
     private async Task<bool> ExportExcelGroupYear(int homeId)
     {
         using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
 
         var result = await this.historyService.GenerateTotalPermonthReport();
-        
-        var resultRoi = this.roiService.SavingsEstimate(result.Model.Item2);
+
+        var resultRoi = this.roiService.CalcSavingsEstimate(result.Model);
 
         using (ExcelEngine excelEngine = new ExcelEngine())
         {
@@ -302,11 +357,12 @@ public class MoreViewModel : BaseViewModel
             application.DefaultVersion = ExcelVersion.Xlsx;
 
             //Create a workbook with a worksheet
-            string[] nameOverview = new string[1];
-            nameOverview[0] = "Overview";
+            string[] nameOverview = new string[2];
+            nameOverview[0] = "Savings estimate";
+            nameOverview[1] = "Overview";
             IWorkbook workbook = application.Workbooks.Create(nameOverview);
-
-            await GenerateYearWorkSheet(workbook.Worksheets[0], result.Model.Item1, homeId, true);
+            await GenerateSavingEssitmateWorksheet(workbook.Worksheets[0], resultRoi.Model, homeId);
+            await GenerateYearWorkSheet(workbook.Worksheets[1], result.Model.Item1, homeId, true);
             foreach (var itemList in result.Model.Item2)
             {
                 workbook.Worksheets.Create(itemList.First().FromDate.Year.ToString());
@@ -340,7 +396,7 @@ public class MoreViewModel : BaseViewModel
             //saveService.SaveAndView("Output.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ms);
         }
     }
-    
+
 
     private async Task ShowInvestAndLon()
     {
