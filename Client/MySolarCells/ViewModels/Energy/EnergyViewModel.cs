@@ -288,8 +288,8 @@ public class EnergyViewModel : BaseViewModel
 
         }
     }
-    private RoiSimulate roiSimulate = new RoiSimulate();
-    public RoiSimulate RoiSimulate
+    private HistorySimulate roiSimulate = new HistorySimulate();
+    public HistorySimulate RoiSimulate
     {
         get { return roiSimulate; }
         set { SetProperty(ref roiSimulate, value); }

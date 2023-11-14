@@ -5,9 +5,9 @@ namespace MySolarCells.Services;
 public interface IHistoryDataService
 {
 
-    Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate);
-    Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end);
-    Task<Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>> GenerateTotalPermonthReport();
+    Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end, HistorySimulate historSimulate);
+    Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end);
+    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport();
 
 }
 
@@ -22,9 +22,9 @@ public class HistoryDataService : IHistoryDataService
 
     /// Return to collectins tuple 1 is for the overview summirized one Year  per row
     /// The second tuple is all months summirzed per year 
-    public async Task<Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>> GenerateTotalPermonthReport()
+    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport()
     {
-        List<ReportRoiStats> result = new List<ReportRoiStats>();
+        List<ReportHistoryStats> result = new List<ReportHistoryStats>();
         var start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
         var dates = DateHelper.GetRelatedDates(DateTime.Today);
         var current = start.ThisMonthStart;
@@ -35,83 +35,83 @@ public class HistoryDataService : IHistoryDataService
         //Get alla data from start to now per month
         while (current < dates.ThisMonthEnd)
         {
-            var stats = await CalculateTotals(current, current.AddMonths(1), new RoiSimulate());
+            var stats = await CalculateTotals(current, current.AddMonths(1), new HistorySimulate());
             //Calulate Intrest currnt month
             var resultInvestcalc = CalculateLonAndInterest(resultInvest, current);
             stats.Investment = resultInvestcalc.Item1;
             stats.InterestCost = Math.Round(resultInvestcalc.Item2, 2);
             //Correct balance with interest cost
             //stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
-            result.Add(new ReportRoiStats { FromDate = current, RoiStats = stats });
+            result.Add(new ReportHistoryStats { FromDate = current, HistoryStats = stats });
             current = current.AddMonths(1);
         }
         // --- Group all per year and get total ----
         int year = result.First().FromDate.Year;
-        List<List<ReportRoiStats>> roiStatsGrpYearAll = new List<List<ReportRoiStats>>();
-        List<ReportRoiStats> roiStatsGrpYear = new List<ReportRoiStats>();
-        List<ReportRoiStats> roiStatsOvervView = new List<ReportRoiStats>();
+        List<List<ReportHistoryStats>> historyStatsGrpYearAll = new List<List<ReportHistoryStats>>();
+        List<ReportHistoryStats> historyStatsGrpYear = new List<ReportHistoryStats>();
+        List<ReportHistoryStats> historStatsOvervView = new List<ReportHistoryStats>();
         double acumlimatedPodSavedAndMinusInterest = 0;
         double? previusYearRoi = null;
         for (int i = 0; i < result.Count; i++)
         {
             if (year == result[i].FromDate.Year)
-                roiStatsGrpYear.Add(result[i]);
+                historyStatsGrpYear.Add(result[i]);
 
             if (year != result[i].FromDate.Year || i == result.Count - 1)
             {
-                TimeSpan timeSpanYear = roiStatsGrpYear.Last().FromDate - roiStatsGrpYear.First().FromDate;
-                ReportRoiStats newYearStats = new ReportRoiStats
+                TimeSpan timeSpanYear = historyStatsGrpYear.Last().FromDate - historyStatsGrpYear.First().FromDate;
+                ReportHistoryStats newYearStats = new ReportHistoryStats
                 {
-                    FromDate = roiStatsGrpYear.First().FromDate,
-                    RoiStats = SummerizeToOneRoiStats(roiStatsGrpYear.Select(x => x.RoiStats).ToList(), timeSpanYear)
+                    FromDate = historyStatsGrpYear.First().FromDate,
+                    HistoryStats = SummerizeToOneRoiStats(historyStatsGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear)
                 };
 
 
-                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, roiStatsGrpYear);
+                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, historyStatsGrpYear);
                 acumlimatedPodSavedAndMinusInterest = resultRoi.Item1;
                 newYearStats.AcumulatedUntilCurrentYearProducedAndSaved = resultRoi.Item1;
                 newYearStats.ProducedSaved = resultRoi.Item2;
                 newYearStats.ROIYearsLeft = resultRoi.Item3;
                 previusYearRoi = newYearStats.ROIYearsLeft;
-                roiStatsOvervView.Add(newYearStats);
+                historStatsOvervView.Add(newYearStats);
 
                 year = result[i].FromDate.Year;
-                roiStatsGrpYearAll.Add(roiStatsGrpYear);
-                roiStatsGrpYear = new List<ReportRoiStats>();
-                roiStatsGrpYear.Add(result[i]);
+                historyStatsGrpYearAll.Add(historyStatsGrpYear);
+                historyStatsGrpYear = new List<ReportHistoryStats>();
+                historyStatsGrpYear.Add(result[i]);
             }
         }
         //Check differnt rouls per year calc
-        foreach (var item in roiStatsOvervView)
+        foreach (var item in historStatsOvervView)
         {
             //In sweden you only get Taxraduction for the amount of kwh that you bay
-            if (item.RoiStats.ProductionSold > item.RoiStats.Purchased)
+            if (item.HistoryStats.ProductionSold > item.HistoryStats.Purchased)
             {
                 var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= item.FromDate);
 
-                var oldvalue = item.RoiStats.ProductionSoldTaxReductionProfit;
-                item.RoiStats.ProductionSoldTaxReductionProfit = Math.Round(item.RoiStats.Purchased * calcParams.TaxReduction, 2);
+                var oldvalue = item.HistoryStats.ProductionSoldTaxReductionProfit;
+                item.HistoryStats.ProductionSoldTaxReductionProfit = Math.Round(item.HistoryStats.Purchased * calcParams.TaxReduction, 2);
                 //item.RoiStats.SumProductionSoldProfit = Math.Round((item.RoiStats.SumProductionSoldProfit - oldvalue) + item.RoiStats.ProductionSoldTaxReductionProfit,2);
-                item.RoiStats.ProductionSoldTaxReductionProfitComment = string.Format(AppResources.Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption, Math.Round(oldvalue - item.RoiStats.ProductionSoldTaxReductionProfit, 2).ToString());
+                item.HistoryStats.ProductionSoldTaxReductionProfitComment = string.Format(AppResources.Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption, Math.Round(oldvalue - item.HistoryStats.ProductionSoldTaxReductionProfit, 2).ToString());
             }
         }
 
-        return new Result<Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>>(new Tuple<List<ReportRoiStats>, List<List<ReportRoiStats>>>(roiStatsOvervView, roiStatsGrpYearAll));
+        return new Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>(new Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>(historStatsOvervView, historyStatsGrpYearAll));
     }
 
-    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end)
+    public async Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end)
     {
 
-        return await CalculateTotalsInternal(start, end, new RoiSimulate { });
+        return await CalculateTotalsInternal(start, end, new HistorySimulate { });
     }
-    public async Task<RoiStats> CalculateTotals(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
+    public async Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end, HistorySimulate historySimulate)
     {
-        List<RoiStats> sumRoi = new List<RoiStats>();
+        List<HistoryStats> sumRoi = new List<HistoryStats>();
         var difference = end.Value - start.Value;
         var current = start;
         while (current < end)
         {
-            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), roiSimulate);
+            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), historySimulate);
             sumRoi.Add(stats);
             current = current.Value.AddDays(1);
         }
@@ -120,92 +120,74 @@ public class HistoryDataService : IHistoryDataService
 
     }
     #region Private
-    private RoiStats SummerizeToOneRoiStats(List<RoiStats> sumRoi, TimeSpan difference)
+    private HistoryStats SummerizeToOneRoiStats(List<HistoryStats> sumHistory, TimeSpan difference)
     {
-        RoiStats returnRoi = new RoiStats
+        HistoryStats returnHistory = new HistoryStats
         {
-            EnergyCalculationParameter = sumRoi.First().EnergyCalculationParameter,
-            Currency = sumRoi.First().Currency,
-            Unit = sumRoi.First().Unit,
+            EnergyCalculationParameter = sumHistory.First().EnergyCalculationParameter,
+            Currency = sumHistory.First().Currency,
+            Unit = sumHistory.First().Unit,
 
-            Purchased = Math.Round(sumRoi.Sum(x => x.Purchased), 2),
-            PurchasedCost = Math.Round(sumRoi.Sum(x => x.PurchasedCost), 2),
+            Purchased = Math.Round(sumHistory.Sum(x => x.Purchased), 2),
+            PurchasedCost = Math.Round(sumHistory.Sum(x => x.PurchasedCost), 2),
 
-            ProductionSold = Math.Round(sumRoi.Sum(x => x.ProductionSold), 2),
-            ProductionSoldProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldProfit), 2),
+            ProductionSold = Math.Round(sumHistory.Sum(x => x.ProductionSold), 2),
+            ProductionSoldProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldProfit), 2),
 
-            ProductionOwnUse = Math.Round(sumRoi.Sum(x => x.ProductionOwnUse), 2),
-            ProductionOwnUseSaved = Math.Round(sumRoi.Sum(x => x.ProductionOwnUseSaved), 2),
+            ProductionOwnUse = Math.Round(sumHistory.Sum(x => x.ProductionOwnUse), 2),
+            ProductionOwnUseSaved = Math.Round(sumHistory.Sum(x => x.ProductionOwnUseSaved), 2),
 
-            BatteryUsed = Math.Round(sumRoi.Sum(x => x.BatteryUsed), 2),
-            BatteryUsedSaved = Math.Round(sumRoi.Sum(x => x.BatteryUsedSaved), 2),
+            BatteryUsed = Math.Round(sumHistory.Sum(x => x.BatteryUsed), 2),
+            BatteryUsedSaved = Math.Round(sumHistory.Sum(x => x.BatteryUsedSaved), 2),
 
-            BatteryCharge = Math.Round(sumRoi.Sum(x => x.BatteryCharge), 2),
+            BatteryCharge = Math.Round(sumHistory.Sum(x => x.BatteryCharge), 2),
 
 
             //calc values
-            ProductionSoldGridCompensationProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldGridCompensationProfit), 2),
+            ProductionSoldGridCompensationProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldGridCompensationProfit), 2),
 
-            ProductionOwnUseTransferFeeSaved = Math.Round(sumRoi.Sum(x => x.ProductionOwnUseTransferFeeSaved), 2),
-            BatteryUseTransferFeeSaved = Math.Round(sumRoi.Sum(x => x.BatteryUseTransferFeeSaved), 2),
-            PurchasedTransferFeeCost = Math.Round(sumRoi.Sum(x => x.PurchasedTransferFeeCost), 2),
-            ProductionOwnUseEnergyTaxSaved = Math.Round(sumRoi.Sum(x => x.ProductionOwnUseEnergyTaxSaved), 2),
-            BatteryUseEnergyTaxSaved = Math.Round(sumRoi.Sum(x => x.BatteryUseEnergyTaxSaved), 2),
+            ProductionOwnUseTransferFeeSaved = Math.Round(sumHistory.Sum(x => x.ProductionOwnUseTransferFeeSaved), 2),
+            BatteryUseTransferFeeSaved = Math.Round(sumHistory.Sum(x => x.BatteryUseTransferFeeSaved), 2),
+            PurchasedTransferFeeCost = Math.Round(sumHistory.Sum(x => x.PurchasedTransferFeeCost), 2),
+            ProductionOwnUseEnergyTaxSaved = Math.Round(sumHistory.Sum(x => x.ProductionOwnUseEnergyTaxSaved), 2),
+            BatteryUseEnergyTaxSaved = Math.Round(sumHistory.Sum(x => x.BatteryUseEnergyTaxSaved), 2),
 
 
-            PurchasedTaxCost = Math.Round(sumRoi.Sum(x => x.PurchasedTaxCost), 2),
+            PurchasedTaxCost = Math.Round(sumHistory.Sum(x => x.PurchasedTaxCost), 2),
 
             //intrest
-            InterestCost = Math.Round(sumRoi.Sum(x => x.InterestCost), 2),
-
-            Investment = sumRoi.Last().Investment,
-
-            ProductionSoldTaxReductionProfit = Math.Round(sumRoi.Sum(x => x.ProductionSoldTaxReductionProfit), 2),
-
-            //Summ Saved
-            //SumPurchasedCost = Math.Round(sumRoi.Sum(x => x.SumPurchasedCost), 2),
-            //SumProductionSoldProfit = Math.Round(sumRoi.Sum(x => x.SumProductionSoldProfit), 2),
-            //SumProductionOwnUseSaved = Math.Round(sumRoi.Sum(x => x.SumProductionOwnUseSaved), 2),
-            //SumBatteryUseSaved = Math.Round(sumRoi.Sum(x => x.SumBatteryUseSaved), 2),
-            //SumProductionOwnUseAndBatterySaved = Math.Round(sumRoi.Sum(x => x.SumProductionOwnUseAndBatterySaved), 2),
-            //SumAllProductionSoldAndSaved = Math.Round(sumRoi.Sum(x => x.SumAllProductionSoldAndSaved), 2),
-            //BalanceProfitAndSaved_Minus_InterestCost = Math.Round(sumRoi.Sum(x => x.BalanceProfitAndSaved_Minus_InterestCost), 2),
-            //SumAllProduction = Math.Round(sumRoi.Sum(x => x.SumAllProduction), 2),
-            //SumAllConsumption = Math.Round(sumRoi.Sum(x => x.SumAllConsumption), 2),
-
-            //BalanceProduction_Minus_Consumption = Math.Round(sumRoi.Sum(x => x.BalanceProduction_Minus_Consumption), 2),
-            //BalanceProductionProfit_Minus_ConsumptionCost = Math.Round(sumRoi.Sum(x => x.BalanceProductionProfit_Minus_ConsumptionCost), 2),
-
-
+            InterestCost = Math.Round(sumHistory.Sum(x => x.InterestCost), 2),
+            Investment = sumHistory.Last().Investment,
+            ProductionSoldTaxReductionProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldTaxReductionProfit), 2),
         };
 
         //Devided per day
-        returnRoi.FactsProductionIndex = Math.Round(returnRoi.SumAllProduction / difference.TotalDays, 2);
-        returnRoi.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(returnRoi.SumPurchasedCost / returnRoi.Purchased, 2);
-        returnRoi.FactsProductionSoldAveragePerKwhProfit = Math.Round(returnRoi.SumProductionSoldProfit / returnRoi.ProductionSold, 2);
-        returnRoi.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(returnRoi.SumProductionOwnUseSaved / returnRoi.ProductionOwnUse, 2);
-        returnRoi.FactsBatteryUsedAveragePerKwhSaved = Math.Round(returnRoi.SumBatteryUseSaved / returnRoi.BatteryUsed, 2);
+        returnHistory.FactsProductionIndex = Math.Round(returnHistory.SumAllProduction / difference.TotalDays, 2);
+        returnHistory.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(returnHistory.SumPurchasedCost / returnHistory.Purchased, 2);
+        returnHistory.FactsProductionSoldAveragePerKwhProfit = Math.Round(returnHistory.SumProductionSoldProfit / returnHistory.ProductionSold, 2);
+        returnHistory.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(returnHistory.SumProductionOwnUseSaved / returnHistory.ProductionOwnUse, 2);
+        returnHistory.FactsBatteryUsedAveragePerKwhSaved = Math.Round(returnHistory.SumBatteryUseSaved / returnHistory.BatteryUsed, 2);
 
-        return returnRoi;
+        return returnHistory;
     }
-    private async Task<RoiStats> CalculateTotalsInternal(DateTime? start, DateTime? end, RoiSimulate roiSimulate)
+    private async Task<HistoryStats> CalculateTotalsInternal(DateTime? start, DateTime? end, HistorySimulate historySimulate)
     {
         List<Energy> energy;
-        RoiStats roiStats = new RoiStats();
+        HistoryStats historyStats = new HistoryStats();
         var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
         energy = await this.mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
-        if (roiSimulate.DoSimulate && roiSimulate.AddBattery)
+        if (historySimulate.DoSimulate && historySimulate.AddBattery)
         {
             //Simulate battery 
             foreach (var item in energy)
             {
                 //Check if battery can be charged
-                if (item.ProductionSold > 0 && (roiSimulate.CurrentBatteryPower + item.ProductionSold) < roiSimulate.MaxBatteryPower)
+                if (item.ProductionSold > 0 && (historySimulate.CurrentBatteryPower + item.ProductionSold) < historySimulate.MaxBatteryPower)
                 {
                     //Battery Charged
                     item.BatteryCharge = item.ProductionSold;
-                    roiSimulate.CurrentBatteryPower = roiSimulate.CurrentBatteryPower + item.ProductionSold;
+                    historySimulate.CurrentBatteryPower = historySimulate.CurrentBatteryPower + item.ProductionSold;
                     //Battery Charged
                     item.BatteryCharge = item.ProductionSold;
                     //if (calcParams.UseSpotPrice)
@@ -216,9 +198,9 @@ public class HistoryDataService : IHistoryDataService
                     item.ProductionSoldProfit = 0;
                 }
                 //Check if battery has more charge then Purchased
-                if (item.Purchased > 0 && roiSimulate.CurrentBatteryPower > item.Purchased)
+                if (item.Purchased > 0 && historySimulate.CurrentBatteryPower > item.Purchased)
                 {
-                    roiSimulate.CurrentBatteryPower = roiSimulate.CurrentBatteryPower - item.Purchased;
+                    historySimulate.CurrentBatteryPower = historySimulate.CurrentBatteryPower - item.Purchased;
                     item.BatteryUsed = item.Purchased;
                     if (calcParams.UseSpotPrice)
                         item.BatteryUsedProfit = Math.Round(item.BatteryUsed * item.UnitPriceBuy, 2);
@@ -230,7 +212,7 @@ public class HistoryDataService : IHistoryDataService
                 }
             }
         }
-        else if (roiSimulate.DoSimulate && roiSimulate.RemoveBattery)
+        else if (historySimulate.DoSimulate && historySimulate.RemoveBattery)
         {
             //Simulate battery 
             foreach (var item in energy)
@@ -263,66 +245,39 @@ public class HistoryDataService : IHistoryDataService
         }
 
         //------------Purchased --------------------------------
-        roiStats.Purchased = Math.Round(energy.Sum(x => x.Purchased), 2);
-        roiStats.PurchasedCost = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.PurchasedCost), 2) : Math.Round(roiStats.Purchased * calcParams.FixedPriceKwh, 2);
-        roiStats.PurchasedTransferFeeCost = Math.Round(roiStats.Purchased * calcParams.TransferFee, 2);
-        roiStats.PurchasedTaxCost = Math.Round(roiStats.Purchased * calcParams.EnergyTax, 2);
-        //roiStats.SumPurchasedCost = Math.Round(roiStats.PurchasedCost + roiStats.PurchasedTransferFeeCost + roiStats.PurchasedTaxCost, 2);
-        //roiStats.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(roiStats.SumPurchasedCost / roiStats.Purchased, 2);
+        historyStats.Purchased = Math.Round(energy.Sum(x => x.Purchased), 2);
+        historyStats.PurchasedCost = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.PurchasedCost), 2) : Math.Round(historyStats.Purchased * calcParams.FixedPriceKwh, 2);
+        historyStats.PurchasedTransferFeeCost = Math.Round(historyStats.Purchased * calcParams.TransferFee, 2);
+        historyStats.PurchasedTaxCost = Math.Round(historyStats.Purchased * calcParams.EnergyTax, 2);
         //--------- ProductionSold -------------------------------
-        roiStats.ProductionSold = Math.Round(energy.Sum(x => x.ProductionSold), 2);
-        roiStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(roiStats.ProductionSold * calcParams.FixedPriceKwh, 2);
-        roiStats.ProductionSoldGridCompensationProfit = Math.Round(roiStats.ProductionSold * calcParams.ProdCompensationElectricityLowload, 2);
-        roiStats.ProductionSoldTaxReductionProfit = Math.Round(roiStats.ProductionSold * calcParams.TaxReduction, 2);
-        //roiStats.SumProductionSoldProfit = Math.Round(roiStats.ProductionSoldProfit + roiStats.ProductionSoldGridCompensationProfit + roiStats.ProductionSoldTaxReductionProfit, 2);
-        //roiStats.FactsProductionSoldAveragePerKwhProfit = Math.Round(roiStats.SumProductionSoldProfit / roiStats.ProductionSold, 2);
-
+        historyStats.ProductionSold = Math.Round(energy.Sum(x => x.ProductionSold), 2);
+        historyStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(historyStats.ProductionSold * calcParams.FixedPriceKwh, 2);
+        historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowload, 2);
+        historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
+        
         //--------- Production Own use ---------------------------
-        roiStats.ProductionOwnUse = Math.Round(energy.Sum(x => x.ProductionOwnUse), 2);
-        roiStats.ProductionOwnUseSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2) : Math.Round(roiStats.ProductionOwnUse * calcParams.FixedPriceKwh, 2);
-        roiStats.ProductionOwnUseTransferFeeSaved = Math.Round(roiStats.ProductionOwnUse * calcParams.TransferFee, 2);
-        roiStats.ProductionOwnUseEnergyTaxSaved = Math.Round(roiStats.ProductionOwnUse * calcParams.EnergyTax, 2);
-        //roiStats.SumProductionOwnUseSaved = Math.Round(roiStats.ProductionOwnUseSaved + roiStats.ProductionOwnUseTransferFeeSaved + roiStats.ProductionOwnUseEnergyTaxSaved, 2);
-        //roiStats.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(roiStats.SumProductionOwnUseSaved / roiStats.ProductionOwnUse, 2);
-
+        historyStats.ProductionOwnUse = Math.Round(energy.Sum(x => x.ProductionOwnUse), 2);
+        historyStats.ProductionOwnUseSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2) : Math.Round(historyStats.ProductionOwnUse * calcParams.FixedPriceKwh, 2);
+        historyStats.ProductionOwnUseTransferFeeSaved = Math.Round(historyStats.ProductionOwnUse * calcParams.TransferFee, 2);
+        historyStats.ProductionOwnUseEnergyTaxSaved = Math.Round(historyStats.ProductionOwnUse * calcParams.EnergyTax, 2);
+        
         //---------- Battery Used -----------------------------------------
-        roiStats.BatteryUsed = Math.Round(energy.Sum(x => x.BatteryUsed), 2);
-        roiStats.BatteryUsedSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2) : Math.Round(roiStats.BatteryUsed * calcParams.FixedPriceKwh, 2);
-        roiStats.BatteryUseTransferFeeSaved = Math.Round(roiStats.BatteryUsed * calcParams.TransferFee, 2);
-        roiStats.BatteryUseEnergyTaxSaved = Math.Round(roiStats.BatteryUsed * calcParams.EnergyTax, 2);
-        //roiStats.SumBatteryUseSaved = Math.Round(roiStats.BatteryUsedSaved + roiStats.BatteryUseTransferFeeSaved + roiStats.BatteryUseEnergyTaxSaved, 2);
-        //roiStats.FactsBatteryUsedAveragePerKwhSaved = Math.Round(roiStats.SumBatteryUseSaved/ roiStats.BatteryUsed, 2);
-
+        historyStats.BatteryUsed = Math.Round(energy.Sum(x => x.BatteryUsed), 2);
+        historyStats.BatteryUsedSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2) : Math.Round(historyStats.BatteryUsed * calcParams.FixedPriceKwh, 2);
+        historyStats.BatteryUseTransferFeeSaved = Math.Round(historyStats.BatteryUsed * calcParams.TransferFee, 2);
+        historyStats.BatteryUseEnergyTaxSaved = Math.Round(historyStats.BatteryUsed * calcParams.EnergyTax, 2);
+        
         //------------ Battery Charge ---------------------------------------
-        roiStats.BatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
-
-
-        // ---------------- sum of combinded valus ----------------------------------------
-        //roiStats.SumProductionOwnUseAndBatterySaved = Math.Round(roiStats.SumProductionOwnUseSaved + roiStats.SumBatteryUseSaved, 2);
-        //roiStats.SumAllProductionSoldAndSaved = Math.Round((roiStats.SumProductionSoldProfit + roiStats.SumProductionOwnUseAndBatterySaved), 2);
-        //roiStats.SumAllProduction = Math.Round(roiStats.ProductionSold + roiStats.ProductionOwnUse + roiStats.BatteryCharge, 2);
-        //roiStats.SumAllConsumption = Math.Round(roiStats.Purchased + roiStats.ProductionOwnUse + roiStats.BatteryUsed, 2);
-
-
-
-        // ---------------- Balance's ----------------------------------------
-        //roiStats.BalanceProfitAndSaved_Minus_InterestCost = Math.Round(roiStats.SumAllProductionSoldAndSaved - roiStats.InterestCost, 2);
-        //roiStats.BalanceProduction_Minus_Consumption = Math.Round(roiStats.SumAllProduction - roiStats.SumAllConsumption, 2);
-        //roiStats.BalanceProductionProfit_Minus_ConsumptionCost = Math.Round(roiStats.SumAllProductionSoldAndSaved - roiStats.SumPurchasedCost, 2);
-
-
-        //Production Index amount of production per installed kWh
-        //.FactsProductionIndex = roiStats.SumAllProduction / calcParams.TotalInstallKwhPanels;
-
-        roiStats.EnergyCalculationParameter = calcParams;
-        return roiStats;
+        historyStats.BatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
+        historyStats.EnergyCalculationParameter = calcParams;
+        return historyStats;
 
     }
-    private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportRoiStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportRoiStats> roiStatsGrpYear)
+    private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportHistoryStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportHistoryStats> historyStatsGrpYear)
     {
-        var currentYearResult = stats.RoiStats.SumAllProductionSoldAndSaved - stats.RoiStats.InterestCost;
+        var currentYearResult = stats.HistoryStats.SumAllProductionSoldAndSaved - stats.HistoryStats.InterestCost;
         acumlimatedPodSavedAndMinusInterest = acumlimatedPodSavedAndMinusInterest + currentYearResult;
-        var investmentLeft = stats.RoiStats.Investment - acumlimatedPodSavedAndMinusInterest;
+        var investmentLeft = stats.HistoryStats.Investment - acumlimatedPodSavedAndMinusInterest;
 
         double fakeProduction = 0;
         //första år då räknar vi inte ROI
@@ -330,8 +285,8 @@ public class HistoryDataService : IHistoryDataService
         //simulera månader innan
         if (firstProductionDay.Timestamp > stats.FromDate)
         {
-            var firstHoleMonth = roiStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
-            var tot = firstHoleMonth.RoiStats.SumAllProductionSoldAndSaved - firstHoleMonth.RoiStats.InterestCost;
+            var firstHoleMonth = historyStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
+            var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
             var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
             var refvalue = tot / devtal;
             DateTime current = firstHoleMonth.FromDate.AddMonths(-1);
@@ -348,8 +303,8 @@ public class HistoryDataService : IHistoryDataService
         //Simulera månader fram till års skiftet
         if (DateTime.Today < stats.FromDate.AddYears(1))
         {
-            var firstHoleMonth = roiStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
-            var tot = firstHoleMonth.RoiStats.SumAllProductionSoldAndSaved - firstHoleMonth.RoiStats.InterestCost;
+            var firstHoleMonth = historyStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
+            var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
             var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
             var refvalue = tot / devtal;
             DateTime current = firstHoleMonth.FromDate.AddMonths(1);
@@ -402,7 +357,7 @@ public class HistoryDataService : IHistoryDataService
     }
     #endregion
 }
-public class RoiSimulate : ObservableObject
+public class HistorySimulate : ObservableObject
 {
     //DOSIMULATE
     public Color ShowSimulateBackgrundColor { get { return doSimulate ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
@@ -489,17 +444,17 @@ public class RoiSimulate : ObservableObject
     }
 
 }
-public class ReportRoiStats
+public class ReportHistoryStats
 {
     public DateTime FromDate { get; set; }
     public double? ROIYearsLeft { get; set; } = 0;
     public double AcumulatedUntilCurrentYearProducedAndSaved { get; set; } = 0;
     public double ProducedSaved { get; set; } = 0;
-    public RoiStats RoiStats { get; set; }
+    public HistoryStats HistoryStats { get; set; }
 
 }
 
-public class RoiStats
+public class HistoryStats
 {
     public string Unit { get; set; } = "kWh";
     public string Currency { get; set; } = "SEK";
@@ -558,7 +513,7 @@ public class RoiStats
     public double FactsProductionOwnUseAveragePerKwhSaved { get; set; } = 0;
     public double FactsBatteryUsedAveragePerKwhSaved { get; set; } = 0;
 
-    public Sqlite.Models.EnergyCalculationParameter EnergyCalculationParameter { get; set; }
+    public EnergyCalculationParameter EnergyCalculationParameter { get; set; }
 
 
     //This is only for fun you dont sell this kwh you load the battery  

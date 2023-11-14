@@ -58,12 +58,12 @@ public partial class DateNavigator : ContentView
     }
 
     public static BindableProperty RoiSimulateProperty = BindableProperty.Create(propertyName: nameof(RoiSimulate),
-    returnType: typeof(RoiSimulate), declaringType: typeof(ContentView),
-    defaultValue: new RoiSimulate(), defaultBindingMode: BindingMode.TwoWay, propertyChanged: RoiSimulatePropertyChanged);
+    returnType: typeof(HistorySimulate), declaringType: typeof(ContentView),
+    defaultValue: new HistorySimulate(), defaultBindingMode: BindingMode.TwoWay, propertyChanged: RoiSimulatePropertyChanged);
 
-    public RoiSimulate RoiSimulate
+    public HistorySimulate RoiSimulate
     {
-        get { return (RoiSimulate)GetValue(RoiSimulateProperty); }
+        get { return (HistorySimulate)GetValue(RoiSimulateProperty); }
         set
         {
             SetValue(RoiSimulateProperty, value);
@@ -72,7 +72,7 @@ public partial class DateNavigator : ContentView
     private static void RoiSimulatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (DateNavigator)bindable;
-        var value = (RoiSimulate)newValue;
+        var value = (HistorySimulate)newValue;
         //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
         //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
         //control.ROIAddBatterySwith.SetBinding(Switch.IsToggledProperty, new Binding("AddBattery", source: value));

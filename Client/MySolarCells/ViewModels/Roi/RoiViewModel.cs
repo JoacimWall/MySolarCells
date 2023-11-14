@@ -49,8 +49,8 @@ public class RoiViewModel : BaseViewModel
         return true;
     }
     
-    private RoiSimulate roiSimulate = new RoiSimulate();
-    public RoiSimulate RoiSimulate
+    private HistorySimulate roiSimulate = new HistorySimulate();
+    public HistorySimulate RoiSimulate
     {
         get { return roiSimulate; }
         set { SetProperty(ref roiSimulate, value); }
@@ -62,8 +62,8 @@ public class RoiViewModel : BaseViewModel
         set { SetProperty(ref chartDataRequest, value); }
     }
 
-    private RoiStats roiStats = new RoiStats();
-    public RoiStats RoiStats
+    private HistoryStats roiStats = new HistoryStats();
+    public HistoryStats RoiStats
     {
         get { return roiStats; }
         set { SetProperty(ref roiStats, value); }
