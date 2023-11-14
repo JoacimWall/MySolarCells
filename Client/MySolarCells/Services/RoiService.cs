@@ -325,7 +325,7 @@ public class RoiService : IRoiService
         var investmentLeft = stats.RoiStats.Investment - acumlimatedPodSavedAndMinusInterest;
 
         double fakeProduction = 0;
-        //fal vi inte har ett första år då räknar vi inte ROI
+        //första år då räknar vi inte ROI
         double? roiLeft = Convert.ToDouble(investmentLeft / currentYearResult);
         //simulera månader innan
         if (firstProductionDay.Timestamp > stats.FromDate)
