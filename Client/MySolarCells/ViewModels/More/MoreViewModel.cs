@@ -7,9 +7,9 @@ namespace MySolarCells.ViewModels.More;
 
 public class MoreViewModel : BaseViewModel
 {
-    private readonly IRoiService roiService;
+    private readonly IHistoryDataService roiService;
     private readonly MscDbContext mscDbContext;
-    public MoreViewModel(IRoiService roiService, MscDbContext mscDbContext)
+    public MoreViewModel(IHistoryDataService roiService, MscDbContext mscDbContext)
     {
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;

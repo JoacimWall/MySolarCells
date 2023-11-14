@@ -7,9 +7,9 @@ public interface IEnergyChartService
 
 public class EnergyChartService : IEnergyChartService
 {
-    private readonly IRoiService roiService;
+    private readonly IHistoryDataService roiService;
     private readonly MscDbContext mscDbContext;
-    public EnergyChartService(IRoiService roiService, MscDbContext mscDbContext)
+    public EnergyChartService(IHistoryDataService roiService, MscDbContext mscDbContext)
     {
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;

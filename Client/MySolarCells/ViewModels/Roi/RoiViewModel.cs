@@ -2,9 +2,9 @@
 
 public class RoiViewModel : BaseViewModel
 {
-    IRoiService roiService;
+    IHistoryDataService roiService;
     IDataSyncService dataSyncService;
-    public RoiViewModel(IRoiService roiService, IDataSyncService dataSyncService)
+    public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService)
     {
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;

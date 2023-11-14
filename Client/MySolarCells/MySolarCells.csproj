@@ -55,10 +55,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.2.23480.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-rc.2.23480.1">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -69,8 +69,8 @@
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="23.1.44" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="23.1.44" />
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="23.1.44" />
-		<PackageReference Include="Shiny.Jobs" Version="3.2.0-beta-0006" />
-		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.0-beta-0006" />
+		<PackageReference Include="Shiny.Jobs" Version="3.2.0-beta-0010" />
+		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.0-beta-0010" />
 		<PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 	</ItemGroup>
 	<!-- Translation -->
