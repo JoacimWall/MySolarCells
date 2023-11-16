@@ -1,6 +1,4 @@
-﻿using System;
-using CoreVideo;
-using NetTopologySuite.Index.HPRtree;
+﻿using System.Collections.Generic;
 
 namespace MySolarCells.Services;
 public interface IRoiService
@@ -30,6 +28,38 @@ public class RoiService :IRoiService
         //History Rows
         foreach (var item in historyStats.Item1)
         {
+            //if current year 
+            if (item.FromDate.Year == DateTime.Now.Year)
+            {
+                List<ReportHistoryStats> listCurrentYear=null;
+                //Get months for current year
+                foreach (var itemMonth in historyStats.Item2)
+                {
+                    if (itemMonth.Any(x => x.FromDate.Year == item.FromDate.Year))
+                    {
+                        listCurrentYear = itemMonth;
+                        break;
+                    }
+                }
+                //Add missing production
+                double fakeproduction = 0;
+                for (int i = 1; i < 13; i++)
+                {
+                    var afterCurrentDay = i > listCurrentYear.Count ? true : false;
+                    var beforeFirstDay = i < listCurrentYear.Count ? listCurrentYear[i].FromDate < item.FirstProductionDay : false;
+                    if (beforeFirstDay || afterCurrentDay)
+                    {
+                        var calcparmas = listCurrentYear.First().HistoryStats.EnergyCalculationParameter;
+                        fakeproduction = fakeproduction + SnittProductionMonth.GetSnitMonth(i, calcparmas.TotalInstallKwhPanels);
+                        //if (listCurrentYear[i].HistoryStats.FactsProductionSoldAveragePerKwhProfit == 0)
+                        //    listCurrentYear[i].HistoryStats.FactsProductionSoldAveragePerKwhProfit = 
+                    }
+
+                }
+
+                item.HistoryStats.ProductionSold = item.HistoryStats.ProductionSold + (fakeproduction * 0.5);
+                item.HistoryStats.ProductionOwnUse = item.HistoryStats.ProductionOwnUse + (fakeproduction * 0.5);
+            }
             var avargePrisOwnUse = item.HistoryStats.FactsBatteryUsedAveragePerKwhSaved == 0 ?
                                    item.HistoryStats.FactsProductionOwnUseAveragePerKwhSaved :
                                    Math.Round((item.HistoryStats.FactsBatteryUsedAveragePerKwhSaved + item.HistoryStats.FactsProductionOwnUseAveragePerKwhSaved) / 2, 2);
@@ -90,6 +120,7 @@ public class RoiService :IRoiService
     }
 
 }
+
 public class EstimateRoi
 {
     public int Year { get; set; }

@@ -48,37 +48,38 @@ public class HistoryDataService : IHistoryDataService
         // --- Group all per year and get total ----
         int year = result.First().FromDate.Year;
         List<List<ReportHistoryStats>> historyStatsGrpYearAll = new List<List<ReportHistoryStats>>();
-        List<ReportHistoryStats> historyStatsGrpYear = new List<ReportHistoryStats>();
+        List<ReportHistoryStats> historyStatsMounthGrpYear = new List<ReportHistoryStats>();
         List<ReportHistoryStats> historStatsOvervView = new List<ReportHistoryStats>();
         double acumlimatedPodSavedAndMinusInterest = 0;
         double? previusYearRoi = null;
         for (int i = 0; i < result.Count; i++)
         {
             if (year == result[i].FromDate.Year)
-                historyStatsGrpYear.Add(result[i]);
+                historyStatsMounthGrpYear.Add(result[i]);
 
             if (year != result[i].FromDate.Year || i == result.Count - 1)
             {
-                TimeSpan timeSpanYear = historyStatsGrpYear.Last().FromDate - historyStatsGrpYear.First().FromDate;
+                TimeSpan timeSpanYear = historyStatsMounthGrpYear.Last().FromDate - historyStatsMounthGrpYear.First().FromDate;
                 ReportHistoryStats newYearStats = new ReportHistoryStats
                 {
-                    FromDate = historyStatsGrpYear.First().FromDate,
-                    HistoryStats = SummerizeToOneRoiStats(historyStatsGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear)
+                    FromDate = historyStatsMounthGrpYear.First().FromDate,
+                    HistoryStats = SummerizeToOneRoiStats(historyStatsMounthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear)
                 };
 
 
-                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, historyStatsGrpYear);
+                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, historyStatsMounthGrpYear);
                 acumlimatedPodSavedAndMinusInterest = resultRoi.Item1;
                 newYearStats.AcumulatedUntilCurrentYearProducedAndSaved = resultRoi.Item1;
                 newYearStats.ProducedSaved = resultRoi.Item2;
                 newYearStats.ROIYearsLeft = resultRoi.Item3;
+                newYearStats.FirstProductionDay = firstProductionDay.Timestamp;
                 previusYearRoi = newYearStats.ROIYearsLeft;
                 historStatsOvervView.Add(newYearStats);
 
                 year = result[i].FromDate.Year;
-                historyStatsGrpYearAll.Add(historyStatsGrpYear);
-                historyStatsGrpYear = new List<ReportHistoryStats>();
-                historyStatsGrpYear.Add(result[i]);
+                historyStatsGrpYearAll.Add(historyStatsMounthGrpYear);
+                historyStatsMounthGrpYear = new List<ReportHistoryStats>();
+                historyStatsMounthGrpYear.Add(result[i]);
             }
         }
         //Check differnt rouls per year calc
@@ -163,10 +164,10 @@ public class HistoryDataService : IHistoryDataService
 
         //Devided per day
         returnHistory.FactsProductionIndex = Math.Round(returnHistory.SumAllProduction / difference.TotalDays, 2);
-        returnHistory.FactsPurchasedCostAveragePerKwhPurchased = Math.Round(returnHistory.SumPurchasedCost / returnHistory.Purchased, 2);
-        returnHistory.FactsProductionSoldAveragePerKwhProfit = Math.Round(returnHistory.SumProductionSoldProfit / returnHistory.ProductionSold, 2);
-        returnHistory.FactsProductionOwnUseAveragePerKwhSaved = Math.Round(returnHistory.SumProductionOwnUseSaved / returnHistory.ProductionOwnUse, 2);
-        returnHistory.FactsBatteryUsedAveragePerKwhSaved = Math.Round(returnHistory.SumBatteryUseSaved / returnHistory.BatteryUsed, 2);
+        returnHistory.FactsPurchasedCostAveragePerKwhPurchased = returnHistory.Purchased == 0 ? 0 : Math.Round(returnHistory.SumPurchasedCost / returnHistory.Purchased, 2);
+        returnHistory.FactsProductionSoldAveragePerKwhProfit = returnHistory.ProductionSold == 0 ? 0 : Math.Round(returnHistory.SumProductionSoldProfit / returnHistory.ProductionSold, 2);
+        returnHistory.FactsProductionOwnUseAveragePerKwhSaved = returnHistory.ProductionOwnUse == 0 ? 0 : Math.Round(returnHistory.SumProductionOwnUseSaved / returnHistory.ProductionOwnUse, 2);
+        returnHistory.FactsBatteryUsedAveragePerKwhSaved = returnHistory.BatteryUsed == 0 ? 0 : Math.Round(returnHistory.SumBatteryUseSaved / returnHistory.BatteryUsed, 2);
 
         return returnHistory;
     }
@@ -446,6 +447,7 @@ public class HistorySimulate : ObservableObject
 }
 public class ReportHistoryStats
 {
+    public DateTime FirstProductionDay { get; set; }
     public DateTime FromDate { get; set; }
     public double? ROIYearsLeft { get; set; } = 0;
     public double AcumulatedUntilCurrentYearProducedAndSaved { get; set; } = 0;
@@ -508,10 +510,17 @@ public class HistoryStats
 
     //fun Facts
     public double FactsProductionIndex { get; set; } = 0;
+
     public double FactsPurchasedCostAveragePerKwhPurchased { get; set; } = 0;
     public double FactsProductionSoldAveragePerKwhProfit { get; set; } = 0;
     public double FactsProductionOwnUseAveragePerKwhSaved { get; set; } = 0;
     public double FactsBatteryUsedAveragePerKwhSaved { get; set; } = 0;
+    //private double factsBatteryUsedAveragePerKwhSaved = 0;
+    //public double FactsBatteryUsedAveragePerKwhSaved
+    //{
+    //    get { return factsBatteryUsedAveragePerKwhSaved; }
+    //    set { factsBatteryUsedAveragePerKwhSaved = double.Equals(double.NaN, value) ? 0: value; }
+    //} 
 
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; }
 
