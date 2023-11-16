@@ -463,4 +463,10 @@
   <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Veronalennus jäi väliin {0} sekuntia, tuotanto suurempi kuin kulutus.</value>
   <comment>Need review</comment></data>
+  <data name="Peak_Use_Production_Kwh_Hour" xml:space="preserve">
+    <value>Huippukäytön tuotanto kWh/tunti</value>
+  <comment>Need review</comment></data>
+  <data name="Peak_Use_Production_And_Own_Use_Kwh_Hour" xml:space="preserve">
+    <value>Huippukäytön tuotanto omaan käyttöön Kwh/tunti</value>
+  <comment>Need review</comment></data>
 </root>

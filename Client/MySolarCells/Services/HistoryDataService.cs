@@ -168,7 +168,12 @@ public class HistoryDataService : IHistoryDataService
         returnHistory.FactsProductionSoldAveragePerKwhProfit = returnHistory.ProductionSold == 0 ? 0 : Math.Round(returnHistory.SumProductionSoldProfit / returnHistory.ProductionSold, 2);
         returnHistory.FactsProductionOwnUseAveragePerKwhSaved = returnHistory.ProductionOwnUse == 0 ? 0 : Math.Round(returnHistory.SumProductionOwnUseSaved / returnHistory.ProductionOwnUse, 2);
         returnHistory.FactsBatteryUsedAveragePerKwhSaved = returnHistory.BatteryUsed == 0 ? 0 : Math.Round(returnHistory.SumBatteryUseSaved / returnHistory.BatteryUsed, 2);
-
+        //Peak
+        int amountPeaks = 3;
+        var topPeakPurchased = sumHistory.OrderByDescending(x=>x.PeakPurchased).Take(amountPeaks);
+        var topPeakPurchasedOwnuse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
+        returnHistory.PeakPurchased = Math.Round(topPeakPurchased.Average(x => x.PeakPurchased),2);
+        returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage),2);
         return returnHistory;
     }
     private async Task<HistoryStats> CalculateTotalsInternal(DateTime? start, DateTime? end, HistorySimulate historySimulate)
@@ -273,35 +278,37 @@ public class HistoryDataService : IHistoryDataService
         historyStats.EnergyCalculationParameter = calcParams;
 
         //------------ Peak Reduction ---------------------------------------
+        historyStats.PeakPurchased = energy.Max(x => x.Purchased);
+        historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+
         // TODO Fetch NoOfPeaksUsedForPeakDetermination from settings
-        historyStats.NoOfPeaksUsedForPeakDetermination = 1;
-        List<double> peakPurchasedAndOwnUsed = new(); 
-        List<double> peakPurchased = new();
+        //historyStats.NoOfPeaksUsedForPeakDetermination = 1;
+        //List<double> peakPurchasedAndOwnUsed = new(); 
+        //List<double> peakPurchased = new();
 
-        for (int i=0; i < historyStats.NoOfPeaksUsedForPeakDetermination; i++)
-        {
-            peakPurchasedAndOwnUsed.Add(0.0);
-            peakPurchased.Add(0.0);
-            foreach (var item in energy)
-            {
-                var totalUsage = item.Purchased + item.ProductionOwnUse;
-                if (!peakPurchasedAndOwnUsed.Contains(totalUsage)) {
-                    if (totalUsage > peakPurchasedAndOwnUsed[i])
-                    {
-                        peakPurchasedAndOwnUsed[i] = totalUsage;
-                    }
-                }
+        //for (int i=0; i < historyStats.NoOfPeaksUsedForPeakDetermination; i++)
+        //{
+        //    peakPurchasedAndOwnUsed.Add(0.0);
+        //    peakPurchased.Add(0.0);
+        //    foreach (var item in energy)
+        //    {
+        //        var totalUsage = item.Purchased + item.ProductionOwnUse;
+        //        if (!peakPurchasedAndOwnUsed.Contains(totalUsage)) {
+        //            if (totalUsage > peakPurchasedAndOwnUsed[i])
+        //              peakPurchasedAndOwnUsed[i] = totalUsage;
+        //        }
 
-                if (!peakPurchased.Contains(item.Purchased))
-                {
-                    if (item.Purchased > peakPurchased[i]) peakPurchased[i] = item.Purchased;
-                }
+        //        if (!peakPurchased.Contains(item.Purchased))
+        //        {
+        //            if (item.Purchased > peakPurchased[i])
+        //                peakPurchased[i] = item.Purchased;
+        //        }
                
-            }
-        }
+        //    }
+        //}
 
-        historyStats.PeakPurchasedAndOwnUsage = peakPurchasedAndOwnUsed;
-        historyStats.PeakPurchased = peakPurchased;
+        //historyStats.PeakPurchasedAndOwnUsage = peakPurchasedAndOwnUsed;
+        //historyStats.PeakPurchased = peakPurchased;
        
         return historyStats;
 
@@ -534,32 +541,25 @@ public class HistoryStats
     //  ----------- Investment and Loan and intrest cost (ony set when calcualte totals from start to end )  ------------------------------------ 
     public double InterestCost { get; set; } = 0;
     public double Investment { get; set; } = 0;
-    //public double LoanLeft { get; set; } = 0;
     //Balance
-    //public double BalanceProfitAndSaved_Minus_InterestCost { get; set; } = 0;
     public double BalanceProduction_Minus_Consumption { get { return Math.Round(SumAllProduction - SumAllConsumption, 2); } }
     public double BalanceProductionProfit_Minus_ConsumptionCost { get { return Math.Round(SumAllProductionSoldAndSaved - SumPurchasedCost, 2); } }
 
     //fun Facts
     public double FactsProductionIndex { get; set; } = 0;
-
     public double FactsPurchasedCostAveragePerKwhPurchased { get; set; } = 0;
     public double FactsProductionSoldAveragePerKwhProfit { get; set; } = 0;
     public double FactsProductionOwnUseAveragePerKwhSaved { get; set; } = 0;
     public double FactsBatteryUsedAveragePerKwhSaved { get; set; } = 0;
-    //private double factsBatteryUsedAveragePerKwhSaved = 0;
-    //public double FactsBatteryUsedAveragePerKwhSaved
-    //{
-    //    get { return factsBatteryUsedAveragePerKwhSaved; }
-    //    set { factsBatteryUsedAveragePerKwhSaved = double.Equals(double.NaN, value) ? 0: value; }
-    //} 
 
-    // ----------- Peak Reduction ---------------------
-    public int NoOfPeaksUsedForPeakDetermination { get; set; } = 0;
-    public List<double> PeakPurchasedAndOwnUsage { get; set; } = new List<double>();
-    public List<double> PeakPurchased { get; set; } = new List<double>();
+    // ----------- Peak Peduction ---------------------
+    public double PeakPurchasedAndOwnUsage { get; set; } = 0;
+    public double PeakPurchased { get; set; } = 0;
+    //public int NoOfPeaksUsedForPeakDetermination { get; set; } = 0;
+    //public List<double> PeakPurchasedAndOwnUsage { get; set; } = new List<double>();
+    //public List<double> PeakPurchased { get; set; } = new List<double>();
     //public double AveragePeakPurchasedAndOwnUsage { get; set; } = 0;
-   // public double AveragePeakPurchased { get; set; } = 0;
+    // public double AveragePeakPurchased { get; set; } = 0;
 
 
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; }

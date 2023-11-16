@@ -805,6 +805,24 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Peak use production own use Kwh/Hour.
+        /// </summary>
+        public static string Peak_Use_Production_And_Own_Use_Kwh_Hour {
+            get {
+                return ResourceManager.GetString("Peak_Use_Production_And_Own_Use_Kwh_Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peak use production kwh/hour.
+        /// </summary>
+        public static string Peak_Use_Production_Kwh_Hour {
+            get {
+                return ResourceManager.GetString("Peak_Use_Production_Kwh_Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pick the brand of your electricity supplier.
         /// </summary>
         public static string Pick_The_Brand_Of_Your_Electricity_Supplier {

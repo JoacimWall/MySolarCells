@@ -508,5 +508,10 @@
 <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Missed {0} sec tax reduction, production higher than consumption.</value>
   <comment>Need review</comment></data>
-
+<data name="Peak_Use_Production_Kwh_Hour" xml:space="preserve">
+    <value>Peak use production kwh/hour</value>
+  <comment>Need review</comment></data>
+<data name="Peak_Use_Production_And_Own_Use_Kwh_Hour" xml:space="preserve">
+    <value>Peak use production own use Kwh/Hour</value>
+  <comment>Need review</comment></data>
 </root>

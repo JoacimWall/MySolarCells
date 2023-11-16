@@ -93,6 +93,9 @@
                         <Label Text="{x:Static trans:AppResources.Average_Production_Sold_Profit_Per_Kwh}"/>
                         <Label Text="{x:Static trans:AppResources.Average_Production_Own_Use_Saved_Per_Kwh}"/>
                         <Label Text="{x:Static trans:AppResources.Average_Battery_Used_Saved_Per_Kwh}"/>
+                        <!--PEAK USE-->
+                        <Label Text="{x:Static trans:AppResources.Peak_Use_Production_Kwh_Hour}"/>
+                        <Label Text="{x:Static trans:AppResources.Peak_Use_Production_And_Own_Use_Kwh_Hour}"/>
 
                     </VerticalStackLayout >
                     <!--Value-->
@@ -136,7 +139,9 @@
                         <Label Text="{Binding RoiStats.FactsProductionSoldAveragePerKwhProfit}" HorizontalTextAlignment="End"/>
                         <Label Text="{Binding RoiStats.FactsProductionOwnUseAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
                         <Label Text="{Binding RoiStats.FactsBatteryUsedAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
-
+                         <!--PEAK USE-->
+                         <Label Text="{Binding RoiStats.PeakPurchased}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PeakPurchasedAndOwnUsage}" HorizontalTextAlignment="End"/>
                     </VerticalStackLayout>
 
                     <!--Unit-->
@@ -176,7 +181,8 @@
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
-
+                        <Label Text="{Binding RoiStats.Unit}" />
+                        <Label Text="{Binding RoiStats.Unit}" />
                     </VerticalStackLayout>
 
 

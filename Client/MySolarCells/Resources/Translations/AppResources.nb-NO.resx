@@ -462,4 +462,10 @@
   <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Tapte {0} sek. skattereduksjon, produksjon høyere enn forbruk.</value>
   <comment>Need review</comment></data>
+  <data name="Peak_Use_Production_Kwh_Hour" xml:space="preserve">
+    <value>Toppbruk produksjon kwh/time</value>
+  <comment>Need review</comment></data>
+  <data name="Peak_Use_Production_And_Own_Use_Kwh_Hour" xml:space="preserve">
+    <value>Toppbruk produksjon egenbruk Kwh/Time</value>
+  <comment>Need review</comment></data>
 </root>
