@@ -271,6 +271,38 @@ public class HistoryDataService : IHistoryDataService
         //------------ Battery Charge ---------------------------------------
         historyStats.BatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
         historyStats.EnergyCalculationParameter = calcParams;
+
+        //------------ Peak Reduction ---------------------------------------
+        // TODO Fetch NoOfPeaksUsedForPeakDetermination from settings
+        historyStats.NoOfPeaksUsedForPeakDetermination = 1;
+        List<double> peakPurchasedAndOwnUsed = new(); 
+        List<double> peakPurchased = new();
+
+        for (int i=0; i < historyStats.NoOfPeaksUsedForPeakDetermination; i++)
+        {
+            peakPurchasedAndOwnUsed.Add(0.0);
+            peakPurchased.Add(0.0);
+            foreach (var item in energy)
+            {
+                var totalUsage = item.Purchased + item.ProductionOwnUse;
+                if (!peakPurchasedAndOwnUsed.Contains(totalUsage)) {
+                    if (totalUsage > peakPurchasedAndOwnUsed[i])
+                    {
+                        peakPurchasedAndOwnUsed[i] = totalUsage;
+                    }
+                }
+
+                if (!peakPurchased.Contains(item.Purchased))
+                {
+                    if (item.Purchased > peakPurchased[i]) peakPurchased[i] = item.Purchased;
+                }
+               
+            }
+        }
+
+        historyStats.PeakPurchasedAndOwnUsage = peakPurchasedAndOwnUsed;
+        historyStats.PeakPurchased = peakPurchased;
+       
         return historyStats;
 
     }
@@ -521,6 +553,14 @@ public class HistoryStats
     //    get { return factsBatteryUsedAveragePerKwhSaved; }
     //    set { factsBatteryUsedAveragePerKwhSaved = double.Equals(double.NaN, value) ? 0: value; }
     //} 
+
+    // ----------- Peak Reduction ---------------------
+    public int NoOfPeaksUsedForPeakDetermination { get; set; } = 0;
+    public List<double> PeakPurchasedAndOwnUsage { get; set; } = new List<double>();
+    public List<double> PeakPurchased { get; set; } = new List<double>();
+    //public double AveragePeakPurchasedAndOwnUsage { get; set; } = 0;
+   // public double AveragePeakPurchased { get; set; } = 0;
+
 
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; }
 
