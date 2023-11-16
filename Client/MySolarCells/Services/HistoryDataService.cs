@@ -278,9 +278,11 @@ public class HistoryDataService : IHistoryDataService
         historyStats.EnergyCalculationParameter = calcParams;
 
         //------------ Peak Reduction ---------------------------------------
-        historyStats.PeakPurchased = energy.Max(x => x.Purchased);
-        historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
-
+        if (energy.Count > 0)
+        {
+            historyStats.PeakPurchased = energy.Max(x => x.Purchased);
+            historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+        }
         // TODO Fetch NoOfPeaksUsedForPeakDetermination from settings
         //historyStats.NoOfPeaksUsedForPeakDetermination = 1;
         //List<double> peakPurchasedAndOwnUsed = new(); 
