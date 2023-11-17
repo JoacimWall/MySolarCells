@@ -474,4 +474,28 @@
   <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
     <value>Sparad energitoppsreduktion</value>
   <comment>Need review</comment></data>
+  <data name="Show_Report" xml:space="preserve">
+    <value>Visa rapport</value>
+  <comment>Need review</comment></data>
+  <data name="Price" xml:space="preserve">
+    <value>Pris</value>
+  <comment>Need review</comment></data>
+  <data name="Annual_Savings" xml:space="preserve">
+    <value>Årliga besparingar</value>
+  <comment>Need review</comment></data>
+  <data name="Yield" xml:space="preserve">
+    <value>Avkastning</value>
+  <comment>Need review</comment></data>
+  <data name="Report" xml:space="preserve">
+    <value>Rapport</value>
+  <comment>Need review</comment></data>
+  <data name="Savings_Calculation" xml:space="preserve">
+    <value>Besparingskalkyl</value>
+  <comment>Need review</comment></data>
+  <data name="Year_Overview" xml:space="preserve">
+    <value>Årsöversikt</value>
+  <comment>Need review</comment></data>
+  <data name="Details_Year" xml:space="preserve">
+    <value>Detaljer {0}</value>
+  <comment>Need review</comment></data>
 </root>

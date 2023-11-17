@@ -26,6 +26,14 @@ public class MoreViewModel : BaseViewModel
     public ICommand ElectricitySupplierCommand => new Command(async () => await ShowElectricitySupplier());
     public ICommand ExportExcelCommand => new Command(async () => await ExportExcelGroupYear(MySolarCellsGlobals.SelectedHome.HomeId));
     public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
+    public ICommand ShowReportCommand => new Command(async () => await ShowReport());
+
+    private async Task ShowReport()
+    {
+        var view = ServiceHelper.GetService<ReportView>();
+       // ((ReportViewModel)view.BindingContext).ApplyQueryAttributes(new Dictionary<string, object> { { nameof(PhotoCropModel), model } });
+        await PushModal(view);
+    }
 
     private async Task ShowElectricitySupplier()
     {

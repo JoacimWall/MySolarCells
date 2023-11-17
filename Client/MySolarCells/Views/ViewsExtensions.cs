@@ -13,6 +13,7 @@ public static class ViewsExtensions
         builder.Services.AddTransient<InvestmentAndLoanView>();
         //ROI
         builder.Services.AddTransient<RoiView>();
+        builder.Services.AddTransient<ReportView>();
         //Energy
         builder.Services.AddTransient<EnergyView>();
         //More

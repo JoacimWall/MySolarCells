@@ -13,6 +13,7 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<InvestmentAndLoanViewModel>();
         //ROI
         builder.Services.AddTransient<RoiViewModel>();
+        builder.Services.AddTransient<ReportViewModel>();
         //Energy
         builder.Services.AddTransient<EnergyViewModel>();
         //More

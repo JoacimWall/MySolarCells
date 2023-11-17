@@ -520,4 +520,28 @@
 <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
     <value>Energy peak reduction saved</value>
   <comment>Need review</comment></data>
+<data name="Show_Report" xml:space="preserve">
+    <value>Show report</value>
+  <comment>Need review</comment></data>
+<data name="Price" xml:space="preserve">
+    <value>Price</value>
+  <comment>Need review</comment></data>
+<data name="Annual_Savings" xml:space="preserve">
+    <value>annual savings</value>
+  <comment>Need review</comment></data>
+<data name="Yield" xml:space="preserve">
+    <value>Yield</value>
+  <comment>Need review</comment></data>
+<data name="Report" xml:space="preserve">
+    <value>Report</value>
+  <comment>Need review</comment></data>
+<data name="Savings_Calculation" xml:space="preserve">
+    <value>Savings calculation</value>
+  <comment>Need review</comment></data>
+<data name="Year_Overview" xml:space="preserve">
+    <value>Year overview</value>
+  <comment>Need review</comment></data>
+<data name="Details_Year" xml:space="preserve">
+    <value>Details {0}</value>
+  <comment>Need review</comment></data>
 </root>

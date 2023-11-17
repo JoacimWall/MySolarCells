@@ -475,4 +475,28 @@
   <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
     <value>Energiahuippujen vähennys säästyi</value>
   <comment>Need review</comment></data>
+  <data name="Show_Report" xml:space="preserve">
+    <value>Näytä raportti</value>
+  <comment>Need review</comment></data>
+  <data name="Price" xml:space="preserve">
+    <value>Hinta</value>
+  <comment>Need review</comment></data>
+  <data name="Annual_Savings" xml:space="preserve">
+    <value>vuosittaiset säästöt</value>
+  <comment>Need review</comment></data>
+  <data name="Yield" xml:space="preserve">
+    <value>Tuotto</value>
+  <comment>Need review</comment></data>
+  <data name="Report" xml:space="preserve">
+    <value>Raportoi</value>
+  <comment>Need review</comment></data>
+  <data name="Savings_Calculation" xml:space="preserve">
+    <value>Säästölaskenta</value>
+  <comment>Need review</comment></data>
+  <data name="Year_Overview" xml:space="preserve">
+    <value>Vuosikatsaus</value>
+  <comment>Need review</comment></data>
+  <data name="Details_Year" xml:space="preserve">
+    <value>Tiedot {0}</value>
+  <comment>Need review</comment></data>
 </root>

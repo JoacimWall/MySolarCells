@@ -103,6 +103,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to annual savings.
+        /// </summary>
+        public static string Annual_Savings {
+            get {
+                return ResourceManager.GetString("Annual_Savings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Api key.
         /// </summary>
         public static string Api_Key {
@@ -360,6 +369,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details {0}.
+        /// </summary>
+        public static string Details_Year {
+            get {
+                return ResourceManager.GetString("Details_Year", resourceCulture);
             }
         }
         
@@ -877,6 +895,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Price.
+        /// </summary>
+        public static string Price {
+            get {
+                return ResourceManager.GetString("Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prices.
         /// </summary>
         public static string Prices {
@@ -1030,6 +1057,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Report.
+        /// </summary>
+        public static string Report {
+            get {
+                return ResourceManager.GetString("Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result.
         /// </summary>
         public static string Result {
@@ -1120,6 +1156,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Savings calculation.
+        /// </summary>
+        public static string Savings_Calculation {
+            get {
+                return ResourceManager.GetString("Savings_Calculation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select the home you want to analyze.
         /// </summary>
         public static string Select_The_Home_You_Want_To_Analyze {
@@ -1143,6 +1188,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Shortcuts {
             get {
                 return ResourceManager.GetString("Shortcuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show report.
+        /// </summary>
+        public static string Show_Report {
+            get {
+                return ResourceManager.GetString("Show_Report", resourceCulture);
             }
         }
         
@@ -1435,11 +1489,29 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Year overview.
+        /// </summary>
+        public static string Year_Overview {
+            get {
+                return ResourceManager.GetString("Year_Overview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Years left until ROI.
         /// </summary>
         public static string Years_Left_Until_ROI {
             get {
                 return ResourceManager.GetString("Years_Left_Until_ROI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yield.
+        /// </summary>
+        public static string Yield {
+            get {
+                return ResourceManager.GetString("Yield", resourceCulture);
             }
         }
     }
