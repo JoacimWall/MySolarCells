@@ -7,7 +7,7 @@ public interface IHistoryDataService
 
     Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end, HistorySimulate historSimulate);
     Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end);
-    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport();
+    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport(DateTime? start, DateTime? end);
 
 }
 
@@ -22,18 +22,20 @@ public class HistoryDataService : IHistoryDataService
 
     /// Return to collectins tuple 1 is for the overview summirized one Year per row
     /// The second tuple is all months summirzed per year 
-    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport()
+    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport(DateTime? start, DateTime? end)
     {
         List<ReportHistoryStats> result = new List<ReportHistoryStats>();
-        var start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
-        var dates = DateHelper.GetRelatedDates(DateTime.Today);
-        var current = start.ThisMonthStart;
+        //var start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
+        //var dates = DateHelper.GetRelatedDates(DateTime.Today);
+        var startDate = DateHelper.GetRelatedDates(start.Value);
+        var endDates = DateHelper.GetRelatedDates(end.Value);
+        var current = startDate.ThisMonthStart;
 
         var resultInvest = this.mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
         var firstProductionDay = this.mscDbContext.Energy.AsNoTracking().Where(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).First();
 
         //Get alla data from start to now per month
-        while (current < dates.ThisMonthEnd)
+        while (current < endDates.ThisMonthEnd)
         {
             var stats = await CalculateTotals(current, current.AddMonths(1), new HistorySimulate());
             //Calulate Intrest currnt month
@@ -50,8 +52,8 @@ public class HistoryDataService : IHistoryDataService
         List<List<ReportHistoryStats>> historyStatsGrpYearAll = new List<List<ReportHistoryStats>>();
         List<ReportHistoryStats> historyStatsMounthGrpYear = new List<ReportHistoryStats>();
         List<ReportHistoryStats> historStatsOvervView = new List<ReportHistoryStats>();
-        double acumlimatedPodSavedAndMinusInterest = 0;
-        double? previusYearRoi = null;
+        // double acumlimatedPodSavedAndMinusInterest = 0;
+        // double? previusYearRoi = null;
         for (int i = 0; i < result.Count; i++)
         {
             if (year == result[i].FromDate.Year)
@@ -67,13 +69,13 @@ public class HistoryDataService : IHistoryDataService
                 };
 
 
-                var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, historyStatsMounthGrpYear);
-                acumlimatedPodSavedAndMinusInterest = resultRoi.Item1;
-                newYearStats.AcumulatedUntilCurrentYearProducedAndSaved = resultRoi.Item1;
-                newYearStats.ProducedSaved = resultRoi.Item2;
-                newYearStats.ROIYearsLeft = resultRoi.Item3;
+                //var resultRoi = CalcualteROI(acumlimatedPodSavedAndMinusInterest, newYearStats, firstProductionDay, previusYearRoi, historyStatsMounthGrpYear);
+                //acumlimatedPodSavedAndMinusInterest = resultRoi.Item1;
+                //newYearStats.AcumulatedUntilCurrentYearProducedAndSaved = resultRoi.Item1;
+                //newYearStats.ProducedSaved = resultRoi.Item2;
+                //newYearStats.ROIYearsLeft = resultRoi.Item3;
                 newYearStats.FirstProductionDay = firstProductionDay.Timestamp;
-                previusYearRoi = newYearStats.ROIYearsLeft;
+                // previusYearRoi = newYearStats.ROIYearsLeft;
                 historStatsOvervView.Add(newYearStats);
 
                 year = result[i].FromDate.Year;
@@ -159,7 +161,9 @@ public class HistoryDataService : IHistoryDataService
             //intrest
             InterestCost = Math.Round(sumHistory.Sum(x => x.InterestCost), 2),
             Investment = sumHistory.Last().Investment,
-            ProductionSoldTaxReductionProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldTaxReductionProfit), 2),
+            ProductionSoldTaxReductionProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldTaxReductionProfit), 2)
+
+
         };
 
         //Devided per day
@@ -169,11 +173,24 @@ public class HistoryDataService : IHistoryDataService
         returnHistory.FactsProductionOwnUseAveragePerKwhSaved = returnHistory.ProductionOwnUse == 0 ? 0 : Math.Round(returnHistory.SumProductionOwnUseSaved / returnHistory.ProductionOwnUse, 2);
         returnHistory.FactsBatteryUsedAveragePerKwhSaved = returnHistory.BatteryUsed == 0 ? 0 : Math.Round(returnHistory.SumBatteryUseSaved / returnHistory.BatteryUsed, 2);
         //Peak
-        int amountPeaks = 3;
-        var topPeakPurchased = sumHistory.OrderByDescending(x=>x.PeakPurchased).Take(amountPeaks);
-        var topPeakPurchasedOwnuse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
-        returnHistory.PeakPurchased = Math.Round(topPeakPurchased.Average(x => x.PeakPurchased),2);
-        returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage),2);
+        if (difference.TotalDays < 32)
+        {
+            int amountPeaks = 3;
+            var topPeakPurchased = sumHistory.OrderByDescending(x => x.PeakPurchased).Take(amountPeaks);
+            var topPeakPurchasedOwnuse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
+            returnHistory.PeakPurchased = Math.Round(topPeakPurchased.Average(x => x.PeakPurchased), 2);
+            returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage), 2);
+            returnHistory.PeakEnergyReduction = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakPurchasedAndOwnUsage - returnHistory.PeakPurchased, 2) : 0;
+            returnHistory.PeakEnergyReductionSaved = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakEnergyReduction * 35, 2) : 0;
+        }
+        else
+        {
+            //Peak
+            returnHistory.PeakPurchased = Math.Round(sumHistory.Max(x => x.PeakPurchased), 2);
+            returnHistory.PeakPurchasedAndOwnUsage = Math.Round(sumHistory.Max(x => x.PeakPurchasedAndOwnUsage), 2);
+            returnHistory.PeakEnergyReduction = Math.Round(sumHistory.Sum(x => x.PeakEnergyReduction), 2);
+            returnHistory.PeakEnergyReductionSaved = Math.Round(sumHistory.Sum(x => x.PeakEnergyReductionSaved), 2);
+        }
         return returnHistory;
     }
     private async Task<HistoryStats> CalculateTotalsInternal(DateTime? start, DateTime? end, HistorySimulate historySimulate)
@@ -260,19 +277,19 @@ public class HistoryDataService : IHistoryDataService
         historyStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(historyStats.ProductionSold * calcParams.FixedPriceKwh, 2);
         historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowload, 2);
         historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
-        
+
         //--------- Production Own use ---------------------------
         historyStats.ProductionOwnUse = Math.Round(energy.Sum(x => x.ProductionOwnUse), 2);
         historyStats.ProductionOwnUseSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionOwnUseProfit), 2) : Math.Round(historyStats.ProductionOwnUse * calcParams.FixedPriceKwh, 2);
         historyStats.ProductionOwnUseTransferFeeSaved = Math.Round(historyStats.ProductionOwnUse * calcParams.TransferFee, 2);
         historyStats.ProductionOwnUseEnergyTaxSaved = Math.Round(historyStats.ProductionOwnUse * calcParams.EnergyTax, 2);
-        
+
         //---------- Battery Used -----------------------------------------
         historyStats.BatteryUsed = Math.Round(energy.Sum(x => x.BatteryUsed), 2);
         historyStats.BatteryUsedSaved = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.BatteryUsedProfit), 2) : Math.Round(historyStats.BatteryUsed * calcParams.FixedPriceKwh, 2);
         historyStats.BatteryUseTransferFeeSaved = Math.Round(historyStats.BatteryUsed * calcParams.TransferFee, 2);
         historyStats.BatteryUseEnergyTaxSaved = Math.Round(historyStats.BatteryUsed * calcParams.EnergyTax, 2);
-        
+
         //------------ Battery Charge ---------------------------------------
         historyStats.BatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
         historyStats.EnergyCalculationParameter = calcParams;
@@ -283,87 +300,59 @@ public class HistoryDataService : IHistoryDataService
             historyStats.PeakPurchased = energy.Max(x => x.Purchased);
             historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
         }
-        // TODO Fetch NoOfPeaksUsedForPeakDetermination from settings
-        //historyStats.NoOfPeaksUsedForPeakDetermination = 1;
-        //List<double> peakPurchasedAndOwnUsed = new(); 
-        //List<double> peakPurchased = new();
 
-        //for (int i=0; i < historyStats.NoOfPeaksUsedForPeakDetermination; i++)
-        //{
-        //    peakPurchasedAndOwnUsed.Add(0.0);
-        //    peakPurchased.Add(0.0);
-        //    foreach (var item in energy)
-        //    {
-        //        var totalUsage = item.Purchased + item.ProductionOwnUse;
-        //        if (!peakPurchasedAndOwnUsed.Contains(totalUsage)) {
-        //            if (totalUsage > peakPurchasedAndOwnUsed[i])
-        //              peakPurchasedAndOwnUsed[i] = totalUsage;
-        //        }
-
-        //        if (!peakPurchased.Contains(item.Purchased))
-        //        {
-        //            if (item.Purchased > peakPurchased[i])
-        //                peakPurchased[i] = item.Purchased;
-        //        }
-               
-        //    }
-        //}
-
-        //historyStats.PeakPurchasedAndOwnUsage = peakPurchasedAndOwnUsed;
-        //historyStats.PeakPurchased = peakPurchased;
-       
         return historyStats;
 
     }
-    private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportHistoryStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportHistoryStats> historyStatsGrpYear)
-    {
-        var currentYearResult = stats.HistoryStats.SumAllProductionSoldAndSaved - stats.HistoryStats.InterestCost;
-        acumlimatedPodSavedAndMinusInterest = acumlimatedPodSavedAndMinusInterest + currentYearResult;
-        var investmentLeft = stats.HistoryStats.Investment - acumlimatedPodSavedAndMinusInterest;
+    //private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportHistoryStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportHistoryStats> historyStatsGrpYear)
+    //{
+    //    var currentYearResult = stats.HistoryStats.SumAllProductionSoldAndSaved - stats.HistoryStats.InterestCost;
+    //    acumlimatedPodSavedAndMinusInterest = acumlimatedPodSavedAndMinusInterest + currentYearResult;
+    //    var investmentLeft = stats.HistoryStats.Investment - acumlimatedPodSavedAndMinusInterest;
 
-        double fakeProduction = 0;
-        //första år då räknar vi inte ROI
-        double? roiLeft = Convert.ToDouble(investmentLeft / currentYearResult);
-        //simulera månader innan
-        if (firstProductionDay.Timestamp > stats.FromDate)
-        {
-            var firstHoleMonth = historyStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
-            var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
-            var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
-            var refvalue = tot / devtal;
-            DateTime current = firstHoleMonth.FromDate.AddMonths(-1);
-            while (current >= stats.FromDate)
-            {
-                fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
-                current = current.AddMonths(-1);
-            }
+    //    double fakeProduction = 0;
+    //    //första år då räknar vi inte ROI
+    //    double? roiLeft = Convert.ToDouble(investmentLeft / currentYearResult);
+    //    //simulera månader innan
+    //    if (firstProductionDay.Timestamp > stats.FromDate)
+    //    {
+    //        var firstHoleMonth = historyStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
+    //        var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
+    //        var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
+    //        var refvalue = tot / devtal;
+    //        DateTime current = firstHoleMonth.FromDate.AddMonths(-1);
+    //        while (current >= stats.FromDate)
+    //        {
+    //            fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
+    //            current = current.AddMonths(-1);
+    //        }
 
-            roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
+    //        roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
 
 
-        }
-        //Simulera månader fram till års skiftet
-        if (DateTime.Today < stats.FromDate.AddYears(1))
-        {
-            var firstHoleMonth = historyStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
-            var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
-            var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
-            var refvalue = tot / devtal;
-            DateTime current = firstHoleMonth.FromDate.AddMonths(1);
-            while (current < stats.FromDate.AddYears(1))
-            {
-                fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
-                current = current.AddMonths(1);
-            }
+    //    }
+    //    //Simulera månader fram till års skiftet
+    //    if (DateTime.Today < stats.FromDate.AddYears(1))
+    //    {
+    //        var firstHoleMonth = historyStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
+    //        var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
+    //        var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
+    //        var refvalue = tot / devtal;
+    //        DateTime current = firstHoleMonth.FromDate.AddMonths(1);
+    //        while (current < stats.FromDate.AddYears(1))
+    //        {
+    //            fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
+    //            current = current.AddMonths(1);
+    //        }
 
-            roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
+    //        roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
 
-        }
-        if (previusYearRoi.HasValue && roiLeft.HasValue)
-            roiLeft = ((previusYearRoi.Value - 1) + roiLeft) / 2;
+    //    }
+    //    if (previusYearRoi.HasValue && roiLeft.HasValue)
+    //        roiLeft = ((previusYearRoi.Value - 1) + roiLeft) / 2;
 
-        return new Tuple<double, double, double?>(acumlimatedPodSavedAndMinusInterest, currentYearResult, roiLeft);
-    }
+    //    return new Tuple<double, double, double?>(acumlimatedPodSavedAndMinusInterest, currentYearResult, roiLeft);
+    //}
     //returns total invest, Loanleft and Interestcost
     private Tuple<int, float> CalculateLonAndInterest(List<InvestmentAndLoan> investmentAndLoans, DateTime start)
     {
@@ -407,7 +396,7 @@ public class HistorySimulate : ObservableObject
     public Color ShowSimulateTextColor { get { return doSimulate ? AppColors.WhiteColor : AppColors.Gray900Color; } }
 
 
-   
+
     private bool doSimulate;
     public bool DoSimulate
     {
@@ -490,9 +479,9 @@ public class ReportHistoryStats
 {
     public DateTime FirstProductionDay { get; set; }
     public DateTime FromDate { get; set; }
-    public double? ROIYearsLeft { get; set; } = 0;
-    public double AcumulatedUntilCurrentYearProducedAndSaved { get; set; } = 0;
-    public double ProducedSaved { get; set; } = 0;
+    //public double? ROIYearsLeft { get; set; } = 0;
+    //public double AcumulatedUntilCurrentYearProducedAndSaved { get; set; } = 0;
+    //public double ProducedSaved { get; set; } = 0;
     public HistoryStats HistoryStats { get; set; }
 
 }
@@ -510,16 +499,17 @@ public class HistoryStats
     public double SumPurchasedCost
     {
         get { return Math.Round(PurchasedCost + PurchasedTransferFeeCost + PurchasedTaxCost, 2); }
-    } 
+    }
     // ----------- ProductionSold ---------------------
     public double ProductionSold { get; set; } = 0;
     public double ProductionSoldProfit { get; set; } = 0;
     public double ProductionSoldGridCompensationProfit { get; set; } = 0;
     public double ProductionSoldTaxReductionProfit { get; set; } = 0;
-    public string ProductionSoldTaxReductionProfitComment { get; set; } ="";
+    public string ProductionSoldTaxReductionProfitComment { get; set; } = "";
     public double SumProductionSoldProfit
     {
-        get { return Math.Round(ProductionSoldProfit + ProductionSoldGridCompensationProfit + ProductionSoldTaxReductionProfit, 2); }  }
+        get { return Math.Round(ProductionSoldProfit + ProductionSoldGridCompensationProfit + ProductionSoldTaxReductionProfit, 2); }
+    }
     // ----------- ProductionOwnUse ---------------------
     public double ProductionOwnUse { get; set; } = 0;
     public double ProductionOwnUseSaved { get; set; } = 0;
@@ -536,7 +526,7 @@ public class HistoryStats
     // ----------- BatteryCharge ---------------------
     public double BatteryCharge { get; set; } = 0;
     // ----------- combinde sum of many values ---------------------
-    public double SumProductionOwnUseAndBatterySaved { get { return Math.Round(SumProductionOwnUseSaved + SumBatteryUseSaved, 2); } }
+    public double SumProductionOwnUseAndBatterySaved { get { return Math.Round(SumProductionOwnUseSaved + SumBatteryUseSaved + PeakEnergyReductionSaved, 2); } }
     public double SumAllProductionSoldAndSaved { get { return Math.Round(SumProductionSoldProfit + SumProductionOwnUseAndBatterySaved, 2); } }
     public double SumAllProduction { get { return Math.Round(ProductionSold + ProductionOwnUse + BatteryCharge, 2); } }
     public double SumAllConsumption { get { return Math.Round(Purchased + ProductionOwnUse + BatteryUsed, 2); } }
@@ -557,6 +547,9 @@ public class HistoryStats
     // ----------- Peak Peduction ---------------------
     public double PeakPurchasedAndOwnUsage { get; set; } = 0;
     public double PeakPurchased { get; set; } = 0;
+    public double PeakEnergyReduction { get; set; } = 0;
+    //TODO:Ändra 35 kr till database egennskap
+    public double PeakEnergyReductionSaved { get; set; } = 0;
     //public int NoOfPeaksUsedForPeakDetermination { get; set; } = 0;
     //public List<double> PeakPurchasedAndOwnUsage { get; set; } = new List<double>();
     //public List<double> PeakPurchased { get; set; } = new List<double>();
@@ -574,42 +567,4 @@ public class HistoryStats
     // public double TotalCompensationForProductionToGridChargeBatteryFake { get; set; } = 0;
     //public double TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid { get; set; } = 0;
     //public double SumProductionBatteryChargeFakeSold { get; set; } = 0;
-}
-public static class SnittProductionMonth
-{
-    public static double GetSnitMonth(int month, double installedKwh)
-    {
-        switch (month)
-        {
-            case 1:
-                return 13.9 * installedKwh;
-            case 2:
-                return 32.3 * installedKwh;
-            case 3:
-                return 85.05 * installedKwh;
-            case 4:
-                return 120.75 * installedKwh;
-            case 5:
-                return 137.95 * installedKwh;
-            case 6:
-                return 136.55 * installedKwh;
-            case 7:
-                return 134.9 * installedKwh;
-            case 8:
-                return 115.65 * installedKwh;
-            case 9:
-                return 89.9 * installedKwh;
-            case 10:
-                return 54.05 * installedKwh;
-            case 11:
-                return 19.6 * installedKwh;
-            case 12:
-                return 9.6 * installedKwh;
-            default:
-                return 0;
-
-        }
-
-    }
-
 }

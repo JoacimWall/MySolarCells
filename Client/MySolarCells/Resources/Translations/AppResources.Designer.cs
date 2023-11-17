@@ -373,6 +373,24 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Energy peak reduction.
+        /// </summary>
+        public static string Energy_Peak_Reduction {
+            get {
+                return ResourceManager.GetString("Energy_Peak_Reduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Energy peak reduction saved.
+        /// </summary>
+        public static string Energy_Peak_Reduction_Saved {
+            get {
+                return ResourceManager.GetString("Energy_Peak_Reduction_Saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Energy tax.
         /// </summary>
         public static string Energy_Tax {
@@ -805,20 +823,20 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Peak use production own use Kwh/Hour.
+        ///   Looks up a localized string similar to Peak purchased kwh/hour.
         /// </summary>
-        public static string Peak_Use_Production_And_Own_Use_Kwh_Hour {
+        public static string Peak_Hour_Purchased {
             get {
-                return ResourceManager.GetString("Peak_Use_Production_And_Own_Use_Kwh_Hour", resourceCulture);
+                return ResourceManager.GetString("Peak_Hour_Purchased", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Peak use production kwh/hour.
+        ///   Looks up a localized string similar to Peak purchased and own use Kwh/Hour.
         /// </summary>
-        public static string Peak_Use_Production_Kwh_Hour {
+        public static string Peak_Hour_Purchased_And_Own_Use {
             get {
-                return ResourceManager.GetString("Peak_Use_Production_Kwh_Hour", resourceCulture);
+                return ResourceManager.GetString("Peak_Hour_Purchased_And_Own_Use", resourceCulture);
             }
         }
         

@@ -134,3 +134,41 @@ public class EstimateRoi
     public double RemainingOnInvestment { get; set; }
 
 }
+public static class SnittProductionMonth
+{
+    public static double GetSnitMonth(int month, double installedKwh)
+    {
+        switch (month)
+        {
+            case 1:
+                return 13.9 * installedKwh;
+            case 2:
+                return 32.3 * installedKwh;
+            case 3:
+                return 85.05 * installedKwh;
+            case 4:
+                return 120.75 * installedKwh;
+            case 5:
+                return 137.95 * installedKwh;
+            case 6:
+                return 136.55 * installedKwh;
+            case 7:
+                return 134.9 * installedKwh;
+            case 8:
+                return 115.65 * installedKwh;
+            case 9:
+                return 89.9 * installedKwh;
+            case 10:
+                return 54.05 * installedKwh;
+            case 11:
+                return 19.6 * installedKwh;
+            case 12:
+                return 9.6 * installedKwh;
+            default:
+                return 0;
+
+        }
+
+    }
+
+}

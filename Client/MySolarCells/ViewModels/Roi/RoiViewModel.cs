@@ -44,8 +44,17 @@ public class RoiViewModel : BaseViewModel
         //if (showProgressDlg)
         //    using var dlg = DialogService.GetProgress("");
         await Task.Delay(200);
-        RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
-        //RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
+        var diffrens = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
+        if (diffrens.TotalDays > 31)
+        {
+            var ReportStats = await this.roiService.GenerateTotalPermonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
+            RoiStats = ReportStats.Model.Item1.First().HistoryStats;
+        }
+        else
+        {
+            RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
+        }
+       
         return true;
     }
     

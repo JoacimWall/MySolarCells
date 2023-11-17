@@ -462,10 +462,16 @@
   <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Mistet {0} sek. momsnedsættelse, produktion højere end forbrug.</value>
   <comment>Need review</comment></data>
-  <data name="Peak_Use_Production_Kwh_Hour" xml:space="preserve">
-    <value>Peak use-produktion kwh/time</value>
+  <data name="Peak_Hour_Purchased" xml:space="preserve">
+    <value>Maksimal indkøbt kwh/time</value>
   <comment>Need review</comment></data>
-  <data name="Peak_Use_Production_And_Own_Use_Kwh_Hour" xml:space="preserve">
-    <value>Spidsforbrug produktion eget brug Kwh/Time</value>
+  <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
+    <value>Peak indkøbt og eget brug Kwh/Time</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Peak_Reduction" xml:space="preserve">
+    <value>Energispidsreduktion</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
+    <value>Energispidsreduktion sparet</value>
   <comment>Need review</comment></data>
 </root>

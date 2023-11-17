@@ -462,10 +462,16 @@
   <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Missade {0} sek skattereduktion, produktion högre än förbrukning.</value>
   <comment>Need review</comment></data>
-  <data name="Peak_Use_Production_Kwh_Hour" xml:space="preserve">
-    <value>Högsta användningsproduktion kwh/timme</value>
+  <data name="Peak_Hour_Purchased" xml:space="preserve">
+    <value>Högsta inköpta kwh/timme</value>
   <comment>Need review</comment></data>
-  <data name="Peak_Use_Production_And_Own_Use_Kwh_Hour" xml:space="preserve">
-    <value>Toppanvändning produktion egen användning Kwh/Timme</value>
+  <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
+    <value>Högst inköpt och eget bruk Kwh/Timme</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Peak_Reduction" xml:space="preserve">
+    <value>Energitoppsreduktion</value>
+  <comment>Need review</comment></data>
+  <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
+    <value>Sparad energitoppsreduktion</value>
   <comment>Need review</comment></data>
 </root>

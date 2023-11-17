@@ -75,50 +75,52 @@ public class MoreViewModel : BaseViewModel
         worksheet.Range["A4"].Text = AppResources.Own_Use;
         worksheet.Range["A5"].Text = AppResources.Purchased;
         worksheet.Range["A6"].Text = AppResources.Battery_used;
-        worksheet.Range["A7"].Text = AppResources.Production;
-        worksheet.Range["A8"].Text = AppResources.Consumption;
-        worksheet.Range["A9"].Text = AppResources.Balance_Production_Minus_Consumption;
+        worksheet.Range["A7"].Text = AppResources.Energy_Peak_Reduction;
+        worksheet.Range["A8"].Text = AppResources.Production;
+        worksheet.Range["A9"].Text = AppResources.Consumption;
+        worksheet.Range["A10"].Text = AppResources.Balance_Production_Minus_Consumption;
         //<!-- COSTS AND REVENUES-->
-        worksheet.Range["A10"].Text = AppResources.Costs_And_Rvenues;
-        worksheet.Range["A11"].Text = AppResources.Production_Profit_Sold;
-        worksheet.Range["A12"].Text = AppResources.Production_Grid_Compensation;
-        worksheet.Range["A13"].Text = AppResources.Production_Saved_Energy_Tax;
-        worksheet.Range["A14"].Text = AppResources.Own_Use_Saved_Cost;
-        worksheet.Range["A15"].Text = AppResources.Own_Use_Saved_Transfer_Fee;
-        worksheet.Range["A16"].Text = AppResources.Own_Use_Saved_Energy_Tax;
-        worksheet.Range["A17"].Text = AppResources.Saved_Cost_Battery;
-        worksheet.Range["A18"].Text = AppResources.Saved_Transfer_Fee_Battery;
-        worksheet.Range["A19"].Text = AppResources.Saved_Energy_Tax_Battery;
-        worksheet.Range["A20"].Text = AppResources.Purchase_Cost;
-        worksheet.Range["A21"].Text = AppResources.Purchase_Transfer_Fee;
-        worksheet.Range["A22"].Text = AppResources.Purchase_Energy_Tax;
-        worksheet.Range["A23"].Text = AppResources.Production;
-        worksheet.Range["A24"].Text = AppResources.Interest;
-        worksheet.Range["A25"].Text = AppResources.Consumption;
-        worksheet.Range["A26"].Text = AppResources.Balance_Production_Minus_Consumption;
+        worksheet.Range["A11"].Text = AppResources.Costs_And_Rvenues;
+        worksheet.Range["A12"].Text = AppResources.Production_Profit_Sold;
+        worksheet.Range["A13"].Text = AppResources.Production_Grid_Compensation;
+        worksheet.Range["A14"].Text = AppResources.Production_Saved_Energy_Tax;
+        worksheet.Range["A15"].Text = AppResources.Own_Use_Saved_Cost;
+        worksheet.Range["A16"].Text = AppResources.Own_Use_Saved_Transfer_Fee;
+        worksheet.Range["A17"].Text = AppResources.Own_Use_Saved_Energy_Tax;
+        worksheet.Range["A18"].Text = AppResources.Saved_Cost_Battery;
+        worksheet.Range["A19"].Text = AppResources.Saved_Transfer_Fee_Battery;
+        worksheet.Range["A20"].Text = AppResources.Saved_Energy_Tax_Battery;
+        worksheet.Range["A21"].Text = AppResources.Purchase_Cost;
+        worksheet.Range["A22"].Text = AppResources.Purchase_Transfer_Fee;
+        worksheet.Range["A23"].Text = AppResources.Purchase_Energy_Tax;
+        worksheet.Range["A24"].Text = AppResources.Energy_Peak_Reduction_Saved;
+        worksheet.Range["A25"].Text = AppResources.Production;
+        worksheet.Range["A26"].Text = AppResources.Interest;
+        worksheet.Range["A27"].Text = AppResources.Consumption;
+        worksheet.Range["A28"].Text = AppResources.Balance_Production_Minus_Consumption;
         // <!--FUN FACTS-->
 
-        worksheet.Range["A27"].Text = AppResources.Fun_Facts;
-        worksheet.Range["A28"].Text = AppResources.Production_Index_Desc_Prod_Per_Day_KWh;
-        worksheet.Range["A29"].Text = AppResources.Average_Purchased_Cost_Per_Kwh;
-        worksheet.Range["A30"].Text = AppResources.Average_Production_Sold_Profit_Per_Kwh;
-        worksheet.Range["A31"].Text = AppResources.Average_Production_Own_Use_Saved_Per_Kwh;
-        worksheet.Range["A32"].Text = AppResources.Average_Battery_Used_Saved_Per_Kwh;
+        worksheet.Range["A29"].Text = AppResources.Fun_Facts;
+        worksheet.Range["A30"].Text = AppResources.Production_Index_Desc_Prod_Per_Day_KWh;
+        worksheet.Range["A31"].Text = AppResources.Average_Purchased_Cost_Per_Kwh;
+        worksheet.Range["A32"].Text = AppResources.Average_Production_Sold_Profit_Per_Kwh;
+        worksheet.Range["A33"].Text = AppResources.Average_Production_Own_Use_Saved_Per_Kwh;
+        worksheet.Range["A34"].Text = AppResources.Average_Battery_Used_Saved_Per_Kwh;
 
-        if (isOverviewSheet)
-        {
-            worksheet.Range["A35"].Text = AppResources.ROI;
-            worksheet.Range["A35"].CellStyle.Font.Bold = true;
-            worksheet.Range["A36"].Text = AppResources.Years_Left_Until_ROI;
-            worksheet.Range["A37"].Text = AppResources.Total_Investment_And_Loan;
-            worksheet.Range["A38"].Text = AppResources.Total_Produced_And_Saved;
-            worksheet.Range["A39"].Text = AppResources.Left_Of_Investment_Cost;
-            worksheet.Range["A39"].CellStyle.Font.Bold = true;
-            worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+        //if (isOverviewSheet)
+        //{
+        //    worksheet.Range["A35"].Text = AppResources.ROI;
+        //    worksheet.Range["A35"].CellStyle.Font.Bold = true;
+        //    worksheet.Range["A36"].Text = AppResources.Years_Left_Until_ROI;
+        //    worksheet.Range["A37"].Text = AppResources.Total_Investment_And_Loan;
+        //    worksheet.Range["A38"].Text = AppResources.Total_Produced_And_Saved;
+        //    worksheet.Range["A39"].Text = AppResources.Left_Of_Investment_Cost;
+        //    worksheet.Range["A39"].CellStyle.Font.Bold = true;
+        //    worksheet.Range["A39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
 
-        }
+        ////}
 
-        worksheet.Range["A1:A32"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
+        worksheet.Range["A1:A34"].CellStyle.HorizontalAlignment = ExcelHAlign.HAlignLeft;
         worksheet.Range["A1"].ColumnWidth = 36;
 
         int index = 0;
@@ -144,47 +146,49 @@ public class MoreViewModel : BaseViewModel
             worksheet.Range[c.ToString() + "4"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUse.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUse).ToString();
             worksheet.Range[c.ToString() + "5"].Value = valueMode ? roiStats[index].HistoryStats.Purchased.ToString() : roiStats.Sum(x => x.HistoryStats.Purchased).ToString();
             worksheet.Range[c.ToString() + "6"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUsed.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUsed).ToString();
-            worksheet.Range[c.ToString() + "7"].Value = valueMode ? roiStats[index].HistoryStats.SumAllProduction.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllProduction).ToString();
-            worksheet.Range[c.ToString() + "8"].Value = valueMode ? roiStats[index].HistoryStats.SumAllConsumption.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllConsumption).ToString();
-            worksheet.Range[c.ToString() + "9"].Value = valueMode ? roiStats[index].HistoryStats.BalanceProduction_Minus_Consumption.ToString() : roiStats.Sum(x => x.HistoryStats.BalanceProduction_Minus_Consumption).ToString();
+            worksheet.Range[c.ToString() + "7"].Value = valueMode ? roiStats[index].HistoryStats.PeakEnergyReduction.ToString() : roiStats.Sum(x => x.HistoryStats.PeakEnergyReduction).ToString();
+            worksheet.Range[c.ToString() + "8"].Value = valueMode ? roiStats[index].HistoryStats.SumAllProduction.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllProduction).ToString();
+            worksheet.Range[c.ToString() + "9"].Value = valueMode ? roiStats[index].HistoryStats.SumAllConsumption.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllConsumption).ToString();
+            worksheet.Range[c.ToString() + "10"].Value = valueMode ? roiStats[index].HistoryStats.BalanceProduction_Minus_Consumption.ToString() : roiStats.Sum(x => x.HistoryStats.BalanceProduction_Minus_Consumption).ToString();
             //<!-- COSTS AND REVENUES-->
-            worksheet.Range[c.ToString() + "11"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldProfit).ToString();
-            worksheet.Range[c.ToString() + "12"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldGridCompensationProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldGridCompensationProfit).ToString();
-            worksheet.Range[c.ToString() + "13"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldTaxReductionProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldTaxReductionProfit).ToString();
+            worksheet.Range[c.ToString() + "12"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldProfit).ToString();
+            worksheet.Range[c.ToString() + "13"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldGridCompensationProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldGridCompensationProfit).ToString();
+            worksheet.Range[c.ToString() + "14"].Value = valueMode ? roiStats[index].HistoryStats.ProductionSoldTaxReductionProfit.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionSoldTaxReductionProfit).ToString();
             if (valueMode && !string.IsNullOrEmpty(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment))
             {
-                worksheet.Range[c.ToString() + "13"].AddThreadedComment(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment, DateTime.Now);
+                worksheet.Range[c.ToString() + "14"].AddThreadedComment(roiStats[index].HistoryStats.ProductionSoldTaxReductionProfitComment, DateTime.Now);
             }
-            worksheet.Range[c.ToString() + "14"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseSaved).ToString();
-            worksheet.Range[c.ToString() + "15"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseTransferFeeSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseTransferFeeSaved).ToString();
-            worksheet.Range[c.ToString() + "16"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseEnergyTaxSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseEnergyTaxSaved).ToString();
-            worksheet.Range[c.ToString() + "17"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUsedSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUsedSaved).ToString();
-            worksheet.Range[c.ToString() + "18"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUseTransferFeeSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUseTransferFeeSaved).ToString();
-            worksheet.Range[c.ToString() + "19"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUseEnergyTaxSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUseEnergyTaxSaved).ToString();
-            worksheet.Range[c.ToString() + "20"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedCost).ToString();
-            worksheet.Range[c.ToString() + "21"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedTransferFeeCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedTransferFeeCost).ToString();
-            worksheet.Range[c.ToString() + "22"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedTaxCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedTaxCost).ToString();
-            worksheet.Range[c.ToString() + "23"].Value = valueMode ? roiStats[index].HistoryStats.SumAllProductionSoldAndSaved.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllProductionSoldAndSaved).ToString();
-            worksheet.Range[c.ToString() + "24"].Value = valueMode ? roiStats[index].HistoryStats.InterestCost.ToString() : roiStats.Sum(x => x.HistoryStats.InterestCost).ToString();
-            worksheet.Range[c.ToString() + "25"].Value = valueMode ? roiStats[index].HistoryStats.SumPurchasedCost.ToString() : roiStats.Sum(x => x.HistoryStats.SumPurchasedCost).ToString();
-            worksheet.Range[c.ToString() + "26"].Value = valueMode ? roiStats[index].HistoryStats.BalanceProductionProfit_Minus_ConsumptionCost.ToString() : roiStats.Sum(x => x.HistoryStats.BalanceProductionProfit_Minus_ConsumptionCost).ToString();
+            worksheet.Range[c.ToString() + "15"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseSaved).ToString();
+            worksheet.Range[c.ToString() + "16"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseTransferFeeSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseTransferFeeSaved).ToString();
+            worksheet.Range[c.ToString() + "17"].Value = valueMode ? roiStats[index].HistoryStats.ProductionOwnUseEnergyTaxSaved.ToString() : roiStats.Sum(x => x.HistoryStats.ProductionOwnUseEnergyTaxSaved).ToString();
+            worksheet.Range[c.ToString() + "18"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUsedSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUsedSaved).ToString();
+            worksheet.Range[c.ToString() + "19"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUseTransferFeeSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUseTransferFeeSaved).ToString();
+            worksheet.Range[c.ToString() + "20"].Value = valueMode ? roiStats[index].HistoryStats.BatteryUseEnergyTaxSaved.ToString() : roiStats.Sum(x => x.HistoryStats.BatteryUseEnergyTaxSaved).ToString();
+            worksheet.Range[c.ToString() + "21"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedCost).ToString();
+            worksheet.Range[c.ToString() + "22"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedTransferFeeCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedTransferFeeCost).ToString();
+            worksheet.Range[c.ToString() + "23"].Value = valueMode ? roiStats[index].HistoryStats.PurchasedTaxCost.ToString() : roiStats.Sum(x => x.HistoryStats.PurchasedTaxCost).ToString();
+            worksheet.Range[c.ToString() + "24"].Value = valueMode ? roiStats[index].HistoryStats.PeakEnergyReductionSaved.ToString() : roiStats.Sum(x => x.HistoryStats.PeakEnergyReductionSaved).ToString();
+            worksheet.Range[c.ToString() + "25"].Value = valueMode ? roiStats[index].HistoryStats.SumAllProductionSoldAndSaved.ToString() : roiStats.Sum(x => x.HistoryStats.SumAllProductionSoldAndSaved).ToString();
+            worksheet.Range[c.ToString() + "26"].Value = valueMode ? roiStats[index].HistoryStats.InterestCost.ToString() : roiStats.Sum(x => x.HistoryStats.InterestCost).ToString();
+            worksheet.Range[c.ToString() + "27"].Value = valueMode ? roiStats[index].HistoryStats.SumPurchasedCost.ToString() : roiStats.Sum(x => x.HistoryStats.SumPurchasedCost).ToString();
+            worksheet.Range[c.ToString() + "28"].Value = valueMode ? roiStats[index].HistoryStats.BalanceProductionProfit_Minus_ConsumptionCost.ToString() : roiStats.Sum(x => x.HistoryStats.BalanceProductionProfit_Minus_ConsumptionCost).ToString();
             //< !--FUN FACTS-- >
-            worksheet.Range[c.ToString() + "28"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionIndex.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionIndex), 2).ToString();
-            worksheet.Range[c.ToString() + "29"].Value = valueMode ? roiStats[index].HistoryStats.FactsPurchasedCostAveragePerKwhPurchased.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsPurchasedCostAveragePerKwhPurchased), 2).ToString();
-            worksheet.Range[c.ToString() + "30"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionSoldAveragePerKwhProfit.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionSoldAveragePerKwhProfit), 2).ToString();
-            worksheet.Range[c.ToString() + "31"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionOwnUseAveragePerKwhSaved.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionOwnUseAveragePerKwhSaved), 2).ToString();
-            worksheet.Range[c.ToString() + "32"].Value = valueMode ? roiStats[index].HistoryStats.FactsBatteryUsedAveragePerKwhSaved.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsBatteryUsedAveragePerKwhSaved), 2).ToString();
+            worksheet.Range[c.ToString() + "30"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionIndex.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionIndex), 2).ToString();
+            worksheet.Range[c.ToString() + "31"].Value = valueMode ? roiStats[index].HistoryStats.FactsPurchasedCostAveragePerKwhPurchased.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsPurchasedCostAveragePerKwhPurchased), 2).ToString();
+            worksheet.Range[c.ToString() + "32"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionSoldAveragePerKwhProfit.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionSoldAveragePerKwhProfit), 2).ToString();
+            worksheet.Range[c.ToString() + "33"].Value = valueMode ? roiStats[index].HistoryStats.FactsProductionOwnUseAveragePerKwhSaved.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsProductionOwnUseAveragePerKwhSaved), 2).ToString();
+            worksheet.Range[c.ToString() + "34"].Value = valueMode ? roiStats[index].HistoryStats.FactsBatteryUsedAveragePerKwhSaved.ToString() : Math.Round(roiStats.Average(x => x.HistoryStats.FactsBatteryUsedAveragePerKwhSaved), 2).ToString();
 
-            if (isOverviewSheet)
-            {
+            //if (isOverviewSheet)
+            //{
 
-                worksheet.Range[c.ToString() + "36"].Value = valueMode ? roiStats[index].ROIYearsLeft.HasValue ? Math.Round(roiStats[index].ROIYearsLeft.Value, 2).ToString() : "" : "";
-                worksheet.Range[c.ToString() + "37"].Value = valueMode ? roiStats[index].HistoryStats.Investment.ToString() : "";
-                worksheet.Range[c.ToString() + "38"].Value = valueMode ? roiStats[index].ProducedSaved.ToString() : roiStats.Sum(x => x.ProducedSaved).ToString();
-                worksheet.Range[c.ToString() + "39"].Value = valueMode ? Math.Round(roiStats[index].HistoryStats.Investment - roiStats[index].AcumulatedUntilCurrentYearProducedAndSaved, 0).ToString() : "";
-                worksheet.Range[c.ToString() + "39"].CellStyle.Font.Bold = true;
-                worksheet.Range[c.ToString() + "39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-            }
+            //    worksheet.Range[c.ToString() + "36"].Value = valueMode ? roiStats[index].ROIYearsLeft.HasValue ? Math.Round(roiStats[index].ROIYearsLeft.Value, 2).ToString() : "" : "";
+            //    worksheet.Range[c.ToString() + "37"].Value = valueMode ? roiStats[index].HistoryStats.Investment.ToString() : "";
+            //    worksheet.Range[c.ToString() + "38"].Value = valueMode ? roiStats[index].ProducedSaved.ToString() : roiStats.Sum(x => x.ProducedSaved).ToString();
+            //    worksheet.Range[c.ToString() + "39"].Value = valueMode ? Math.Round(roiStats[index].HistoryStats.Investment - roiStats[index].AcumulatedUntilCurrentYearProducedAndSaved, 0).ToString() : "";
+            //    worksheet.Range[c.ToString() + "39"].CellStyle.Font.Bold = true;
+            //    worksheet.Range[c.ToString() + "39"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+            //}
 
             if (index == roiStats.Count)
                 break;
@@ -197,20 +201,20 @@ public class MoreViewModel : BaseViewModel
         worksheet.Range["A1:" + lastC + "1"].CellStyle.Font.Size = 14;
         //production and Consumtion result rows
         //worksheet.Range["A7:" + lastC + "8"].CellStyle.Color = Syncfusion.Drawing.Color.Transparent;
-        worksheet.Range["A9:" + lastC + "9"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-        worksheet.Range["A7:" + lastC + "9"].CellStyle.Font.Bold = true;
+        worksheet.Range["A10:" + lastC + "10"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+        worksheet.Range["A8:" + lastC + "10"].CellStyle.Font.Bold = true;
 
         //Costs and Revenues Title
-        worksheet.Range["A10:" + lastC + "10"].CellStyle.Font.Bold = true;
-        worksheet.Range["A10:" + lastC + "10"].CellStyle.Font.Size = 14;
+        worksheet.Range["A11:" + lastC + "11"].CellStyle.Font.Bold = true;
+        worksheet.Range["A11:" + lastC + "11"].CellStyle.Font.Size = 14;
         //production and Consumtion result rows
         //worksheet.Range["A23:" + lastC + "24"].CellStyle.Color = Syncfusion.Drawing.Color.Transparent;
-        worksheet.Range["A26:" + lastC + "26"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
-        worksheet.Range["A23:" + lastC + "26"].CellStyle.Font.Bold = true;
+        worksheet.Range["A28:" + lastC + "28"].CellStyle.Color = Syncfusion.Drawing.Color.Orange;
+        worksheet.Range["A25:" + lastC + "28"].CellStyle.Font.Bold = true;
 
         //FunFacts
-        worksheet.Range["A27:" + lastC + "27"].CellStyle.Font.Bold = true;
-        worksheet.Range["A27:" + lastC + "27"].CellStyle.Font.Size = 14;
+        worksheet.Range["A29:" + lastC + "29"].CellStyle.Font.Bold = true;
+        worksheet.Range["A29:" + lastC + "29"].CellStyle.Font.Size = 14;
 
 
         worksheet.Range[lastC + "2:" + lastC + "39"].CellStyle.Font.Bold = true;
@@ -346,8 +350,7 @@ public class MoreViewModel : BaseViewModel
     {
         using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
-
-        var result = await this.historyService.GenerateTotalPermonthReport();
+        var result = await this.historyService.GenerateTotalPermonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
 
         var resultRoi = this.roiService.CalcSavingsEstimate(result.Model);
 
