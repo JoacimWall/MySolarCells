@@ -30,8 +30,8 @@ public class InverterViewModel : BaseViewModel
             }
 
             UserName = inverter.UserName;
-            Password = StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey); 
-            ApiKey = StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey); 
+            Password = string.IsNullOrEmpty(inverter.Password) ? "" : StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey); 
+            ApiKey = string.IsNullOrEmpty(inverter.ApiKey) ? "" : StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey); 
         }
     }
 
@@ -86,7 +86,7 @@ public class InverterViewModel : BaseViewModel
                 UserName = this.userName,
                 Password = string.IsNullOrEmpty(this.password) ? "" : StringHelper.Encrypt(this.password, AppConstants.Secretkey),
                 ApiUrl = "",
-                ApiKey = StringHelper.Encrypt(this.inverterLoginResponse.token, AppConstants.Secretkey)
+                ApiKey = string.IsNullOrEmpty(this.inverterLoginResponse.token) ? "" : StringHelper.Encrypt(this.inverterLoginResponse.token, AppConstants.Secretkey)
             };
             //TODO:Do we neeed more info from Inverter
             await this.mscDbContext.Inverter.AddAsync(InverterExist);

@@ -32,7 +32,7 @@
                 <Setter Property="HorizontalTextAlignment" Value="End"/>
                 <Setter Property="HorizontalOptions" Value="Fill"/>
                 <Setter Property="VerticalTextAlignment" Value="End"/>
-                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontSize" Value="11" />
                 <Setter Property="HeightRequest" Value="17" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/> 
