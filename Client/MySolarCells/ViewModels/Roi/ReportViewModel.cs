@@ -25,43 +25,50 @@ public class ReportViewModel : BaseViewModel
     public ICommand NextPageCommand => new Command(async () => await NextPage(true));
     private async  Task PrevPage(bool v)
     {
-       
+        using var dlg = DialogService.GetProgress(AppResources.Loading);
+        await Task.Delay(300);
+        for (int i = ReportData.Count - 1; i >= 0; i--)
+        {
+            if (ReportData[i] == SelReportPage && i > 0)
+            {
+                SelReportPage = ReportData[i-1];
+                return;
+            }
+        }
+        
     }
 
   
 
     private async Task NextPage(bool v)
     {
-        SelReportPage = ReportData[1];
-    }
-
-    public async override Task OnAppearingAsync()
-    {
-        await ReloadData(true);
+        using var dlg = DialogService.GetProgress(AppResources.Loading);
+        await Task.Delay(300);
+        for (int i = 0; i < ReportData.Count; i++)
+        {
+            if (ReportData[i] == SelReportPage && i < ReportData.Count - 1)
+            {
+                SelReportPage = ReportData[i+1];
+                return;
+            }
+        }
         
     }
+    public async override Task RefreshAsync(object layoutState)
+    {
+        await ReloadData(true);
+    }
+    
    
     private async Task<bool> ReloadData(bool showProgressDlg)
     {
-        //if (showProgressDlg)
-        //    using var dlg = DialogService.GetProgress("");
-        await Task.Delay(200);
-        // var diffrens = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
-        //if (diffrens.TotalDays > 31)
-        //{
-        //    var ReportStats = await this.roiService.GenerateTotalPermonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
-        //    RoiStats = ReportStats.Model.Item1.First().HistoryStats;
-        //}
-        //else
-        //{
-        //    RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
-        //}
+        using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
+        await Task.Delay(300);
         var result = await this.historyDataService.GenerateTotalPermonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
         var resultRoi = this.roiService.CalcSavingsEstimate(result.Model);
         if (!result.WasSuccessful)
         {
-
-
+            await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
         else
         {

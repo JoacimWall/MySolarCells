@@ -17,7 +17,7 @@
             </Label.GestureRecognizers>
         </Label>
         <!--Right-->
-        <Label   Grid.Row="3" Grid.Column="2" FontSize="25" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
+        <Label   Grid.Row="3" Grid.Column="2" FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Forward_Tapped" />
             </Label.GestureRecognizers>

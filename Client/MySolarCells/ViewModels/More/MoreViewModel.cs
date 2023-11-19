@@ -30,8 +30,10 @@ public class MoreViewModel : BaseViewModel
 
     private async Task ShowReport()
     {
+        //using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
+        //await Task.Delay(200);
         var view = ServiceHelper.GetService<ReportView>();
-       // ((ReportViewModel)view.BindingContext).ApplyQueryAttributes(new Dictionary<string, object> { { nameof(PhotoCropModel), model } });
+        await ((ReportViewModel)view.BindingContext).RefreshAsync(ViewState.Refreshing);
         await PushModal(view);
     }
 

@@ -498,4 +498,10 @@
   <data name="Details_Year" xml:space="preserve">
     <value>Detaljer {0}</value>
   <comment>Need review</comment></data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laster</value>
+  <comment>Need review</comment></data>
+  <data name="Close" xml:space="preserve">
+    <value>Lukk</value>
+  <comment>Need review</comment></data>
 </root>

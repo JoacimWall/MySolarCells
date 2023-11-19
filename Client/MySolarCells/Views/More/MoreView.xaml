@@ -67,12 +67,12 @@
                                     Direction="Row"
                                     JustifyContent="SpaceAround"
                                     Wrap="Wrap">
-                 <!--  ReportViewl  -->
+                 <!--  ReportView  -->
                 <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
-                        FontIcon="{x:Static theming:IconFont.Bargraph}"
+                        FontIcon="{x:Static theming:IconFont.Report}"
                         IsVisible="True"
-                        TitleText="{Binding Source={x:Static trans:AppResources.Show_Report}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
+                        TitleText="{x:Static trans:AppResources.Show_Report}">
                     <control:MenuGridItemView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowReportCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
@@ -82,7 +82,7 @@
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Export_file}"
                         IsVisible="True"
-                        TitleText="{Binding Source={x:Static trans:AppResources.Export_To_Excel}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
+                        TitleText="{x:Static trans:AppResources.Export_To_Excel}">
                     <control:MenuGridItemView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ExportExcelCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>

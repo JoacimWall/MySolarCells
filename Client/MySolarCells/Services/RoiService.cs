@@ -121,19 +121,7 @@ public class RoiService :IRoiService
 
 }
 
-public class EstimateRoi
-{
-    public int Year { get; set; }
-    public double AvargePriceSold { get; set; }
-    public double AvargePrisOwnUse { get; set; }
-    public double ProductionSold { get; set; }
-    public double ProductionOwnUse { get; set; }
-    public double YearSavingsSold { get; set; }
-    public double YearSavingsOwnUse { get; set; }
-    public double ReturnPercentage { get; set; }
-    public double RemainingOnInvestment { get; set; }
 
-}
 public static class SnittProductionMonth
 {
     public static double GetSnitMonth(int month, double installedKwh)

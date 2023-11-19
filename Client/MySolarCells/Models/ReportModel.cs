@@ -21,7 +21,7 @@ public class ReportModelTemplatesSelector : DataTemplateSelector
 
     public DataTemplate SavingEssitmate_Template { get; set; }
     public DataTemplate YearsOverview_Template { get; set; }
-    public DataTemplate YearDetails_Template { get; set; }
+    //public DataTemplate YearDetails_Template { get; set; }
 
 
 
@@ -40,9 +40,8 @@ public class ReportModelTemplatesSelector : DataTemplateSelector
                 case ReportPageTyp.SavingEssitmate:
                     return SavingEssitmate_Template;
                 case ReportPageTyp.YearsOverview:
-                    return YearsOverview_Template;
                 case ReportPageTyp.YearDetails:
-                    return YearDetails_Template;
+                    return YearsOverview_Template;
                
                 default:
                     return new DataTemplate();

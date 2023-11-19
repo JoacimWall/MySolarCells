@@ -11,312 +11,193 @@
                         x:DataType="vm:ReportViewModel">
     <ContentPage.Resources>
         <ResourceDictionary>
+            <Style x:Key="ReportTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Margin" Value="2,2,2,0" />
+                <Setter Property="Padding" Value="2,0,2,0"/> 
+                <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray400Color}" />
+            </Style>
+            <Style x:Key="ReportSubTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="VerticalTextAlignment" Value="End"/>
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="HeightRequest" Value="17" />
+                <Setter Property="Margin" Value="2,2,2,0" />
+                <Setter Property="Padding" Value="2,0,2,0"/> 
+                <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray400Color}" />
+            </Style>
+            <Style x:Key="ReportTextValueStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
+                <Setter Property="HorizontalTextAlignment" Value="End"/>
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalTextAlignment" Value="End"/>
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="HeightRequest" Value="17" />
+                <Setter Property="Margin" Value="2,2,2,0" />
+                <Setter Property="Padding" Value="2,0,2,0"/> 
+                <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray200Color}" />
+            </Style>
 
             <DataTemplate x:Key="SavingEssitmate_Template" x:DataType="ml:ReportModel">
-                <Grid BackgroundColor="{x:Static theming:AppColors.Gray100Color}"  ColumnSpacing="8" RowSpacing="4" Padding="8"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                      ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <BoxView Margin="-8,0" Grid.Row="0" Grid.ColumnSpan="10" Grid.RowSpan="3" BackgroundColor="{x:Static theming:AppColors.Gray300Color}"/>
-                    <!--YEAR-->
-                    <Label Grid.Row="1" Grid.Column="0"  FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
-                    <Label Grid.Row="3" Grid.Column="0" Text="{Binding EstimatRoi[0].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="0" Text="{Binding EstimatRoi[1].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="0" Text="{Binding EstimatRoi[2].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="0" Text="{Binding EstimatRoi[3].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="0" Text="{Binding EstimatRoi[4].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="0" Text="{Binding EstimatRoi[5].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="0" Text="{Binding EstimatRoi[6].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="0" Text="{Binding EstimatRoi[7].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="0" Text="{Binding EstimatRoi[8].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="0" Text="{Binding EstimatRoi[9].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="0" Text="{Binding EstimatRoi[10].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="0" Text="{Binding EstimatRoi[11].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="0" Text="{Binding EstimatRoi[12].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="0" Text="{Binding EstimatRoi[13].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="0" Text="{Binding EstimatRoi[14].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="0" Text="{Binding EstimatRoi[15].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="0" Text="{Binding EstimatRoi[16].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="0" Text="{Binding EstimatRoi[17].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="0" Text="{Binding EstimatRoi[18].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="0" Text="{Binding EstimatRoi[19].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="0" Text="{Binding EstimatRoi[20].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="0" Text="{Binding EstimatRoi[21].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="0" Text="{Binding EstimatRoi[22].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="0" Text="{Binding EstimatRoi[23].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="0" Text="{Binding EstimatRoi[24].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="0" Text="{Binding EstimatRoi[25].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="0" Text="{Binding EstimatRoi[26].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="0" Text="{Binding EstimatRoi[27].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="0" Text="{Binding EstimatRoi[28].Year}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="0" Text="{Binding EstimatRoi[29].Year}" HorizontalTextAlignment="End"/>
-                    <!--PRICE-->
-                    <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Prices}"/>
-                    <Label Grid.Row="2" Grid.Column="2" Text="{x:Static trans:AppResources.Sold}" FontSize="12" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="2" Grid.Column="3" Text="{x:Static trans:AppResources.Own_Use}" FontSize="12" HorizontalTextAlignment="End" />
-                    <Label Grid.Row="3" Grid.Column="2" Text="{Binding EstimatRoi[0].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="3" Grid.Column="3" Text="{Binding EstimatRoi[0].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="2" Text="{Binding EstimatRoi[1].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="3" Text="{Binding EstimatRoi[1].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="2" Text="{Binding EstimatRoi[2].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="3" Text="{Binding EstimatRoi[2].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="2" Text="{Binding EstimatRoi[3].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="3" Text="{Binding EstimatRoi[3].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="2" Text="{Binding EstimatRoi[4].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="3" Text="{Binding EstimatRoi[4].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="2" Text="{Binding EstimatRoi[5].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="3" Text="{Binding EstimatRoi[5].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="2" Text="{Binding EstimatRoi[6].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="3" Text="{Binding EstimatRoi[6].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="2" Text="{Binding EstimatRoi[7].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="3" Text="{Binding EstimatRoi[7].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="2" Text="{Binding EstimatRoi[8].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="3" Text="{Binding EstimatRoi[8].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="2" Text="{Binding EstimatRoi[9].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="3" Text="{Binding EstimatRoi[9].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="2" Text="{Binding EstimatRoi[10].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="3" Text="{Binding EstimatRoi[10].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="2" Text="{Binding EstimatRoi[11].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="3" Text="{Binding EstimatRoi[11].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="2" Text="{Binding EstimatRoi[12].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="3" Text="{Binding EstimatRoi[12].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="2" Text="{Binding EstimatRoi[13].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="3" Text="{Binding EstimatRoi[13].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="2" Text="{Binding EstimatRoi[14].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="3" Text="{Binding EstimatRoi[14].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="2" Text="{Binding EstimatRoi[15].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="3" Text="{Binding EstimatRoi[15].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="2" Text="{Binding EstimatRoi[16].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="3" Text="{Binding EstimatRoi[16].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="2" Text="{Binding EstimatRoi[17].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="3" Text="{Binding EstimatRoi[17].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="2" Text="{Binding EstimatRoi[18].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="3" Text="{Binding EstimatRoi[18].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="2" Text="{Binding EstimatRoi[19].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="3" Text="{Binding EstimatRoi[19].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="2" Text="{Binding EstimatRoi[20].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="3" Text="{Binding EstimatRoi[20].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="2" Text="{Binding EstimatRoi[21].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="3" Text="{Binding EstimatRoi[21].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="2" Text="{Binding EstimatRoi[22].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="3" Text="{Binding EstimatRoi[22].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="2" Text="{Binding EstimatRoi[23].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="3" Text="{Binding EstimatRoi[23].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="2" Text="{Binding EstimatRoi[24].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="3" Text="{Binding EstimatRoi[24].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="2" Text="{Binding EstimatRoi[25].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="3" Text="{Binding EstimatRoi[25].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="2" Text="{Binding EstimatRoi[26].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="3" Text="{Binding EstimatRoi[26].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="2" Text="{Binding EstimatRoi[27].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="3" Text="{Binding EstimatRoi[27].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="2" Text="{Binding EstimatRoi[28].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="3" Text="{Binding EstimatRoi[28].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="2" Text="{Binding EstimatRoi[29].AvargePriceSold, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="3" Text="{Binding EstimatRoi[29].AvargePrisOwnUse, StringFormat='{0:F2} kr'}" HorizontalTextAlignment="End"/>
+                <ScrollView Grid.Column="1" Orientation="Horizontal">
+                    <Grid RowDefinitions="Auto,Auto,*">
+                        <!--Titels-->
+                        <HorizontalStackLayout Grid.Row="0">
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="40" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="84" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Prices}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Production}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Annual_Savings}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="84" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Yield}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="104" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Investment}"/>
 
-                    <!--PRODUCTION-->
-                    <Label Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Production}"/>
-                    <Label Grid.Row="2" Grid.Column="4" Text="{x:Static trans:AppResources.Sold}" FontSize="12" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="2" Grid.Column="5" Text="{x:Static trans:AppResources.Own_Use}" FontSize="12" HorizontalTextAlignment="End" />
-                    <Label Grid.Row="3" Grid.Column="4" Text="{Binding EstimatRoi[0].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="3" Grid.Column="5" Text="{Binding EstimatRoi[0].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="4" Text="{Binding EstimatRoi[1].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="5" Text="{Binding EstimatRoi[1].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="4" Text="{Binding EstimatRoi[2].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="5" Text="{Binding EstimatRoi[2].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="4" Text="{Binding EstimatRoi[3].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="5" Text="{Binding EstimatRoi[3].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="4" Text="{Binding EstimatRoi[4].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="5" Text="{Binding EstimatRoi[4].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="4" Text="{Binding EstimatRoi[5].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="5" Text="{Binding EstimatRoi[5].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="4" Text="{Binding EstimatRoi[6].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="5" Text="{Binding EstimatRoi[6].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="4" Text="{Binding EstimatRoi[7].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="5" Text="{Binding EstimatRoi[7].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="4" Text="{Binding EstimatRoi[8].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="5" Text="{Binding EstimatRoi[8].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="4" Text="{Binding EstimatRoi[9].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="5" Text="{Binding EstimatRoi[9].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="4" Text="{Binding EstimatRoi[10].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="5" Text="{Binding EstimatRoi[10].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="4" Text="{Binding EstimatRoi[11].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="5" Text="{Binding EstimatRoi[11].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="4" Text="{Binding EstimatRoi[12].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="5" Text="{Binding EstimatRoi[12].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="4" Text="{Binding EstimatRoi[13].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="5" Text="{Binding EstimatRoi[13].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="4" Text="{Binding EstimatRoi[14].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="5" Text="{Binding EstimatRoi[14].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="4" Text="{Binding EstimatRoi[15].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="5" Text="{Binding EstimatRoi[15].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="4" Text="{Binding EstimatRoi[16].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="5" Text="{Binding EstimatRoi[16].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="4" Text="{Binding EstimatRoi[17].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="5" Text="{Binding EstimatRoi[17].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="4" Text="{Binding EstimatRoi[18].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="5" Text="{Binding EstimatRoi[18].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="4" Text="{Binding EstimatRoi[19].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="5" Text="{Binding EstimatRoi[19].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="4" Text="{Binding EstimatRoi[20].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="5" Text="{Binding EstimatRoi[20].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="4" Text="{Binding EstimatRoi[21].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="5" Text="{Binding EstimatRoi[21].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="4" Text="{Binding EstimatRoi[22].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="5" Text="{Binding EstimatRoi[22].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="4" Text="{Binding EstimatRoi[23].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="5" Text="{Binding EstimatRoi[23].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="4" Text="{Binding EstimatRoi[24].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="5" Text="{Binding EstimatRoi[24].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="4" Text="{Binding EstimatRoi[25].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="5" Text="{Binding EstimatRoi[25].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="4" Text="{Binding EstimatRoi[26].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="5" Text="{Binding EstimatRoi[26].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="4" Text="{Binding EstimatRoi[27].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="5" Text="{Binding EstimatRoi[27].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="4" Text="{Binding EstimatRoi[28].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="5" Text="{Binding EstimatRoi[28].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="4" Text="{Binding EstimatRoi[29].ProductionSold, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="5" Text="{Binding EstimatRoi[28].ProductionOwnUse, StringFormat='{0:F0} kWh'}" HorizontalTextAlignment="End"/>
 
-                    <!--SAVING-->
-                    <Label Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Annual_Savings}"/>
-                    <Label Grid.Row="2" Grid.Column="6" Text="{x:Static trans:AppResources.Sold}" FontSize="12" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="2" Grid.Column="7" Text="{x:Static trans:AppResources.Own_Use}" FontSize="12" HorizontalTextAlignment="End" />
-                    <Label Grid.Row="3" Grid.Column="6" Text="{Binding EstimatRoi[0].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="3" Grid.Column="7" Text="{Binding EstimatRoi[0].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="6" Text="{Binding EstimatRoi[1].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="7" Text="{Binding EstimatRoi[1].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="6" Text="{Binding EstimatRoi[2].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="7" Text="{Binding EstimatRoi[2].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="6" Text="{Binding EstimatRoi[3].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="7" Text="{Binding EstimatRoi[3].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="6" Text="{Binding EstimatRoi[4].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="7" Text="{Binding EstimatRoi[4].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="6" Text="{Binding EstimatRoi[5].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="7" Text="{Binding EstimatRoi[5].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="6" Text="{Binding EstimatRoi[6].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="7" Text="{Binding EstimatRoi[6].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="6" Text="{Binding EstimatRoi[7].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="7" Text="{Binding EstimatRoi[7].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="6" Text="{Binding EstimatRoi[8].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="7" Text="{Binding EstimatRoi[8].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="6" Text="{Binding EstimatRoi[9].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="7" Text="{Binding EstimatRoi[9].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="6" Text="{Binding EstimatRoi[10].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="7" Text="{Binding EstimatRoi[10].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="6" Text="{Binding EstimatRoi[11].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="7" Text="{Binding EstimatRoi[11].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="6" Text="{Binding EstimatRoi[12].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="7" Text="{Binding EstimatRoi[12].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="6" Text="{Binding EstimatRoi[13].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="7" Text="{Binding EstimatRoi[13].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="6" Text="{Binding EstimatRoi[14].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="7" Text="{Binding EstimatRoi[14].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="6" Text="{Binding EstimatRoi[15].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="7" Text="{Binding EstimatRoi[15].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="6" Text="{Binding EstimatRoi[16].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="7" Text="{Binding EstimatRoi[16].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="6" Text="{Binding EstimatRoi[17].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="7" Text="{Binding EstimatRoi[17].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="6" Text="{Binding EstimatRoi[18].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="7" Text="{Binding EstimatRoi[18].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="6" Text="{Binding EstimatRoi[19].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="7" Text="{Binding EstimatRoi[19].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="6" Text="{Binding EstimatRoi[20].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="7" Text="{Binding EstimatRoi[20].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="6" Text="{Binding EstimatRoi[21].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="7" Text="{Binding EstimatRoi[21].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="6" Text="{Binding EstimatRoi[22].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="7" Text="{Binding EstimatRoi[22].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="6" Text="{Binding EstimatRoi[23].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="7" Text="{Binding EstimatRoi[23].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="6" Text="{Binding EstimatRoi[24].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="7" Text="{Binding EstimatRoi[24].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="6" Text="{Binding EstimatRoi[25].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="7" Text="{Binding EstimatRoi[25].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="6" Text="{Binding EstimatRoi[26].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="7" Text="{Binding EstimatRoi[26].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="6" Text="{Binding EstimatRoi[27].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="7" Text="{Binding EstimatRoi[27].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="6" Text="{Binding EstimatRoi[28].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="7" Text="{Binding EstimatRoi[28].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="6" Text="{Binding EstimatRoi[29].ProductionSold, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="7" Text="{Binding EstimatRoi[29].ProductionOwnUse, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Grid.Row="1">
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text=" "  HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Sold}" HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Own_Use}" HorizontalTextAlignment="End" />
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="84" Text=" "  HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="104" Text=" "  HorizontalTextAlignment="End"/>
+                        </HorizontalStackLayout>
+                        <ScrollView Grid.Row="2" Orientation="Vertical">
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding EstimatRoi}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="ml:EstimateRoi">
+                                        <Grid ColumnDefinitions="44,44,44,64,64,64,64,88,108">
+                                            <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" Text="{Binding Year}" />
+                                            <Label Grid.Column="1" Style="{StaticResource ReportTextValueStyle}" Text="{Binding AvargePriceSold, StringFormat='{0:F2} kr'}" />
+                                            <Label Grid.Column="2" Style="{StaticResource ReportTextValueStyle}" Text="{Binding AvargePrisOwnUse, StringFormat='{0:F2} kr'}" />
+                                            <Label Grid.Column="3" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ProductionSold, StringFormat='{0:F0} kWh'}" />
+                                            <Label Grid.Column="4" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ProductionOwnUse, StringFormat='{0:F0} kWh'}" />
+                                            <Label Grid.Column="5" Style="{StaticResource ReportTextValueStyle}" Text="{Binding YearSavingsSold, StringFormat='{0:F0} kr'}" />
+                                            <Label Grid.Column="6" Style="{StaticResource ReportTextValueStyle}" Text="{Binding YearSavingsOwnUse, StringFormat='{0:F0} kr'}" />
+                                            <Label Grid.Column="7" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ReturnPercentage, StringFormat='{0:F2} %'}" />
+                                            <Label Grid.Column="8" Style="{StaticResource ReportTextValueStyle}" Text="{Binding RemainingOnInvestment, StringFormat='{0:F0} kr'}" />
 
-                    <!--Yield-->
-                    <Label Grid.Row="1" Grid.Column="8"  FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Yield}"/>
-                    <Label Grid.Row="3" Grid.Column="8" Text="{Binding EstimatRoi[0].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="8" Text="{Binding EstimatRoi[1].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="8" Text="{Binding EstimatRoi[2].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="8" Text="{Binding EstimatRoi[3].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="8" Text="{Binding EstimatRoi[4].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="8" Text="{Binding EstimatRoi[5].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="8" Text="{Binding EstimatRoi[6].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="8" Text="{Binding EstimatRoi[7].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="8" Text="{Binding EstimatRoi[8].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="8" Text="{Binding EstimatRoi[9].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="8" Text="{Binding EstimatRoi[10].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="8" Text="{Binding EstimatRoi[11].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="8" Text="{Binding EstimatRoi[12].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="8" Text="{Binding EstimatRoi[13].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="8" Text="{Binding EstimatRoi[14].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="8" Text="{Binding EstimatRoi[15].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="8" Text="{Binding EstimatRoi[16].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="8" Text="{Binding EstimatRoi[17].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="8" Text="{Binding EstimatRoi[18].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="8" Text="{Binding EstimatRoi[19].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="8" Text="{Binding EstimatRoi[20].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="8" Text="{Binding EstimatRoi[21].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="8" Text="{Binding EstimatRoi[22].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="8" Text="{Binding EstimatRoi[23].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="8" Text="{Binding EstimatRoi[24].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="8" Text="{Binding EstimatRoi[25].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="8" Text="{Binding EstimatRoi[26].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="8" Text="{Binding EstimatRoi[27].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="8" Text="{Binding EstimatRoi[28].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="8" Text="{Binding EstimatRoi[29].ReturnPercentage, StringFormat='{0:F2} %'}" HorizontalTextAlignment="End"/>
 
-                    <!--Yield-->
-                    <Label Grid.Row="1" Grid.Column="9"  FontSize="17" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Investment}"/>
-                    <Label Grid.Row="3" Grid.Column="9" Text="{Binding EstimatRoi[0].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="4" Grid.Column="9" Text="{Binding EstimatRoi[1].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="5" Grid.Column="9" Text="{Binding EstimatRoi[2].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="6" Grid.Column="9" Text="{Binding EstimatRoi[3].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="7" Grid.Column="9" Text="{Binding EstimatRoi[4].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="8" Grid.Column="9" Text="{Binding EstimatRoi[5].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="9" Grid.Column="9" Text="{Binding EstimatRoi[6].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="10" Grid.Column="9" Text="{Binding EstimatRoi[7].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="11" Grid.Column="9" Text="{Binding EstimatRoi[8].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="12" Grid.Column="9" Text="{Binding EstimatRoi[9].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="13" Grid.Column="9" Text="{Binding EstimatRoi[10].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="14" Grid.Column="9" Text="{Binding EstimatRoi[11].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="15" Grid.Column="9" Text="{Binding EstimatRoi[12].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="16" Grid.Column="9" Text="{Binding EstimatRoi[13].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="17" Grid.Column="9" Text="{Binding EstimatRoi[14].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="18" Grid.Column="9" Text="{Binding EstimatRoi[15].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="19" Grid.Column="9" Text="{Binding EstimatRoi[16].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="20" Grid.Column="9" Text="{Binding EstimatRoi[17].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="21" Grid.Column="9" Text="{Binding EstimatRoi[18].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="22" Grid.Column="9" Text="{Binding EstimatRoi[19].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="23" Grid.Column="9" Text="{Binding EstimatRoi[20].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="24" Grid.Column="9" Text="{Binding EstimatRoi[21].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="25" Grid.Column="9" Text="{Binding EstimatRoi[22].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="26" Grid.Column="9" Text="{Binding EstimatRoi[23].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="27" Grid.Column="9" Text="{Binding EstimatRoi[24].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="28" Grid.Column="9" Text="{Binding EstimatRoi[25].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="29" Grid.Column="9" Text="{Binding EstimatRoi[26].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="30" Grid.Column="9" Text="{Binding EstimatRoi[27].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="31" Grid.Column="9" Text="{Binding EstimatRoi[28].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Row="32" Grid.Column="9" Text="{Binding EstimatRoi[29].RemainingOnInvestment, StringFormat='{0:F0} kr'}" HorizontalTextAlignment="End"/>
-                </Grid>
+                                        </Grid>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </Grid>
+                </ScrollView>
             </DataTemplate>
             <DataTemplate x:Key="YearsOverview_Template" x:DataType="ml:ReportModel">
-                <Grid  RowDefinitions="Auto,Auto,30,*" >
+                <ScrollView Grid.Column="1" Orientation="Vertical">
+                    <Grid  RowDefinitions="*" ColumnDefinitions="Auto,*" >
+                        <!--Titles-->
+                        <VerticalStackLayout >
+                            <Label Style="{StaticResource ReportTitleStyle}" Text="{x:Static trans:AppResources.Production_And_Consumption}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Sold}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Battery_Charge}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Own_Use}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Purchased}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Battery_used}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Peak_Hour_Purchased_And_Own_Use}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Energy_Peak_Reduction}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Consumption}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text=" "/>
+                            <!-- COSTS AND REVENUES-->
+                            <Label Style="{StaticResource ReportTitleStyle}" Text="{x:Static trans:AppResources.Costs_And_Rvenues}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production_Profit_Sold}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production_Grid_Compensation}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production_Saved_Energy_Tax}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Own_Use_Saved_Cost}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Own_Use_Saved_Transfer_Fee}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Own_Use_Saved_Energy_Tax}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Saved_Cost_Battery}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Saved_Transfer_Fee_Battery}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Saved_Energy_Tax_Battery}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Purchase_Cost}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Purchase_Transfer_Fee}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Purchase_Energy_Tax}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Energy_Peak_Reduction_Saved}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Interest}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Consumption}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Balance_Production_Minus_Consumption}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text=" "/>
+                            <!--FUN FACTS-->
+                            <Label Style="{StaticResource ReportTitleStyle}" Text="{x:Static trans:AppResources.Fun_Facts}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Per_Day_KWh}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Average_Purchased_Cost_Per_Kwh}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Average_Production_Sold_Profit_Per_Kwh}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Average_Production_Own_Use_Saved_Per_Kwh}"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" Text="{x:Static trans:AppResources.Average_Battery_Used_Saved_Per_Kwh}"/>
+                        </VerticalStackLayout>
+                        <!--Data-->
+                        <ScrollView Grid.Column="1" Orientation="Horizontal">
+                            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Stats}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="ml:ReportHistoryStats">
+                                        <VerticalStackLayout >
+                                            <!--Command="{Binding Source={RelativeSource AncestorType={x:Type vm:StoryViewModel}}, Path=CampaignTappedCommand}"-->
+                                            <Label Style="{StaticResource ReportTitleStyle}"  HorizontalTextAlignment="End" >
+                                                <Label.Text>
+                                                    <MultiBinding Converter="{StaticResource TimeStampToStringConverter}">
+                                                        <Binding Path="FromDate" />
+                                                        <Binding Path="ReportPageTyp" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSold, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryCharge, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionOwnUse, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.Purchased, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryUsed, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PeakPurchasedAndOwnUsage, StringFormat='{0:F0} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PeakEnergyReduction, StringFormat='{0:F0} kWh'}"/>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.SumAllProduction, StringFormat='{0:F0} kWh'}"/>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.SumAllConsumption, StringFormat='{0:F0} kWh'}"  />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BalanceProduction_Minus_Consumption, StringFormat='{0:F0} kWh'}"  />
+                                            <Label Style="{StaticResource ReportSubTitleStyle}" Text=" "/>
+                                            <Label Style="{StaticResource ReportTitleStyle}" Text=" "/>
+                                            <!-- COSTS AND REVENUES-->
 
-                    <Label TextColor="Black" Text="efsdfdsf"/>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSoldProfit, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSoldGridCompensationProfit, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSoldTaxReductionProfit, StringFormat='{0:F0} kr'}"/>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionOwnUseSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionOwnUseTransferFeeSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionOwnUseEnergyTaxSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryUsedSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryUseTransferFeeSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryUseEnergyTaxSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PurchasedCost, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PurchasedTransferFeeCost, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PurchasedTaxCost, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.PeakEnergyReductionSaved, StringFormat='{0:F0} kr'}" />
 
-                </Grid>
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.SumAllProductionSoldAndSaved, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.InterestCost, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.SumPurchasedCost, StringFormat='{0:F0} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BalanceProductionProfit_Minus_ConsumptionCost, StringFormat='{0:F0} kr'}"  />
+                                            <Label Style="{StaticResource ReportSubTitleStyle}" Text=" "/>
+                                            <Label Style="{StaticResource ReportTitleStyle}" Text=" "/>
+                                            <!--FUN FACTS-->
+
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.FactsProductionIndex, StringFormat='{0:F2} kWh'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.FactsPurchasedCostAveragePerKwhPurchased, StringFormat='{0:F2} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.FactsProductionSoldAveragePerKwhProfit, StringFormat='{0:F2} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.FactsProductionOwnUseAveragePerKwhSaved, StringFormat='{0:F2} kr'}" />
+                                            <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.FactsBatteryUsedAveragePerKwhSaved, StringFormat='{0:F2} kr'}"/>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+
+                        </ScrollView>
+                    </Grid>
+                </ScrollView>
             </DataTemplate>
             <DataTemplate x:Key="YearDetails_Template" x:DataType="ml:ReportModel">
                 <Grid  RowDefinitions="Auto,Auto,30,*" >
@@ -328,38 +209,37 @@
             <ml:ReportModelTemplatesSelector x:Key="ReportModelTemplatesSelector"
                                                  SavingEssitmate_Template="{StaticResource SavingEssitmate_Template}"
                                                  YearsOverview_Template="{StaticResource YearsOverview_Template}"
-                                                 YearDetails_Template="{StaticResource YearDetails_Template}" />
+                                                  />
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid RowDefinitions="Auto,*" >
-        <Grid Margin="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
+        <Grid Margin="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
+            <!--Title-->
             <Label FontSize="20" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Report}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-             <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-           
+            <!--navback-->
+            <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="14" TextColor="{x:Static theming:AppColors.BlackColor}" Text="{x:Static trans:AppResources.Close}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+         
+            <!--SubTitle-->
+            <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+
             <!--Left-->
-            <Label   Grid.Row="3"  FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Left}" FontFamily="AppIconsFont"  VerticalTextAlignment="Center" HorizontalTextAlignment="Start" >
+            <Label   Grid.Row="1"  FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Left}" FontFamily="AppIconsFont"  VerticalTextAlignment="Center" HorizontalTextAlignment="Start" >
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding PrevPageCommand}" />
                 </Label.GestureRecognizers>
             </Label>
             <!--Right-->
-            <Label   Grid.Row="3" Grid.Column="2" FontSize="25" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
+            <Label   Grid.Row="1" Grid.Column="2" FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NextPageCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
 
-        <ScrollView Grid.Row="1" Orientation="Both" >
-            <!--<VerticalStackLayout Style="{StaticResource GridBasePage}"  BindableLayout.ItemsSource="{Binding SelReportPage.EstimatRoi}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate >
-                            <Label Text="{Binding Year }"/> 
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>-->
-            <control:TemplatedContentPresenter Data="{Binding SelReportPage}" VerticalOptions="Fill" HorizontalOptions="Fill" DataTemplateSelector="{StaticResource ReportModelTemplatesSelector}" />
-        </ScrollView>
+        <!--<ScrollView Grid.Row="1" Orientation="Both" >
+          </ScrollView>-->
+        <control:TemplatedContentPresenter Grid.Row="1" Data="{Binding SelReportPage}" VerticalOptions="Fill" HorizontalOptions="Fill" DataTemplateSelector="{StaticResource ReportModelTemplatesSelector}" />
+
 
     </Grid>
 </views:BaseContentPage>

@@ -7,6 +7,7 @@ namespace MySolarCells.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+
             if (value == null)
                 return null;
 
@@ -27,6 +28,7 @@ namespace MySolarCells.Converters
             //}
 
             return null;
+           
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

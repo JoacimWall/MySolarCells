@@ -301,6 +301,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compensation electricity load.
         /// </summary>
         public static string Compensation_Electricity_Load {
@@ -711,6 +720,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Left_Of_Investment_Cost {
             get {
                 return ResourceManager.GetString("Left_Of_Investment_Cost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
         

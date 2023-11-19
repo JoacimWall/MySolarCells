@@ -178,7 +178,7 @@
     <value>Uppdatera</value>
   <comment>Need review</comment></data>
   <data name="Export_To_Excel" xml:space="preserve">
-    <value>exportera till Excel</value>
+    <value>Exportera till Excel</value>
   <comment>Need review</comment></data>
   <data name="Install_Year" xml:space="preserve">
     <value>Installationsår</value>
@@ -295,7 +295,7 @@
     <value>Totalt köpt</value>
   <comment>Need review</comment></data>
   <data name="Production_And_Consumption" xml:space="preserve">
-    <value>Produktion och konsumtion</value>
+    <value>Prod.. och kons..</value>
   <comment>Need review</comment></data>
   <data name="Today" xml:space="preserve">
     <value>I dag</value>
@@ -322,22 +322,22 @@
     <value>Kostnader och intäkter</value>
   <comment>Need review</comment></data>
   <data name="Production_Profit_Sold" xml:space="preserve">
-    <value>Produktionsvinst såld</value>
+    <value>Prod sålt</value>
   <comment>Need review</comment></data>
   <data name="Production_Grid_Compensation" xml:space="preserve">
-    <value>Production nätnytta</value>
+    <value>Prod nätnytta</value>
   <comment>Need review</comment></data>
   <data name="Production_Saved_Energy_Tax" xml:space="preserve">
-    <value>Produktionsbesparing energiskatt</value>
+    <value>Prod energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Own_Use_Saved_Cost" xml:space="preserve">
     <value>Egen anv. sparad kostnad</value>
   <comment>Need review</comment></data>
   <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
-    <value>Egen anv. sparad överföringsavg.</value>
+    <value>Egen anv. överföringsavg.</value>
   <comment>Need review</comment></data>
   <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
-    <value>Egen anv. sparad energiskatt</value>
+    <value>Egen anv. energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Purchase_Cost" xml:space="preserve">
     <value>Inköp kostnad</value>
@@ -355,7 +355,7 @@
     <value>Ta bort batteriet</value>
   <comment>Need review</comment></data>
   <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
-    <value>Balans (produktion - förbrukning)</value>
+    <value>Balans (prod.. - förb..)</value>
   <comment>Need review</comment></data>
   <data name="Battery" xml:space="preserve">
     <value>Batteri</value>
@@ -427,16 +427,16 @@
     <value>Roliga fakta</value>
   <comment>Need review</comment></data>
   <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
-    <value>Genomsnittlig köpt kostnad/kWh</value>
+    <value>Snittpris inköp</value>
   <comment>Need review</comment></data>
   <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
-    <value>Genomsnittlig produktion såld vinst/kWh</value>
+    <value>Snittpris såld</value>
   <comment>Need review</comment></data>
   <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
-    <value>Genomsnittlig produktion egen användning sparad/Kwh</value>
+    <value>Snittpris egen använding</value>
   <comment>Need review</comment></data>
   <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
-    <value>Genomsnittligt använt batteri sparat/Kwh</value>
+    <value>Snittpris batteri</value>
   <comment>Need review</comment></data>
   <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
     <value>Synkroniseringen har inte startat eftersom vi har all data fram till föregående hela timme.</value>
@@ -466,7 +466,7 @@
     <value>Högsta inköpta kwh/timme</value>
   <comment>Need review</comment></data>
   <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
-    <value>Högst inköpt och eget bruk Kwh/Timme</value>
+    <value>Max förbrukning</value>
   <comment>Need review</comment></data>
   <data name="Energy_Peak_Reduction" xml:space="preserve">
     <value>Energitoppsreduktion</value>
@@ -497,5 +497,11 @@
   <comment>Need review</comment></data>
   <data name="Details_Year" xml:space="preserve">
     <value>Detaljer {0}</value>
+  <comment>Need review</comment></data>
+  <data name="Loading" xml:space="preserve">
+    <value>Läser in</value>
+  <comment>Need review</comment></data>
+  <data name="Close" xml:space="preserve">
+    <value>Stäng</value>
   <comment>Need review</comment></data>
 </root>

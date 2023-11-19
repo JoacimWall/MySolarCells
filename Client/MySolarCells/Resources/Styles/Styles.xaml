@@ -14,6 +14,7 @@
     <!--  Local converters  -->
     <converters:ImageHeightFromDisplayWidthConverter x:Key="ImageHeightFromDisplayWidthConverter" />
     <converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter" />
+     <converters:TimeStampToStringConverter x:Key="TimeStampToStringConverter" />
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={x:Static theming:AppColors.Gray400Color}, Dark={x:Static theming:AppColors.WhiteColor}}" />
