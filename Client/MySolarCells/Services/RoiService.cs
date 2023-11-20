@@ -88,13 +88,13 @@ public class RoiService :IRoiService
         //Future years
         int startYear = historyStats.Item1.Last().FromDate.AddYears(1).Year;
         int endYear = historyStats.Item1.First().FromDate.AddYears(30).Year;
-       
+
         //double realutvecklingElpris = 1.05;
         //double degrageringPerAr = 0.0025;
-       
+
         //Räkna upp alla värden
 
-
+        bool roiYearSet = false;
         for (int i = startYear; i < endYear; i++)
         {
             var newYear = new EstimateRoi
@@ -113,7 +113,14 @@ public class RoiService :IRoiService
             totalSaving = totalSaving + savingThisYear;
             newYear.RemainingOnInvestment = Math.Round(lastknownInvestment - totalSaving, 0);
             if (newYear.RemainingOnInvestment < 0)
-                newYear.RemainingOnInvestment =Math.Abs(newYear.RemainingOnInvestment);
+            {
+                newYear.RemainingOnInvestment = Math.Abs(newYear.RemainingOnInvestment);
+                if (!roiYearSet)
+                {
+                    newYear.IsRoiYear = true;
+                    roiYearSet = true;
+                }
+            }
             newYear.ReturnPercentage = Math.Round((savingThisYear / lastknownInvestment) * 100, 1);
 
             
@@ -128,34 +135,34 @@ public class RoiService :IRoiService
 
 public static class SnittProductionMonth
 {
-    public static double GetSnitMonth(int month, double installedKwh)
+    public static double GetSnitMonth(int month, double installedKw)
     {
         switch (month)
         {
             case 1:
-                return 13.9 * installedKwh;
+                return 13.9 * installedKw;
             case 2:
-                return 32.3 * installedKwh;
+                return 32.3 * installedKw;
             case 3:
-                return 85.05 * installedKwh;
+                return 85.05 * installedKw;
             case 4:
-                return 120.75 * installedKwh;
+                return 120.75 * installedKw;
             case 5:
-                return 137.95 * installedKwh;
+                return 137.95 * installedKw;
             case 6:
-                return 136.55 * installedKwh;
+                return 136.55 * installedKw;
             case 7:
-                return 134.9 * installedKwh;
+                return 134.9 * installedKw;
             case 8:
-                return 115.65 * installedKwh;
+                return 115.65 * installedKw;
             case 9:
-                return 89.9 * installedKwh;
+                return 89.9 * installedKw;
             case 10:
-                return 54.05 * installedKwh;
+                return 54.05 * installedKw;
             case 11:
-                return 19.6 * installedKwh;
+                return 19.6 * installedKw;
             case 12:
-                return 9.6 * installedKwh;
+                return 9.6 * installedKw;
             default:
                 return 0;
 

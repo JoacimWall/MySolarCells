@@ -69,17 +69,15 @@
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="ml:EstimateRoi">
                                         <Grid ColumnDefinitions="44,44,44,64,64,64,64,88,108">
-                                            <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" Text="{Binding Year}" />
-                                            <Label Grid.Column="1" Style="{StaticResource ReportTextValueStyle}" Text="{Binding AvargePriceSold, StringFormat='{0:F2} kr'}" />
-                                            <Label Grid.Column="2" Style="{StaticResource ReportTextValueStyle}" Text="{Binding AvargePrisOwnUse, StringFormat='{0:F2} kr'}" />
-                                            <Label Grid.Column="3" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ProductionSold, StringFormat='{0:F0} kWh'}" />
-                                            <Label Grid.Column="4" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ProductionOwnUse, StringFormat='{0:F0} kWh'}" />
-                                            <Label Grid.Column="5" Style="{StaticResource ReportTextValueStyle}" Text="{Binding YearSavingsSold, StringFormat='{0:F0} kr'}" />
-                                            <Label Grid.Column="6" Style="{StaticResource ReportTextValueStyle}" Text="{Binding YearSavingsOwnUse, StringFormat='{0:F0} kr'}" />
-                                            <Label Grid.Column="7" Style="{StaticResource ReportTextValueStyle}" Text="{Binding ReturnPercentage, StringFormat='{0:F2} %'}" />
-                                            <Label Grid.Column="8" Style="{StaticResource ReportTextValueStyle}" Text="{Binding RemainingOnInvestment, StringFormat='{0:F0} kr'}" />
-
-
+                                            <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding Year}" />
+                                            <Label Grid.Column="1" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AvargePriceSold, StringFormat='{0:F2} kr'}" />
+                                            <Label Grid.Column="2" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AvargePrisOwnUse, StringFormat='{0:F2} kr'}" />
+                                            <Label Grid.Column="3" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding ProductionSold, StringFormat='{0:F0} kWh'}" />
+                                            <Label Grid.Column="4" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding ProductionOwnUse, StringFormat='{0:F0} kWh'}" />
+                                            <Label Grid.Column="5" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding YearSavingsSold, StringFormat='{0:F0} kr'}" />
+                                            <Label Grid.Column="6" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding YearSavingsOwnUse, StringFormat='{0:F0} kr'}" />
+                                            <Label Grid.Column="7" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding ReturnPercentage, StringFormat='{0:F2} %'}" />
+                                            <Label Grid.Column="8" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding RemainingOnInvestment, StringFormat='{0:F0} kr'}" />
                                         </Grid>
 
                                     </DataTemplate>

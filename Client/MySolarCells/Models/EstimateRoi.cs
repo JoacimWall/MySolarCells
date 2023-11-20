@@ -11,6 +11,9 @@ public class EstimateRoi
     public double YearSavingsOwnUse { get; set; }
     public double ReturnPercentage { get; set; }
     public double RemainingOnInvestment { get; set; }
-
+    public bool IsRoiYear { get; set; }
+    public Color BackgroundColorValueField
+    { get
+        { return IsRoiYear ? AppColors.SignalGreenColor : AppColors.Gray200Color; } }
 }
 

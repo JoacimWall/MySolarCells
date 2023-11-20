@@ -73,7 +73,7 @@
                 </Entry.Behaviors>
             </Entry>
             <!--Total installed Kwh-->
-            <Label Grid.Row="14"  Grid.ColumnSpan="2" Text="{x:Static trans:AppResources.Total_Installed_Panels_Kwh}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Label Grid.Row="14"  Grid.ColumnSpan="2" Text="{x:Static trans:AppResources.Total_Installed_Panels_Kw}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="15" Grid.ColumnSpan="3" Keyboard="Numeric"  Text="{Binding SelectedParameters.TotalInstallKwhPanels}">
                 <Entry.Behaviors>
                     <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="1.0" MaximumValue="100.0" MaximumDecimalPlaces="3" />

@@ -381,8 +381,8 @@
   <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
     <value>Beräkningsfaktorer för kostnader och intäkter relaterade till solcellsproduktion.</value>
   <comment>Need review</comment></data>
-  <data name="Total_Installed_Panels_Kwh" xml:space="preserve">
-    <value>Totalt antal installerade paneler (kWh)</value>
+  <data name="Total_Installed_Panels_Kw" xml:space="preserve">
+    <value>Totalt antal installerade paneler (kW)</value>
   <comment>Need review</comment></data>
   <data name="Application_Version" xml:space="preserve">
     <value>Applikationsversion</value>

@@ -451,8 +451,8 @@
 <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
     <value>Calculation factors for costs and revenues related to solar cell production.</value>
   <comment>Need review</comment></data>
-<data name="Total_Installed_Panels_Kwh" xml:space="preserve">
-    <value>Total installed panels (kWh)</value>
+<data name="Total_Installed_Panels_Kw" xml:space="preserve">
+    <value>Total installed panels (kW)</value>
   <comment>Need review</comment></data>
 <data name="Application_Version" xml:space="preserve">
     <value>Application version</value>

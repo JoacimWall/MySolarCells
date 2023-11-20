@@ -1417,11 +1417,11 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total installed panels (kWh).
+        ///   Looks up a localized string similar to Total installed panels (kW).
         /// </summary>
-        public static string Total_Installed_Panels_Kwh {
+        public static string Total_Installed_Panels_Kw {
             get {
-                return ResourceManager.GetString("Total_Installed_Panels_Kwh", resourceCulture);
+                return ResourceManager.GetString("Total_Installed_Panels_Kw", resourceCulture);
             }
         }
         
