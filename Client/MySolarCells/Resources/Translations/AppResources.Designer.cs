@@ -850,6 +850,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Panel degradation per year.
+        /// </summary>
+        public static string Panel_Degradation_Per_Year {
+            get {
+                return ResourceManager.GetString("Panel_Degradation_Per_Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {
@@ -945,6 +954,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Production_And_Consumption {
             get {
                 return ResourceManager.GetString("Production_And_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production and consumption.
+        /// </summary>
+        public static string Production_And_Consumption_Short {
+            get {
+                return ResourceManager.GetString("Production_And_Consumption_Short", resourceCulture);
             }
         }
         
@@ -1053,6 +1071,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Purchased {
             get {
                 return ResourceManager.GetString("Purchased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Real development electricity price.
+        /// </summary>
+        public static string Real_Development_Electricity_Price {
+            get {
+                return ResourceManager.GetString("Real_Development_Electricity_Price", resourceCulture);
             }
         }
         

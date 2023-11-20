@@ -51,6 +51,7 @@ public class MoreViewModel : BaseViewModel
     private async Task ShowCalcParameters()
     {
         await GoToAsync(nameof(EnergyCalculationParameterView));
+        //await GoToAsync(nameof(ParametersOverviewView));
     }
     public async override Task OnAppearingAsync()
     {
@@ -361,8 +362,10 @@ public class MoreViewModel : BaseViewModel
         using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
         var result = await this.historyService.GenerateTotalPermonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
-
-        var resultRoi = this.roiService.CalcSavingsEstimate(result.Model);
+        var savingEsitmate = mscDbContext.SavingEssitmateParameters.FirstOrDefault();
+        if (savingEsitmate is null)
+            savingEsitmate = new MySolarCellsSQLite.Sqlite.Models.SavingEssitmateParameters();
+        var resultRoi = this.roiService.CalcSavingsEstimate(result.Model, savingEsitmate);
 
         using (ExcelEngine excelEngine = new ExcelEngine())
         {

@@ -113,11 +113,11 @@ public static class AppColors
     }
 
     //------------ Base Colors ----------------------------------//
-    public static Color Primary800Color = Color.FromArgb("#23115e");
-    public static Color Primary500Color = Color.FromArgb("#2B0B98");
-    public static Color Primary400Color = Color.FromArgb("#2d05b5");
-    public static Color Primary200Color = Color.FromArgb("#3604de");
-    public static Color Primary100Color = Color.FromArgb("#3d05f7");
+    public static Color Primary800Color = Color.FromArgb("#014073");
+    public static Color Primary500Color = Color.FromArgb("#005EAB");
+    public static Color Primary400Color = Color.FromArgb("#006cc4");
+    public static Color Primary200Color = Color.FromArgb("#027fe6");
+    public static Color Primary100Color = Color.FromArgb("#038cfc");
 
 
     public static Color PrimaryAccentColor = Color.FromArgb("#FF675C");

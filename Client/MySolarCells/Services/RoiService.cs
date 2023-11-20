@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using MySolarCellsSQLite.Sqlite.Models;
 
 namespace MySolarCells.Services;
 public interface IRoiService
 {
-    Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats);
+    Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats, SavingEssitmateParameters savingEssitmateParameters);
 }
 
 public class RoiService :IRoiService
@@ -20,7 +21,7 @@ public class RoiService :IRoiService
     /// Input to collectins tuple 1 is for the overview summirized one Year per row
     /// The second tuple is all months summirzed per year 
     /// <returns></returns>
-    public Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats)
+    public Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats, SavingEssitmateParameters savingEssitmateParameters)
     {
         List<EstimateRoi> list = new List<EstimateRoi>();
         double totalSaving = 0;
@@ -88,8 +89,8 @@ public class RoiService :IRoiService
         int startYear = historyStats.Item1.Last().FromDate.AddYears(1).Year;
         int endYear = historyStats.Item1.First().FromDate.AddYears(30).Year;
        
-        double realutvecklingElpris = 1.05;
-        double degrageringPerAr = 0.0025;
+        //double realutvecklingElpris = 1.05;
+        //double degrageringPerAr = 0.0025;
        
         //Räkna upp alla värden
 
@@ -99,26 +100,29 @@ public class RoiService :IRoiService
             var newYear = new EstimateRoi
             {
                 Year = i,
-                AvargePriceSold = Math.Round(list.Last().AvargePriceSold * realutvecklingElpris, 2),
-                AvargePrisOwnUse = Math.Round(list.Last().AvargePrisOwnUse * realutvecklingElpris, 2),
-                ProductionSold = Math.Round(list.Last().ProductionSold * (1 - degrageringPerAr), 2),
-                ProductionOwnUse = Math.Round(list.Last().ProductionOwnUse * (1 - degrageringPerAr), 2),
+                AvargePriceSold = Math.Round(list.Last().AvargePriceSold * (1 + savingEssitmateParameters.RealDevelopmentElectricityPrice / 100), 2),
+                AvargePrisOwnUse = Math.Round(list.Last().AvargePrisOwnUse * (1 + savingEssitmateParameters.RealDevelopmentElectricityPrice / 100), 2),
+                ProductionSold = Math.Round(list.Last().ProductionSold * (1 - savingEssitmateParameters.PanelDegradationPerYear/100), 2),
+                ProductionOwnUse = Math.Round(list.Last().ProductionOwnUse * (1 - savingEssitmateParameters.PanelDegradationPerYear/100), 2),
               
             };
             
             newYear.YearSavingsSold = Math.Round( newYear.ProductionSold * newYear.AvargePriceSold,2);
             newYear.YearSavingsOwnUse = Math.Round(newYear.ProductionOwnUse * newYear.AvargePrisOwnUse, 2);
             var savingThisYear = Math.Round(newYear.YearSavingsSold + newYear.YearSavingsOwnUse,2);
+            totalSaving = totalSaving + savingThisYear;
             newYear.RemainingOnInvestment = Math.Round(lastknownInvestment - totalSaving, 0);
+            if (newYear.RemainingOnInvestment < 0)
+                newYear.RemainingOnInvestment =Math.Abs(newYear.RemainingOnInvestment);
             newYear.ReturnPercentage = Math.Round((savingThisYear / lastknownInvestment) * 100, 1);
 
-            totalSaving = totalSaving + savingThisYear;
+            
             list.Add(newYear);
 
         }
         return new Result<List<EstimateRoi>>(list); 
     }
-
+   
 }
 
 

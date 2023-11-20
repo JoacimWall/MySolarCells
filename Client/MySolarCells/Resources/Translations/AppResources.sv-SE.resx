@@ -295,7 +295,7 @@
     <value>Totalt köpt</value>
   <comment>Need review</comment></data>
   <data name="Production_And_Consumption" xml:space="preserve">
-    <value>Prod.. och kons..</value>
+    <value>Produktion och konsumtion</value>
   <comment>Need review</comment></data>
   <data name="Today" xml:space="preserve">
     <value>I dag</value>
@@ -503,5 +503,14 @@
   <comment>Need review</comment></data>
   <data name="Close" xml:space="preserve">
     <value>Stäng</value>
+  <comment>Need review</comment></data>
+  <data name="Production_And_Consumption_Short" xml:space="preserve">
+    <value>Prod.. och konsum..</value>
+  <comment>Need review</comment></data>
+  <data name="Real_Development_Electricity_Price" xml:space="preserve">
+    <value>Real utveckling elpris per år</value>
+  <comment>Need review</comment></data>
+  <data name="Panel_Degradation_Per_Year" xml:space="preserve">
+    <value>Panelnedbrytning per år</value>
   <comment>Need review</comment></data>
 </root>

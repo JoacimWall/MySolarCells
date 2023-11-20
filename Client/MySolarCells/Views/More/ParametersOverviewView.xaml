@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                        x:Class="MySolarCells.Views.More.ParametersOverviewView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:ml="clr-namespace:MySolarCells.Models"
+                        xmlns:control="clr-namespace:MySolarCells.Controls"
+                        Shell.NavBarIsVisible="True"
+                        x:DataType="vm:ParametersOverviewViewModel">
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="1" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}" BackgroundColor="Transparent" ></Button>
+            </Border>
+        </Grid>
+
+    </Shell.TitleView>
+    <CollectionView Margin="16,8" ItemsSource="{Binding ParamOverviewDtos}" VerticalOptions="Fill" >
+        <CollectionView.Header>
+            <Grid RowDefinitions="Auto,Auto">
+                <Label Grid.Column="0" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="Filter" HorizontalTextAlignment="Start"/>
+
+                <HorizontalStackLayout Grid.Row="1" Spacing="8">
+                    <!--Calcualtion Parameters-->
+                    <Border  BackgroundColor="{x:Static theming:AppColors.Gray400Color}" StrokeShape="RoundRectangle 8,8,8,8" >
+                        <Grid Margin="1" HeightRequest="50" WidthRequest="50"  BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                                   Text="{x:Static theming:IconFont.Bargraph}"
+                                   FontSize="25" Margin="0" 
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   FontFamily="AppIconsFont"
+                                   VerticalOptions="Center"
+                                   VerticalTextAlignment="Center"/>
+
+                        </Grid>
+                    </Border>
+                    <!--Investment and Loan -->
+                    <Border  BackgroundColor="{x:Static theming:AppColors.Gray400Color}" StrokeShape="RoundRectangle 8,8,8,8" >
+                        <Grid Margin="1" HeightRequest="50" WidthRequest="50"  BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static theming:IconFont.Money}"
+                           FontSize="25" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="AppIconsFont"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center"/>
+
+                        </Grid>
+                    </Border>
+                </HorizontalStackLayout>
+            </Grid>
+        </CollectionView.Header>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="ml:ParamOverviewDto">
+                 <Border Margin="0,8" Padding="16" BackgroundColor="{x:Static theming:AppColors.Gray200Color}" StrokeShape="RoundRectangle 8,8,8,8" >
+                     <Grid  RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+                          <Label Grid.RowSpan="2"  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{Binding Icon}"
+                           FontSize="25" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="AppIconsFont"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center"/>
+
+                         <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{Binding Name}"
+                           FontSize="16" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Start"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Start"/>
+
+                          <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{Binding FromDate, StringFormat='{}{0:d}'}"
+                           FontSize="16" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Start"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Start"/>
+
+                     </Grid>
+                 </Border>
+            </DataTemplate>
+
+        </CollectionView.ItemTemplate>
+        <CollectionView.Footer>
+            <Grid RowDefinitions="Auto,Auto">
+                <Label Grid.Column="0" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Add}" HorizontalTextAlignment="Start"/>
+
+                <HorizontalStackLayout Grid.Row="1" Spacing="8">
+                    <!--Calcualtion Parameters-->
+                    <Border  BackgroundColor="{x:Static theming:AppColors.Gray400Color}" StrokeShape="RoundRectangle 8,8,8,8" >
+                        <Grid Margin="1" HeightRequest="50" WidthRequest="50"  BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static theming:IconFont.Bargraph}"
+                           FontSize="25" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="AppIconsFont"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center"/>
+
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static theming:IconFont.Add}" Margin="20,12,-2,0"
+                           FontSize="25"
+                           FontFamily="AppIconsFont" TextColor="{x:Static theming:AppColors.Primary500Color}"
+                           HorizontalTextAlignment="End"
+                           VerticalTextAlignment="End"/>
+                        </Grid>
+                    </Border>
+                    <!--Investment and Loan -->
+                    <Border  BackgroundColor="{x:Static theming:AppColors.Gray400Color}" StrokeShape="RoundRectangle 8,8,8,8" >
+                        <Grid Margin="1" HeightRequest="50" WidthRequest="50"  BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static theming:IconFont.Money}"
+                           FontSize="25" Margin="0" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           FontFamily="AppIconsFont"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center"/>
+
+                            <Label  Style="{StaticResource LabelEntryTitleStyle}"
+                           Text="{x:Static theming:IconFont.Add}" Margin="20,12,-2,0"
+                           FontSize="25"
+                           FontFamily="AppIconsFont" TextColor="{x:Static theming:AppColors.Primary500Color}"
+                           HorizontalTextAlignment="End"
+                           VerticalTextAlignment="End"/>
+                        </Grid>
+                    </Border>
+                </HorizontalStackLayout>
+            </Grid>
+        </CollectionView.Footer>
+
+    </CollectionView>
+</views:BaseContentPage>

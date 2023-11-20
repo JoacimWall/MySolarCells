@@ -550,5 +550,14 @@
 <data name="Close" xml:space="preserve">
     <value>Close</value>
   <comment>Need review</comment></data>
+<data name="Production_And_Consumption_Short" xml:space="preserve">
+    <value>Production and consumption</value>
+  <comment>Need review</comment></data>
+<data name="Real_Development_Electricity_Price" xml:space="preserve">
+    <value>Real development electricity price</value>
+  <comment>Need review</comment></data>
+<data name="Panel_Degradation_Per_Year" xml:space="preserve">
+    <value>Panel degradation per year</value>
+  <comment>Need review</comment></data>
 
 </root>

@@ -18,6 +18,7 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<EnergyViewModel>();
         //More
         builder.Services.AddTransient<MoreViewModel>();
+        builder.Services.AddTransient<ParametersOverviewViewModel>();
         return builder;
     }
 }

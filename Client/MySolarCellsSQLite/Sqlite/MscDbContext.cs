@@ -2,6 +2,7 @@
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
 using MySolarCells.Services.Sqlite.Models;
+using MySolarCellsSQLite.Sqlite.Models;
 
 namespace MySolarCells.Services.Sqlite;
 
@@ -23,9 +24,9 @@ public class MscDbContext : DbContext
         try
         {
             //this.Database.EnsureCreated();
-             this.Database.Migrate();
+            this.Database.Migrate();
         }
-        catch
+        catch (Exception e)
         {
 
         }
@@ -80,5 +81,7 @@ public class MscDbContext : DbContext
     public DbSet<InvestmentAndLoanInterest> InvestmentAndLonInterest { get; set; }
     public DbSet<Models.Preferences> Preferences { get; set; }
     public DbSet<Log> Log { get; set; }
+    public DbSet<SavingEssitmateParameters> SavingEssitmateParameters { get; set; }
+    
 }
 

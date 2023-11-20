@@ -505,4 +505,13 @@
   <data name="Close" xml:space="preserve">
     <value>kiinni</value>
   <comment>Need review</comment></data>
+  <data name="Production_And_Consumption_Short" xml:space="preserve">
+    <value>Tuotanto ja kulutus</value>
+  <comment>Need review</comment></data>
+  <data name="Real_Development_Electricity_Price" xml:space="preserve">
+    <value>Real Development Sähkön hinta</value>
+  <comment>Need review</comment></data>
+  <data name="Panel_Degradation_Per_Year" xml:space="preserve">
+    <value>Paneelin heikkeneminen vuodessa</value>
+  <comment>Need review</comment></data>
 </root>

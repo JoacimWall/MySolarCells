@@ -12,9 +12,9 @@
                         x:DataType="vm:MoreViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.More}" HorizontalTextAlignment="Center"/>
             <!--<Border Grid.Column="1" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="2" >
+                    StrokeThickness="1" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
@@ -98,7 +98,7 @@
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
                 <!--  Inverter  -->
-                <control:MenuGridItemView Margin="0,3"
+                <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Inverter}"
                         TitleText="{Binding Source={x:Static trans:AppResources.Inverter}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
@@ -107,7 +107,7 @@
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
                 <!--  Calculation_Parameters  -->
-                <control:MenuGridItemView Margin="0,3"
+                <control:MenuGridItemView Margin="0,0,0,3"
                             WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                             FontIcon="{x:Static theming:IconFont.Bargraph}"
                             IsVisible="True"
@@ -117,7 +117,7 @@
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
                 <!--  My_Investment_And_Loan  -->
-                <control:MenuGridItemView Margin="0,2"
+                <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Money}"
                         IsVisible="True"

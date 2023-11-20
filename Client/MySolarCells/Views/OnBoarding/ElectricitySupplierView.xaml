@@ -14,7 +14,7 @@
                <Label Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Style="{StaticResource LabelBaseStyle}" Text="{x:Static trans:AppResources.Electricity_Supplier}" HorizontalTextAlignment="Center"/>
          
              <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="2" >
+                    StrokeThickness="1" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>
@@ -23,7 +23,7 @@
 
           
             <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray900Color}" IsVisible="{Binding ShowHomePicker}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="2" >
+                    StrokeThickness="1" >
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>

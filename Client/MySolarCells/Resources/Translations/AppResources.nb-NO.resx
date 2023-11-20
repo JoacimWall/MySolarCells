@@ -504,4 +504,13 @@
   <data name="Close" xml:space="preserve">
     <value>Lukk</value>
   <comment>Need review</comment></data>
+  <data name="Production_And_Consumption_Short" xml:space="preserve">
+    <value>Produksjon og forbruk</value>
+  <comment>Need review</comment></data>
+  <data name="Real_Development_Electricity_Price" xml:space="preserve">
+    <value>Real Utvikling Elpris</value>
+  <comment>Need review</comment></data>
+  <data name="Panel_Degradation_Per_Year" xml:space="preserve">
+    <value>Paneldegradering per år</value>
+  <comment>Need review</comment></data>
 </root>

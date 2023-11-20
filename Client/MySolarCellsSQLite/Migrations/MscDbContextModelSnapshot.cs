@@ -15,7 +15,7 @@ namespace MySolarCellsSQLite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0-rc.2.23480.1");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("MySolarCells.Services.Sqlite.Models.Energy", b =>
                 {
@@ -337,6 +337,26 @@ namespace MySolarCellsSQLite.Migrations
                         .IsUnique();
 
                     b.ToTable("Preferences");
+                });
+
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.SavingEssitmateParameters", b =>
+                {
+                    b.Property<int>("SavingEssitmateParametersId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FromDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("PanelDegradationPerYear")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("RealDevelopmentElectricityPrice")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("SavingEssitmateParametersId");
+
+                    b.ToTable("SavingEssitmateParameters");
                 });
 
             modelBuilder.Entity("MySolarCells.Services.Sqlite.Models.InvestmentAndLoanInterest", b =>

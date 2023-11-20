@@ -11,9 +11,9 @@
 
     <Grid RowDefinitions="Auto,*" >
         <Grid  RowDefinitions="Auto,Auto">
-            <Label FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.ROI}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.ROI}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="1" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" WidthRequest="100" HorizontalOptions="End" Padding="0" Margin="8,8"  
-                    StrokeThickness="2" IsVisible="{OnPlatform Android=false, iOS=false}">
+                    StrokeThickness="1" IsVisible="{OnPlatform Android=false, iOS=false}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20,20,20,20" />
                 </Border.StrokeShape>

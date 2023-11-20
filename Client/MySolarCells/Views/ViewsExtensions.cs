@@ -18,6 +18,7 @@ public static class ViewsExtensions
         builder.Services.AddTransient<EnergyView>();
         //More
         builder.Services.AddTransient<MoreView>();
+        builder.Services.AddTransient<ParametersOverviewView>();
         return builder;
     }
 }

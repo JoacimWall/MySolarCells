@@ -15,5 +15,6 @@ public static class IconFont
     public const string More_vertical = "\uea0b";
     public const string Coins = "\uea0c";
     public const string Report = "\uea0d";
+    public const string Add = "\uea0e";
 }
 

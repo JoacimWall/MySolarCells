@@ -14,6 +14,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(EnergyCalculationParameterView), typeof(EnergyCalculationParameterView));
         Routing.RegisterRoute(nameof(ElectricitySupplierView), typeof(ElectricitySupplierView));
         Routing.RegisterRoute(nameof(InverterView), typeof(InverterView));
+        Routing.RegisterRoute(nameof(ParametersOverviewView), typeof(ParametersOverviewView));
 
     }
 }
