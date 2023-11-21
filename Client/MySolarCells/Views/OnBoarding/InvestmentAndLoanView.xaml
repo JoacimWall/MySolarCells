@@ -11,7 +11,7 @@
                         x:DataType="vm:InvestmentAndLoanViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
             <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}" >
                 <Button  Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}" Text="{x:Static trans:AppResources.Back}" />
             </Border>
@@ -29,7 +29,7 @@
             <Label Margin="0" Grid.Row="0" Grid.ColumnSpan="3" FontSize="17" Style="{StaticResource LabelBaseStyle}"
             Text="{x:Static trans:AppResources.Investment_Loan_Intro_Text}" VerticalOptions="Center" HorizontalTextAlignment="Center" />
 
-            <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource LabelEntryTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}"  />
+            <Label  Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource LabelEntryTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}"  />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndloan}" ItemDisplayBinding="{Binding Description}"/>
             <Button  Style="{StaticResource ButtonBaseStyle}" Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInestlonCommand}"/>
             <!--Description-->
@@ -57,14 +57,14 @@
            
 
             <!--Inerest picker-->
-            <Label Margin="0,0,0,-6" Grid.Row="12" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest_Saved}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Label  Grid.Row="12" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest_Saved}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Margin="0" Grid.Row="13" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndloan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
             <Button Grid.Row="13"  Grid.Column="3" Style="{StaticResource ButtonBaseStyle}" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
-            <Label Grid.Row="15" Margin="0,0,0,-4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Label Grid.Row="15"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
             <!--FromDate iterest-->
-            <Label Margin="0,0,0,0" Grid.Row="17" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}"/>
+            <Label Grid.Row="17" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInterest.FromDate}" />
 
             <!--Investment-->
@@ -76,7 +76,7 @@
 
             </Entry>
              <!--Amortization-->
-            <Label Grid.Row="21" Margin="0,0,0,-4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Amortization}" HorizontalTextAlignment="Start" HorizontalOptions="Start" />
+            <Label Grid.Row="21" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Amortization}" HorizontalTextAlignment="Start" HorizontalOptions="Start" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="22" Grid.ColumnSpan="2" Text="{Binding SelectedInterest.Amortization}" />
                </Grid>
     </ScrollView>

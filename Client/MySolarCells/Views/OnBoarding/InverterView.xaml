@@ -10,7 +10,7 @@
                         x:DataType="vm:InverterViewModel">
      <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Inverter}" HorizontalTextAlignment="Center" Style="{StaticResource LabelBaseStyle}"/>
+            <Label Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.Inverter}" HorizontalTextAlignment="Center" Style="{StaticResource LabelBaseStyle}"/>
              <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding NavBackCommand}" Text="{x:Static trans:AppResources.Back}" />
             </Border>
@@ -31,7 +31,7 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
 
-            <Label Margin="0,0,0,-6" Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Inverter}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Label  Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Inverter}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding InverterModels}" SelectedItem="{Binding SelectedInverterModel}" ItemDisplayBinding="{Binding ItemTitle}"/>
             <Label  Grid.Row="4" Grid.ColumnSpan="3" Text="{Binding InverterGuideText}" Style="{StaticResource LabelBaseStyle}" />
             <VerticalStackLayout Grid.Row="5" Margin="0,0,0,-6" Grid.ColumnSpan="3" Spacing="4">
@@ -54,11 +54,11 @@
             <Button Margin="0,8,0,16" Style="{StaticResource ButtonBaseStyle}" Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
 
             <!--Inverters-->
-            <Label Margin="0,0,0,-6" Grid.Row="9" Grid.ColumnSpan="5" Text="{x:Static trans:AppResources.Pick_Your_Site}" IsVisible="{Binding ShowSiteNodePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Label  Grid.Row="9" Grid.ColumnSpan="5" Text="{x:Static trans:AppResources.Pick_Your_Site}" IsVisible="{Binding ShowSiteNodePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Grid.Row="10" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}" ItemsSource="{Binding SitesNodes}" SelectedItem="{Binding SelectedSiteNode}" ItemDisplayBinding="{Binding Name}"/>
 
             <!--Install date-->
-            <Label Margin="0,0,0,-6" Grid.Row="11" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Text="{x:Static trans:AppResources.Install_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Label  Grid.Row="11" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Text="{x:Static trans:AppResources.Install_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <DatePicker Grid.Row="12" Grid.ColumnSpan="5" IsVisible="{Binding ShowSiteNodePicker}"  Date="{Binding InstallDate}" />
            
         
