@@ -215,9 +215,10 @@
             <!--Title-->
             <Label FontSize="20" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Report}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <!--navback-->
-            <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="14" TextColor="{x:Static theming:AppColors.BlackColor}" Text="{x:Static trans:AppResources.Close}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+            <Border  Style="{StaticResource BorderButtonStyle}">
+                <Button Style="{StaticResource ButtonBaseStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
+            </Border>
             <!--More-->
-
             <Label Grid.Column="2" Margin="12,2,12,2" FontSize="17"  TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.More_vertical}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MoreButtonCommand}" />
@@ -252,12 +253,8 @@
                     <Slider x:Name="PanelDegradationPerYear" Grid.Row="3"  Minimum="0.15" Maximum="1" Value="{Binding SavingEssitmateParameters.PanelDegradationPerYear}"  />
                     <Label Grid.Row="3" Grid.Column="2"  Text="{Binding Source={x:Reference PanelDegradationPerYear},Path=Value,StringFormat='{0:F2} %'}" HorizontalTextAlignment="End" HorizontalOptions="End" VerticalTextAlignment="Center"/>
 
-                    <Border Grid.Row="0" Grid.ColumnSpan="2" Stroke="{x:Static theming:AppColors.Gray500Color}" BackgroundColor="{x:Static theming:AppColors.Primary500Color}"  HeightRequest="30" WidthRequest="100" HorizontalOptions="End" Padding="0" Margin="0,0,-4,0"  
-                    StrokeThickness="1" >
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20,20,20,20" />
-                        </Border.StrokeShape>
-                        <Button Padding="4" Margin="2" Command="{Binding RefreshSavingEssitmateCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.WhiteColor}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
+                    <Border Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End"  >
+                        <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding RefreshSavingEssitmateCommand}"  Text="{x:Static trans:AppResources.Refresh}"/>
                     </Border>
 
                 </Grid>

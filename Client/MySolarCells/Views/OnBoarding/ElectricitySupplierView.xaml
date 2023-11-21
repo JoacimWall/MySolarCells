@@ -10,26 +10,13 @@
                         x:DataType="vm:ElectricitySupplierViewModel">
     <Shell.TitleView >
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto" >
-
-               <Label Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Style="{StaticResource LabelBaseStyle}" Text="{x:Static trans:AppResources.Electricity_Supplier}" HorizontalTextAlignment="Center"/>
-         
-             <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+            <Label Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Style="{StaticResource LabelBaseStyle}" Text="{x:Static trans:AppResources.Electricity_Supplier}" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}" >
+                <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Back}" />
             </Border>
-
-          
-            <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray900Color}" IsVisible="{Binding ShowHomePicker}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+            <Border Grid.Column="2" Style="{StaticResource BorderButtonStyle}" IsVisible="{Binding ShowHomePicker}" >
+                <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SaveCommand}"  Text="{x:Static trans:AppResources.Save}" />
             </Border>
-
         </Grid>
 
     </Shell.TitleView>
@@ -43,7 +30,7 @@
             <Label  Grid.Row="3" Grid.ColumnSpan="3" Margin="0,16" Text="{Binding GuideText}" Style="{StaticResource LabelBaseStyle}" />
             <VerticalStackLayout Spacing="4" Grid.Row="4" Margin="0,0,0,-6" Grid.ColumnSpan="3">
                 <!--Navigate to url-->
-                <Button Margin="0,0,0,8" IsVisible="{Binding ShowNavigateUrl}" Text="{x:Static trans:AppResources.Goto_Tibber_Api_Site}" Command="{Binding GoToNavigateUrlCommand}"/>
+                <Button Margin="0,0,0,8" Style="{StaticResource ButtonBaseStyle}" IsVisible="{Binding ShowNavigateUrl}" Text="{x:Static trans:AppResources.Goto_Tibber_Api_Site}" Command="{Binding GoToNavigateUrlCommand}"/>
                 <!--UserName-->
                 <Label IsVisible="{Binding ShowUserName}" Text="{x:Static trans:AppResources.Username}" Style="{StaticResource LabelEntryTitleStyle}" />
                 <Entry Margin="0,0,0,8" IsVisible="{Binding ShowUserName}" Text="{Binding UserName}" />
@@ -58,7 +45,7 @@
                 <Entry Margin="0,0,0,8" IsVisible="{Binding ShowApiKey}" Text="{Binding ApiKey}"   />
             </VerticalStackLayout>
             <!--Test connection to API-->
-            <Button Margin="0,8,0,8" Grid.Row="5"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
+            <Button Margin="0,8,0,8" Style="{StaticResource ButtonBaseStyle}" Grid.Row="5"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
 
             <!--Homes-->
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Select_The_Home_You_Want_To_Analyze}" IsVisible="{Binding ShowHomePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
@@ -66,8 +53,8 @@
             <!--Install date-->
             <Label  Grid.Row="8" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Install_Year}" IsVisible="{Binding ShowHomePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Grid.Row="9" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" SelectedItem="{Binding InstallDate}" ItemsSource="{Binding InstallYears}" ItemDisplayBinding="{Binding ItemTitle}"  />
-               
-           
+
+
             <!--ImportOnlySpotPrice-->
             <HorizontalStackLayout IsVisible="{Binding ShowHomePicker}" Grid.Row="10"  Grid.ColumnSpan="3">
                 <CheckBox IsChecked="{Binding ImportOnlySpotPrice}" VerticalOptions="Center" HorizontalOptions="Start"/>

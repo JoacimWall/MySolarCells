@@ -12,19 +12,11 @@
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
             <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
-            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}" BackgroundColor="Transparent" ></Button>
+            <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}" >
+                <Button  Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}" Text="{x:Static trans:AppResources.Back}" />
             </Border>
-            <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" BackgroundColor="Transparent" ></Button>
+            <Border Grid.Column="2" Style="{StaticResource BorderButtonStyle}">
+                <Button  Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SaveCommand}"  Text="{x:Static trans:AppResources.Save}" />
             </Border>
 
         </Grid>
@@ -39,7 +31,7 @@
 
             <Label Margin="0,0,0,-6" Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource LabelEntryTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}"  />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndloan}" ItemDisplayBinding="{Binding Description}"/>
-            <Button  Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInestlonCommand}"/>
+            <Button  Style="{StaticResource ButtonBaseStyle}" Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInestlonCommand}"/>
             <!--Description-->
             <Label Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Description}" />
@@ -67,7 +59,7 @@
             <!--Inerest picker-->
             <Label Margin="0,0,0,-6" Grid.Row="12" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest_Saved}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Margin="0" Grid.Row="13" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndloan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
-            <Button Grid.Row="13"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInterestCommand}"/>
+            <Button Grid.Row="13"  Grid.Column="3" Style="{StaticResource ButtonBaseStyle}" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
             <Label Grid.Row="15" Margin="0,0,0,-4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />

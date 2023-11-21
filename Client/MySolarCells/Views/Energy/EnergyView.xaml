@@ -13,12 +13,8 @@
     <Grid RowDefinitions="Auto,*">
         <Grid RowDefinitions="Auto,Auto" >
             <Label FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.Production}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-            <Border  Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" WidthRequest="100" HorizontalOptions="End" Padding="0" Margin="8,8"  
-                    StrokeThickness="2" IsVisible="{OnPlatform Android=false, iOS=false}" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SyncCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Refresh}" BackgroundColor="Transparent" ></Button>
+            <Border  Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}" >
+                <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}"  Text="{x:Static trans:AppResources.Refresh}" />
             </Border>
             <control:DateNavigator  Grid.Row="1" ChartData="{Binding ChartDataRequest}" GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ShowRoiSimulate="False" />
         </Grid>

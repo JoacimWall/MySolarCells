@@ -11,20 +11,12 @@
      <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
             <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Inverter}" HorizontalTextAlignment="Center" Style="{StaticResource LabelBaseStyle}"/>
-             <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" ></Button>
+             <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}">
+                <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding NavBackCommand}" Text="{x:Static trans:AppResources.Back}" />
             </Border>
-            <Border Grid.Column="2" IsVisible="{Binding ShowSiteNodePicker}" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
+            <Border Grid.Column="2" IsVisible="{Binding ShowSiteNodePicker}" Style="{StaticResource BorderButtonStyle}" >
                  <!--Save Home-->
-                <Button Padding="4" Margin="2"  Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" Style="{StaticResource LabelBaseStyle}" BackgroundColor="Transparent" />
+                <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SaveCommand}" Text="{x:Static trans:AppResources.Save}" />
             </Border>
 
         </Grid>
@@ -59,7 +51,7 @@
             </VerticalStackLayout>
 
 
-            <Button Margin="0,8,0,16" Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
+            <Button Margin="0,8,0,16" Style="{StaticResource ButtonBaseStyle}" Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Validate}" Command="{Binding TestConnectionCommand}"/>
 
             <!--Inverters-->
             <Label Margin="0,0,0,-6" Grid.Row="9" Grid.ColumnSpan="5" Text="{x:Static trans:AppResources.Pick_Your_Site}" IsVisible="{Binding ShowSiteNodePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>

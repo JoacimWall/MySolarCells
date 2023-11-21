@@ -14,19 +14,11 @@
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
             <Label Grid.Column="1"  FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Power_Tariff}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
-            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}"  BackgroundColor="Transparent" ></Button>
+            <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}">
+                <Button  Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Back}"  ></Button>
             </Border>
-            <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
-                    StrokeThickness="1" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20,20,20,20" />
-                </Border.StrokeShape>
-                <Button Padding="4" Margin="2" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" BackgroundColor="Transparent" ></Button>
+            <Border Grid.Column="2" Style="{StaticResource BorderButtonStyle}" >
+                <Button  Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SaveCommand}"  Text="{x:Static trans:AppResources.Save}"/>
             </Border>
 
         </Grid>
@@ -34,14 +26,14 @@
     </Shell.TitleView>
     <ScrollView>
         <Grid Style="{StaticResource GridBasePage}" VerticalOptions="Start" RowDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17" Text="{x:Static trans:AppResources.Power_Tariff_Intro_Text}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center" />
+            <Label Margin="0,0,0,16" Grid.Row="1" Grid.ColumnSpan="3" FontSize="17" Text="{x:Static trans:AppResources.Power_Tariff_Intro_Text}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Start" />
 
-            <Label Margin="0,8,0,-6" Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Calculation_Factors}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Label  Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Calculation_Factors}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameters, Mode=TwoWay}" ItemDisplayBinding="{Binding DisplayName}"/>
-            <Button  Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddParametersCommand}"/>
+            <Button  Grid.Row="3"  Grid.Column="3" Style="{StaticResource ButtonBaseStyle}" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddParametersCommand}"/>
 
             <!--FromDate-->
-            <Label Margin="0,0,0,-6"  Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <Label   Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <DatePicker Grid.Row="5" Grid.ColumnSpan="3" Date="{Binding SelectedParameters.FromDate}" Format="yyyy-MM" />
 
 
