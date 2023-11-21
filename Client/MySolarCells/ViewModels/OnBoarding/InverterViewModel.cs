@@ -76,7 +76,7 @@ public class InverterViewModel : BaseViewModel
         var InverterExist = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.InverterId.ToString() && x.InverterTyp == SelectedInverterModel.ItemValue);
         if (InverterExist == null)
         {
-            InverterExist = new Services.Sqlite.Models.Inverter
+            InverterExist = new SQLite.Sqlite.Models.Inverter
             {
                 SubSystemEntityId = resultInverter.Model.InverterId,
                 InverterTyp = (int)SelectedInverterModel.ItemValue,

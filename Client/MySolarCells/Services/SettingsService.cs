@@ -30,7 +30,7 @@ public class SettingsService : ISettingsService
         {
             var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
             if (exist == null)
-                this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
+                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
             else
                 exist.IntValue = (int)value;
             this.mscDbContext.SaveChanges();
@@ -51,7 +51,7 @@ public class SettingsService : ISettingsService
             var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
             if (exist == null && value != 0)
             {
-                this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(SelectedHomeId), IntValue = (int)value });
+                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(SelectedHomeId), IntValue = (int)value });
                 this.mscDbContext.SaveChanges();
             }
             else if (exist != null)

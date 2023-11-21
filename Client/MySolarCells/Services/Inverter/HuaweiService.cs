@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Acr.UserDialogs;
+using SQLitePCL;
 using Syncfusion.XlsIO.FormatParser.FormatTokens;
 using Syncfusion.XlsIO.Parser.Biff_Records.MsoDrawing;
 
@@ -123,7 +124,7 @@ public class HuaweiService : IInverterServiceInterface
         {
             int batch100 = 0;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
-            List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
+            List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
             var datehelp = DateHelper.GetRelatedDates(DateTime.Now);
             DateTime end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
             DateTime nextStart = new DateTime();
@@ -210,7 +211,7 @@ public class HuaweiService : IInverterServiceInterface
 
                         batch100 = 0;
                         await this.mscDbContext.BulkUpdateAsync(eneryList);
-                        eneryList = new List<Sqlite.Models.Energy>();
+                        eneryList = new List<SQLite.Sqlite.Models.Energy>();
                     }
 
                 }
@@ -225,7 +226,7 @@ public class HuaweiService : IInverterServiceInterface
 
                 batch100 = 0;
                 await this.mscDbContext.BulkUpdateAsync(eneryList);
-                eneryList = new List<Sqlite.Models.Energy>();
+                eneryList = new List<SQLite.Sqlite.Models.Energy>();
             }
             
         }

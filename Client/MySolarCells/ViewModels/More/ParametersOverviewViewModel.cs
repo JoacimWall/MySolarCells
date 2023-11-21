@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using MySolarCells.Services.Sqlite.Models;
-using Syncfusion.XlsIO;
-
-
-namespace MySolarCells.ViewModels.More;
+﻿namespace MySolarCells.ViewModels.More;
 
 public class ParametersOverviewViewModel : BaseViewModel
 {

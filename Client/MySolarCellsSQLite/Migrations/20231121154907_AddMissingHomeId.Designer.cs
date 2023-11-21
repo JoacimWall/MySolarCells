@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySolarCells.Services.Sqlite;
 
@@ -10,9 +11,11 @@ using MySolarCells.Services.Sqlite;
 namespace MySolarCellsSQLite.Migrations
 {
     [DbContext(typeof(MscDbContext))]
-    partial class MscDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121154907_AddMissingHomeId")]
+    partial class AddMissingHomeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -318,6 +321,9 @@ namespace MySolarCellsSQLite.Migrations
                     b.Property<int>("AmountOfPeaksToUse")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("DayTimeAllDay")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("DayTimeEnd")
                         .HasColumnType("INTEGER");
 
@@ -336,16 +342,22 @@ namespace MySolarCellsSQLite.Migrations
                     b.Property<int>("PeriodMonthStart")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("PeroidAllYear")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("PricePerKwh")
                         .HasColumnType("REAL");
 
                     b.Property<bool>("UsePeaksFromSameDay")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("Weekday")
+                    b.Property<bool>("WeekDayAllDays")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Weekend")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("weekday")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("PowerTariffParametersId");

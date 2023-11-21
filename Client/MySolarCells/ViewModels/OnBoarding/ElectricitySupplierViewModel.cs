@@ -88,7 +88,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         var homeExist = await this.mscDbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selecteddHome.SubSystemEntityId.ToString());
         if (homeExist == null)
         {
-            homeExist = new Services.Sqlite.Models.Home();
+            homeExist = new Home();
             await this.mscDbContext.Home.AddAsync(homeExist);
         }
 
@@ -155,8 +155,8 @@ public class ElectricitySupplierViewModel : BaseViewModel
         }
     }
 
-    private ObservableCollection<Services.Sqlite.Models.Home> homes = new ObservableCollection<Services.Sqlite.Models.Home>();
-    public ObservableCollection<Services.Sqlite.Models.Home> Homes
+    private ObservableCollection<Home> homes = new ObservableCollection<Home>();
+    public ObservableCollection<Home> Homes
     {
         get => homes;
         set
@@ -165,8 +165,8 @@ public class ElectricitySupplierViewModel : BaseViewModel
 
         }
     }
-    private Services.Sqlite.Models.Home selecteddHome;
-    public Services.Sqlite.Models.Home SelecteddHome
+    private Home selecteddHome;
+    public Home SelecteddHome
     {
         get => selecteddHome;
         set { SetProperty(ref selecteddHome, value); }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
-using MySolarCells.Services.Sqlite.Models;
-using MySolarCellsSQLite.Sqlite.Models;
+using MySolarCells.SQLite.Sqlite.Models;
 
 namespace MySolarCells.Services.Sqlite;
 
@@ -55,9 +54,6 @@ public class MscDbContext : DbContext
         {
 
         }
-
-
-
     }
 
     // ----------------------- ALLWAYS ENABLED --------------------------------
@@ -66,7 +62,7 @@ public class MscDbContext : DbContext
     {
         //UniqueIndex
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
-        modelBuilder.Entity<Models.Preferences>().HasIndex(u => u.Name).IsUnique();
+        modelBuilder.Entity<SQLite.Sqlite.Models.Preferences>().HasIndex(u => u.Name).IsUnique();
         modelBuilder.Entity<EnergyCalculationParameter>().HasIndex(u => u.FromDate).IsUnique();
         modelBuilder.Entity<InvestmentAndLoan>().HasIndex(u => u.FromDate).IsUnique();
         modelBuilder.Entity<InvestmentAndLoan>().HasMany(c => c.Interest);
@@ -79,9 +75,11 @@ public class MscDbContext : DbContext
     public DbSet<EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
     public DbSet<InvestmentAndLoan> InvestmentAndLon { get; set; }
     public DbSet<InvestmentAndLoanInterest> InvestmentAndLonInterest { get; set; }
-    public DbSet<Models.Preferences> Preferences { get; set; }
+    public DbSet<SQLite.Sqlite.Models.Preferences> Preferences { get; set; }
     public DbSet<Log> Log { get; set; }
     public DbSet<SavingEssitmateParameters> SavingEssitmateParameters { get; set; }
+    public DbSet<PowerTariffParameters> PowerTariffParameters { get; set; }
     
+
 }
 

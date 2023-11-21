@@ -1,5 +1,4 @@
-﻿using System;
-using MySolarCells.Services.Sqlite.Models;
+﻿
 
 namespace MySolarCells.Services.GridSupplier
 {

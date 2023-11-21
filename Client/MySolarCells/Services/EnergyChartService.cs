@@ -434,13 +434,13 @@ public class ChartDataRequest : ObservableObject
 
         }
     }
-    private DateTime filterStart = DateTime.Now;
+    private DateTime filterStart = DateTime.Today;
     public DateTime FilterStart
     {
         get { return filterStart; }
         set { SetProperty(ref filterStart, value); }
     }
-    private DateTime filterEnd = DateTime.Now;
+    private DateTime filterEnd = DateTime.Today;
     public DateTime FilterEnd
     {
         get { return filterEnd; }

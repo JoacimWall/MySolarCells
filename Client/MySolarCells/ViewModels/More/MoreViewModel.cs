@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using MySolarCells.Services.Sqlite.Models;
-using Syncfusion.XlsIO;
-
+﻿using Syncfusion.XlsIO;
 
 namespace MySolarCells.ViewModels.More;
 
@@ -27,6 +23,12 @@ public class MoreViewModel : BaseViewModel
     public ICommand ExportExcelCommand => new Command(async () => await ExportExcelGroupYear(MySolarCellsGlobals.SelectedHome.HomeId));
     public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
     public ICommand ShowReportCommand => new Command(async () => await ShowReport());
+    public ICommand ShowPowerTariffCommand => new Command(async () => await ShowPowerTariff());
+
+    private async Task ShowPowerTariff()
+    {
+        await GoToAsync(nameof(PowerTariffParameterView));
+    }
 
     private async Task ShowReport()
     {
@@ -364,7 +366,7 @@ public class MoreViewModel : BaseViewModel
         var result = await this.historyService.GenerateTotalPermonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
         var savingEsitmate = mscDbContext.SavingEssitmateParameters.FirstOrDefault();
         if (savingEsitmate is null)
-            savingEsitmate = new MySolarCellsSQLite.Sqlite.Models.SavingEssitmateParameters();
+            savingEsitmate = new SavingEssitmateParameters();
         var resultRoi = this.roiService.CalcSavingsEstimate(result.Model, savingEsitmate);
 
         using (ExcelEngine excelEngine = new ExcelEngine())
@@ -418,8 +420,8 @@ public class MoreViewModel : BaseViewModel
     {
         await GoToAsync(nameof(InvestmentAndLoanView));
     }
-    private Services.Sqlite.Models.Home home;
-    public Services.Sqlite.Models.Home Home
+    private Home home;
+    public Home Home
     {
         get => MySolarCellsGlobals.SelectedHome;
         set

@@ -2,8 +2,8 @@
 
 public class MySolarCellsGlobals
 {
-    private static Services.Sqlite.Models.Home selectedHome; 
-    public static Services.Sqlite.Models.Home SelectedHome
+    private static Home selectedHome; 
+    public static Home SelectedHome
     {
         get => selectedHome;
         set

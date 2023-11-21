@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                        x:Class="MySolarCells.Views.OnBoarding.PowerTariffParameterView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:sliders="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sliders"
+                        Shell.NavBarIsVisible="True"
+                        x:DataType="vm:PowerTariffParameterViewModel">
+
+    <Shell.TitleView>
+        <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="1"  FontSize="20" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Power_Tariff}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
+            <Border Grid.Column="0" Stroke="{x:Static theming:AppColors.Gray900Color}"  HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="1" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2"  Command="{Binding NavBackCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Back}"  BackgroundColor="Transparent" ></Button>
+            </Border>
+            <Border Grid.Column="2" Stroke="{x:Static theming:AppColors.Gray900Color}" HeightRequest="30" Padding="0" Margin="0,8"  
+                    StrokeThickness="1" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20" />
+                </Border.StrokeShape>
+                <Button Padding="4" Margin="2" Command="{Binding SaveCommand}" FontSize="13" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{x:Static trans:AppResources.Save}" BackgroundColor="Transparent" ></Button>
+            </Border>
+
+        </Grid>
+
+    </Shell.TitleView>
+    <ScrollView>
+        <Grid Style="{StaticResource GridBasePage}" VerticalOptions="Start" RowDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17" Text="{x:Static trans:AppResources.Power_Tariff_Intro_Text}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center" />
+
+            <Label Margin="0,8,0,-6" Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Calculation_Factors}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameters, Mode=TwoWay}" ItemDisplayBinding="{Binding DisplayName}"/>
+            <Button  Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddParametersCommand}"/>
+
+            <!--FromDate-->
+            <Label Margin="0,0,0,-6"  Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
+            <DatePicker Grid.Row="5" Grid.ColumnSpan="3" Date="{Binding SelectedParameters.FromDate}" Format="yyyy-MM" />
+
+
+            <!--PricePerKwh-->
+            <Label Grid.Row="6"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Price}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Entry Grid.Row="7" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedParameters.PricePerKwh}" >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="100" MaximumDecimalPlaces="2" />
+                </Entry.Behaviors>
+            </Entry>
+            <!--AmountOfPeaksToUse-->
+            <Label Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Entry Grid.Row="9" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedParameters.AmountOfPeaksToUse}"  >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
+                </Entry.Behaviors>
+            </Entry>
+            <!--UsePeaksFromSameDay-->
+            <HorizontalStackLayout Grid.Row="10" HorizontalOptions="Start"  Grid.ColumnSpan="3">
+                <CheckBox Margin="-12,0,0,0" HorizontalOptions="Start" IsChecked="{Binding SelectedParameters.UsePeaksFromSameDay}" VerticalOptions="Center" />
+                <Label   Text="{x:Static trans:AppResources.Use_Peaks_From_Same_Day_In_Calculation}" VerticalTextAlignment="Center" Style="{StaticResource LabelEntryTitleStyle}" />
+            </HorizontalStackLayout>
+            <!--UsePeaksFromSameDay-->
+            <Label Grid.Row="11"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Period}" Style="{StaticResource LabelEntryTitleStyle}" />
+
+            <Border Padding="8" Grid.ColumnSpan="3" Stroke="{x:Static theming:AppColors.Gray900Color}" StrokeThickness="1" Grid.Row="12">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" >
+                    <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Start"  Grid.ColumnSpan="3">
+                        <CheckBox Margin="-12,0,0,0" HorizontalOptions="Start" IsChecked="{Binding SelectedParameters.Weekday}" VerticalOptions="Center" />
+                        <Label   Text="{x:Static trans:AppResources.Weekday}" VerticalTextAlignment="Center" Style="{StaticResource LabelEntryTitleStyle}" />
+                         <CheckBox Margin="0,0,0,0" HorizontalOptions="Start" IsChecked="{Binding SelectedParameters.Weekend}" VerticalOptions="Center" />
+                        <Label   Text="{x:Static trans:AppResources.Weekend}" VerticalTextAlignment="Center" Style="{StaticResource LabelEntryTitleStyle}" />
+
+                    </HorizontalStackLayout>
+                    <!--Månader på Året-->
+                    <Label Grid.Row="1"  Text="{x:Static trans:AppResources.Month}" Style="{StaticResource LabelEntryTitleStyle}" />
+                    <sliders:SfRangeSlider  Margin="-16,0,-16,0" Grid.Row="2" Minimum="1" Maximum="12" RangeStart="{Binding SelectedParameters.PeriodMonthStart}" RangeEnd="{Binding SelectedParameters.PeriodMonthEnd}" Interval="2" ShowLabels="True" MinorTicksPerInterval="1" ShowTicks="True"/>
+                     <!--Timmar på dygnet-->
+                    <Label Grid.Row="3" Margin="0,12,0,0"  Text="{x:Static trans:AppResources.Hour}" Style="{StaticResource LabelEntryTitleStyle}" />
+                    <sliders:SfRangeSlider  Margin="-16,0,-16,0" Grid.Row="4" Minimum="0" Maximum="23" RangeStart="{Binding SelectedParameters.DayTimeStart}" RangeEnd="{Binding SelectedParameters.DayTimeEnd}" Interval="2" ShowLabels="true" ShowTicks="True" MinorTicksPerInterval="1" />
+
+                </Grid>
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12,12,12,12" />
+                </Border.StrokeShape>
+            </Border>
+
+            <!--TaxReduction-->
+            <!--<Label Grid.Row="10"  Grid.ColumnSpan="2" Text="{x:Static trans:AppResources.Tax_Reduction_Discription}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Entry Grid.Row="11" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedParameters.TaxReduction}" >
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
+                </Entry.Behaviors>
+            </Entry>-->
+            <!--EnergyTax-->
+            <!--<Label Grid.Row="12" Grid.ColumnSpan="2"  Text="{x:Static trans:AppResources.Energy_Tax_Comsumption}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Entry Grid.Row="13" Grid.ColumnSpan="3" Keyboard="Numeric"  Text="{Binding SelectedParameters.EnergyTax}">
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
+                </Entry.Behaviors>
+            </Entry>-->
+            <!--Total installed Kwh-->
+            <!--<Label Grid.Row="14"  Grid.ColumnSpan="2" Text="{x:Static trans:AppResources.Total_Installed_Panels_Kw}" Style="{StaticResource LabelEntryTitleStyle}" />
+            <Entry Grid.Row="15" Grid.ColumnSpan="3" Keyboard="Numeric"  Text="{Binding SelectedParameters.TotalInstallKwhPanels}">
+                <Entry.Behaviors>
+                    <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="1.0" MaximumValue="100.0" MaximumDecimalPlaces="3" />
+                </Entry.Behaviors>
+            </Entry>-->
+
+
+            <!--Use SpotPrices-->
+            <!--<HorizontalStackLayout Grid.Row="16" VerticalOptions="Center" >
+                <CheckBox IsChecked="{Binding SelectedParameters.UseSpotPrice}" VerticalOptions="Center"/>
+                <Label Text="{x:Static trans:AppResources.Use_Spot_Prices}" VerticalTextAlignment="Center" VerticalOptions="Center" Style="{StaticResource LabelEntryTitleStyle}"/>
+            </HorizontalStackLayout>-->
+            <!--Fixed price-->
+            <!--<Label Grid.Row="17" Text="{x:Static trans:AppResources.Fixed_Price_Kwh}" Style="{StaticResource LabelEntryTitleStyle}"  />
+                <Entry Grid.Row="18" Grid.ColumnSpan="2" Keyboard="Numeric" Text="{Binding SelectedParameters.FixedPriceKwh}">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
+                    </Entry.Behaviors>
+                </Entry>-->
+
+        </Grid>
+    </ScrollView>
+</views:BaseContentPage>

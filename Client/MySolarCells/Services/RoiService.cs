@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 public interface IRoiService
 {
     Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats, SavingEssitmateParameters savingEssitmateParameters);
@@ -9,10 +6,9 @@ public interface IRoiService
 
 public class RoiService :IRoiService
 {
-    private readonly MscDbContext mscDbContext;
-    public RoiService(MscDbContext mscDbContext)
+    public RoiService()
     {
-        this.mscDbContext = mscDbContext;
+
     }
     /// <summary>
     /// 
@@ -26,6 +22,7 @@ public class RoiService :IRoiService
         List<EstimateRoi> list = new List<EstimateRoi>();
         double totalSaving = 0;
         double lastknownInvestment = 0;
+        int yearCountFromStart = 1;
         //History Rows
         foreach (var item in historyStats.Item1)
         {
@@ -52,8 +49,7 @@ public class RoiService :IRoiService
                     {
                         var calcparmas = listCurrentYear.First().HistoryStats.EnergyCalculationParameter;
                         fakeproduction = fakeproduction + SnittProductionMonth.GetSnitMonth(i, calcparmas.TotalInstallKwhPanels);
-                        //if (listCurrentYear[i].HistoryStats.FactsProductionSoldAveragePerKwhProfit == 0)
-                        //    listCurrentYear[i].HistoryStats.FactsProductionSoldAveragePerKwhProfit = 
+                      
                     }
 
                 }
@@ -73,6 +69,7 @@ public class RoiService :IRoiService
             list.Add(new EstimateRoi
             {
                 Year = item.FromDate.Year,
+                YearFromStart = yearCountFromStart,
                 AvargePriceSold = item.HistoryStats.FactsProductionSoldAveragePerKwhProfit,
                 AvargePrisOwnUse = avargePrisOwnUse,
                 ProductionSold = item.HistoryStats.ProductionSold,
@@ -80,9 +77,9 @@ public class RoiService :IRoiService
                 YearSavingsSold = yearSavingsSold,
                 YearSavingsOwnUse = yearSavingsOwnUse,
                 RemainingOnInvestment = Math.Round(item.HistoryStats.Investment - totalSaving,0),
-                 ReturnPercentage = Math.Round((savingThisYear/ item.HistoryStats.Investment)*100,1)
+                ReturnPercentage = Math.Round((savingThisYear/ item.HistoryStats.Investment)*100,1)
             });
-
+            yearCountFromStart++;
              lastknownInvestment = item.HistoryStats.Investment;
         }
         //Future years
@@ -100,6 +97,7 @@ public class RoiService :IRoiService
             var newYear = new EstimateRoi
             {
                 Year = i,
+                YearFromStart = yearCountFromStart,
                 AvargePriceSold = Math.Round(list.Last().AvargePriceSold * (1 + savingEssitmateParameters.RealDevelopmentElectricityPrice / 100), 2),
                 AvargePrisOwnUse = Math.Round(list.Last().AvargePrisOwnUse * (1 + savingEssitmateParameters.RealDevelopmentElectricityPrice / 100), 2),
                 ProductionSold = Math.Round(list.Last().ProductionSold * (1 - savingEssitmateParameters.PanelDegradationPerYear/100), 2),
@@ -123,9 +121,8 @@ public class RoiService :IRoiService
             }
             newYear.ReturnPercentage = Math.Round((savingThisYear / lastknownInvestment) * 100, 1);
 
-            
             list.Add(newYear);
-
+            yearCountFromStart++;
         }
         return new Result<List<EstimateRoi>>(list); 
     }

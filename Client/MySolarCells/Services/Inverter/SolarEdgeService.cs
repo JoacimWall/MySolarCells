@@ -74,7 +74,7 @@ public class SolarEdgeService : IInverterServiceInterface
             string processingDateFrom;
             string processingDateTo;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
-            List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
+            List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
             int maxWeek = 0;
@@ -236,7 +236,7 @@ public class SolarEdgeService : IInverterServiceInterface
 
                         batch100 = 0;
                         await this.mscDbContext.BulkUpdateAsync(eneryList);
-                        eneryList = new List<Sqlite.Models.Energy>();
+                        eneryList = new List<SQLite.Sqlite.Models.Energy>();
                     }
 
                 }
@@ -251,7 +251,7 @@ public class SolarEdgeService : IInverterServiceInterface
 
                 batch100 = 0;
                 await this.mscDbContext.BulkUpdateAsync(eneryList);
-                eneryList = new List<Sqlite.Models.Energy>();
+                eneryList = new List<SQLite.Sqlite.Models.Energy>();
             }
             
         }

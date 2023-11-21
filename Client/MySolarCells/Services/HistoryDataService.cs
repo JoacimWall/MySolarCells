@@ -1,6 +1,4 @@
-﻿using MySolarCells.Services.Sqlite.Models;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public interface IHistoryDataService
 {
@@ -38,7 +36,7 @@ public class HistoryDataService : IHistoryDataService
         while (current < endDates.ThisMonthEnd)
         {
             var stats = await CalculateTotals(current, current.AddMonths(1), new HistorySimulate());
-            
+
             //Calulate Intrest currnt month
             var resultInvestcalc = CalculateLonAndInterest(resultInvest, current);
             stats.Investment = resultInvestcalc.Item1;
@@ -68,9 +66,9 @@ public class HistoryDataService : IHistoryDataService
                     ReportPageTyp = (int)ReportPageTyp.YearsOverview,
                     FromDate = historyStatsMounthGrpYear.First().FromDate,
                     HistoryStats = SummerizeToOneRoiStats(historyStatsMounthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear),
-                     FirstProductionDay = firstProductionDay.Timestamp
+                    FirstProductionDay = firstProductionDay.Timestamp
                 };
-                
+
                 historStatsOvervView.Add(newYearStats);
 
                 year = result[i].FromDate.Year;
@@ -170,13 +168,16 @@ public class HistoryDataService : IHistoryDataService
         //Peak
         if (difference.TotalDays < 32)
         {
-            int amountPeaks = 3;
+            int amountPeaks = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters.AmountOfPeaksToUse : 1;
+            double peakPricePerKwh = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters.PricePerKwh : 0;
+
+
             var topPeakPurchased = sumHistory.OrderByDescending(x => x.PeakPurchased).Take(amountPeaks);
             var topPeakPurchasedOwnuse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
             returnHistory.PeakPurchased = Math.Round(topPeakPurchased.Average(x => x.PeakPurchased), 2);
             returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage), 2);
             returnHistory.PeakEnergyReduction = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakPurchasedAndOwnUsage - returnHistory.PeakPurchased, 2) : 0;
-            returnHistory.PeakEnergyReductionSaved = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakEnergyReduction * 35, 2) : 0;
+            returnHistory.PeakEnergyReductionSaved = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakEnergyReduction * peakPricePerKwh, 2) : 0;
         }
         else
         {
@@ -193,6 +194,7 @@ public class HistoryDataService : IHistoryDataService
         List<Energy> energy;
         HistoryStats historyStats = new HistoryStats();
         var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        var powerParams = this.mscDbContext.PowerTariffParameters.AsNoTracking().OrderBy(o => o.FromDate).LastOrDefault(x => x.FromDate <= start);
         energy = await this.mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
 
         if (historySimulate.DoSimulate && historySimulate.AddBattery)
@@ -288,66 +290,36 @@ public class HistoryDataService : IHistoryDataService
         //------------ Battery Charge ---------------------------------------
         historyStats.BatteryCharge = Math.Round(energy.Sum(x => x.BatteryCharge), 2);
         historyStats.EnergyCalculationParameter = calcParams;
-
+        historyStats.PowerTariffParameters = powerParams;
         //------------ Peak Reduction ---------------------------------------
         if (energy.Count > 0)
         {
-            historyStats.PeakPurchased = energy.Max(x => x.Purchased);
-            historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+            if (powerParams == null)
+            {
+                historyStats.PeakPurchased = energy.Max(x => x.Purchased);
+                historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+            }
+            else
+            {
+                //Plocka ut månader
+                var valid = energy.Where(x => x.Timestamp.Month >= powerParams.PeriodMonthStart && x.Timestamp.Month <= powerParams.PeriodMonthEnd);
+                //plocka ut vardagar 
+                if (powerParams.Weekday && !powerParams.Weekend)
+                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
+                else if (!powerParams.Weekday && powerParams.Weekend) //Helger
+                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
+
+                //plockar ut timmar
+                valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
+                historyStats.PeakPurchased = valid.Max(x => x.Purchased);
+                historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+            }
         }
 
         return historyStats;
 
     }
-    //private Tuple<double, double, double?> CalcualteROI(double acumlimatedPodSavedAndMinusInterest, ReportHistoryStats stats, Energy firstProductionDay, double? previusYearRoi, List<ReportHistoryStats> historyStatsGrpYear)
-    //{
-    //    var currentYearResult = stats.HistoryStats.SumAllProductionSoldAndSaved - stats.HistoryStats.InterestCost;
-    //    acumlimatedPodSavedAndMinusInterest = acumlimatedPodSavedAndMinusInterest + currentYearResult;
-    //    var investmentLeft = stats.HistoryStats.Investment - acumlimatedPodSavedAndMinusInterest;
-
-    //    double fakeProduction = 0;
-    //    //första år då räknar vi inte ROI
-    //    double? roiLeft = Convert.ToDouble(investmentLeft / currentYearResult);
-    //    //simulera månader innan
-    //    if (firstProductionDay.Timestamp > stats.FromDate)
-    //    {
-    //        var firstHoleMonth = historyStatsGrpYear.FirstOrDefault(x => x.FromDate > firstProductionDay.Timestamp);
-    //        var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
-    //        var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
-    //        var refvalue = tot / devtal;
-    //        DateTime current = firstHoleMonth.FromDate.AddMonths(-1);
-    //        while (current >= stats.FromDate)
-    //        {
-    //            fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
-    //            current = current.AddMonths(-1);
-    //        }
-
-    //        roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
-
-
-    //    }
-    //    //Simulera månader fram till års skiftet
-    //    if (DateTime.Today < stats.FromDate.AddYears(1))
-    //    {
-    //        var firstHoleMonth = historyStatsGrpYear.Last(x => x.FromDate.Month < DateTime.Today.Month);
-    //        var tot = firstHoleMonth.HistoryStats.SumAllProductionSoldAndSaved - firstHoleMonth.HistoryStats.InterestCost;
-    //        var devtal = SnittProductionMonth.GetSnitMonth(firstHoleMonth.FromDate.Month, 1);
-    //        var refvalue = tot / devtal;
-    //        DateTime current = firstHoleMonth.FromDate.AddMonths(1);
-    //        while (current < stats.FromDate.AddYears(1))
-    //        {
-    //            fakeProduction = fakeProduction + refvalue * SnittProductionMonth.GetSnitMonth(current.Month, 1);
-    //            current = current.AddMonths(1);
-    //        }
-
-    //        roiLeft = Convert.ToDouble(investmentLeft / (fakeProduction + currentYearResult));
-
-    //    }
-    //    if (previusYearRoi.HasValue && roiLeft.HasValue)
-    //        roiLeft = ((previusYearRoi.Value - 1) + roiLeft) / 2;
-
-    //    return new Tuple<double, double, double?>(acumlimatedPodSavedAndMinusInterest, currentYearResult, roiLeft);
-    //}
+    
     //returns total invest, Loanleft and Interestcost
     private Tuple<int, float> CalculateLonAndInterest(List<InvestmentAndLoan> investmentAndLoans, DateTime start)
     {

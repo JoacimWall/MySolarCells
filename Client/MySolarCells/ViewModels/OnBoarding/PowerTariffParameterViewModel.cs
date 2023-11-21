@@ -1,15 +1,19 @@
-﻿namespace MySolarCells.ViewModels.OnBoarding;
+﻿
+using Microsoft.EntityFrameworkCore;
 
-public class EnergyCalculationParameterViewModel : BaseViewModel
+
+namespace MySolarCells.ViewModels.OnBoarding;
+
+public class PowerTariffParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public EnergyCalculationParameterViewModel(MscDbContext mscDbContext)
+    public PowerTariffParameterViewModel(MscDbContext mscDbContext)
     {
         this.mscDbContext = mscDbContext;
-        var list = this.mscDbContext.EnergyCalculationParameter.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
+        var list = this.mscDbContext.PowerTariffParameters.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
         if (list != null && list.Count > 0)
         {
-            Parameters = new ObservableCollection<EnergyCalculationParameter>(list);
+            Parameters = new ObservableCollection<PowerTariffParameters>(list);
             selectedParameters = parameters.Last();
         }
         else //Add default first one
@@ -35,7 +39,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         //Clone previus
         if (firstTime)
         {
-            Parameters.Add(new EnergyCalculationParameter
+            Parameters.Add(new PowerTariffParameters
             {
                 HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
                 FromDate = MySolarCellsGlobals.SelectedHome.FromDate,
@@ -44,21 +48,21 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
         else
         { 
         var paramLast = Parameters.Last();
-        Parameters.Add(new EnergyCalculationParameter
+        Parameters.Add(new PowerTariffParameters
         {
             HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
             FromDate = paramLast.FromDate.AddMonths(1),
-            EnergyTax = paramLast.EnergyTax,
-            FixedPriceKwh = paramLast.FixedPriceKwh,
-            ProdCompensationElectricityLowload = paramLast.ProdCompensationElectricityLowload,
-            TaxReduction = paramLast.TaxReduction,
-            TotalInstallKwhPanels = paramLast.TotalInstallKwhPanels,
-            TransferFee = paramLast.TransferFee,
-            UseSpotPrice = paramLast.UseSpotPrice
+            //EnergyTax = paramLast.EnergyTax,
+            //FixedPriceKwh = paramLast.FixedPriceKwh,
+            //ProdCompensationElectricityLowload = paramLast.ProdCompensationElectricityLowload,
+            //TaxReduction = paramLast.TaxReduction,
+            //TotalInstallKwhPanels = paramLast.TotalInstallKwhPanels,
+            //TransferFee = paramLast.TransferFee,
+            //UseSpotPrice = paramLast.UseSpotPrice
 
         });
         }
-        this.mscDbContext.EnergyCalculationParameter.Add(Parameters.Last());
+        this.mscDbContext.PowerTariffParameters.Add(Parameters.Last());
         SelectedParameters = Parameters.Last();
     }
 
@@ -86,8 +90,8 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
 
     }
 
-    private ObservableCollection<EnergyCalculationParameter> parameters = new ObservableCollection<EnergyCalculationParameter>();
-    public ObservableCollection<EnergyCalculationParameter> Parameters
+    private ObservableCollection<PowerTariffParameters> parameters = new ObservableCollection<PowerTariffParameters>();
+    public ObservableCollection<PowerTariffParameters> Parameters
     {
         get => parameters;
         set
@@ -96,8 +100,8 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
 
         }
     }
-    private EnergyCalculationParameter selectedParameters = new EnergyCalculationParameter();
-    public EnergyCalculationParameter SelectedParameters
+    private PowerTariffParameters selectedParameters = new PowerTariffParameters();
+    public PowerTariffParameters SelectedParameters
     {
         get => selectedParameters;
         set

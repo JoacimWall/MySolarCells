@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MySolarCells.Services.Sqlite;
 
@@ -10,9 +11,11 @@ using MySolarCells.Services.Sqlite;
 namespace MySolarCellsSQLite.Migrations
 {
     [DbContext(typeof(MscDbContext))]
-    partial class MscDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121171415_PowerTariffTabelFix")]
+    partial class PowerTariffTabelFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");

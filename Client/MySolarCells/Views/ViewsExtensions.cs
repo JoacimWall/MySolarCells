@@ -11,6 +11,8 @@ public static class ViewsExtensions
         builder.Services.AddTransient<EnergyCalculationParameterView>();
         builder.Services.AddTransient<FirstSyncView>();
         builder.Services.AddTransient<InvestmentAndLoanView>();
+        builder.Services.AddTransient<PowerTariffParameterView>();
+
         //ROI
         builder.Services.AddTransient<RoiView>();
         builder.Services.AddTransient<ReportView>();

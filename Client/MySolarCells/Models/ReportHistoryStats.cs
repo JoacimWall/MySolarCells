@@ -1,7 +1,4 @@
-﻿using System;
-using MySolarCells.Services.Sqlite.Models;
-
-namespace MySolarCells.Models;
+﻿namespace MySolarCells.Models;
 
 public class ReportHistoryStats
 {
@@ -84,7 +81,7 @@ public class HistoryStats
 
 
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; }
-
+    public PowerTariffParameters PowerTariffParameters { get; set; }
 
     //This is only for fun you dont sell this kwh you load the battery  
     // public double TotalBatteryChargeProfitFake { get; set; } = 0;

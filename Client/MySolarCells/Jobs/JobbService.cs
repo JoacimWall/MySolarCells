@@ -15,9 +15,9 @@ public class JobDalySync : IJob
 
     public async Task Run(JobInfo jobInfo, CancellationToken cancelToken)
     {
-        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+        mscDbContext.Log.Add(new Log
         {
-            LogTitle = "Sync stated from bakgrund job",
+            LogTitle = "Sync stated from bakgrunds job",
             CreateDate = DateTime.Now,
             LogDetails = "",
             LogTyp = (int)LogTyp.Info 

@@ -559,5 +559,28 @@
 <data name="Panel_Degradation_Per_Year" xml:space="preserve">
     <value>Panel degradation per year</value>
   <comment>Need review</comment></data>
-
+<data name="Power_Tariff" xml:space="preserve">
+    <value>Power tariff</value>
+  <comment>Need review</comment></data>
+<data name="Power_Tariff_Intro_Text" xml:space="preserve">
+    <value>Power tariffs are something that some electricity companies charge to reduce high loads in the network.</value>
+  <comment>Need review</comment></data>
+<data name="Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month" xml:space="preserve">
+    <value>Number of peaks to calculate the fee on per month</value>
+  <comment>Need review</comment></data>
+<data name="Use_Peaks_From_Same_Day_In_Calculation" xml:space="preserve">
+    <value>Use peaks from same day in calculation</value>
+  <comment>Need review</comment></data>
+<data name="Period" xml:space="preserve">
+    <value>Period</value>
+  <comment>Need review</comment></data>
+<data name="Weekday" xml:space="preserve">
+    <value>Weekday</value>
+  <comment>Need review</comment></data>
+<data name="Weekend" xml:space="preserve">
+    <value>Weekend</value>
+  <comment>Need review</comment></data>
+<data name="Hour" xml:space="preserve">
+    <value>Hour</value>
+  <comment>Need review</comment></data>
 </root>

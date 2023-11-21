@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.Services.Sqlite.Models;
+﻿namespace MySolarCells.SQLite.Sqlite.Models;
 
 public class Log : ObservableObject
 {

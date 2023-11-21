@@ -517,6 +517,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hour.
+        /// </summary>
+        public static string Hour {
+            get {
+                return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to If battery is not used.
         /// </summary>
         public static string If_Battery_Is_Not_Used {
@@ -805,6 +814,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of peaks to calculate the fee on per month.
+        /// </summary>
+        public static string Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month {
+            get {
+                return ResourceManager.GetString("Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string Ok {
@@ -886,6 +904,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Period.
+        /// </summary>
+        public static string Period {
+            get {
+                return ResourceManager.GetString("Period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pick the brand of your electricity supplier.
         /// </summary>
         public static string Pick_The_Brand_Of_Your_Electricity_Supplier {
@@ -918,6 +945,24 @@ namespace MySolarCells.Resources.Translations {
         public static string Pick_Your_Site {
             get {
                 return ResourceManager.GetString("Pick_Your_Site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power tariff.
+        /// </summary>
+        public static string Power_Tariff {
+            get {
+                return ResourceManager.GetString("Power_Tariff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power tariffs are something that some electricity companies charge to reduce high loads in the network..
+        /// </summary>
+        public static string Power_Tariff_Intro_Text {
+            get {
+                return ResourceManager.GetString("Power_Tariff_Intro_Text", resourceCulture);
             }
         }
         
@@ -1489,6 +1534,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use peaks from same day in calculation.
+        /// </summary>
+        public static string Use_Peaks_From_Same_Day_In_Calculation {
+            get {
+                return ResourceManager.GetString("Use_Peaks_From_Same_Day_In_Calculation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Spot prices.
         /// </summary>
         public static string Use_Spot_Prices {
@@ -1521,6 +1575,24 @@ namespace MySolarCells.Resources.Translations {
         public static string Week {
             get {
                 return ResourceManager.GetString("Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekday.
+        /// </summary>
+        public static string Weekday {
+            get {
+                return ResourceManager.GetString("Weekday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekend.
+        /// </summary>
+        public static string Weekend {
+            get {
+                return ResourceManager.GetString("Weekend", resourceCulture);
             }
         }
         

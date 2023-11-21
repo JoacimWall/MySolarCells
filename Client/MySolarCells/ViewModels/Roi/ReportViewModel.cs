@@ -1,6 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.ViewModels.Roi;
+﻿namespace MySolarCells.ViewModels.Roi;
 
 public class ReportViewModel : BaseViewModel
 {

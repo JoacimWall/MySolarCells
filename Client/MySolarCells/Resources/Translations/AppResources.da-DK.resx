@@ -381,9 +381,6 @@
   <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
     <value>Beregningsfaktorer for omkostninger og indtægter relateret til solcelleproduktion.</value>
   <comment>Need review</comment></data>
-  <data name="Total_Installed_Panels_Kwh" xml:space="preserve">
-    <value>Samlet installerede paneler (kWh)</value>
-  <comment>Need review</comment></data>
   <data name="Application_Version" xml:space="preserve">
     <value>Applikationsversion</value>
   <comment>Need review</comment></data>
@@ -512,5 +509,32 @@
   <comment>Need review</comment></data>
   <data name="Panel_Degradation_Per_Year" xml:space="preserve">
     <value>Panelnedbrydning om året</value>
+  <comment>Need review</comment></data>
+  <data name="Total_Installed_Panels_Kw" xml:space="preserve">
+    <value>Samlet installerede paneler (kW)</value>
+  <comment>Need review</comment></data>
+  <data name="Power_Tariff" xml:space="preserve">
+    <value>Strømtarif</value>
+  <comment>Need review</comment></data>
+  <data name="Power_Tariff_Intro_Text" xml:space="preserve">
+    <value>Strømtariffer er noget, som nogle elselskaber opkræver for at reducere høje belastninger i nettet.</value>
+  <comment>Need review</comment></data>
+  <data name="Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month" xml:space="preserve">
+    <value>Antal toppe at beregne gebyret på pr. måned</value>
+  <comment>Need review</comment></data>
+  <data name="Use_Peaks_From_Same_Day_In_Calculation" xml:space="preserve">
+    <value>Brug peaks fra samme dag i beregningen</value>
+  <comment>Need review</comment></data>
+  <data name="Period" xml:space="preserve">
+    <value>Periode</value>
+  <comment>Need review</comment></data>
+  <data name="Weekday" xml:space="preserve">
+    <value>Ugedag</value>
+  <comment>Need review</comment></data>
+  <data name="Weekend" xml:space="preserve">
+    <value>Weekend</value>
+  <comment>Need review</comment></data>
+  <data name="Hour" xml:space="preserve">
+    <value>Time</value>
   <comment>Need review</comment></data>
 </root>

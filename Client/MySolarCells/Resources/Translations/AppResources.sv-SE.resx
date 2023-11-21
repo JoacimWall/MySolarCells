@@ -513,4 +513,28 @@
   <data name="Panel_Degradation_Per_Year" xml:space="preserve">
     <value>Panelnedbrytning per år</value>
   <comment>Need review</comment></data>
+  <data name="Power_Tariff" xml:space="preserve">
+    <value>Effekttaxa</value>
+  <comment>Need review</comment></data>
+  <data name="Power_Tariff_Intro_Text" xml:space="preserve">
+    <value>Effekttariffer är något som vissa elbolag tar ut för att minska höga belastningar i nätet.</value>
+  <comment>Need review</comment></data>
+  <data name="Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month" xml:space="preserve">
+    <value>Antal toppar att beräkna avgiften på per månad</value>
+  <comment>Need review</comment></data>
+  <data name="Use_Peaks_From_Same_Day_In_Calculation" xml:space="preserve">
+    <value>Använd toppar från samma dag i beräkningen</value>
+  <comment>Need review</comment></data>
+  <data name="Period" xml:space="preserve">
+    <value>Period</value>
+  <comment>Need review</comment></data>
+  <data name="Weekday" xml:space="preserve">
+    <value>Veckodag</value>
+  <comment>Need review</comment></data>
+  <data name="Weekend" xml:space="preserve">
+    <value>Helgen</value>
+  <comment>Need review</comment></data>
+  <data name="Hour" xml:space="preserve">
+    <value>Timme</value>
+  <comment>Need review</comment></data>
 </root>

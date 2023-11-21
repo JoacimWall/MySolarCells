@@ -1,4 +1,5 @@
-﻿using Syncfusion.XlsIO.Parser.Biff_Records.MsoDrawing;
+﻿using SQLitePCL;
+using Syncfusion.XlsIO.Parser.Biff_Records.MsoDrawing;
 using System.IO;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -121,7 +122,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             string toTimeOfDay = "T23:59:59";
             string fromTimeOfDay = "T00:00:00";
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
-            List<Sqlite.Models.Energy> eneryList = new List<Sqlite.Models.Energy>();
+            List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
 
@@ -215,7 +216,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
                 batch100 = 0;
                 await this.mscDbContext.BulkUpdateAsync(eneryList);
-                eneryList = new List<Sqlite.Models.Energy>();
+                eneryList = new List<SQLite.Sqlite.Models.Energy>();
             }
            
         }

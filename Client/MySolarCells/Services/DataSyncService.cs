@@ -26,7 +26,7 @@ public class DataSyncService : IDataSyncService
 
        
 
-        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+        mscDbContext.Log.Add(new SQLite.Sqlite.Models.Log
         {
             LogTitle = "Sync started",
             CreateDate = DateTime.Now,
@@ -41,7 +41,7 @@ public class DataSyncService : IDataSyncService
         var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Day, PevhourDatetime.Hour,0,0);
         if (lastSyncTime.Timestamp >= prevHoleHour && lastSyncInverterTime.Timestamp >= prevHoleHour)
         {
-            mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+            mscDbContext.Log.Add(new SQLite.Sqlite.Models.Log
             {
                 LogTitle = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More,
                 CreateDate = DateTime.Now,
@@ -92,15 +92,14 @@ public class DataSyncService : IDataSyncService
         var resultInverter = await inverterService.Sync(lastSyncInverterTime.Timestamp, progress, 0);
        
 
-        mscDbContext.Log.Add(new Services.Sqlite.Models.Log
+        mscDbContext.Log.Add(new SQLite.Sqlite.Models.Log
         {
             LogTitle = "Sync done",
             CreateDate = DateTime.Now,
             LogDetails = "",
             LogTyp = result.WasSuccessful ? (int)LogTyp.Info : (int)LogTyp.Error
         });
-        //if (resultInverter.WasSuccessful)
-        //    this.settingsService.LastDataSync = DateTime.Now;
+       
         return resultInverter;
 
     }

@@ -11,6 +11,8 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<FirstSyncViewModel>();
         builder.Services.AddTransient<EnergyCalculationParameterViewModel>();
         builder.Services.AddTransient<InvestmentAndLoanViewModel>();
+        builder.Services.AddTransient<PowerTariffParameterViewModel>();
+
         //ROI
         builder.Services.AddTransient<RoiViewModel>();
         builder.Services.AddTransient<ReportViewModel>();

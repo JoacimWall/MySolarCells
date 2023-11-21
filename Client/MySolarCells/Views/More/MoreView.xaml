@@ -126,17 +126,16 @@
                         <TapGestureRecognizer Command="{Binding ShowInvestAndLonCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-                <!--  pointshop  -->
-                <!--<control:MenuGridItemView Margin="0,2"
+              <!--  PowerTariff  -->
+                <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
-                        FontIcon="{x:Static theming:AppIconFont.Pointshop}"
-                        FontIconExternal="{x:Static theming:AppIconFont.External_link}"
+                        FontIcon="{x:Static theming:IconFont.Dashbord}"
                         IsVisible="True"
-                        TitleText="{Binding Source={x:Static trans:AppResources.Points_Shop}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
+                        TitleText="{Binding Source={x:Static trans:AppResources.Power_Tariff}, Converter={StaticResource TextCaseConverter}, ConverterParameter={x:Static toolkit:TextCaseType.FirstUpperRestLower}}">
                     <control:MenuGridItemView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding PointsShopviewTapCommand}" />
+                        <TapGestureRecognizer Command="{Binding ShowPowerTariffCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
-                </control:MenuGridItemView>-->
+                </control:MenuGridItemView>
 
 
 

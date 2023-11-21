@@ -1,8 +1,4 @@
-﻿
-using MySolarCells.Services.Sqlite.Models;
-namespace MySolarCells.Services.GridSupplier;
-
-
+﻿namespace MySolarCells.Services.GridSupplier;
 
 public class TibberService : IGridSupplierInterface
 {
@@ -60,7 +56,7 @@ public class TibberService : IGridSupplierInterface
 
         var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
         if (!result.WasSuccessful)
-            return new Result<GridSupplierLoginResponse>(result.ErrorMessage != null ? result.ErrorMessage : AppResources.The_Login_Failed_Check_That_You_Entered_The_Correct_Information );
+            return new Result<GridSupplierLoginResponse>(result.ErrorMessage != null ? result.ErrorMessage : AppResources.The_Login_Failed_Check_That_You_Entered_The_Correct_Information);
         else
         {
             gridSupplierLoginResponse = new GridSupplierLoginResponse { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() };
@@ -99,7 +95,7 @@ public class TibberService : IGridSupplierInterface
             return new Result<List<Home>>(homes);
 
         }
-        
+
     }
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
@@ -111,7 +107,7 @@ public class TibberService : IGridSupplierInterface
             bool importOnlySpotPrice = MySolarCellsGlobals.SelectedHome.ImportOnlySpotPrice;
             List<Energy> eneryInsertList = new List<Energy>();
             List<Energy> eneryUpdateList = new List<Energy>();
-            
+
             //DateTime start = MySolarCellsGlobals.SelectedHome.FromDate;
             var dates = Helpers.DateHelper.GetRelatedDates(DateTime.Today);
             DateTime end = dates.BaseDate.AddDays(1);
@@ -299,33 +295,33 @@ public class TibberService : IGridSupplierInterface
 
             if (eneryInsertList.Count > 0)
             {
- 
+
                 batch100 = 0;
                 await this.mscDbContext.BulkUpdateAsync(eneryInsertList);
                 eneryInsertList = new List<Energy>();
 
             }
             //-------- Sync future prices spot ---------------------
-           GraphQlRequestTibber graphQlRequestTibberPrice = new GraphQlRequestTibber
+            GraphQlRequestTibber graphQlRequestTibberPrice = new GraphQlRequestTibber
             {
-               variables = new TibberConsumptionProductionRequest
-               {
-                   homeid = MySolarCellsGlobals.SelectedHome.SubSystemEntityId
-                   
-               },
-               query = "query getdata($homeid: ID!) { viewer { home(id: $homeid) { currentSubscription { priceInfo { today { total energy tax level startsAt currency } tomorrow { total energy tax level startsAt currency }}}}}}"
-           };
+                variables = new TibberConsumptionProductionRequest
+                {
+                    homeid = MySolarCellsGlobals.SelectedHome.SubSystemEntityId
+
+                },
+                query = "query getdata($homeid: ID!) { viewer { home(id: $homeid) { currentSubscription { priceInfo { today { total energy tax level startsAt currency } tomorrow { total energy tax level startsAt currency }}}}}}"
+            };
             var result = await this.restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibberPrice);
             if (!result.WasSuccessful)
                 return new Result<DataSyncResponse>(result.ErrorMessage);
             else
             {
                 List<TibberPrice> listPrice = new List<TibberPrice>();
-               if (result.Model.data.viewer.home.currentSubscription.priceInfo.today.Count > 0)
+                if (result.Model.data.viewer.home.currentSubscription.priceInfo.today.Count > 0)
                     listPrice.AddRange(result.Model.data.viewer.home.currentSubscription.priceInfo.today);
                 if (result.Model.data.viewer.home.currentSubscription.priceInfo.tomorrow.Count > 0)
                     listPrice.AddRange(result.Model.data.viewer.home.currentSubscription.priceInfo.tomorrow);
-               
+
                 foreach (var priceItem in listPrice)
                 {
                     var existPrice = await this.mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == priceItem.startsAt && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
@@ -340,7 +336,7 @@ public class TibberService : IGridSupplierInterface
                         };
                         this.mscDbContext.Energy.Add(existPrice);
                     }
-                     //only update when vat is = 0. else pick prices from consumtions import
+                    //only update when vat is = 0. else pick prices from consumtions import
                     if (existPrice.UnitPriceVatBuy == 0)
                     {
                         existPrice.UnitPriceBuy = priceItem.total;
@@ -361,7 +357,7 @@ public class TibberService : IGridSupplierInterface
         }
     }
 
-    
+
 
 }
 
@@ -436,8 +432,8 @@ public class TibberPrice
     public string level { get; set; }
     public DateTime startsAt { get; set; }
     public string currency { get; set; }
-    
-    
+
+
 }
 
 

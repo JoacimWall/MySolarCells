@@ -44,7 +44,7 @@
                     <Grid RowDefinitions="Auto,Auto,*">
                         <!--Titels-->
                         <HorizontalStackLayout Grid.Row="0">
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="40" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
+                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="60" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
                             <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="84" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Prices}"/>
                             <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Production}"/>
                             <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Annual_Savings}"/>
@@ -54,7 +54,7 @@
 
                         </HorizontalStackLayout>
                         <HorizontalStackLayout Grid.Row="1">
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text=" "  HorizontalTextAlignment="End"/>
+                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text=" "  HorizontalTextAlignment="End"/>
                             <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
                             <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
                             <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
@@ -68,8 +68,8 @@
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding EstimatRoi}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="ml:EstimateRoi">
-                                        <Grid ColumnDefinitions="44,44,44,64,64,64,64,88,108">
-                                            <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding Year}" />
+                                        <Grid ColumnDefinitions="64,44,44,64,64,64,64,88,108">
+                                            <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding YearTitle}" />
                                             <Label Grid.Column="1" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AvargePriceSold, StringFormat='{0:F2} kr'}" />
                                             <Label Grid.Column="2" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AvargePrisOwnUse, StringFormat='{0:F2} kr'}" />
                                             <Label Grid.Column="3" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding ProductionSold, StringFormat='{0:F0} kWh'}" />

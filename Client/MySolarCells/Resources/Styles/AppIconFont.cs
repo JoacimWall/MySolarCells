@@ -16,5 +16,6 @@ public static class IconFont
     public const string Coins = "\uea0c";
     public const string Report = "\uea0d";
     public const string Add = "\uea0e";
+    public const string Dashbord = "\uea0f";
 }
 
