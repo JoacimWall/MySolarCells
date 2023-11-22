@@ -583,4 +583,8 @@
 <data name="Hour" xml:space="preserve">
     <value>Hour</value>
   <comment>Need review</comment></data>
+<data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
+    <value>Peak tariff purchase cost</value>
+  <comment>Need review</comment></data>
+
 </root>

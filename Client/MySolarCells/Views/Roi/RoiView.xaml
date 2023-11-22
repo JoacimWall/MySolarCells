@@ -11,7 +11,7 @@
 
     <Grid RowDefinitions="Auto,*" >
         <Grid  RowDefinitions="Auto,Auto">
-            <Label FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.ROI}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Style="{StaticResource LabelPageTitleStyle}"  Text="{x:Static trans:AppResources.ROI}" />
             <Border Grid.Column="1" Style="{StaticResource BorderButtonStyle}" IsVisible="{OnPlatform Android=false, iOS=false}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}" Text="{x:Static trans:AppResources.Refresh}"/>
             </Border>
@@ -28,18 +28,16 @@
                         <Label FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Production_And_Consumption}"/>
                         <!--TotalProductionSold-->
                         <Label  Text="{x:Static trans:AppResources.Sold}"/>
-                        <!--Battery_Charge-->
-                        <Label Text="{x:Static trans:AppResources.Battery_Charge}"/>
                         <!--Production_Own_Use-->
                         <Label  Text="{x:Static trans:AppResources.Own_Use}"/>
-                        <!--TotalPurchased-->
-                        <Label Text="{x:Static trans:AppResources.Purchased}"/>
+                        <!--Battery_Charge-->
+                        <Label Text="{x:Static trans:AppResources.Battery_Charge}"/>
                         <!--Battery Used-->
                         <Label Text="{x:Static trans:AppResources.Battery_used}"/>
-                        <!--Peak-->
-                        <Label Text="{x:Static trans:AppResources.Peak_Hour_Purchased}"/>
-                        <Label Text="{x:Static trans:AppResources.Peak_Hour_Purchased_And_Own_Use}"/>
-                        <Label Text="{x:Static trans:AppResources.Energy_Peak_Reduction}"/>
+                        <!--TotalPurchased-->
+                        <Label Text="{x:Static trans:AppResources.Purchased}"/>
+
+
                         <BoxView Margin="0,4" HeightRequest="1" />
                         <!--Produced-->
                         <Label Text="{x:Static trans:AppResources.Production}"/>
@@ -70,15 +68,16 @@
                         <Label Text="{x:Static trans:AppResources.Saved_Transfer_Fee_Battery}"/>
                         <!--TotalSavedEnergyTaxBatteryUse-->
                         <Label Text="{x:Static trans:AppResources.Saved_Energy_Tax_Battery}"/>
-
+                        <!--peak use-->
+                        <Label Text="{x:Static trans:AppResources.Energy_Peak_Reduction_Saved}"/>
                         <!--TotalPurchasedCost-->
                         <Label Text="{x:Static trans:AppResources.Purchase_Cost}"/>
                         <!--TotalTransferFeePurchased-->
                         <Label Text="{x:Static trans:AppResources.Purchase_Transfer_Fee}"/>
                         <!--TotalTaxPurchased-->
                         <Label Text="{x:Static trans:AppResources.Purchase_Energy_Tax}"/>
-                         <!--peak use-->
-                        <Label Text="{x:Static trans:AppResources.Energy_Peak_Reduction_Saved}"/>
+                         <!--peak purched Cost-->
+                        <Label Text="{x:Static trans:AppResources.Peak_Tariff_Purchase_Cost}"/>
                         <BoxView Margin="0,4" HeightRequest="1" />
                         <!--Produced-->
                         <Label Text="{x:Static trans:AppResources.Production}"/>
@@ -91,59 +90,65 @@
                         <!--FUN FACTS-->
                         <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Fun_Facts}"/>
                         <Label Text="{x:Static trans:AppResources.Production_Index_Desc_Prod_Per_Day_KWh}"/>
-                        <Label Text="{x:Static trans:AppResources.Average_Purchased_Cost_Per_Kwh}"/>
+
                         <Label Text="{x:Static trans:AppResources.Average_Production_Sold_Profit_Per_Kwh}"/>
                         <Label Text="{x:Static trans:AppResources.Average_Production_Own_Use_Saved_Per_Kwh}"/>
                         <Label Text="{x:Static trans:AppResources.Average_Battery_Used_Saved_Per_Kwh}"/>
-                       
+                        <Label Text="{x:Static trans:AppResources.Average_Purchased_Cost_Per_Kwh}"/>
+                        <!--Peak-->
+                        <Label Text="{x:Static trans:AppResources.Peak_Hour_Purchased}"/>
+                        <!--Peak Reduction-->
+                        <Label Text="{x:Static trans:AppResources.Energy_Peak_Reduction}"/>
 
                     </VerticalStackLayout >
                     <!--Value-->
                     <VerticalStackLayout Grid.Row="2" Grid.Column="1" >
                         <!--PRODUCTION AND CONSUMPTION-->
                         <Label FontSize="17"  Text=" "/>
-                        <Label Text="{Binding RoiStats.ProductionSold}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BatteryCharge}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.ProductionOwnUse}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.Purchased}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BatteryUsed}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PeakPurchased}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PeakPurchasedAndOwnUsage}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PeakEnergyReduction}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionSold, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionOwnUse, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BatteryCharge, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BatteryUsed, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.Purchased, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+
+
                         <BoxView Margin="0,4" HeightRequest="1" />
                         <!--SumProductionOwnUseAndBattery-->
-                        <Label Text="{Binding RoiStats.SumAllProduction}"  HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.SumAllConsumption}"  HorizontalTextAlignment="End" />
-                        <Label Text="{Binding RoiStats.BalanceProduction_Minus_Consumption}"  HorizontalTextAlignment="End" />
+                        <Label Text="{Binding RoiStats.SumAllProduction, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.SumAllConsumption, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
+                        <Label Text="{Binding RoiStats.BalanceProduction_Minus_Consumption, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
 
                         <!-- COSTS AND REVENUES-->
                         <Label  Margin="0,16,0,0"  FontSize="17"  Text=" "/>
-                        <Label Text="{Binding RoiStats.ProductionSoldProfit}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.ProductionSoldGridCompensationProfit}" HorizontalTextAlignment="End" />
-                        <Label Text="{Binding RoiStats.ProductionSoldTaxReductionProfit}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.ProductionOwnUseSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.ProductionOwnUseTransferFeeSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.ProductionOwnUseEnergyTaxSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BatteryUsedSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BatteryUseTransferFeeSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BatteryUseEnergyTaxSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PurchasedCost}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PurchasedTransferFeeCost}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PurchasedTaxCost}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.PeakEnergyReductionSaved}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionSoldProfit, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionSoldGridCompensationProfit, StringFormat='{0:F2}'}" HorizontalTextAlignment="End" />
+                        <Label Text="{Binding RoiStats.ProductionSoldTaxReductionProfit, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionOwnUseSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionOwnUseTransferFeeSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.ProductionOwnUseEnergyTaxSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BatteryUsedSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BatteryUseTransferFeeSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BatteryUseEnergyTaxSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PeakEnergyReductionSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PurchasedCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PurchasedTransferFeeCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PurchasedTaxCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PeakPurchasedCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+
                         <BoxView Margin="0,4" HeightRequest="1" />
-                        <Label Text="{Binding RoiStats.SumAllProductionSoldAndSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.SumPurchasedCost}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost}"  HorizontalTextAlignment="End" />
+                        <Label Text="{Binding RoiStats.SumAllProductionSoldAndSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.SumPurchasedCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
 
                         <!--FUN FACTS-->
                         <Label Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text=" "/>
-                        <Label Text="{Binding RoiStats.FactsProductionIndex}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.FactsPurchasedCostAveragePerKwhPurchased}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.FactsProductionSoldAveragePerKwhProfit}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.FactsProductionOwnUseAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
-                        <Label Text="{Binding RoiStats.FactsBatteryUsedAveragePerKwhSaved}" HorizontalTextAlignment="End"/>
-
+                        <Label Text="{Binding RoiStats.FactsProductionIndex, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.FactsProductionSoldAveragePerKwhProfit, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.FactsProductionOwnUseAveragePerKwhSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.FactsBatteryUsedAveragePerKwhSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.FactsPurchasedCostAveragePerKwhPurchased, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PeakPurchased, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
+                        <Label Text="{Binding RoiStats.PeakEnergyReduction, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
 
 
                     </VerticalStackLayout>
@@ -154,9 +159,7 @@
                         <Label Text="{Binding RoiStats.Unit}" />
                         <Label Text="{Binding RoiStats.Unit}" />
                         <Label Text="{Binding RoiStats.Unit}" />
-                        <Label Text="{Binding RoiStats.Unit}" />
-                        <Label Text="{Binding RoiStats.Unit}" />
-                        <Label Text="{Binding RoiStats.Unit}" />
+
                         <Label Text="{Binding RoiStats.Unit}" />
                         <Label Text="{Binding RoiStats.Unit}" />
                         <BoxView Margin="0,4" HeightRequest="1" />
@@ -176,6 +179,7 @@
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
+                        <Label Text="{Binding RoiStats.Currency}" />
                          <Label Text="{Binding RoiStats.Currency}" />
                         <BoxView Margin="0,4" HeightRequest="1" />
                         <Label Text="{Binding RoiStats.Currency}"/>
@@ -189,8 +193,9 @@
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
                         <Label Text="{Binding RoiStats.Currency}"/>
-                        
-                       
+                        <Label Text="{Binding RoiStats.Unit}" />
+                        <Label Text="{Binding RoiStats.Unit}" />
+
                     </VerticalStackLayout>
 
 

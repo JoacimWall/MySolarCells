@@ -11,7 +11,7 @@
                         x:DataType="vm:InvestmentAndLoanViewModel">
     <Shell.TitleView>
         <Grid Margin="0,10" Padding="0,0" ColumnDefinitions="Auto,*,Auto">
-            <Label Grid.Column="1" FontSize="20" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center"/>
+            <Label Grid.Column="1" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}" />
             <Border Grid.Column="0" Style="{StaticResource BorderButtonStyle}" >
                 <Button  Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}" Text="{x:Static trans:AppResources.Back}" />
             </Border>

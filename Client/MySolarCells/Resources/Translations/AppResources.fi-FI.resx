@@ -538,4 +538,7 @@
   <data name="Hour" xml:space="preserve">
     <value>Tunnin</value>
   <comment>Need review</comment></data>
+  <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
+    <value>Huipputariffin ostohinta</value>
+  <comment>Need review</comment></data>
 </root>

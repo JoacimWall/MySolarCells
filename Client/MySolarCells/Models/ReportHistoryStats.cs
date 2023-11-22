@@ -21,7 +21,7 @@ public class HistoryStats
     public double PurchasedTaxCost { get; set; } = 0;
     public double SumPurchasedCost
     {
-        get { return Math.Round(PurchasedCost + PurchasedTransferFeeCost + PurchasedTaxCost, 2); }
+        get { return Math.Round(PurchasedCost + PurchasedTransferFeeCost + PurchasedTaxCost + PeakPurchasedCost, 2); }
     }
     // ----------- ProductionSold ---------------------
     public double ProductionSold { get; set; } = 0;
@@ -70,8 +70,9 @@ public class HistoryStats
     // ----------- Peak Peduction ---------------------
     public double PeakPurchasedAndOwnUsage { get; set; } = 0;
     public double PeakPurchased { get; set; } = 0;
+
     public double PeakEnergyReduction { get; set; } = 0;
-    //TODO:Ändra 35 kr till database egennskap
+    public double PeakPurchasedCost { get; set; } = 0;
     public double PeakEnergyReductionSaved { get; set; } = 0;
     //public int NoOfPeaksUsedForPeakDetermination { get; set; } = 0;
     //public List<double> PeakPurchasedAndOwnUsage { get; set; } = new List<double>();

@@ -904,6 +904,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Peak tariff purchase cost.
+        /// </summary>
+        public static string Peak_Tariff_Purchase_Cost {
+            get {
+                return ResourceManager.GetString("Peak_Tariff_Purchase_Cost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Period.
         /// </summary>
         public static string Period {

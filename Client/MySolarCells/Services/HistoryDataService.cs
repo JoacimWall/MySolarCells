@@ -178,6 +178,7 @@ public class HistoryDataService : IHistoryDataService
             returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage), 2);
             returnHistory.PeakEnergyReduction = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakPurchasedAndOwnUsage - returnHistory.PeakPurchased, 2) : 0;
             returnHistory.PeakEnergyReductionSaved = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakEnergyReduction * peakPricePerKwh, 2) : 0;
+            returnHistory.PeakPurchasedCost = peakPricePerKwh > 0 ? Math.Round(returnHistory.PeakPurchased * peakPricePerKwh, 2) : 0;
         }
         else
         {
@@ -186,6 +187,7 @@ public class HistoryDataService : IHistoryDataService
             returnHistory.PeakPurchasedAndOwnUsage = Math.Round(sumHistory.Max(x => x.PeakPurchasedAndOwnUsage), 2);
             returnHistory.PeakEnergyReduction = Math.Round(sumHistory.Sum(x => x.PeakEnergyReduction), 2);
             returnHistory.PeakEnergyReductionSaved = Math.Round(sumHistory.Sum(x => x.PeakEnergyReductionSaved), 2);
+            returnHistory.PeakPurchasedCost = Math.Round(sumHistory.Sum(x => x.PeakPurchasedCost), 2);
         }
         return returnHistory;
     }

@@ -106,7 +106,7 @@
     <value>Överföringsavgift</value>
   <comment>Need review</comment></data>
   <data name="Battery_Transfer_Fee" xml:space="preserve">
-    <value>Batteri sparad överföringsavg.</value>
+    <value>Batteri anv. överföringsavg.</value>
   <comment>Need review</comment></data>
   <data name="Energy_Tax" xml:space="preserve">
     <value>Energiskatt</value>
@@ -124,7 +124,7 @@
     <value>Om batteriet inte används</value>
   <comment>Need review</comment></data>
   <data name="Production_Own_Use" xml:space="preserve">
-    <value>Produktion för eget bruk</value>
+    <value>Produktion för eget anv.</value>
   <comment>Need review</comment></data>
   <data name="KWh_From_Battery" xml:space="preserve">
     <value>KWh från batteri</value>
@@ -244,22 +244,22 @@
     <value>Sparad energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Battery_used" xml:space="preserve">
-    <value>Batteri används</value>
+    <value>Batteri anv.</value>
   <comment>Need review</comment></data>
   <data name="Saved_Cost" xml:space="preserve">
     <value>Sparad kostnad</value>
   <comment>Need review</comment></data>
   <data name="Saved_Cost_Battery" xml:space="preserve">
-    <value>Batteri sparad kostnad</value>
+    <value>Batteri anv. kostnad</value>
   <comment>Need review</comment></data>
   <data name="Saved_Transfer_Fee" xml:space="preserve">
     <value>Sparad övergångsavgift</value>
   <comment>Need review</comment></data>
   <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
-    <value>Batteri sparad överföringsavg.</value>
+    <value>Batteri anv. överföringsavg.</value>
   <comment>Need review</comment></data>
   <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
-    <value>Batteri sparad energiskatt</value>
+    <value>Batteri anv. energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Total_Production_Sold_Own_Use" xml:space="preserve">
     <value>Total produktion (såld/egen användning)</value>
@@ -286,7 +286,7 @@
     <value>Såld</value>
   <comment>Need review</comment></data>
   <data name="Own_Use" xml:space="preserve">
-    <value>Eget bruk</value>
+    <value>Eget anv.</value>
   <comment>Need review</comment></data>
   <data name="Consumption" xml:space="preserve">
     <value>Konsumtion</value>
@@ -331,7 +331,7 @@
     <value>Prod energiskatt</value>
   <comment>Need review</comment></data>
   <data name="Own_Use_Saved_Cost" xml:space="preserve">
-    <value>Egen anv. sparad kostnad</value>
+    <value>Egen anv. kostnad</value>
   <comment>Need review</comment></data>
   <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
     <value>Egen anv. överföringsavg.</value>
@@ -424,7 +424,7 @@
     <value>Importen av data från din växelriktare avslutades eftersom den bara tillåter {0} dagars synkronisering per dag. Du importerade {1} dagar, har nu data upp till {2}</value>
 <comment>Need review</comment></data>
   <data name="Fun_Facts" xml:space="preserve">
-    <value>Roliga fakta</value>
+    <value>Fakta</value>
   <comment>Need review</comment></data>
   <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
     <value>Snittpris inköp</value>
@@ -463,13 +463,13 @@
     <value>Missade {0} sek skattereduktion, produktion högre än förbrukning.</value>
   <comment>Need review</comment></data>
   <data name="Peak_Hour_Purchased" xml:space="preserve">
-    <value>Högsta inköpta kwh/timme</value>
+    <value>Köpt top förb.</value>
   <comment>Need review</comment></data>
   <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
-    <value>Max förbrukning</value>
+    <value>Köpt o egen anv. top förb.</value>
   <comment>Need review</comment></data>
   <data name="Energy_Peak_Reduction" xml:space="preserve">
-    <value>Energitoppsreduktion</value>
+    <value>Egen anv. redusering top förb.</value>
   <comment>Need review</comment></data>
   <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
     <value>Sparad energitoppsreduktion</value>
@@ -536,5 +536,8 @@
   <comment>Need review</comment></data>
   <data name="Hour" xml:space="preserve">
     <value>Timme</value>
+  <comment>Need review</comment></data>
+  <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
+    <value>Inköp energitopp</value>
   <comment>Need review</comment></data>
 </root>

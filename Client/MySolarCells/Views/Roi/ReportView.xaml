@@ -213,7 +213,7 @@
     <Grid RowDefinitions="Auto,*" >
         <Grid Margin="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
             <!--Title-->
-            <Label FontSize="20" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Primary500Color}" Text="{x:Static trans:AppResources.Report}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
             <!--navback-->
             <Border  Style="{StaticResource BorderButtonStyle}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
