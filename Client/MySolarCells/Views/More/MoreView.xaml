@@ -136,7 +136,7 @@
 
             <Border Margin="0,20" Grid.Row="4" Grid.ColumnSpan="2" BackgroundColor="{x:Static theming:AppColors.Gray400Color}"
                       StrokeShape="RoundRectangle 8,8,8,8">
-                <VerticalStackLayout  Spacing="0" Margin="1" Opacity="0.92" BackgroundColor="{x:Static theming:AppColors.Primary100Color}">
+                <VerticalStackLayout  Spacing="0" Margin="1" Opacity="0.92" BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
                     <!--App version-->
                     <Label Margin="16,16,16,4" FontSize="18" Text="{x:Static trans:AppResources.Application_Version}" HorizontalTextAlignment="Start" />
                     <Label Margin="16,0,16,0" HorizontalTextAlignment="Start" Text="{Binding AppInfoVersion}" />
