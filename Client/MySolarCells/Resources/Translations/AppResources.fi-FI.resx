@@ -541,4 +541,10 @@
   <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
     <value>Huipputariffin ostohinta</value>
   <comment>Need review</comment></data>
+  <data name="Swedish" xml:space="preserve">
+    <value>Ruotsin kieli</value>
+  <comment>Need review</comment></data>
+  <data name="English" xml:space="preserve">
+    <value>Englanti</value>
+  <comment>Need review</comment></data>
 </root>

@@ -586,5 +586,10 @@
 <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
     <value>Peak tariff purchase cost</value>
   <comment>Need review</comment></data>
-
+<data name="Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  <comment>Need review</comment></data>
+<data name="English" xml:space="preserve">
+    <value>English</value>
+  <comment>Need review</comment></data>
 </root>

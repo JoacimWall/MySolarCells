@@ -22,15 +22,16 @@
             <ScrollView>
                 <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                     <!--PRODUCTION GRAF-->
-                    <Label VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="17" Margin="8,8,8,8" Text="{Binding ProductionChartTitle}"/>
-                    <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorSold}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorUsed}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryCharge}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
-                    </HorizontalStackLayout>
+                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="17" Margin="8,8,8,0" Text="{Binding ProductionChartTitle,StringFormat='{0:F0} '}"/>
+                    <Grid HorizontalOptions="Center" Margin="8,8,8,4" Grid.Row="3" Grid.Column="0" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+
+                        <BoxView Grid.Column="0" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16"  BackgroundColor="{Binding ColorSold}"  />
+                        <Label Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
+                        <BoxView Grid.Row="1" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorUsed}"  />
+                        <Label Grid.Row="1" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
+                        <BoxView Grid.Row="2" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorbatteryCharge}"  />
+                        <Label Grid.Row="2" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
+                    </Grid>
                     <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250">
                         <chart:SfCartesianChart.ZoomPanBehavior>
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
@@ -83,15 +84,15 @@
 
                     </chart:SfCartesianChart>
                     <!--CONSUMTION GRAF-->
-                    <Label  VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,8" Grid.Column="0" FontSize="17" Text="{Binding ConsumtionChartTitle}"/>
-                    <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,8" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorUsed}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
-                        <Label VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryUsed}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding EnergyChartBatteryUsedTitle}"/>
-                    </HorizontalStackLayout>
+                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,4" Grid.Column="0" FontSize="17" Text="{Binding ConsumtionChartTitle}"/>
+                    <Grid HorizontalOptions="Center" Margin="8,8,8,8" Grid.Row="6" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+                        <BoxView Grid.Column="0" Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorUsed}"  />
+                        <Label Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
+                        <BoxView Grid.Row="1" Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
+                        <Label Grid.Row="1" Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
+                        <BoxView Grid.Row="2"  Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryUsed}"  />
+                        <Label Grid.Row="2" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartBatteryUsedTitle}"/>
+                    </Grid>
                     <chart:SfCartesianChart Grid.Row="7" Grid.ColumnSpan="3" HeightRequest="250">
                         <chart:SfCartesianChart.ZoomPanBehavior>
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
@@ -144,13 +145,13 @@
 
                     </chart:SfCartesianChart>
                     <!--PRICE GRAF-->
-                    <Label  VerticalTextAlignment="Center" Grid.Row="8" Margin="8,8,8,8" Grid.Column="0" FontSize="17" Text="{Binding PriceChartTitle}"/>
-                    <HorizontalStackLayout HorizontalOptions="End" Spacing="4" Margin="8,8,8,8" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3">
-                        <BoxView Opacity="0.8"  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorPriceBuy}"  />
-                        <Label VerticalTextAlignment="Center" Text="{Binding PriceChartPriceBuyTitle}"/>
-                        <BoxView Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPriceSell}"  />
-                        <Label VerticalTextAlignment="Center"  Text="{Binding PriceChartPriceSellTitle}"/>
-                    </HorizontalStackLayout>
+                    <Label HorizontalTextAlignment="Center"  VerticalTextAlignment="Center" Grid.Row="8" Margin="8,8,8,8" Grid.Column="0" FontSize="17" Text="{Binding PriceChartTitle}"/>
+                    <Grid HorizontalOptions="Center"  Margin="8,8,8,8" Grid.Row="9" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+                        <BoxView Grid.Column="0" Opacity="0.8"  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorPriceBuy}"  />
+                        <Label  Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding PriceChartPriceBuyTitle}"/>
+                        <BoxView Grid.Row="1" Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPriceSell}"  />
+                        <Label Grid.Row="1" Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding PriceChartPriceSellTitle}"/>
+                    </Grid>
                     <chart:SfCartesianChart Grid.Row="10" Grid.ColumnSpan="3" HeightRequest="250">
                         <chart:SfCartesianChart.ZoomPanBehavior>
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>

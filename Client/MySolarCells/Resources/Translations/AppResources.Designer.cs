@@ -436,6 +436,15 @@ namespace MySolarCells.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error import data from inverter.
         /// </summary>
         public static string Error_Import_Data_From_Inverter {
@@ -1368,6 +1377,15 @@ namespace MySolarCells.Resources.Translations {
         public static string Support_And_Feedback {
             get {
                 return ResourceManager.GetString("Support_And_Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Swedish.
+        /// </summary>
+        public static string Swedish {
+            get {
+                return ResourceManager.GetString("Swedish", resourceCulture);
             }
         }
         

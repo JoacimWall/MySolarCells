@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                        x:Class="MySolarCells.Views.More.SelectLanguageCountryView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:control="clr-namespace:MySolarCells.Controls"
+                        Shell.NavBarIsVisible="True"
+                        x:DataType="vm:SelectLanguageCountryViewModel">
+
+
+    <Grid Style="{StaticResource GridBasePage}" RowSpacing="16" RowDefinitions="Auto,*, Auto, Auto,*"  >
+        <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto">
+            <!--Title-->
+            <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
+            <!--navback-->
+            <Border  Style="{StaticResource BorderButtonStyle}">
+                <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
+            </Border>
+        </Grid>
+        <Border Grid.Row="2" Padding="16" StrokeShape="RoundRectangle 20,20,20,20" BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Image Source="se" HeightRequest="40" VerticalOptions="Center" InputTransparent="True"/>
+                <Label FontSize="20" Grid.Column="1" VerticalTextAlignment="Center" InputTransparent="True" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Swedish}" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectSweCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+        </Border>
+        <Border Grid.Row="3" Padding="16" StrokeShape="RoundRectangle 20,20,20,20" BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Image Source="us" HeightRequest="40" VerticalOptions="Center" InputTransparent="True"/>
+                <Label FontSize="20" Grid.Column="1" VerticalTextAlignment="Center" InputTransparent="True" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.English}" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectEngCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+        </Border>
+    </Grid>
+
+</views:BaseContentPage>

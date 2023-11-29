@@ -540,4 +540,10 @@
   <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
     <value>Topptakst kjøpskostnad</value>
   <comment>Need review</comment></data>
+  <data name="Swedish" xml:space="preserve">
+    <value>svensk</value>
+  <comment>Need review</comment></data>
+  <data name="English" xml:space="preserve">
+    <value>Engelsk</value>
+  <comment>Need review</comment></data>
 </root>

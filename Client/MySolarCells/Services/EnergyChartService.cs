@@ -241,15 +241,15 @@ public class EnergyChartService : IEnergyChartService
 
         if (chartDataRequest.ChartDataUnit == ChartDataUnit.kWh)
         {
-            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, stats.BatteryCharge);
-            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, stats.ProductionSold);
-            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, stats.ProductionOwnUse);
+            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, Math.Round(stats.BatteryCharge,1));
+            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, Math.Round(stats.ProductionSold,1));
+            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, Math.Round(stats.ProductionOwnUse,1));
 
-            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, stats.BatteryUsed);
-            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Purchased, stats.Purchased);
+            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, Math.Round(stats.BatteryUsed),1);
+            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Purchased, Math.Round(stats.Purchased,1));
 
-            result.ProductionChartTitle = string.Format("{0} {1} kWh", AppResources.Production, stats.SumAllProduction);
-            result.ConsumtionChartTitle = string.Format("{0} {1} kWh", AppResources.Consumption, stats.SumAllConsumption);
+            result.ProductionChartTitle = string.Format("{0} {1} kWh", AppResources.Production, Math.Round(stats.SumAllProduction,1));
+            result.ConsumtionChartTitle = string.Format("{0} {1} kWh", AppResources.Consumption, Math.Round(stats.SumAllConsumption,1));
             result.PriceChartTitle = AppResources.Prices; // "Prices";
             result.PriceBuyTile = AppResources.Buy_Transfer_Fee_Tax;// "Buy (transfer fee/tax)";
             result.PriceSellTile = AppResources.Sell_Tax_Red_Net_Ben;// "Sell (tax red../net ben..)";
@@ -262,15 +262,15 @@ public class EnergyChartService : IEnergyChartService
             //double batteryUsed = stats.BatteryUsedSaved + stats.BatteryUseTransferFeeSaved + stats.BatteryUseEnergyTaxSaved;
             double batteryCharge = 0;
 
-            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, batteryCharge);
-            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, stats.SumProductionSoldProfit);
-            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, stats.SumProductionOwnUseSaved);
+            result.BatteryChargeTitle = string.Format("{0} {1}",AppResources.Battery, Math.Round(batteryCharge,1));
+            result.ProductionSoldTile = string.Format("{0} {1}",AppResources.Sold, Math.Round(stats.SumProductionSoldProfit,1));
+            result.ProductionUsedTile = string.Format("{0} {1}",AppResources.Own_Use, Math.Round(stats.SumProductionOwnUseSaved,1));
 
-            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, stats.SumBatteryUseSaved);
-            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Grid, stats.SumPurchasedCost);
+            result.BatteryUsedTile = string.Format("{0} {1}",AppResources.Battery, Math.Round(stats.SumBatteryUseSaved),1);
+            result.ConsumedGridTile = string.Format("{0} {1}",AppResources.Grid, Math.Round(stats.SumPurchasedCost,1));
 
-            result.ProductionChartTitle = string.Format("{0} {1} Sek",AppResources.Production, Math.Round(stats.SumProductionSoldProfit + stats.SumProductionOwnUseSaved, 2));
-            result.ConsumtionChartTitle = string.Format("{0} {1} Sek",AppResources.Consumption, Math.Round(stats.SumPurchasedCost + stats.SumProductionOwnUseSaved + stats.SumBatteryUseSaved, 2));
+            result.ProductionChartTitle = string.Format("{0} {1} Sek",AppResources.Production, Math.Round(stats.SumProductionSoldProfit + stats.SumProductionOwnUseSaved, 1));
+            result.ConsumtionChartTitle = string.Format("{0} {1} Sek",AppResources.Consumption, Math.Round(stats.SumPurchasedCost + stats.SumProductionOwnUseSaved + stats.SumBatteryUseSaved, 1));
             result.PriceChartTitle = AppResources.Prices; // "Prices";
             result.PriceBuyTile = AppResources.Buy_Transfer_Fee_Tax;// "Buy (transfer fee/tax)";
             result.PriceSellTile = AppResources.Sell_Tax_Red_Net_Ben;// "Sell (tax red../net ben..)";
@@ -305,6 +305,10 @@ public class EnergyChartService : IEnergyChartService
 }
 public class ChartEntry
 {
+
+
+    
+
     public float? Value { get; set; }
 
     /// <summary>

@@ -118,8 +118,8 @@ public class SolarEdgeService : IInverterServiceInterface
                         }
                         switch (item.type.ToLower())
                         {
-                            //case "selfconsumption":
-                            case "production":
+                            case "selfconsumption":
+                            //case "production":
                                 exist.SelfConsumption = exist.SelfConsumption + (value.value.HasValue ? value.value.Value : 0);
                                 break;
                             case "feedin":
@@ -138,7 +138,7 @@ public class SolarEdgeService : IInverterServiceInterface
                             default:
                                 break;
                         }
-                        exist.SelfConsumption = exist.SelfConsumption - exist.FeedIn;
+                        //exist.SelfConsumption = exist.SelfConsumption - exist.FeedIn;
                     }
                 }
                 //Add Battery max 7 days

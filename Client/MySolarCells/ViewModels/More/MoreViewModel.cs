@@ -6,11 +6,14 @@ public class MoreViewModel : BaseViewModel
 {
     private readonly IHistoryDataService historyService;
     private readonly IRoiService roiService;
+    private readonly ISettingsService settingsService;
+
     private readonly MscDbContext mscDbContext;
-    public MoreViewModel(IHistoryDataService historyService, IRoiService roiService, MscDbContext mscDbContext)
+    public MoreViewModel(IHistoryDataService historyService, IRoiService roiService, ISettingsService settingsService, MscDbContext mscDbContext)
     {
         this.historyService = historyService;
         this.roiService = roiService;
+        this.settingsService = settingsService;
         this.mscDbContext = mscDbContext;
         Home = MySolarCellsGlobals.SelectedHome;
         AppInfoVersion = AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
@@ -24,6 +27,15 @@ public class MoreViewModel : BaseViewModel
     public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
     public ICommand ShowReportCommand => new Command(async () => await ShowReport());
     public ICommand ShowPowerTariffCommand => new Command(async () => await ShowPowerTariff());
+    public ICommand ShowPickCountryCommand => new Command(async () => await ShowPickCountry());
+
+    private async Task ShowPickCountry()
+    {
+        //await GoToAsync(nameof(SelectLanguageCountryView));
+        var view = ServiceHelper.GetService<SelectLanguageCountryView>();
+        //await ((ReportViewModel)view.BindingContext).RefreshAsync(ViewState.Refreshing);
+        await PushModal(view);
+    }
 
     private async Task ShowPowerTariff()
     {
@@ -434,6 +446,12 @@ public class MoreViewModel : BaseViewModel
     public string HomeImageUrl
     {
         get => "MySolarCells.Resources.EmbeddedImages.house_with_solar_cells.png";
+
+    }
+    public string LanguageImage
+    {
+
+        get => this.settingsService.UserCountry == CountryEnum.Sv_SE ? "se.png":"us.png";
 
     }
     public string ElectricitySupplierText

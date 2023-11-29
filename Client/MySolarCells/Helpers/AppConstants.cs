@@ -16,4 +16,9 @@ public enum OnboardingStatusEnum
     OnboardingDone = 6,
    // OnboardingDone =7
 }
-
+public enum CountryEnum
+{
+    Undefined = 0,
+    En_US = 1,
+    Sv_SE = 2
+}

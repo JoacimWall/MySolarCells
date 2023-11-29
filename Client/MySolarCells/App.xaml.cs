@@ -17,7 +17,7 @@ public partial class App : Application
         this.dataSyncService = dataSyncService;
         this.mscDbContext = mscDbContext;
         MySolarCellsGlobals.App = this;
-
+        this.settingsService.SetCurentCultureOnAllThreds(this.settingsService.UserCountry); 
         // Local Notification tap event listener
         //LocalNotificationCenter.Current.NotificationActionTapped += OnNotificationActionTapped;
         //LocalNotificationCenter.Current.NotificationReceived += Current_NotificationReceived;

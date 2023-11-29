@@ -18,7 +18,7 @@
     </Shell.TitleView>
     <ScrollView x:Name="TheScrollView" Margin="0" >
         <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, Auto,Auto, Auto, Auto"  >
-            <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnSpacing="16" ColumnDefinitions="Auto,Auto">
+            <Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnSpacing="16" ColumnDefinitions="Auto,*">
                 <Image Margin="0,0,0,0"
                    Aspect="AspectFit"
                    BackgroundColor="Transparent"
@@ -47,6 +47,11 @@
                            Text="{Binding InverterModelText}" Style="{StaticResource LabelBaseStyle}" LineBreakMode="TailTruncation"/>
 
                 </VerticalStackLayout>
+                <Image Grid.Column="1" Source="{Binding LanguageImage}" HeightRequest="40" VerticalOptions="Start" HorizontalOptions="End">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowPickCountryCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
             </Grid>
 
             <Label Grid.Row="2" Grid.ColumnSpan="2" Margin="8,16,8,0" Style="{StaticResource LabelEntryTitleStyle}" FontFamily="OpenSansSemibold" FontSize="16"

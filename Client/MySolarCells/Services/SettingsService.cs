@@ -1,10 +1,13 @@
-﻿namespace MySolarCells.Services;
+﻿using System.Globalization;
+
+namespace MySolarCells.Services;
 
 public interface ISettingsService
 {
     OnboardingStatusEnum OnboardingStatus { get; set; }
     int SelectedHomeId { get; set; }
-    //DateTime LastDataSync { get; set; }
+    CountryEnum UserCountry { get; set; }
+    void SetCurentCultureOnAllThreds(CountryEnum country);
 }
 
 public class SettingsService : ISettingsService
@@ -63,25 +66,50 @@ public class SettingsService : ISettingsService
             
         }
     }
-    //public DateTime LastDataSync
-    //{
-    //    get
-    //    {
-    //        var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
-    //        if (exist == null)
-    //            return DateTime.Now.AddHours(-1);
-    //        else
-    //            return exist.DateValue;
-    //    }
-    //    set
-    //    {
-    //        var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastDataSync));
-    //        if (exist == null)
-    //            this.mscDbContext.Preferences.Add(new Sqlite.Models.Preferences { Name = nameof(LastDataSync), DateValue =value });
-    //        else
-    //            exist.DateValue = value;
-    //        this.mscDbContext.SaveChanges();
-    //    }
-    //}
-    
+    public CountryEnum UserCountry
+    {
+        get
+        {
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
+            if (exist == null)
+                return CountryEnum.En_US;
+            else
+                return (CountryEnum)exist.IntValue;
+        }
+        set
+        {
+            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
+            if (exist == null)
+                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(UserCountry), IntValue = (int)value });
+            else
+                exist.IntValue = (int)value;
+            this.mscDbContext.SaveChanges();
+            SetCurentCultureOnAllThreds(value);
+        }
+    }
+
+    public void SetCurentCultureOnAllThreds(CountryEnum country)
+    {
+        switch (country)
+        {
+            case CountryEnum.Sv_SE:
+            case CountryEnum.Undefined:
+            default:
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("sv-SE");
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+                AppResources.Culture = Thread.CurrentThread.CurrentUICulture;
+               
+                break;
+            case CountryEnum.En_US:
+           
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US"); //en-US
+                Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+                AppResources.Culture = Thread.CurrentThread.CurrentUICulture;
+             
+                break;
+        }
+
+        //MySolarCellsGlobals..ApplicationTitle = AppResources.Libero_Club;
+    }
+
 }

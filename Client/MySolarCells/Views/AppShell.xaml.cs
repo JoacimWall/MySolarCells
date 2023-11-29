@@ -1,4 +1,6 @@
-﻿namespace MySolarCells.Views;
+﻿using Microsoft.Maui.Controls;
+
+namespace MySolarCells.Views;
 
 public partial class AppShell : Shell
 {
@@ -16,6 +18,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(InverterView), typeof(InverterView));
         Routing.RegisterRoute(nameof(ParametersOverviewView), typeof(ParametersOverviewView));
         Routing.RegisterRoute(nameof(PowerTariffParameterView), typeof(PowerTariffParameterView));
+        Routing.RegisterRoute(nameof(SelectLanguageCountryView), typeof(SelectLanguageCountryView));
+
 
     }
 }
