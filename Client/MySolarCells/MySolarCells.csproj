@@ -54,26 +54,27 @@
 		<!--<SelfContained>true</SelfContained>-->
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Acr.UserDialogs" Version="8.0.1" />
-		<PackageReference Include="EFCore.BulkExtensions" Version="8.0.0-rc.1.2" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
-		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="23.2.4" />
-		<PackageReference Include="Syncfusion.Maui.Charts" Version="23.2.4" />
-		<PackageReference Include="Syncfusion.Maui.Picker" Version="23.2.4" />
-		<PackageReference Include="Shiny.Jobs" Version="3.2.0-beta-0010" />
-		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.0-beta-0010" />
+		<PackageReference Include="EFCore.BulkExtensions" Version="8.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
+		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="24.1.47" />
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="24.1.47" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="24.1.47" />
+		<PackageReference Include="Shiny.Jobs" Version="3.2.3" />
+		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.3" />
 		<PackageReference Include="Plugin.LocalNotification" Version="11.0.0-preview01" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="23.2.4" />
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="24.1.47" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
 	</ItemGroup>
 	<!--EmbeddedImages-->
 	<ItemGroup>
