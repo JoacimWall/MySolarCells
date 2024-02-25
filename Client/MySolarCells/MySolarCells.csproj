@@ -16,6 +16,7 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MySolarCells</RootNamespace>
 		<UseMaui>true</UseMaui>
+		<MauiVersion>8.0.7</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<!-- Display name -->
@@ -24,7 +25,7 @@
 		<ApplicationId>com.walltech.mysolarcells.beta</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
-		<ApplicationVersion>27</ApplicationVersion>
+		<ApplicationVersion>28</ApplicationVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">25.0</SupportedOSPlatformVersion>
@@ -47,34 +48,36 @@
 		<!--DEBUG ON DEVICE-->
 		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
 		<!--DEBUG ON SIMULATOR-->
-		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+		<!--<ForceSimulatorX64ArchitectureInIDE>true</ForceSimulatorX64ArchitectureInIDE>
+		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
 		<RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
 		<!--<SelfContained>true</SelfContained>-->
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
+		<!--<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />-->
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Acr.UserDialogs" Version="8.0.1" />
-		<PackageReference Include="EFCore.BulkExtensions" Version="8.0.1" />
+		<PackageReference Include="EFCore.BulkExtensions" Version="8.0.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
-		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="24.1.47" />
-		<PackageReference Include="Syncfusion.Maui.Charts" Version="24.1.47" />
-		<PackageReference Include="Syncfusion.Maui.Picker" Version="24.1.47" />
-		<PackageReference Include="Shiny.Jobs" Version="3.2.3" />
-		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.3" />
-		<PackageReference Include="Plugin.LocalNotification" Version="11.0.0-preview01" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="24.1.47" />
+		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="24.2.7" />
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="24.2.7" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="24.2.7" />
+		<PackageReference Include="Shiny.Jobs" Version="3.2.4" />
+		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.4" />
+		<PackageReference Include="Plugin.LocalNotification" Version="11.1.0" />
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="24.2.7" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
+		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
 	</ItemGroup>
 	<!--EmbeddedImages-->
 	<ItemGroup>

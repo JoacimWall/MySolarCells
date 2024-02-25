@@ -8,9 +8,9 @@ public class InverterViewModel : BaseViewModel
     public InverterViewModel(MscDbContext mscDbContext)
     {
         this.mscDbContext = mscDbContext;
-        //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
+        //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
        
         var inverter = this.mscDbContext.Inverter.FirstOrDefault();
@@ -85,7 +85,7 @@ public class InverterViewModel : BaseViewModel
                 Name = resultInverter.Model.Name,
                 UserName = this.userName,
                 Password = string.IsNullOrEmpty(this.password) ? "" : StringHelper.Encrypt(this.password, AppConstants.Secretkey),
-                ApiUrl = "",
+                ApiUrl = this.apiUrl,
                 ApiKey = string.IsNullOrEmpty(this.inverterLoginResponse.token) ? "" : StringHelper.Encrypt(this.inverterLoginResponse.token, AppConstants.Secretkey)
             };
             //TODO:Do we neeed more info from Inverter

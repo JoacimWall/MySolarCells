@@ -1,21 +1,29 @@
 ﻿using SQLitePCL;
+using Syncfusion.Maui.Charts;
 using Syncfusion.XlsIO.Parser.Biff_Records.MsoDrawing;
+using System;
+using System.ComponentModel;
 using System.IO;
+using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MySolarCells.Services.Inverter;
 
 public class HomeAssistentInverterService : IInverterServiceInterface
 {
+
     private HttpClient restClient;
     private readonly MscDbContext mscDbContext;
     private InverterLoginResponse inverterLoginResponse;
     private readonly JsonSerializerOptions jsonOptions;
 
-    public string InverterGuideText => "Rest API is on the same aurl as the HA web frontend." + Environment.NewLine +
-                    " https://IP_ADDRESS:8123/api/" + Environment.NewLine + "You obtain a token under your profile in HA.";
-    public string DefaultApiUrl => "https://wallhome.duckdns.org:8123/api/";
+    public string InverterGuideText => "WebSockets API is on the same aurl as the HA web frontend." + Environment.NewLine +
+                    "ws or wss://IP_ADDRESS:8123/api/websocket" + Environment.NewLine + "You obtain a token under your profile in HA.";
+    public string DefaultApiUrl => "wss://yourserver.duckdns.org/api/websocket";
     public bool ShowUserName => false;
 
     public bool ShowPassword => false;
@@ -23,189 +31,276 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     public bool ShowApiUrl => true;
 
     public bool ShowApiKey => true;
-    private HttpClient GetHttpClient(string apiUrl, string apiKey)
-    {
-        //Vi använder detta för att den vanliga rest client med ReadAsStreamAsync verkar inte vilja fungera med HA
-        HttpClient testc = new HttpClient();
 
-
-        testc.BaseAddress = new Uri(apiUrl);
-        //testc.DefaultRequestHeaders.Add(AppConstants.Authorization, "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyNzZjN2E3ZmY5OWU0MGI2OGNhZDE1NmM2YTgzMDI4OCIsImlhdCI6MTY5NjM5NjI1NiwiZXhwIjoyMDExNzU2MjU2fQ.o_JFjiPNdPyJl0YtBmY5fKJO_A6ms3Gs40jDfZG9ofY" ); //string.Format("Bearer {0}", apiKey)
-        testc.DefaultRequestHeaders.Add(AppConstants.Authorization, string.Format("Bearer {0}", apiKey)); //
-
-        testc.DefaultRequestHeaders.Add("User-Accept", "*/*");
-        //testc.DefaultRequestHeaders.Add("Host", "wallhome.duckdns.org:8123");
-        testc.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.33.0");
-        testc.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
-        testc.DefaultRequestHeaders.Add("Connection", "keep-alive");
-        return testc;
-    }
     public HomeAssistentInverterService(MscDbContext mscDbContext)
     {
         this.mscDbContext = mscDbContext;
         jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-    }
-    public async Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
-    {
-        this.restClient = GetHttpClient(apiUrl, apiKey);
-        var r = await this.restClient.GetAsync("");
-        string content = await r.Content.ReadAsStringAsync();
-        var result = new Result<HaApiStatus>(JsonSerializer.Deserialize<HaApiStatus>(content, jsonOptions));
+        client = new ClientWebSocket();
+        cts = new CancellationTokenSource();
 
-        //Test APi Connection 
-        
-        if (!result.WasSuccessful)
-            return new Result<InverterLoginResponse>(result.ErrorMessage);
-        else
+
+    }
+    #region WebSocket
+    string apiKey;
+    string apiUrl;
+    string reciveMode;
+    readonly ClientWebSocket client;
+    readonly CancellationTokenSource cts;
+
+    public bool IsConnected => client.State == WebSocketState.Open;
+
+    private bool connected = false; 
+    async Task ConnectToServerAsync(string reciveMode, string userName, string password, string apiUrl, string apiKey)
+    {
+        this.apiKey = apiKey;
+        this.apiUrl = apiUrl;
+        this.reciveMode = reciveMode;
+       
+        await client.ConnectAsync(new Uri(apiUrl), cts.Token);
+        await Task.Factory.StartNew(async () =>
         {
-             this.inverterLoginResponse = new InverterLoginResponse
+            while (connected == false)
             {
-                token = apiKey,
-                expiresIn = 0,
-                tokenType = "",
-            };
+                await ReadMessage();
+            }
+        }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+
+    }
+    async Task ReadMessage()
+    {
+        WebSocketReceiveResult result;
+        var message = new ArraySegment<byte>(new byte[8192]);
+        do
+        {
+            result = await client.ReceiveAsync(message, cts.Token);
+            if (result.MessageType != WebSocketMessageType.Text)
+                break;
+            var messageBytes = message.Skip(message.Offset).Take(result.Count).ToArray();
+            string receivedMessage = Encoding.UTF8.GetString(messageBytes);
+            var filterResponse = JsonSerializer.Deserialize<GenericFilterResponse>(receivedMessage);
+            if (filterResponse.type == "auth_required")
+            {
+                SendMessageAsync(JsonSerializer.Serialize(new AuthMessage { type = "auth", access_token = this.apiKey }));
+            }
+            else if (filterResponse.type == "auth_ok")
+            {
+                if (this.reciveMode == "TestApiKey")
+                {
+                    this.inverterLoginResponse = new InverterLoginResponse
+                    {
+                        token = apiKey,
+                        expiresIn = 0,
+                        tokenType = "",
+                    };
+                    //cts.Cancel();
+                }
+                connected = true;
+            }
+            else if (filterResponse.id == 2)
+            {
+                var prefs = JsonSerializer.Deserialize<EnergyPrefsResult>(receivedMessage);
+                if (prefs.success)
+                {
+                    var returnlist = new List<InverterSite>();
+                    int fakeId = 1;
+                    foreach (var item in prefs.result.energy_sources)
+                    {
+                        if (item.type == "solar")
+                        {
+                            returnlist.Add(new InverterSite { Id = fakeId.ToString(), Name = item.stat_energy_from });
+                            fakeId++;
+                        }
+                    }
+                    pickerOneReturnlist = returnlist;
+                }
+                pickerReslutDone = true;
+                //cts.Cancel();
+            }
+            else if (filterResponse.id > 10)
+            {
+                var energy = JsonSerializer.Deserialize<EnergyProductionResult>(receivedMessage);
+                lastEnergyResult = energy;
+                energyDataResponseExist = true;
+            }
+            Console.WriteLine("Received: {0}", receivedMessage);
 
         }
+        while (!result.EndOfMessage);
+    }
+    async void SendMessageAsync(string message)
+    {
+        if (!CanSendMessage(message))
+            return;
 
+        var byteMessage = Encoding.UTF8.GetBytes(message);
+        var segmnet = new ArraySegment<byte>(byteMessage);
+      
+        await client.SendAsync(segmnet, WebSocketMessageType.Text, true, cts.Token);
+        Console.WriteLine("Send: {0}", Encoding.UTF8.GetString(byteMessage));
+    }
+
+
+    bool CanSendMessage(string message)
+    {
+        return IsConnected && !string.IsNullOrEmpty(message);
+    }
+    #endregion
+
+
+    public async Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
+    {
+
+        await ConnectToServerAsync("TestApiKey", "", "", apiUrl, apiKey);
+        while (connected == false)
+            await Task.Delay(1000);
 
         return new Result<InverterLoginResponse>(inverterLoginResponse);
     }
+    private List<InverterSite> pickerOneReturnlist;
+    private bool pickerReslutDone = false;
     public async Task<Result<List<InverterSite>>> GetPickerOne()
     {
-        
-        var r = await this.restClient.GetAsync("states");
-        string contnet = await r.Content.ReadAsStringAsync();
-        var result = new Result<List<HaStates>>(JsonSerializer.Deserialize<List<HaStates>>(contnet, jsonOptions));
-        if (!result.WasSuccessful)
-            return new Result<List<InverterSite>>(result.ErrorMessage);
-        else
+        await Task.Factory.StartNew(async () =>
         {
-           
-            var returnlist = new List<InverterSite>();
-            int fakeId = 1;
-            foreach (var item in result.Model)
+            while (pickerReslutDone == false)
             {
-                returnlist.Add(new InverterSite { Id = fakeId.ToString(), Name = item.entity_id.ToString() });
-                fakeId++;
+                await ReadMessage();
             }
-            return new Result<List<InverterSite>>(returnlist);
+        }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+       
+        SendMessageAsync(JsonSerializer.Serialize(new GetPrefsRequest { id = 2, type = "energy/get_prefs" }));
 
-        }
+        while (pickerReslutDone == false)
+            await Task.Delay(1000);
+
+        return new Result<List<InverterSite>>(pickerOneReturnlist);
+
+       
     }
     public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
         //we return the same this for the general flow should work
-        return new Result<GetInverterResponse>( new GetInverterResponse { InverterId = inverterSite.Name, Name = inverterSite.Name });
+        return new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Name, Name = inverterSite.Name });
     }
 
+
+    bool energyDataResponseExist = false;
+    EnergyProductionResult lastEnergyResult;
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-
-        
+        int websocketid = 11; 
         var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
-        var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
+        var loginResult = await TestConnection("", "", inverter.ApiUrl, StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
+        if (!loginResult.WasSuccessful)
+            return new Result<DataSyncResponse>(loginResult.ErrorMessage);
         inverterLoginResponse = loginResult.Model;
 
         try
         {
-
-
             int batch100 = 0;
-            string processingDateFrom;
-            string processingDateTo;
-            string toTimeOfDay = "T23:59:59";
-            string fromTimeOfDay = "T00:00:00";
+            DateTime processingDateFrom;
+            DateTime processingDateTo;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
             List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
 
-            var deviceIds = new List<int>();
-            deviceIds.Add(Convert.ToInt32(inverter.SubSystemEntityId));
-            var dataTypes = new List<string>();
-            dataTypes.Add("ac_hourly_yield");
-            //HAaUserRoleDeviceProductionResponse dayProduction = new HAaUserRoleDeviceProductionResponse();
-
+            //var deviceIds = new List<int>();
+            //deviceIds.Add(Convert.ToInt32(inverter.SubSystemEntityId));
+            //var dataTypes = new List<string>();
+            //dataTypes.Add("ac_hourly_yield");
+            //KostalUserRoleDeviceProductionResponse dayProduction = new KostalUserRoleDeviceProductionResponse();
+            int daysScope = 4;
             while (start < end)
             {
-                //Get 3 mounts per request
-                if (start.AddMonths(1) < end)
+                //Get daysScope mounts per request
+                if (start.AddDays(daysScope) < end)
                 {
-                    processingDateFrom = new DateTime(start.Year, start.Month, start.Day).ToString("yyyy-MM-dd") + fromTimeOfDay;
-                    processingDateTo = new DateTime(start.AddMonths(1).Year, start.AddMonths(3).Month, start.AddMonths(3).Day).ToString("yyyy-MM-dd") + toTimeOfDay;
-                    nextStart = start.AddMonths(1);
+                    processingDateFrom = new DateTime(start.Year, start.Month, start.Day);//.ToString("yyyy-MM-dd");
+                    processingDateTo = new DateTime(start.AddDays(daysScope).Year, start.AddDays(daysScope).Month, start.AddDays(daysScope).Day);//.ToString("yyyy-MM-dd");
+                    nextStart = start.AddDays(daysScope);
                 }
                 else
                 {
-                    processingDateFrom = new DateTime(start.Year, start.Month, start.Day).ToString("yyyy-MM-dd") + fromTimeOfDay;
-                    processingDateTo = new DateTime(end.Year, end.Month, end.Day).ToString("yyyy-MM-dd") + toTimeOfDay;
+                    processingDateFrom = new DateTime(start.Year, start.Month, start.Day);//.ToString("yyyy-MM-dd");
+                    processingDateTo = new DateTime(end.Year, end.Month, end.Day);//.ToString("yyyy-MM-dd");
                     nextStart = end;
                 }
 
+                energyDataResponseExist = false;
 
-                //var dataSelector = new HAaUserRoleDateSelector { from = processingDateFrom, to = processingDateTo, fromTimeOfDay = "00:00:00", toTimeOfDay = "23:59:59" };
-                //var query = "query FETCH_DEVICE_DATA($deviceIds: [Long!]!, $dataTypes: [String!]!, $dateSelector: TimeSpanSelectorInput!, $padWithNull: Boolean = true, $byTimeInterval: AggregationInterval!, $byDevice: Boolean = true, $statistic: AggregationStatistic = SUM) {  deviceData(deviceIds: $deviceIds, dataTypes: $dataTypes, dateSelector: $dateSelector, padWithNull: $padWithNull) {    aggregate(byDevice: $byDevice, byTimeInterval: $byTimeInterval, statistic: $statistic) {      timeSeries {        points {          timestamp          value          __typename        }        __typename      }      __typename    }    __typename  }}";
-                //var graphQlRequest = new HAaUserRoleGraphQlRequest { operationName = "FETCH_DEVICE_DATA", query = query, variables = new HAaUserRoleProductionHourVariables { padWithNull = true, byDevice = true, statistic = "SUM", deviceIds = deviceIds, dataTypes = dataTypes, dateSelector = dataSelector, byTimeInterval = "HOUR" } };
-                //var resultDay = await this.restClient.ExecutePostAsync<HAaUserRoleDeviceProductionResponse>(string.Empty, graphQlRequest);
-                string quary = string.Format("history/period/{0}?minimal_response=&filter_entity_id={1}&end_time={2}", processingDateFrom, inverter.SubSystemEntityId, processingDateTo);
-                var r = await this.restClient.GetAsync(quary);
-                string contnet = await r.Content.ReadAsStringAsync();
-                var result = new Result<List<HaStates>>(JsonSerializer.Deserialize<List<HaStates>>(contnet, jsonOptions));
-                //ska värden per timma.
+                await Task.Factory.StartNew(async () =>
+                {
+                    while (pickerReslutDone == false)
+                    {
+                        await ReadMessage();
+                    }
+                }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
-                //dayProduction = resultDay.Model;
-                //List<HAaUserRolePoint> listPoints = new List<HAaUserRolePoint>();
-                //if (resultDay.WasSuccessful && resultDay.Model != null)
-                //{
-                //    listPoints = dayProduction.data.deviceData.aggregate.timeSeries.First().points;
+                SendMessageAsync(JsonSerializer.Serialize(new EnergyProductionRequest
+                {
+                    id = websocketid,
+                    type = "energy/fossil_energy_consumption",
+                    co2_statistic_id = "power",
+                    energy_statistic_ids = new List<string> { inverter.SubSystemEntityId },
+                    period = "hour",
+                     start_time = processingDateFrom.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'"),
+                     end_time = processingDateTo.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'")
+                }));
 
-                //}
-                //else
-                //{
-                //    //TODO:Show error
-                //}
-                //var producedI = listPoints.Count;
+                websocketid++;
 
-                //for (int i = 0; i < producedI; i++)
-                //{
-                //    progressStartNr++;
-                //    batch100++;
-                //    var energyExist = dbContext.Energy.FirstOrDefault(x => x.Timestamp == listPoints[i].timestamp);
-                //    if (energyExist != null)
-                //    {
-                //        if (listPoints[i].value.HasValue && listPoints[i].value.Value > 0)
-                //        {
-                //            energyExist.ProductionOwnUse = (Convert.ToDouble(listPoints[i].value.Value) / 1000) - Convert.ToDouble(energyExist.ProductionSold);
-                //            //Only add if price over zero
-                //            if (energyExist.UnitPriceBuy > 0)
-                //                energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
-                //            else
-                //                energyExist.ProductionOwnUseProfit = 0;
-                //        }
-                //        energyExist.InverterTypProductionOwnUse = (int)InverterTyp.HomeAssistent;
-                //        energyExist.ProductionOwnUseSynced = true;
-                //        eneryList.Add(energyExist);
+                while (energyDataResponseExist == false)
+                    await Task.Delay(1000);
 
-                //    }
+                
+                foreach (var item in lastEnergyResult.result)
+                {
+                    progressStartNr++;
+                    batch100++;
+                    var timestampProd = Convert.ToDateTime(item.Key);
+                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
+                    if (energyExist != null)
+                    {
+                        if (item.Value > 0)
+                        {
+                            energyExist.ProductionOwnUse = item.Value - Convert.ToDouble(energyExist.ProductionSold);
+                            //Only add if price over zero
+                            if (energyExist.UnitPriceBuy > 0)
+                                energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
+                            else
+                                energyExist.ProductionOwnUseProfit = 0;
+                        }
+                        energyExist.InverterTypProductionOwnUse = (int)InverterTyp.Kostal;
+                        if (energyExist.Timestamp < end.AddHours(-1))
+                            energyExist.ProductionOwnUseSynced = true;
 
-                //    if (batch100 == 100)
-                //    {
-                //        await Task.Delay(100); //Så att GUI hinner uppdatera
-                //        progress.Report(progressStartNr);
+                        eneryList.Add(energyExist);
 
-                //        batch100 = 0;
-                //        await dbContext.BulkUpdateAsync(eneryList);
-                //        eneryList = new List<Sqlite.Models.Energy>();
-                //    }
+                    }
 
-                //}
+                    if (batch100 == 100)
+                    {
+                        await Task.Delay(100); //Så att GUI hinner uppdatera
+                        progress.Report(progressStartNr);
 
+                        batch100 = 0;
+                        await this.mscDbContext.BulkUpdateAsync(eneryList);
+                        eneryList = new List<SQLite.Sqlite.Models.Energy>();
+                    }
+
+                }
+                if (lastEnergyResult.result.Count < (daysScope*24))
+                {
+                    progressStartNr = progressStartNr + ((daysScope * 24) - lastEnergyResult.result.Count);
+                }
                 start = nextStart;
             }
 
@@ -218,7 +313,11 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 await this.mscDbContext.BulkUpdateAsync(eneryList);
                 eneryList = new List<SQLite.Sqlite.Models.Energy>();
             }
-           
+            return new Result<DataSyncResponse>(new DataSyncResponse
+            {
+                SyncState = DataSyncState.ProductionSync,
+                Message = AppResources.Import_Of_Production_Done
+            }, true);
         }
         catch (Exception ex)
         {
@@ -226,33 +325,99 @@ public class HomeAssistentInverterService : IInverterServiceInterface
         }
 
 
-        return new Result<DataSyncResponse>(new DataSyncResponse
-        {
-            SyncState = DataSyncState.ProductionSync,
-            Message = AppResources.Import_Of_Production_Done
-        }, true);
-
-
 
     }
 }
 //Response
-public class HaApiStatus
+#region Websocket
+class AuthMessage
 {
-    public string message { get; set; }
+    public string type { get; set; }
+    public string access_token { get; set; }
+}
+class GetPrefsRequest
+{
+    public int id { get; set; }
+    public string type { get; set; }
+}
+//used to filter incoming messags
+class GenericFilterResponse
+{
+    public int id { get; set; }
+    public string type { get; set; }
+    public string ha_version { get; set; }
 }
 
-public class HaStates
+
+
+class EnergyPrefsResult
 {
-    public string entity_id { get; set; }
+    public int id { get; set; }
+    public string type { get; set; }
+    public bool success { get; set; }
+    public EnergyPrefs result { get; set; }
+}
+class EnergyPrefs
+{
+    public List<EnergySource> energy_sources { get; set; }
+    //public List<DeviceConsumption> device_consumption { get; set; }
+}
+
+class EnergySource
+{
+    public string type { get; set; }
+    //public List<FlowFrom> flow_from { get; set; }
+    //public List<FlowTo> flow_to { get; set; }
+    public double cost_adjustment_day { get; set; }
+    public string stat_energy_from { get; set; }
+    public object config_entry_solar_forecast { get; set; }
+    public string stat_cost { get; set; }
+    public object entity_energy_price { get; set; }
+    public object number_energy_price { get; set; }
+}
+//public class DeviceConsumption
+//{
+//    public string stat_consumption { get; set; }
+//}
+
+
+
+//public class FlowFrom
+//{
+//    public string stat_energy_from { get; set; }
+//    public object entity_energy_price { get; set; }
+//    public object number_energy_price { get; set; }
+//    public string stat_cost { get; set; }
+//}
+
+//public class FlowTo
+//{
+//    public string stat_energy_to { get; set; }
+//    public string stat_compensation { get; set; }
+//    public object entity_energy_price { get; set; }
+//    public object number_energy_price { get; set; }
+//}
+class EnergyProductionRequest
+{
+    public int id { get; set; }
+    public string type { get; set; }
+    public string start_time { get; set; }
+    public string end_time { get; set; }
+    public List<string> energy_statistic_ids { get; set; }
+    public string period { get; set; }
+    public string co2_statistic_id { get; set; }
+}
+ class EnergyProductionResult
+{
+    public int id { get; set; }
+    public string type { get; set; }
+    public bool success { get; set; }
+    //public List<object> result { get; set; }
+    public Dictionary<string, double> result { get; set; }
     
 }
+#endregion
 
-
-
-
-
-//Request
 
 
 

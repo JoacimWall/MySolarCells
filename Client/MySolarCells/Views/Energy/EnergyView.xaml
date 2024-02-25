@@ -13,7 +13,7 @@
     <Grid RowDefinitions="Auto,*">
         <Grid RowDefinitions="Auto,Auto" >
             <Label Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Production}" />
-            <Border  Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}" >
+            <Border Margin="8" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}" >
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}"  Text="{x:Static trans:AppResources.Refresh}" />
             </Border>
             <control:DateNavigator  Grid.Row="1" ChartData="{Binding ChartDataRequest}" GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ShowRoiSimulate="False" />

@@ -90,6 +90,8 @@ public class KostalService : IInverterServiceInterface
         var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
         var loginResult = await TestConnection(inverter.UserName, StringHelper.Decrypt(inverter.Password, AppConstants.Secretkey), "", "");
+        if (!loginResult.WasSuccessful)
+            return new Result<DataSyncResponse>(loginResult.ErrorMessage);
         inverterLoginResponse = loginResult.Model;
 
         try

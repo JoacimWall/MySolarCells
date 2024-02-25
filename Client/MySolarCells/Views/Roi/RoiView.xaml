@@ -12,7 +12,7 @@
     <Grid RowDefinitions="Auto,*" >
         <Grid  RowDefinitions="Auto,Auto">
             <Label Style="{StaticResource LabelPageTitleStyle}"  Text="{x:Static trans:AppResources.ROI}" />
-            <Border Grid.Column="1" Style="{StaticResource BorderButtonStyle}" IsVisible="{OnPlatform Android=false, iOS=false}">
+            <Border Margin="8" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}" Text="{x:Static trans:AppResources.Refresh}"/>
             </Border>
             <control:DateNavigator  Grid.Row="1"  ShowUnitCurrencySeletor="False"
