@@ -63,7 +63,7 @@ public class SolarEdgeService : IInverterServiceInterface
     
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-         var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+         var inverter = await this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         ////LOGIN
         var loginResult = await TestConnection("", "", "", StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
 

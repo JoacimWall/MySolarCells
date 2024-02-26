@@ -22,7 +22,7 @@ public class DataSyncService : IDataSyncService
     public async Task<Result<DataSyncResponse>> Sync()
     {
         var gridSupplierInterface = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.FirstOrDefault().ElectricitySupplier);
-        var inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.FirstOrDefault().InverterTyp);
+        var inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault().InverterTyp);
 
        
 

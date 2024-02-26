@@ -50,18 +50,24 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     string apiKey;
     string apiUrl;
     string reciveMode;
-    readonly ClientWebSocket client;
-    readonly CancellationTokenSource cts;
+    ClientWebSocket client;
+    CancellationTokenSource cts;
 
     public bool IsConnected => client.State == WebSocketState.Open;
 
-    private bool connected = false; 
+    private bool connected = false;
     async Task ConnectToServerAsync(string reciveMode, string userName, string password, string apiUrl, string apiKey)
     {
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
         this.reciveMode = reciveMode;
-       
+        if (IsConnected)
+        {
+            await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "", cts.Token);
+            client = new ClientWebSocket();
+            cts = new CancellationTokenSource();
+        }
+
         await client.ConnectAsync(new Uri(apiUrl), cts.Token);
         await Task.Factory.StartNew(async () =>
         {
@@ -140,7 +146,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
         var byteMessage = Encoding.UTF8.GetBytes(message);
         var segmnet = new ArraySegment<byte>(byteMessage);
-      
+
         await client.SendAsync(segmnet, WebSocketMessageType.Text, true, cts.Token);
         Console.WriteLine("Send: {0}", Encoding.UTF8.GetString(byteMessage));
     }
@@ -155,12 +161,18 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
     public async Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
     {
+        try
+        {
+            await ConnectToServerAsync("TestApiKey", "", "", apiUrl, apiKey);
+            while (connected == false)
+                await Task.Delay(1000);
 
-        await ConnectToServerAsync("TestApiKey", "", "", apiUrl, apiKey);
-        while (connected == false)
-            await Task.Delay(1000);
-
-        return new Result<InverterLoginResponse>(inverterLoginResponse);
+            return new Result<InverterLoginResponse>(inverterLoginResponse);
+        }
+        catch (Exception ex)
+        {
+            return new Result<InverterLoginResponse>(ex.Message);
+        }
     }
     private List<InverterSite> pickerOneReturnlist;
     private bool pickerReslutDone = false;
@@ -173,7 +185,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 await ReadMessage();
             }
         }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-       
+
         SendMessageAsync(JsonSerializer.Serialize(new GetPrefsRequest { id = 2, type = "energy/get_prefs" }));
 
         while (pickerReslutDone == false)
@@ -181,7 +193,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
         return new Result<List<InverterSite>>(pickerOneReturnlist);
 
-       
+
     }
     public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
@@ -194,8 +206,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     EnergyProductionResult lastEnergyResult;
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-        int websocketid = 11; 
-        var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+        int websocketid = 11;
+        var inverter = await this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
         var loginResult = await TestConnection("", "", inverter.ApiUrl, StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
         if (!loginResult.WasSuccessful)
@@ -251,8 +263,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     co2_statistic_id = "power",
                     energy_statistic_ids = new List<string> { inverter.SubSystemEntityId },
                     period = "hour",
-                     start_time = processingDateFrom.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'"),
-                     end_time = processingDateTo.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'")
+                    start_time = processingDateFrom.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'"),
+                    end_time = processingDateTo.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'")
                 }));
 
                 websocketid++;
@@ -260,7 +272,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 while (energyDataResponseExist == false)
                     await Task.Delay(1000);
 
-                
+
                 foreach (var item in lastEnergyResult.result)
                 {
                     progressStartNr++;
@@ -297,7 +309,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     }
 
                 }
-                if (lastEnergyResult.result.Count < (daysScope*24))
+                if (lastEnergyResult.result.Count < (daysScope * 24))
                 {
                     progressStartNr = progressStartNr + ((daysScope * 24) - lastEnergyResult.result.Count);
                 }
@@ -407,14 +419,14 @@ class EnergyProductionRequest
     public string period { get; set; }
     public string co2_statistic_id { get; set; }
 }
- class EnergyProductionResult
+class EnergyProductionResult
 {
     public int id { get; set; }
     public string type { get; set; }
     public bool success { get; set; }
     //public List<object> result { get; set; }
     public Dictionary<string, double> result { get; set; }
-    
+
 }
 #endregion
 

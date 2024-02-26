@@ -59,7 +59,7 @@ public class FirstSyncViewModel : BaseViewModel
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
             
-            var inverter = await this.mscDbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+            var inverter = await this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
 
             var differenceInverter = DateTime.Now - inverter.FromDate;
 

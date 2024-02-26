@@ -224,18 +224,19 @@
     </Style>
     <Style x:Key="LabelEntryTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
         <Setter Property="FontSize" Value="13" />
-       
+
     </Style>
 
     <Style x:Key="LabelPageTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
-            <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.Primary500Color}}" />
-     
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={x:Static theming:AppColors.Primary500Color}, Dark={x:Static theming:AppColors.Primary500Color}}" />
+        <Setter Property="VerticalOptions" Value="Fill"/>
+        
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="Margin" Value="0,8,0,-2" />
+        <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="FontSize" Value="20" />
-         <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
-    
+
 
     </Style>
     <Style TargetType="ListView">

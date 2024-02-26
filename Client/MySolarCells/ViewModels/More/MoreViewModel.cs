@@ -464,7 +464,7 @@ public class MoreViewModel : BaseViewModel
         get
         {
 
-            var inverter = this.mscDbContext.Inverter.FirstOrDefault(x => x.HomeId == Home.HomeId);
+            var inverter = this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault(x => x.HomeId == Home.HomeId);
             inverterModelText = inverter.Name;
             OnPropertyChanged(nameof(InverterModelText));
             return ((InverterTyp)inverter.InverterTyp).ToString();

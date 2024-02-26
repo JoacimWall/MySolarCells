@@ -13,7 +13,7 @@ public class InverterViewModel : BaseViewModel
         //InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Kostal.ToString(), ItemValue = (int)InverterTyp.Kostal });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
        
-        var inverter = this.mscDbContext.Inverter.FirstOrDefault();
+        var inverter = this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault();
         if (inverter == null)
         {
             SelectedInverterModel = InverterModels.First();

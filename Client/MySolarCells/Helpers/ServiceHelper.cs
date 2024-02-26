@@ -42,6 +42,8 @@ public static class ServiceHelper
         switch (inverterModel)
         {
             case (int)InverterTyp.Kostal:
+                //return new HomeAssistentInverterService(ServiceHelper.GetService<MscDbContext>());
+                //HA ersätter Kostal
                 return new KostalService(ServiceHelper.GetService<IRestClient>() ,ServiceHelper.GetService<MscDbContext>());
             case (int)InverterTyp.Huawei:
                 return new HuaweiService(ServiceHelper.GetService<IRestClient>(), ServiceHelper.GetService<MscDbContext>());
