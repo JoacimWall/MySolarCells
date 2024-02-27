@@ -203,7 +203,7 @@ public class SolarEdgeService : IInverterServiceInterface
                         energyExist.InverterTypProductionOwnUse = (int)InverterTyp.SolarEdge;
                         energyExist.ElectricitySupplierPurchased = (int)InverterTyp.SolarEdge;
                         energyExist.ElectricitySupplierProductionSold = (int)InverterTyp.SolarEdge;
-                        if (energyExist.Timestamp < end.AddHours(-1))
+                        if (energyExist.Timestamp < end.AddHours(-2))
                         {
                             energyExist.ProductionSoldSynced = true;
                             energyExist.ProductionOwnUseSynced = true;

@@ -163,7 +163,7 @@ public class KostalService : IInverterServiceInterface
                                 energyExist.ProductionOwnUseProfit = 0;
                         }
                         energyExist.InverterTypProductionOwnUse = (int)InverterTyp.Kostal;
-                        if (energyExist.Timestamp < end.AddHours(-1))
+                        if (energyExist.Timestamp < end.AddHours(-2))
                             energyExist.ProductionOwnUseSynced = true;
 
                         eneryList.Add(energyExist);

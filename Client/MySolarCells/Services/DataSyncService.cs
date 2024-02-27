@@ -35,7 +35,7 @@ public class DataSyncService : IDataSyncService
         });
         //Get last Sync Time for grid supplier
         var lastSyncTime = this.mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
-        var lastSyncInverterTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var lastSyncInverterTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
 
         var PevhourDatetime = DateTime.Now.AddHours(-1);   
         var prevHoleHour = new DateTime(PevhourDatetime.Year, PevhourDatetime.Month, PevhourDatetime.Day, PevhourDatetime.Hour,0,0);

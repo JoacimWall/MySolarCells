@@ -165,6 +165,11 @@ public class TibberService : IGridSupplierInterface
 
                     //Save Consumtion
                     var energy = resultSites.Model.data.viewer.home.consumption.nodes[i];
+
+                    //test att hoppur ifall det är nuvarande timma eller mer
+                    //if (energy.from.Value > DateTime.Now.AddHours(-1))
+                    //    continue;
+
                     //check if exist in db
                     Energy energyExist = null;
                     if (existCheckDb)
@@ -208,7 +213,7 @@ public class TibberService : IGridSupplierInterface
                     energyExist.UnitPriceBuy = energy.unitPrice.HasValue ? Convert.ToDouble(energy.unitPrice.Value) : 0;
                     energyExist.UnitPriceVatBuy = energy.unitPriceVAT.HasValue ? Convert.ToDouble(energy.unitPriceVAT.Value) : 0;
                     //only flag row as synced if time has passed we import spotprice for future hours 
-                    if (energyExist.Timestamp < DateTime.Now)
+                    if (energyExist.Timestamp < DateTime.Now.AddHours(-2))
                         energyExist.PurchasedSynced = true;
                     //production
                     if (resultSites.Model.data.viewer.home.production != null && resultSites.Model.data.viewer.home.production.nodes != null)
@@ -230,7 +235,7 @@ public class TibberService : IGridSupplierInterface
                             energyExist.UnitPriceSold = energyProd.unitPrice.HasValue ? Convert.ToDouble(energyProd.unitPrice.Value) : 0;
                             energyExist.UnitPriceVatSold = energyProd.unitPriceVAT.HasValue ? Convert.ToDouble(energyProd.unitPriceVAT.Value) : 0;
                             //only flag row as synced if time has passed we import spotprice for future hours 
-                            if (energyExist.Timestamp < DateTime.Now)
+                            if (energyExist.Timestamp < DateTime.Now.AddHours(-2))
                                 energyExist.ProductionSoldSynced = true;
 
                         }
