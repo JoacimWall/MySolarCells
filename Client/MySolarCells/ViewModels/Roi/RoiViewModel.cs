@@ -8,7 +8,7 @@ public class RoiViewModel : BaseViewModel
     {
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;
-
+        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
         WeakReferenceMessenger.Default.Register<RefreshRoiViewMessage>(this, async (r, m) =>
         {
             await ReloadData(true);
@@ -20,6 +20,7 @@ public class RoiViewModel : BaseViewModel
     public ICommand SyncCommand => new Command(async () => await Sync());
     public async override Task OnAppearingAsync()
     {
+        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
         await ReloadData(true);
         
     }
@@ -64,12 +65,12 @@ public class RoiViewModel : BaseViewModel
         get { return roiSimulate; }
         set { SetProperty(ref roiSimulate, value); }
     }
-    private ChartDataRequest chartDataRequest = new ChartDataRequest();
-    public ChartDataRequest ChartDataRequest
-    {
-        get { return chartDataRequest; }
-        set { SetProperty(ref chartDataRequest, value); }
-    }
+    //private ChartDataRequest chartDataRequest = new ChartDataRequest();
+    //public ChartDataRequest ChartDataRequest
+    //{
+    //    get { return chartDataRequest; }
+    //    set { SetProperty(ref chartDataRequest, value); }
+    //}
 
     private HistoryStats roiStats = new HistoryStats();
     public HistoryStats RoiStats

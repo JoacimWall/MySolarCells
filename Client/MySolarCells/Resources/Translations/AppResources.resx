@@ -592,4 +592,8 @@
 <data name="English" xml:space="preserve">
     <value>English</value>
   <comment>Need review</comment></data>
+<data name="Language" xml:space="preserve">
+    <value>Language</value>
+  <comment>Need review</comment></data>
+
 </root>

@@ -18,7 +18,7 @@ public class MySolarCellsGlobals
     public static DateTime LastOnStart { get; set; }
     public static DateTime LastOnResume { get; set; }
     public static Application App { get; set; }
-
+    public static ChartDataRequest ChartDataRequest = new ChartDataRequest();
     public static ApplicationState ApplicationState { get; set; }
 
 

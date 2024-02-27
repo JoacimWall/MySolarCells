@@ -13,7 +13,7 @@ public class EnergyViewModel : BaseViewModel
         this.dataSyncService = dataSyncService;
         this.mscDbContext = mscDbContext;
         //this.jobManager = jobManager;
-        
+        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
         //DateTime dateTime = new DateTime(2023, 4, 8);
         //long milliseconds = DateHelper.DateTimeToMillis(dateTime);
         //DateTime dattest = DateHelper.MillisToDateTime(1680926400000);
@@ -48,7 +48,7 @@ public class EnergyViewModel : BaseViewModel
         //If there is no data try to fetch
         if (fromOnAppearing && !resultSeries.WasSuccessful && resultSeries.ErrorCode == ErrorCodes.NoEnergyEntryOnCurrentDate)
         {
-            await Sync();
+            //await Sync();
             resultSeries = await energyChartService.GetChartData(ChartDataRequest);
         }
         if (!resultSeries.WasSuccessful)
@@ -151,56 +151,13 @@ public class EnergyViewModel : BaseViewModel
     }
     public async override Task OnAppearingAsync()
     {
+        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        await ReloadGraph(true);
         if (FirstTimeAppearing)
         {
-            await ReloadGraph(true);
-            //await this.jobManager.RunAll();
-            //var jobs = this.jobManager.GetJobs();
-            //await this.jobManager.RunAll();
-            //if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
-            //{
-            //    await LocalNotificationCenter.Current.RequestNotificationPermission();
-
-            //    //var notification = new NotificationRequest
-            //    //{
-            //    //    Silent = true,
-            //    //    NotificationId = 100,
-            //    //    Title = "Test",
-            //    //    Description = "Test Description",
-            //    //    ReturningData = "Dummy data", // Returning data when tapped on notification.
-            //    //    Schedule =
-            //    //    {
-            //    //        NotifyTime = DateTime.Now.AddSeconds(30) // Used for Scheduling local notification, if not specified notification will show immediately.
-            //    //    }
-            //    //};
-            //    //await LocalNotificationCenter.Current.Show(notification);
-            //}
-            //else
-            //{
-            //       //var notification = new NotificationRequest
-            //       // {
-            //       //     Silent = true,
-            //       //     NotificationId = 100,
-            //       //     Title = "Test",
-            //       //     Description = "Test Description",
-            //       //     ReturningData = "Dummy data", // Returning data when tapped on notification.
-            //       //     Schedule =
-            //       // {
-            //       //     NotifyTime = DateTime.Now.AddSeconds(30) // Used for Scheduling local notification, if not specified notification will show immediately.
-            //       // }
-            //       // };
-            //       // await LocalNotificationCenter.Current.Show(notification);
-
-
-
-
-            //}
+           
         }
-        else
-        {
-          
-
-        }
+        
 
 
 
@@ -294,12 +251,12 @@ public class EnergyViewModel : BaseViewModel
         get { return roiSimulate; }
         set { SetProperty(ref roiSimulate, value); }
     }
-    private ChartDataRequest chartDataRequest = new ChartDataRequest();
-    public ChartDataRequest ChartDataRequest
-    {
-        get { return chartDataRequest; }
-        set { SetProperty(ref chartDataRequest, value); }
-    }
+    //private ChartDataRequest chartDataRequest = new ChartDataRequest();
+    //public ChartDataRequest ChartDataRequest
+    //{
+    //    get { return chartDataRequest; }
+    //    set { SetProperty(ref chartDataRequest, value); }
+    //}
 
     private Color colorPriceBuy;
     public Color ColorPriceBuy

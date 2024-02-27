@@ -79,6 +79,9 @@ public class DataSyncService : IDataSyncService
         //ProgressSubStatus = "saved rows 0";
         await Task.Delay(200);
 
+        //Denan behöver updateras efter gridsync för att bli rätt.
+         lastSyncInverterTime = this.mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+
         // var inverter = await dbContext.Inverter.FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         var differenceInverter = DateTime.Now - lastSyncInverterTime.Timestamp;
 

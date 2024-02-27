@@ -30,6 +30,17 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     public virtual ICommand NavBackCommand => new Command(async () => await GoBack());
     public virtual ICommand RefreshCommand => new Command(async (layoutState) => await RefreshAsync(layoutState));
 
+    private ChartDataRequest chartDataRequest = new ChartDataRequest();
+    public ChartDataRequest ChartDataRequest
+    {
+        get { return chartDataRequest; }
+        set
+        {
+            SetProperty(ref chartDataRequest, value);
+            MySolarCellsGlobals.ChartDataRequest = value;
+        }
+    }
+   
 
     [ObservableProperty]
     bool showNavbarBackbutton;

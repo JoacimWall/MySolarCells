@@ -15,7 +15,7 @@
     <Grid Style="{StaticResource GridBasePage}" RowSpacing="16" RowDefinitions="Auto,*, Auto, Auto,*"  >
         <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto">
             <!--Title-->
-            <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
+            <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Language}" />
             <!--navback-->
             <Border  Style="{StaticResource BorderButtonStyle}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />

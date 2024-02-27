@@ -546,4 +546,7 @@
   <data name="English" xml:space="preserve">
     <value>Engelsk</value>
   <comment>Need review</comment></data>
+  <data name="Language" xml:space="preserve">
+    <value>Språk</value>
+  <comment>Need review</comment></data>
 </root>

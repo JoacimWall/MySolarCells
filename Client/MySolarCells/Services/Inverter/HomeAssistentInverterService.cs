@@ -246,7 +246,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     //Sista dagen då kör vi till midnatt
                     if (end.Day == start.Day)
                         processingDateTo = processingDateTo.AddDays(1);
-                   
+
                     nextStart = end;
                 }
 
@@ -283,7 +283,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     batch100++;
                     var timestampProd = Convert.ToDateTime(item.Key);
                     var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
-                    if (energyExist != null)
+                    if (energyExist != null && (energyExist.Timestamp < end.AddHours(-2)))
                     {
                         if (item.Value > 0 && energyExist.ProductionSoldSynced)
                         {
@@ -295,8 +295,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                                 energyExist.ProductionOwnUseProfit = 0;
                         }
                         energyExist.InverterTypProductionOwnUse = (int)InverterTyp.HomeAssistent;
-                        if (energyExist.Timestamp < end.AddHours(-2))
-                            energyExist.ProductionOwnUseSynced = true;
+
+                        energyExist.ProductionOwnUseSynced = true;
 
                         eneryList.Add(energyExist);
 
