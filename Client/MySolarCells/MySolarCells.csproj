@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-maccatalyst;net8.0-android;net8.0-ios</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MySolarCells</RootNamespace>
 		<UseMaui>true</UseMaui>
-		<MauiVersion>8.0.7</MauiVersion>
+		<MauiVersion>8.0.6</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
 		<!-- Display name -->
 		<ApplicationTitle>My Solar Cells</ApplicationTitle>
 		<!-- App Identifier -->
@@ -20,6 +22,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">25.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<LangVersion>latestmajor</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
@@ -38,12 +41,11 @@
 		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
 		<!--DEBUG ON SIMULATOR-->
 		<!--<ForceSimulatorX64ArchitectureInIDE>true</ForceSimulatorX64ArchitectureInIDE>-->
-		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
 	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
+<!--	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
 		<RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
-		<!--<SelfContained>true</SelfContained>-->
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
@@ -61,8 +63,6 @@
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="24.2.8" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="24.2.8" />
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="24.2.8" />
-		<PackageReference Include="Shiny.Jobs" Version="3.2.4" />
-		<PackageReference Include="Shiny.Hosting.Maui" version="3.1.1" Version="3.2.4" />
 		<PackageReference Include="Plugin.LocalNotification" Version="11.1.1" />
 		<PackageReference Include="Syncfusion.Maui.Sliders" Version="24.2.8" />
 		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
@@ -70,7 +70,6 @@
 	<!--EmbeddedImages-->
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\EmbeddedImages\house_with_solar_cells.png" />
-
 	</ItemGroup>
 	
 	<!-- Translation -->
@@ -93,13 +92,6 @@
 	<ItemGroup>
 		<AndroidResource Include="Platforms\Android\Resources\xml\provider_paths.xml" />
 	</ItemGroup>
-	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
-		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
-		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Release.plist</CodesignEntitlements>
-		<UseHardenedRuntime>true</UseHardenedRuntime>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
 		<CodesignProvision>My solar cells Beta</CodesignProvision>
@@ -119,6 +111,15 @@
 		<CodesignExtraArgs>
 		</CodesignExtraArgs>
 	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
+		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
+		<AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
+		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Release.plist</CodesignEntitlements>
+		<UseHardenedRuntime>true</UseHardenedRuntime>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 		<AndroidDexTool>d8</AndroidDexTool>
 		<LangVersion>latest</LangVersion>

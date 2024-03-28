@@ -2,34 +2,36 @@
 
 public class RoiViewModel : BaseViewModel
 {
-    IHistoryDataService roiService;
-    IDataSyncService dataSyncService;
-    public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService)
+    readonly IHistoryDataService roiService;
+    readonly IDataSyncService dataSyncService;
+    public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService,IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;
-        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
-        WeakReferenceMessenger.Default.Register<RefreshRoiViewMessage>(this, async (r, m) =>
+        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        WeakReferenceMessenger.Default.Register<RefreshRoiViewMessage>(this, async (_, _) =>
         {
-            await ReloadData(true);
+            await ReloadData();
 
         });
 
     }
-    public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadData(true));
+    public ICommand ReloadGraphDataCommand => new Command(async () => await ReloadData());
     public ICommand SyncCommand => new Command(async () => await Sync());
-    public async override Task OnAppearingAsync()
+    public override async Task OnAppearingAsync()
     {
-        this.ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
-        await ReloadData(true);
+        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        await ReloadData();
         
     }
     private async Task Sync()
     {
-        using var dlg = DialogService.GetProgress(AppResources.Import_Data);
+        _ = (ProgressDialog)DialogService.GetProgress(AppResources.Import_Data);
         await Task.Delay(200);
-        var result = await this.dataSyncService.Sync();
-        if (!result.WasSuccessful)
+        var result = await dataSyncService.Sync();
+        if (!result.WasSuccessful || result.Model == null)
         {
             await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
@@ -37,46 +39,32 @@ public class RoiViewModel : BaseViewModel
         {
             DialogService.ShowToast(result.Model.Message);
         }
-        await ReloadData(false);
+        await ReloadData();
         IsRefreshing = false;
     }
-    private async Task<bool> ReloadData(bool showProgressDlg)
+    private async Task ReloadData()
     {
         //if (showProgressDlg)
         //    using var dlg = DialogService.GetProgress("");
         await Task.Delay(200);
-        var diffrens = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
-        if (diffrens.TotalDays > 31)
+        var difference = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
+        if (difference.TotalDays > 31)
         {
-            var ReportStats = await this.roiService.GenerateTotalPermonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
-            RoiStats = ReportStats.Model.Item1.First().HistoryStats;
+            var reportStats = await roiService.GenerateTotalPerMonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
+            if (reportStats.Model != null) 
+                RoiStats = reportStats.Model.Item1.First().HistoryStats;
         }
         else
         {
-            RoiStats = await this.roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
+            RoiStats = await roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
         }
-       
-        return true;
     }
-    
-    private HistorySimulate roiSimulate = new HistorySimulate();
-    public HistorySimulate RoiSimulate
-    {
-        get { return roiSimulate; }
-        set { SetProperty(ref roiSimulate, value); }
-    }
-    //private ChartDataRequest chartDataRequest = new ChartDataRequest();
-    //public ChartDataRequest ChartDataRequest
-    //{
-    //    get { return chartDataRequest; }
-    //    set { SetProperty(ref chartDataRequest, value); }
-    //}
-
+   
     private HistoryStats roiStats = new HistoryStats();
     public HistoryStats RoiStats
     {
-        get { return roiStats; }
-        set { SetProperty(ref roiStats, value); }
+        get => roiStats;
+        set => SetProperty(ref roiStats, value);
     }
 
 

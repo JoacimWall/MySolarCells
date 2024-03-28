@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MySolarCells.Services.Inverter;
@@ -16,10 +18,10 @@ namespace MySolarCells.Services.Inverter;
 public class HomeAssistentInverterService : IInverterServiceInterface
 {
 
-    private HttpClient restClient;
+    //private HttpClient restClient;
     private readonly MscDbContext mscDbContext;
-    private InverterLoginResponse inverterLoginResponse;
-    private readonly JsonSerializerOptions jsonOptions;
+    private InverterLoginResponse? inverterLoginResponse;
+    //private readonly JsonSerializerOptions jsonOptions;
 
     public string InverterGuideText => "WebSockets API is on the same aurl as the HA web frontend." + Environment.NewLine +
                     "ws or wss://IP_ADDRESS:8123/api/websocket" + Environment.NewLine + "You obtain a token under your profile in HA.";
@@ -35,27 +37,30 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     public HomeAssistentInverterService(MscDbContext mscDbContext)
     {
         this.mscDbContext = mscDbContext;
-        jsonOptions = new JsonSerializerOptions
+        /*jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
+        };*/
 
         client = new ClientWebSocket();
         cts = new CancellationTokenSource();
-
+        apiKey = "";
+        apiUrl = "";
+        pickerOneReturnlist = new();
+        lastEnergyResult = new();
 
     }
     #region WebSocket
     string apiKey;
     string apiUrl;
-    string reciveMode;
+    string reciveMode="";
     ClientWebSocket client;
     CancellationTokenSource cts;
 
     public bool IsConnected => client.State == WebSocketState.Open;
 
-    private bool connected = false;
+    private bool connected;
     async Task ConnectToServerAsync(string reciveMode, string userName, string password, string apiUrl, string apiKey)
     {
         this.apiKey = apiKey;
@@ -89,16 +94,16 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 break;
             var messageBytes = message.Skip(message.Offset).Take(result.Count).ToArray();
             string receivedMessage = Encoding.UTF8.GetString(messageBytes);
-            var filterResponse = JsonSerializer.Deserialize<GenericFilterResponse>(receivedMessage);
+            var filterResponse = JsonSerializer.Deserialize<GenericFilterResponse>(receivedMessage)!;
             if (filterResponse.type == "auth_required")
             {
-                SendMessageAsync(JsonSerializer.Serialize(new AuthMessage { type = "auth", access_token = this.apiKey }));
+                SendMessageAsync(JsonSerializer.Serialize(new AuthMessage { type = "auth", access_token = apiKey }));
             }
             else if (filterResponse.type == "auth_ok")
             {
-                if (this.reciveMode == "TestApiKey")
+                if (reciveMode == "TestApiKey")
                 {
-                    this.inverterLoginResponse = new InverterLoginResponse
+                    inverterLoginResponse = new InverterLoginResponse
                     {
                         token = apiKey,
                         expiresIn = 0,
@@ -110,7 +115,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             }
             else if (filterResponse.id == 2)
             {
-                var prefs = JsonSerializer.Deserialize<EnergyPrefsResult>(receivedMessage);
+                var prefs = JsonSerializer.Deserialize<EnergyPrefsResult>(receivedMessage)!;
                 if (prefs.success)
                 {
                     var returnlist = new List<InverterSite>();
@@ -130,7 +135,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             }
             else if (filterResponse.id > 10)
             {
-                var energy = JsonSerializer.Deserialize<EnergyProductionResult>(receivedMessage);
+                var energy = JsonSerializer.Deserialize<EnergyProductionResult>(receivedMessage)!;
                 lastEnergyResult = energy;
                 energyDataResponseExist = true;
             }
@@ -166,7 +171,9 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             await ConnectToServerAsync("TestApiKey", "", "", apiUrl, apiKey);
             while (connected == false)
                 await Task.Delay(1000);
-
+            if (inverterLoginResponse == null)
+                return new Result<InverterLoginResponse>("inverterLoginResponse is null");
+            
             return new Result<InverterLoginResponse>(inverterLoginResponse);
         }
         catch (Exception ex)
@@ -175,7 +182,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
         }
     }
     private List<InverterSite> pickerOneReturnlist;
-    private bool pickerReslutDone = false;
+    private bool pickerReslutDone;
     public async Task<Result<List<InverterSite>>> GetPickerOne()
     {
         await Task.Factory.StartNew(async () =>
@@ -195,21 +202,26 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
 
     }
-    public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
+    public Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
         //we return the same this for the general flow should work
-        return new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Name, Name = inverterSite.Name });
+        return Task.FromResult(new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Name, Name = inverterSite.Name }));
     }
 
 
-    bool energyDataResponseExist = false;
+    bool energyDataResponseExist;
     EnergyProductionResult lastEnergyResult;
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-        int websocketid = 11;
-        var inverter = await this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+        int websocketId = 11;
+        var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
         //LOGIN
-        var loginResult = await TestConnection("", "", inverter.ApiUrl, StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
+        string apiKey="";
+        
+        if (inverter.ApiKey != null)
+            apiKey = StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey);
+        
+        var loginResult = await TestConnection("", "", inverter.ApiUrl?? "", apiKey);
         if (!loginResult.WasSuccessful)
             return new Result<DataSyncResponse>(loginResult.ErrorMessage);
         inverterLoginResponse = loginResult.Model;
@@ -220,7 +232,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             DateTime processingDateFrom;
             DateTime processingDateTo;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
-            List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
+            List<Energy> eneryList = new List<Energy>();
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
 
@@ -262,7 +274,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
                 SendMessageAsync(JsonSerializer.Serialize(new EnergyProductionRequest
                 {
-                    id = websocketid,
+                    id = websocketId,
                     type = "energy/fossil_energy_consumption",
                     co2_statistic_id = "power",
                     energy_statistic_ids = new List<string> { inverter.SubSystemEntityId },
@@ -271,7 +283,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     end_time = processingDateTo.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'")
                 }));
 
-                websocketid++;
+                websocketId++;
 
                 while (energyDataResponseExist == false)
                     await Task.Delay(1000);
@@ -282,7 +294,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     progressStartNr++;
                     batch100++;
                     var timestampProd = Convert.ToDateTime(item.Key);
-                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
+                    var energyExist = mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
                     if (energyExist != null && (energyExist.Timestamp < end.AddHours(-2)))
                     {
                         if (item.Value > 0 && energyExist.ProductionSoldSynced)
@@ -308,8 +320,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await this.mscDbContext.BulkUpdateAsync(eneryList);
-                        eneryList = new List<SQLite.Sqlite.Models.Energy>();
+                        await mscDbContext.BulkUpdateAsync(eneryList);
+                        eneryList = new List<Energy>();
                     }
 
                 }
@@ -326,8 +338,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await this.mscDbContext.BulkUpdateAsync(eneryList);
-                eneryList = new List<SQLite.Sqlite.Models.Energy>();
+                await mscDbContext.BulkUpdateAsync(eneryList);
+                eneryList = new List<Energy>();
             }
             return new Result<DataSyncResponse>(new DataSyncResponse
             {
@@ -348,20 +360,20 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 #region Websocket
 class AuthMessage
 {
-    public string type { get; set; }
-    public string access_token { get; set; }
+    public string type { get; set; } = "";
+    public string access_token { get; set; }= "";
 }
 class GetPrefsRequest
 {
     public int id { get; set; }
-    public string type { get; set; }
+    public string type { get; set; }= "";
 }
 //used to filter incoming messags
 class GenericFilterResponse
 {
     public int id { get; set; }
-    public string type { get; set; }
-    public string ha_version { get; set; }
+    public string type { get; set; }= "";
+    public string ha_version { get; set; }= "";
 }
 
 
@@ -369,27 +381,27 @@ class GenericFilterResponse
 class EnergyPrefsResult
 {
     public int id { get; set; }
-    public string type { get; set; }
+    public string type { get; set; }= "";
     public bool success { get; set; }
-    public EnergyPrefs result { get; set; }
+    public EnergyPrefs result { get; set; } = new();
 }
 class EnergyPrefs
 {
-    public List<EnergySource> energy_sources { get; set; }
+    public List<EnergySource> energy_sources { get; set; }= new();
     //public List<DeviceConsumption> device_consumption { get; set; }
 }
 
 class EnergySource
 {
-    public string type { get; set; }
+    public string type { get; set; } = "";
     //public List<FlowFrom> flow_from { get; set; }
     //public List<FlowTo> flow_to { get; set; }
     public double cost_adjustment_day { get; set; }
-    public string stat_energy_from { get; set; }
-    public object config_entry_solar_forecast { get; set; }
-    public string stat_cost { get; set; }
-    public object entity_energy_price { get; set; }
-    public object number_energy_price { get; set; }
+    public string stat_energy_from { get; set; } = "";
+    public object config_entry_solar_forecast { get; set; }= new();
+    public string stat_cost { get; set; } = "";
+    public object entity_energy_price { get; set; }= new();
+    public object number_energy_price { get; set; }= new();
 }
 //public class DeviceConsumption
 //{
@@ -416,20 +428,20 @@ class EnergySource
 class EnergyProductionRequest
 {
     public int id { get; set; }
-    public string type { get; set; }
-    public string start_time { get; set; }
-    public string end_time { get; set; }
-    public List<string> energy_statistic_ids { get; set; }
-    public string period { get; set; }
-    public string co2_statistic_id { get; set; }
+    public string type { get; set; } = "";
+    public string start_time { get; set; } = "";
+    public string end_time { get; set; } = "";
+    public List<string> energy_statistic_ids { get; set; }= new();
+    public string period { get; set; } = "";
+    public string co2_statistic_id { get; set; } = "";
 }
 class EnergyProductionResult
 {
     public int id { get; set; }
-    public string type { get; set; }
+    public string type { get; set; } = "";
     public bool success { get; set; }
     //public List<object> result { get; set; }
-    public Dictionary<string, double> result { get; set; }
+    public Dictionary<string, double> result { get; set; } = new();
 
 }
 #endregion

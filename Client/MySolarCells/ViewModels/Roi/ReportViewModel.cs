@@ -1,42 +1,47 @@
-﻿namespace MySolarCells.ViewModels.Roi;
+﻿using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
+
+namespace MySolarCells.ViewModels.Roi;
 
 public class ReportViewModel : BaseViewModel
 {
-    IHistoryDataService historyDataService;
-    IDataSyncService dataSyncService;
-    IEnergyChartService energyChartService;
-    IRoiService roiService;
+    readonly IHistoryDataService historyDataService;
+    readonly IRoiService roiService;
     private readonly MscDbContext mscDbContext;
-    public ReportViewModel(IHistoryDataService historyDataService, IRoiService roiService, IDataSyncService dataSyncService, IEnergyChartService energyChartService, MscDbContext mscDbContext)
+    public ReportViewModel(IHistoryDataService historyDataService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
+        
         this.historyDataService = historyDataService;
         this.roiService = roiService;
-        this.dataSyncService = dataSyncService;
-        this.energyChartService = energyChartService;
         this.mscDbContext = mscDbContext;
-        var exist = this.mscDbContext.SavingEssitmateParameters.FirstOrDefault();
+        
+        var exist = this.mscDbContext.SavingEstimateParameters.FirstOrDefault();
         if (exist is null)
         {
-            exist = new SavingEssitmateParameters();
-            this.mscDbContext.SavingEssitmateParameters.Add(exist);
+            exist = new SavingEstimateParameters();
+            this.mscDbContext.SavingEstimateParameters.Add(exist);
             this.mscDbContext.SaveChanges();
         }
-        SavingEssitmateParameters = exist;
+        savingEstimateParameters = exist;
+        selReportPage = new ReportModel();
     }
     public ICommand MoreButtonCommand => new Command(async () => await MoreButton());
 
-    private async Task MoreButton()
+    private Task MoreButton()
     {
-        ShowSavingEsstimateIsVisible = !showSavingEsstimateIsVisible;
+        ShowSavingEstimateIsVisible = !showSavingEstimateIsVisible;
+        return Task.CompletedTask;
     }
     
-    public ICommand RefreshSavingEssitmateCommand => new Command(async () => await ReloadSavingsEstimate(false));
-    public ICommand ReloadGraphDataCommand => new Command(async () => await RefreshAsync(null));
-    public ICommand PrevPageCommand => new Command(async () => await PrevPage(true));
-    public ICommand NextPageCommand => new Command(async () => await NextPage(true));
-    private async Task PrevPage(bool v)
+    public ICommand RefreshSavingEstimateCommand => new Command(async () => await ReloadSavingsEstimate(false));
+    public ICommand ReloadGraphDataCommand => new Command(async () => await RefreshAsync( ));
+    public ICommand PrevPageCommand => new Command(async () => await PrevPage());
+    public ICommand NextPageCommand => new Command(async () => await NextPage());
+    private async Task PrevPage()
     {
-        using var dlg = DialogService.GetProgress(AppResources.Loading);
+        _ = (ProgressDialog)DialogService.GetProgress(AppResources.Loading);
         await Task.Delay(300);
         for (int i = ReportData.Count - 1; i >= 0; i--)
         {
@@ -49,15 +54,14 @@ public class ReportViewModel : BaseViewModel
 
     }
 
-    public async override Task OnDisappearingAsync()
+    public override async Task OnDisappearingAsync()
     {
-        //Save cahnges to the SavingEssitmateParameters 
-        await this.mscDbContext.SaveChangesAsync();
+        await mscDbContext.SaveChangesAsync();
     }
 
-    private async Task NextPage(bool v)
+    private async Task NextPage()
     {
-        using var dlg = DialogService.GetProgress(AppResources.Loading);
+        using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Loading);
         await Task.Delay(300);
         for (int i = 0; i < ReportData.Count; i++)
         {
@@ -67,56 +71,77 @@ public class ReportViewModel : BaseViewModel
                 return;
             }
         }
-
     }
-    public async override Task RefreshAsync(object layoutState)
+
+    public override async Task RefreshAsync(TsViewState layoutState = TsViewState.Refreshing, bool showProgress = true)
     {
-        using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
+        using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(300);
-        await ReloadHistoryData(true);
+        await ReloadHistoryData();
         await ReloadSavingsEstimate(true);
     }
 
-    private Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>> resultHistory;
-    private async Task<bool> ReloadHistoryData(bool showProgressDlg)
+    private Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>? resultHistory;
+    private async Task ReloadHistoryData()
     {
-        resultHistory = await this.historyDataService.GenerateTotalPermonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
+        resultHistory = await historyDataService.GenerateTotalPerMonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
         if (!resultHistory.WasSuccessful)
         {
             await DialogService.ShowAlertAsync(resultHistory.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
         }
-        return true;
     }
     private async Task<bool> ReloadSavingsEstimate(bool firstTime)
     {
-        using var dlg = DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
+      
+        
+        using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(300);
 
-        var resultRoi = this.roiService.CalcSavingsEstimate(resultHistory.Model, SavingEssitmateParameters);
-        if (!resultRoi.WasSuccessful)
+        if (resultHistory is { Model: not null })
         {
-            await DialogService.ShowAlertAsync(resultRoi.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
-        }
-        else
-        {
-            if (firstTime)
-            {
-                ReportData.Add(new ReportModel { EstimatRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEssitmate, ReportTitle = AppResources.Savings_Calculation });
-                ReportData.Add(new ReportModel { Stats = resultHistory.Model.Item1, ReportPageTyp = ReportPageTyp.YearsOverview, ReportTitle = AppResources.Year_Overview });
-                foreach (var item in resultHistory.Model.Item2)
-                {
-                    ReportData.Add(new ReportModel { Stats = item, ReportPageTyp = ReportPageTyp.YearDetails, ReportTitle = string.Format(AppResources.Details_Year, item.First().FromDate.Year) });
-                }
-                await Task.Delay(300);
-                SelReportPage = ReportData.First();
-            }
-            else
-            {
-                ReportData[0] = new ReportModel { EstimatRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEssitmate, ReportTitle = AppResources.Savings_Calculation };
-                SelReportPage = ReportData.First();
-            }
            
+                var resultRoi = roiService.CalcSavingsEstimate(resultHistory.Model, SavingEstimateParameters);
+                if (!resultRoi.WasSuccessful)
+                {
+                    await DialogService.ShowAlertAsync(resultRoi.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
+                }
+                else
+                {
+                    if (resultRoi.Model != null)
+                    {
+                        if (firstTime)
+                        {
+                            ReportData.Add(new ReportModel
+                            {
+                                EstimateRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEstimate,
+                                ReportTitle = AppResources.Savings_Calculation
+                            });
+                            ReportData.Add(new ReportModel
+                            {
+                                Stats = resultHistory.Model.Item1, ReportPageTyp = ReportPageTyp.YearsOverview,
+                                ReportTitle = AppResources.Year_Overview
+                            });
+                            foreach (var item in resultHistory.Model.Item2)
+                            {
+                                ReportData.Add(new ReportModel
+                                {
+                                    Stats = item, ReportPageTyp = ReportPageTyp.YearDetails,
+                                    ReportTitle = string.Format(AppResources.Details_Year, item.First().FromDate.Year)
+                                });
+                            }
+                            await Task.Delay(300);
+                            SelReportPage = ReportData.First();
+                        }
+                        else
+                        {
+                            ReportData[0] = new ReportModel { EstimateRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEstimate, ReportTitle = AppResources.Savings_Calculation };
+                            SelReportPage = ReportData.First();
+                        }
+                    }
+                }
+            
         }
+
         return true;
     }
     //private HistorySimulate roiSimulate = new HistorySimulate();
@@ -126,30 +151,30 @@ public class ReportViewModel : BaseViewModel
     //    set { SetProperty(ref roiSimulate, value); }
     //}
 
-    private bool showSavingEsstimateIsVisible = false;
-    public bool ShowSavingEsstimateIsVisible
+    private bool showSavingEstimateIsVisible;
+    public bool ShowSavingEstimateIsVisible
     {
-        get { return showSavingEsstimateIsVisible; }
-        set { SetProperty(ref showSavingEsstimateIsVisible, value); }
+        get => showSavingEstimateIsVisible;
+        set => SetProperty(ref showSavingEstimateIsVisible, value);
     }
 
-    private SavingEssitmateParameters savingEssitmateParameters;
-    public SavingEssitmateParameters SavingEssitmateParameters
+    private SavingEstimateParameters savingEstimateParameters;
+    public SavingEstimateParameters SavingEstimateParameters
     {
-        get { return savingEssitmateParameters; }
-        set { SetProperty(ref savingEssitmateParameters, value); }
+        get => savingEstimateParameters;
+        set => SetProperty(ref savingEstimateParameters, value);
     }
     private ReportModel selReportPage;
     public ReportModel SelReportPage
     {
-        get { return selReportPage; }
-        set { SetProperty(ref selReportPage, value); }
+        get => selReportPage;
+        set => SetProperty(ref selReportPage, value);
     }
     private List<ReportModel> reportData = new List<ReportModel>();
     public List<ReportModel> ReportData
     {
-        get { return reportData; }
-        set { SetProperty(ref reportData, value); }
+        get => reportData;
+        set => SetProperty(ref reportData, value);
     }
 
 }

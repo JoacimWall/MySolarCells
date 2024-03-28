@@ -16,14 +16,14 @@ public partial class MenuGridItemView : ContentView
 
     public string TitleText
     {
-        get { return base.GetValue(TitleTextProperty).ToString(); }
-        set { base.SetValue(TitleTextProperty, value); }
+        get => (string)GetValue(TitleTextProperty);
+        set => SetValue(TitleTextProperty, value);
     }
 
     private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (MenuGridItemView)bindable;
-        control.title.Text = newValue.ToString();
+        control.Title.Text = newValue.ToString() ?? string.Empty;
     }
 
     public static readonly BindableProperty FontIconTextProperty = BindableProperty.Create(
@@ -36,14 +36,14 @@ public partial class MenuGridItemView : ContentView
 
     public string FontIcon
     {
-        get { return base.GetValue(FontIconTextProperty).ToString(); }
-        set { base.SetValue(FontIconTextProperty, value); }
+        get => (string)GetValue(FontIconTextProperty);
+        set => SetValue(FontIconTextProperty, value);
     }
 
     private static void FontIconTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (MenuGridItemView)bindable;
-        control.IconLabel.Text = newValue.ToString();
+        control.IconLabel.Text = newValue.ToString() ?? string.Empty;
     }
 
     public static readonly BindableProperty FontIconExternalProperty = BindableProperty.Create(
@@ -56,14 +56,14 @@ public partial class MenuGridItemView : ContentView
 
     public string FontIconExternal
     {
-        get { return base.GetValue(FontIconExternalProperty).ToString(); }
-        set { base.SetValue(FontIconExternalProperty, value); }
+        get => (string)GetValue(FontIconExternalProperty);
+        set => SetValue(FontIconExternalProperty, value);
     }
 
     private static void FontIconExternalPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (MenuGridItemView)bindable;
-        control.IconLabelExternal.Text = newValue.ToString();
+        control.IconLabelExternal.Text = newValue.ToString() ?? "";
     }
 
 
@@ -74,19 +74,19 @@ public partial class MenuGridItemView : ContentView
 
     private static void DateImplementedChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        MenuGridItemView control;
-
-        control = (MenuGridItemView)bindable;
-        if (control != null && newValue != null)
-        {
-            //control.IsNewLabel.IsVisible = (DateTime.Now - (DateTime)newValue).TotalDays < 30 ? true : false;
-        }
+        // MenuGridItemView control;
+        //
+        // control = (MenuGridItemView)bindable;
+        // if (control != null && newValue != null)
+        // {
+        //     //control.IsNewLabel.IsVisible = (DateTime.Now - (DateTime)newValue).TotalDays < 30 ? true : false;
+        // }
     }
 
     public DateTime DateImplemented
     {
-        get { return (DateTime)GetValue(DateImplementedProperty); }
-        set { SetValue(DateImplementedProperty, value);   }
+        get => (DateTime)GetValue(DateImplementedProperty);
+        set => SetValue(DateImplementedProperty, value);
     }
 
 }

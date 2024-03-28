@@ -1,13 +1,12 @@
-﻿using Syncfusion.XlsIO;
-
-namespace MySolarCells.ViewModels.More;
+﻿namespace MySolarCells.ViewModels.More;
 
 public class SelectLanguageCountryViewModel : BaseViewModel
 {
-    private readonly ISettingsService settingsService;
-    public SelectLanguageCountryViewModel(ISettingsService settingsService)
+   
+    public SelectLanguageCountryViewModel(IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
-        this.settingsService = settingsService;
        
 
     }
@@ -16,10 +15,10 @@ public class SelectLanguageCountryViewModel : BaseViewModel
     public ICommand SelectSweCommand => new Command(async () => await SelectSwe());
     private async Task SelectEng()
     {
-        if (this.settingsService.UserCountry != CountryEnum.En_US)
+        if (SettingsService.UserCountry != CountryEnum.EnUs)
         {
-            this.settingsService.UserCountry = CountryEnum.En_US;
-            App.Current.MainPage = new AppShell();
+            SettingsService.UserCountry = CountryEnum.EnUs;
+            if (Application.Current != null) Application.Current.MainPage = new AppShell();
         }
         else
         {
@@ -29,10 +28,10 @@ public class SelectLanguageCountryViewModel : BaseViewModel
     }
     private async Task SelectSwe()
     {
-        if (this.settingsService.UserCountry != CountryEnum.Sv_SE)
+        if (SettingsService.UserCountry != CountryEnum.SvSe)
         {
-            this.settingsService.UserCountry = CountryEnum.Sv_SE;
-            App.Current.MainPage = new AppShell();
+            SettingsService.UserCountry = CountryEnum.SvSe;
+            if (Application.Current != null) Application.Current.MainPage = new AppShell();
         }
         else
         {

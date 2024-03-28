@@ -1,5 +1,7 @@
 ﻿
 
+using MySolarCellsSQLite.Sqlite.Models;
+
 namespace MySolarCells.Services.GridSupplier
 {
 	public interface IGridSupplierInterface
@@ -21,8 +23,8 @@ namespace MySolarCells.Services.GridSupplier
     public class GridSupplierLoginResponse
     {
 
-        public string ApiKey { get; set; }
-        public string ResponseText { get; set; }
+        public string ApiKey { get; set; } = "";
+        public string ResponseText { get; set; } = "";
 
     }
 }

@@ -7,9 +7,5 @@
                          BackgroundColor="{x:Static theming:AppColors.Primary500Color}">
     <Grid>
 
-        <!--<Image Margin="40" Source="splash" Aspect="AspectFit" WidthRequest="300"
-            HeightRequest="{Binding Converter={StaticResource TmImageHeightFromDisplayWidthConverter},ConverterParameter='StartupPage'}"
-            VerticalOptions="Fill"
-            HorizontalOptions="Fill" />-->
     </Grid>
 </views:BaseContentPage>

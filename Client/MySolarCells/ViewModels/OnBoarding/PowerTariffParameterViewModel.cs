@@ -1,5 +1,5 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
 
 
 namespace MySolarCells.ViewModels.OnBoarding;
@@ -7,11 +7,13 @@ namespace MySolarCells.ViewModels.OnBoarding;
 public class PowerTariffParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public PowerTariffParameterViewModel(MscDbContext mscDbContext)
+    public PowerTariffParameterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
         this.mscDbContext = mscDbContext;
         var list = this.mscDbContext.PowerTariffParameters.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
-        if (list != null && list.Count > 0)
+        if ( list.Count > 0)
         {
             Parameters = new ObservableCollection<PowerTariffParameters>(list);
             selectedParameters = parameters.Last();
@@ -20,7 +22,7 @@ public class PowerTariffParameterViewModel : BaseViewModel
             AddParameters(true);
     }
     public ICommand AddParametersCommand => new Command(() => AddParameters());
-    public ICommand ShowDatePickerCommand => new Command(() => ShowDatePickerDlg());
+    public ICommand ShowDatePickerCommand => new Command(ShowDatePickerDlg);
 
     private void ShowDatePickerDlg()
     {
@@ -32,11 +34,11 @@ public class PowerTariffParameterViewModel : BaseViewModel
     public bool ShowDatePicker
     {
         get => showDatePicker;
-        set { SetProperty(ref showDatePicker, value); }
+        set => SetProperty(ref showDatePicker, value);
     }
     private void AddParameters(bool firstTime = false)
     {
-        //Clone previus
+        //Clone previous
         if (firstTime)
         {
             Parameters.Add(new PowerTariffParameters
@@ -47,22 +49,14 @@ public class PowerTariffParameterViewModel : BaseViewModel
         }
         else
         { 
-        var paramLast = Parameters.Last();
-        Parameters.Add(new PowerTariffParameters
-        {
-            HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
-            FromDate = paramLast.FromDate.AddMonths(1),
-            //EnergyTax = paramLast.EnergyTax,
-            //FixedPriceKwh = paramLast.FixedPriceKwh,
-            //ProdCompensationElectricityLowload = paramLast.ProdCompensationElectricityLowload,
-            //TaxReduction = paramLast.TaxReduction,
-            //TotalInstallKwhPanels = paramLast.TotalInstallKwhPanels,
-            //TransferFee = paramLast.TransferFee,
-            //UseSpotPrice = paramLast.UseSpotPrice
-
-        });
+            var paramLast = Parameters.Last();
+            Parameters.Add(new PowerTariffParameters
+            {
+                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+                FromDate = paramLast.FromDate.AddMonths(1),
+            });
         }
-        this.mscDbContext.PowerTariffParameters.Add(Parameters.Last());
+        mscDbContext.PowerTariffParameters.Add(Parameters.Last());
         SelectedParameters = Parameters.Last();
     }
 
@@ -72,14 +66,14 @@ public class PowerTariffParameterViewModel : BaseViewModel
     {
         try
         {
-            await this.mscDbContext.SaveChangesAsync();
+            await mscDbContext.SaveChangesAsync();
             if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
             {
                 await GoBack();
             }
             else
             {
-                SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationparametersSelected;
+                SettingsService.OnboardingStatus = OnboardingStatusEnum.EnergyCalculationParameterSelected;
                 await GoToAsync(nameof(InvestmentAndLoanView));
             }
         }
@@ -94,21 +88,14 @@ public class PowerTariffParameterViewModel : BaseViewModel
     public ObservableCollection<PowerTariffParameters> Parameters
     {
         get => parameters;
-        set
-        {
-            SetProperty(ref parameters, value);
-
-        }
+        set => SetProperty(ref parameters, value);
     }
     private PowerTariffParameters selectedParameters = new PowerTariffParameters();
     public PowerTariffParameters SelectedParameters
     {
         get => selectedParameters;
-        set
-        {
-            SetProperty(ref selectedParameters, value);
-            //SelectedFromDate = value.FromDate;
-        }
+        set => SetProperty(ref selectedParameters, value);
+        //SelectedFromDate = value.FromDate;
     }
     //private DateTime selectedFromDate = DateTime.Today;
     //public DateTime SelectedFromDate

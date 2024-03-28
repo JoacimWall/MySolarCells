@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.SQLite.Sqlite.Models;
+﻿namespace MySolarCellsSQLite.Sqlite.Models;
 
 public class EnergyCalculationParameter : ObservableObject
 {
@@ -18,36 +18,36 @@ public class EnergyCalculationParameter : ObservableObject
         }
     }
     
-    private double prodCompensationElectricityLowload = 0.078;
-    [Required]  //Nätnytta 0.078 kr/kWh
-    public double ProdCompensationElectricityLowload
+    private double prodCompensationElectricityLowLoad = 0.078;
+    [Required]  //Net benefit SEK 0.078/kWh
+    public double ProdCompensationElectricityLowLoad
     {
-        get => prodCompensationElectricityLowload;
-        set  {  SetProperty(ref prodCompensationElectricityLowload, value); }
+        get => prodCompensationElectricityLowLoad;
+        set => SetProperty(ref prodCompensationElectricityLowLoad, value);
     }
 
     private double transferFee = 0.3;
-    [Required]  //Eventuell överföringsavgift som du kostar vi köp av eller (sparar vi egen användning) Ellevio 0.3 kr
+    [Required]  //Any transfer fee that costs you if we buy from or (we save for our own use) Ellevio SEK 0.3
     public double TransferFee
     {
         get => transferFee;
-        set { SetProperty(ref transferFee, value); }
+        set => SetProperty(ref transferFee, value);
     }
 
     private double taxReduction = 0.6;
-    [Required] //0.60/kWh såld el Max 18 0000 kr och inte för fler kWh än huset köper in
+    [Required] //0.60/kWh electricity sold Max SEK 18,0000 and not for more kWh than the house buys in
     public double TaxReduction
     {
         get => taxReduction;
-        set { SetProperty(ref taxReduction, value); }
+        set => SetProperty(ref taxReduction, value);
     }
 
     private double energyTax = 0.49;
-    [Required] //0.49/kWh såld (sparar vi egen användning)
+    [Required] //0.49/kWh sold (we save our own use)
     public double EnergyTax
     {
         get => energyTax;
-        set { SetProperty(ref energyTax, value); }
+        set => SetProperty(ref energyTax, value);
     }
 
     private double totalInstallKwhPanels = 10.5;
@@ -55,15 +55,15 @@ public class EnergyCalculationParameter : ObservableObject
     public double TotalInstallKwhPanels
     {
         get => totalInstallKwhPanels;
-        set { SetProperty(ref totalInstallKwhPanels, value); }
+        set => SetProperty(ref totalInstallKwhPanels, value);
     }
 
-    private double fixedPriceKwh = 0;
+    private double fixedPriceKwh;
     [Required] //fixed price 
     public double FixedPriceKwh
     {
         get => fixedPriceKwh;
-        set { SetProperty(ref fixedPriceKwh, value); }
+        set => SetProperty(ref fixedPriceKwh, value);
     }
 
     private bool useSpotPrice = true;
@@ -74,28 +74,23 @@ public class EnergyCalculationParameter : ObservableObject
         set
         {
             SetProperty(ref useSpotPrice, value);
-            ShowFixedPrice = value ? false : true;
+            ShowFixedPrice = !value;
         }
     }
-    //FK's
     [Required]
     public int HomeId { get; set; }
 
    
     
     [NotMapped]
-    public string DisplayName
-    {
-        get { return fromDate.ToString("yyyy-MM"); }
-        
-    }
+    public string DisplayName => fromDate.ToString("yyyy-MM");
 
     private bool showFixedPrice;
     [NotMapped]
     public bool ShowFixedPrice
     {
         get => showFixedPrice;
-        set { SetProperty(ref showFixedPrice, value); }
+        set => SetProperty(ref showFixedPrice, value);
     }
 }
 

@@ -5,7 +5,7 @@ public static class ViewsExtensions
     public static MauiAppBuilder ConfigureViews(this MauiAppBuilder builder)
     {
         
-        //Onoarding
+        //OnBoarding
         builder.Services.AddTransient<ElectricitySupplierView>();
         builder.Services.AddTransient<InverterView>();
         builder.Services.AddTransient<EnergyCalculationParameterView>();

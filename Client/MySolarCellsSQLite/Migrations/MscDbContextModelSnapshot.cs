@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MySolarCells.Services.Sqlite;
+using MySolarCellsSQLite.Sqlite;
 
 #nullable disable
 
@@ -15,9 +15,9 @@ namespace MySolarCellsSQLite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.Energy", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.Energy", b =>
                 {
                     b.Property<int>("EnergyId")
                         .ValueGeneratedOnAdd()
@@ -37,6 +37,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Currency")
                         .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ElectricitySupplierProductionSold")
@@ -53,6 +54,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("PriceLevel")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("ProductionOwnUse")
@@ -87,6 +89,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Unit")
                         .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("UnitPriceBuy")
@@ -109,7 +112,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("Energy");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.EnergyCalculationParameter", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.EnergyCalculationParameter", b =>
                 {
                     b.Property<int>("EnergyCalculationParameterId")
                         .ValueGeneratedOnAdd()
@@ -127,7 +130,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.Property<int>("HomeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("ProdCompensationElectricityLowload")
+                    b.Property<double>("ProdCompensationElectricityLowLoad")
                         .HasColumnType("REAL");
 
                     b.Property<double>("TaxReduction")
@@ -150,7 +153,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("EnergyCalculationParameter");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.Home", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.Home", b =>
                 {
                     b.Property<int>("HomeId")
                         .ValueGeneratedOnAdd()
@@ -158,6 +161,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("ApiKey")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ElectricitySupplier")
@@ -171,10 +175,12 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SubSystemEntityId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("HomeId");
@@ -182,16 +188,18 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("Home");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.Inverter", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.Inverter", b =>
                 {
                     b.Property<int>("InverterId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ApiKey")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ApiUrl")
+                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FromDate")
@@ -205,16 +213,20 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SubSystemEntityId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("InverterId");
@@ -222,7 +234,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("Inverter");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.InvestmentAndLoan", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.InvestmentAndLoan", b =>
                 {
                     b.Property<int>("InvestmentAndLoanId")
                         .ValueGeneratedOnAdd()
@@ -230,6 +242,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FromDate")
@@ -252,7 +265,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("InvestmentAndLon");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.InvestmentAndLoanInterest", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.InvestmentAndLoanInterest", b =>
                 {
                     b.Property<int>("InvestmentAndLoanInterestId")
                         .ValueGeneratedOnAdd()
@@ -263,6 +276,7 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FromDate")
@@ -284,7 +298,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("InvestmentAndLonInterest");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.Log", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.Log", b =>
                 {
                     b.Property<int>("LogId")
                         .ValueGeneratedOnAdd()
@@ -295,10 +309,12 @@ namespace MySolarCellsSQLite.Migrations
 
                     b.Property<string>("LogDetails")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LogTitle")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("LogTyp")
@@ -309,7 +325,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("Log");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.PowerTariffParameters", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.PowerTariffParameters", b =>
                 {
                     b.Property<int>("PowerTariffParametersId")
                         .ValueGeneratedOnAdd()
@@ -353,7 +369,7 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("PowerTariffParameters");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.Preferences", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.Preferences", b =>
                 {
                     b.Property<int>("PreferencesId")
                         .ValueGeneratedOnAdd()
@@ -362,18 +378,20 @@ namespace MySolarCellsSQLite.Migrations
                     b.Property<DateTime>("DateValue")
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("DoubleValue")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("IntValue")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StringValue")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("doubleValue")
-                        .HasColumnType("REAL");
 
                     b.HasKey("PreferencesId");
 
@@ -383,9 +401,9 @@ namespace MySolarCellsSQLite.Migrations
                     b.ToTable("Preferences");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.SavingEssitmateParameters", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.SavingEstimateParameters", b =>
                 {
-                    b.Property<int>("SavingEssitmateParametersId")
+                    b.Property<int>("SavingEstimateParametersId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -401,21 +419,21 @@ namespace MySolarCellsSQLite.Migrations
                     b.Property<double>("RealDevelopmentElectricityPrice")
                         .HasColumnType("REAL");
 
-                    b.HasKey("SavingEssitmateParametersId");
+                    b.HasKey("SavingEstimateParametersId");
 
-                    b.ToTable("SavingEssitmateParameters");
+                    b.ToTable("SavingEstimateParameters");
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.InvestmentAndLoanInterest", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.InvestmentAndLoanInterest", b =>
                 {
-                    b.HasOne("MySolarCells.SQLite.Sqlite.Models.InvestmentAndLoan", null)
+                    b.HasOne("MySolarCellsSQLite.Sqlite.Models.InvestmentAndLoan", null)
                         .WithMany("Interest")
                         .HasForeignKey("InvestmentAndLoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MySolarCells.SQLite.Sqlite.Models.InvestmentAndLoan", b =>
+            modelBuilder.Entity("MySolarCellsSQLite.Sqlite.Models.InvestmentAndLoan", b =>
                 {
                     b.Navigation("Interest");
                 });

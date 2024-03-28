@@ -6,49 +6,39 @@ public partial class DateNavigator : ContentView
     {
         InitializeComponent();
         SimulateSettings.IsVisible = false;
-        //ROISimulateOn.IsToggled = false;
         ShowSimulateButton.IsVisible = true;
-        
-        // ROISimulateBatteryKwh.SetBinding(Label.TextProperty, new Binding("MaxBatteryPower", source: RoiSimulate));
-        //ROISimulateBatteryKwh.Text = value.MaxBatteryPower.ToString();
     }
 
-    public static readonly BindableProperty GraphDataChangedCommandProperty = BindableProperty.Create(nameof(GraphDataChangedCommand), typeof(ICommand), typeof(DateNavigator), null);
-    public ICommand GraphDataChangedCommand
+    public static readonly BindableProperty GraphDataChangedCommandProperty = BindableProperty.Create(nameof(GraphDataChangedCommand), typeof(ICommand), typeof(DateNavigator));
+    public ICommand? GraphDataChangedCommand
     {
-        get { return (ICommand)GetValue(GraphDataChangedCommandProperty); }
-        set { SetValue(GraphDataChangedCommandProperty, value); }
+        get => (ICommand)GetValue(GraphDataChangedCommandProperty);
+        set => SetValue(GraphDataChangedCommandProperty, value);
     }
 
 
-    public static BindableProperty ChartDataProperty = BindableProperty.Create(propertyName: nameof(ChartData),
+    public static readonly BindableProperty ChartDataProperty = BindableProperty.Create(propertyName: nameof(ChartData),
     returnType: typeof(ChartDataRequest), declaringType: typeof(ContentView),
     defaultValue: new ChartDataRequest(), defaultBindingMode: BindingMode.TwoWay);
     public ChartDataRequest ChartData
     {
-        get { return (ChartDataRequest)GetValue(ChartDataProperty); }
-        set
-        {
-            SetValue(ChartDataProperty, value);
-        }
+        get => (ChartDataRequest)GetValue(ChartDataProperty);
+        set => SetValue(ChartDataProperty, value);
     }
 
 
-    public static BindableProperty ShowUnitCurrencySeletorProperty = BindableProperty.Create(propertyName: nameof(ShowUnitCurrencySeletor),
+    public static BindableProperty ShowUnitCurrencySelectorProperty = BindableProperty.Create(propertyName: nameof(ShowUnitCurrencySelector),
     returnType: typeof(bool), declaringType: typeof(ContentView),
-    defaultValue: true, defaultBindingMode: BindingMode.OneWay, propertyChanged: ShowUnitCurrencySeletorPropertyChanged);
+    defaultValue: true, defaultBindingMode: BindingMode.OneWay, propertyChanged: ShowUnitCurrencySelectorPropertyChanged);
 
-    public bool ShowUnitCurrencySeletor
+    public bool ShowUnitCurrencySelector
     {
-        get { return (bool)GetValue(ShowUnitCurrencySeletorProperty); }
-        set
-        {
-            SetValue(ShowUnitCurrencySeletorProperty, value);
-        }
+        get => (bool)GetValue(ShowUnitCurrencySelectorProperty);
+        set => SetValue(ShowUnitCurrencySelectorProperty, value);
     }
 
 
-    private static void ShowUnitCurrencySeletorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void ShowUnitCurrencySelectorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
 
         var control = (DateNavigator)bindable;
@@ -63,21 +53,14 @@ public partial class DateNavigator : ContentView
 
     public HistorySimulate RoiSimulate
     {
-        get { return (HistorySimulate)GetValue(RoiSimulateProperty); }
-        set
-        {
-            SetValue(RoiSimulateProperty, value);
-        }
+        get => (HistorySimulate)GetValue(RoiSimulateProperty);
+        set => SetValue(RoiSimulateProperty, value);
     }
     private static void RoiSimulatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (DateNavigator)bindable;
         var value = (HistorySimulate)newValue;
-        //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
-        //control.ROISimulateOn.SetBinding(Switch.IsToggledProperty, new Binding("DoSimulate", source: value));
-        //control.ROIAddBatterySwith.SetBinding(Switch.IsToggledProperty, new Binding("AddBattery", source: value));
-        //control.ROIRemoveBatterySwitch.SetBinding(Switch.IsToggledProperty, new Binding("RemoveBattery", source: value));
-        control.ROISBatteryKwh.SetBinding(Microsoft.Maui.Controls.Slider.ValueProperty, new Binding("MaxBatteryPower", source: value));
+        control.RoisBatteryKwh.SetBinding(Slider.ValueProperty, new Binding("MaxBatteryPower", source: value));
         
     }
 
@@ -95,10 +78,7 @@ public partial class DateNavigator : ContentView
 
     public bool ShowRoiSimulate
     {
-        get
-        {
-            return (bool)GetValue(ShowRoiSimulateProperty);
-        }
+        get => (bool)GetValue(ShowRoiSimulateProperty);
         set
         {
             SetValue(ShowRoiSimulateProperty, value);
@@ -106,17 +86,14 @@ public partial class DateNavigator : ContentView
         }
     }
 
-    void Back_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Back_Tapped(Object sender, TappedEventArgs e)
     {
         switch (ChartData.ChartDataRange)
         {
             case ChartDataRange.Today:
             case ChartDataRange.Day:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddDays(-1);
-                if (ChartData.TimeStamp.Date == DateTime.Now.Date)
-                    ChartData.ChartDataRange = ChartDataRange.Today;
-                else
-                    ChartData.ChartDataRange = ChartDataRange.Day;
+                ChartData.ChartDataRange = ChartData.TimeStamp.Date == DateTime.Now.Date ? ChartDataRange.Today : ChartDataRange.Day;
                 break;
             case ChartDataRange.Week:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddDays(-7);
@@ -139,17 +116,14 @@ public partial class DateNavigator : ContentView
 
     }
 
-    void Forward_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Forward_Tapped(Object sender, TappedEventArgs e)
     {
         switch (ChartData.ChartDataRange)
         {
             case ChartDataRange.Today:
             case ChartDataRange.Day:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddDays(1);
-                if (ChartData.TimeStamp.Date == DateTime.Now.Date)
-                    ChartData.ChartDataRange = ChartDataRange.Today;
-                else
-                    ChartData.ChartDataRange = ChartDataRange.Day;
+                ChartData.ChartDataRange = ChartData.TimeStamp.Date == DateTime.Now.Date ? ChartDataRange.Today : ChartDataRange.Day;
                 break;
             case ChartDataRange.Week:
                 ChartData.TimeStamp = ChartData.TimeStamp.AddDays(7);
@@ -172,7 +146,7 @@ public partial class DateNavigator : ContentView
 
     }
 
-    void Today_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Today_Tapped(Object sender, TappedEventArgs e)
     {
 
         ChartData.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
@@ -181,50 +155,50 @@ public partial class DateNavigator : ContentView
             GraphDataChangedCommand.Execute(null);
 
     }
-    void Day_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Day_Tapped(Object sender, TappedEventArgs e)
     {
         ChartData.ChartDataRange = ChartDataRange.Day;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
 
     }
-    void Week_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Week_Tapped(Object sender, TappedEventArgs e)
     {
         ChartData.ChartDataRange = ChartDataRange.Week;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
 
-    void Month_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Month_Tapped(Object sender, TappedEventArgs e)
     {
         ChartData.ChartDataRange = ChartDataRange.Month;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
 
-    void Year_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Year_Tapped(Object sender, TappedEventArgs e)
     {
         ChartData.ChartDataRange = ChartDataRange.Year;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
 
-    void Unit_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Unit_Tapped(Object sender, TappedEventArgs e)
     {
-        ChartData.ChartDataUnit = ChartDataUnit.kWh;
+        ChartData.ChartDataUnit = ChartDataUnit.KWh;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
 
-    void Currency_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void Currency_Tapped(Object sender, TappedEventArgs e)
     {
         ChartData.ChartDataUnit = ChartDataUnit.Currency;
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
 
-    private bool simSettingsIsVisible = false;
-    void ShowSimulate_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    private bool simSettingsIsVisible;
+    void ShowSimulate_Tapped(Object sender, TappedEventArgs e)
     {
         if (simSettingsIsVisible)
         {
@@ -242,38 +216,23 @@ public partial class DateNavigator : ContentView
         }
     }
     
-    void AddBattery_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    void AddBattery_Tapped(Object sender, TappedEventArgs e)
     {
         RoiSimulate.AddBattery = !RoiSimulate.AddBattery;
         WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
-    void RmoveBattery_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+
+    private void RemoveBattery_Tapped(Object sender, TappedEventArgs e)
     {
         RoiSimulate.RemoveBattery = !RoiSimulate.RemoveBattery;
         WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 
-    void ROISimulateBatteryKwh_TextChanged(System.Object sender, Microsoft.Maui.Controls.TextChangedEventArgs e)
-    {
-        RoiSimulate.MaxBatteryPower = Convert.ToDouble(e.NewTextValue);
-    }
-  
-    void ROISimulateOn_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
-    {
-        
-    }
-    
-    
-
-    void ROIRemoveBatterySwitch_Toggled(System.Object sender, Microsoft.Maui.Controls.ToggledEventArgs e)
-    {
-        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
-    }
-    private bool moreStackIsVisible = false;
-    void More_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+    private bool moreStackIsVisible;
+    void More_Tapped(Object sender, TappedEventArgs e)
     {
 
-        moreStackIsVisible = this.MoreStack.IsVisible = !moreStackIsVisible;
+        moreStackIsVisible = MoreStack.IsVisible = !moreStackIsVisible;
     }
 
    

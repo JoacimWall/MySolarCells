@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.Services.Sqlite;
+﻿namespace MySolarCellsSQLite.Sqlite;
 
 public enum ElectricitySupplier
 {
@@ -8,7 +8,6 @@ public enum ElectricitySupplier
 public enum InverterTyp
 {
     Unknown = 0,
-    Kostal = 1,
     Huawei = 2,
     HomeAssistent = 3,
     SolarEdge = 4

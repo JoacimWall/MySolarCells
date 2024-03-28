@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MySolarCells.Services.Sqlite;
+using MySolarCellsSQLite.Sqlite;
 
 #nullable disable
 
@@ -12,7 +12,7 @@ namespace MySolarCellsSQLite.Migrations
 {
     [DbContext(typeof(MscDbContext))]
     [Migration("20231104213105_initial")]
-    partial class initial
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

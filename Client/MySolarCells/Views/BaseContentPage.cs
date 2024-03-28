@@ -6,18 +6,15 @@ namespace MySolarCells.Views;
 
 public class BaseContentPage : ContentPage
 {
-    public BaseContentPage()
+    protected BaseContentPage()
     {
         NavigationPage.SetBackButtonTitle(this, "");
         NavigationPage.SetHasNavigationBar(this, false);
-        //BackgroundColor = AppColors.PageBackgroundColor;
-        //TODO:MAUI_INFO finns nuget för detta. bugg Vi kan inte använda Shell TilelView då orginal back pilen visas på IOS i 1 sec innan den döljs
-        //https://www.nuget.org/packages/PureWeen.Maui.FixesAndWorkarounds kan fixa detta kanske
         Shell.SetNavBarIsVisible(this, false);
         Shell.SetBackButtonBehavior(this, new BackButtonBehavior { IsVisible = false });
         
-        //döljer warnings då vi kräver IOS 12.4 så det är lugnt  
-        this.HideSoftInputOnTapped = true;
+        //hides warnings as we require IOS 12.4 so it's easy
+        HideSoftInputOnTapped = true;
       
         On<iOS>().SetUseSafeArea(true);
         
@@ -46,25 +43,23 @@ public class BaseContentPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        bool darkStatusBarBackground = true;
-        if (this.StatusbarBackgroundColor == AppColors.WhiteColor
-                || StatusbarBackgroundColor == AppColors.Gray100Color
-                || StatusbarBackgroundColor == AppColors.Primary200Color)
-            darkStatusBarBackground = false;
+        bool darkStatusBarBackground = !(StatusbarBackgroundColor == AppColors.WhiteColor
+                                         || StatusbarBackgroundColor == AppColors.Gray100Color
+                                         || StatusbarBackgroundColor == AppColors.Primary200Color);
 
 
 #pragma warning disable CA1416
         if (darkStatusBarBackground)
-            this.Behaviors.Add(new CommunityToolkit.Maui.Behaviors.StatusBarBehavior { StatusBarColor = StatusbarBackgroundColor, StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.LightContent });
+            Behaviors.Add(new CommunityToolkit.Maui.Behaviors.StatusBarBehavior { StatusBarColor = StatusbarBackgroundColor, StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.LightContent });
         else
-            this.Behaviors.Add(new CommunityToolkit.Maui.Behaviors.StatusBarBehavior { StatusBarColor = StatusbarBackgroundColor, StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.DarkContent });
+            Behaviors.Add(new CommunityToolkit.Maui.Behaviors.StatusBarBehavior { StatusBarColor = StatusbarBackgroundColor, StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.DarkContent });
 #pragma warning restore CA1416
 
 
 
         if (BindingContext != null)
         {
-            await (BindingContext as BaseViewModel)?.OnAppearingAsync();
+            await ((BaseViewModel)BindingContext).OnAppearingAsync();
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -79,7 +74,7 @@ public class BaseContentPage : ContentPage
         base.OnDisappearing();
         if (BindingContext != null)
         {
-            await (BindingContext as BaseViewModel)?.OnDisappearingAsync();
+            await ((BaseViewModel)BindingContext).OnDisappearingAsync();
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 (BindingContext as BaseViewModel)?.OnDisappearing();

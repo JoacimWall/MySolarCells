@@ -1,106 +1,109 @@
-﻿using Acr.UserDialogs;
-namespace MySolarCells.Services;
+﻿using Color = System.Drawing.Color;
 
+namespace MySolarCells.Services;
 public interface IDialogService
 {
-    Task ShowAlertAsync(string message, string title, string buttonLabel);
-    Task<bool> ShowAlertAsync(string message, string title, string buttonAccept, string buttonCancel);
-    Task<string> ShowPromptAsync(string message, string title, string ok, string cancel, string initvalue = "");
-    Task<string> ShowActionSheetAsync(string title, string cancel, string destructive, params String[] buttons);
+    Task ShowAlertAsync(string? message, string? title, string? buttonLabel);
+    Task<bool> ShowAlertAsync(string? message, string? title, string? buttonAccept, string? buttonCancel);
+    Task<string> ShowPromptAsync(string? message, string? title, string? ok, string? cancel, string initValue = "");
+    Task<string> ShowActionSheetAsync(string? title, string? cancel, string? destructive, params string[] buttons);
 
-    Task<bool> ConfirmAsync(string message, string title, string ok, string cancel);
-    IProgressDialog GetProgress(string title);
-    void ShowToast(string message, ToastPosition toastPosition = ToastPosition.Top);
+    Task<bool> ConfirmAsync(string? message, string? title, string? ok, string? cancel);
+    object GetProgress(string title);
+    void ShowToast(string message, int durationSecs = 3);
 }
-
 public class DialogService : IDialogService
 {
-    public async Task ShowAlertAsync(string message, string title, string buttonLabel)
+    public async Task ShowAlertAsync(string? message, string? title, string? buttonLabel)
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
-       {
-           await Application.Current.MainPage.DisplayAlert(title, message, buttonLabel);
-       });
-
-
+        {
+            if (Application.Current != null && Application.Current.MainPage != null)
+                await Application.Current.MainPage.DisplayAlert(title, message, buttonLabel);
+        });
     }
-    public async Task<bool> ShowAlertAsync(string message, string title, string buttonAccept, string buttonCancel)
+
+    public async Task<bool> ShowAlertAsync(string? message, string? title, string? buttonAccept, string? buttonCancel)
     {
         return await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            return await Application.Current.MainPage.DisplayAlert(title, message, buttonAccept, buttonCancel);
+            if (Application.Current != null && Application.Current.MainPage != null)
+                return await Application.Current.MainPage.DisplayAlert(title, message, buttonAccept, buttonCancel);
+            return false;
         });
-
-
     }
-    public async Task<string> ShowActionSheetAsync(string title, string cancel, string destructive, params string[] buttons)
+
+    public async Task<string> ShowActionSheetAsync(string? title, string? cancel, string? destructive,
+        params string[] buttons)
     {
-        if (String.IsNullOrEmpty(title))
+        if (string.IsNullOrEmpty(title))
             title = "";
 
-        buttons = buttons.Where(c => c != null).ToArray();
+        buttons = buttons.Where(c => c != string.Empty).ToArray();
 
-        string result = null;
+        var result = string.Empty;
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
-       {
-           result = await Application.Current.MainPage.DisplayActionSheet(title, cancel, destructive, buttons);
-       });
-
-
-
-        if (result == null)
-            return string.Empty;
-
+        {
+            if (Application.Current != null && Application.Current.MainPage != null)
+                result = await Application.Current.MainPage.DisplayActionSheet(title, cancel, destructive, buttons);
+        });
         return result;
-
     }
-    public async Task<string> ShowPromptAsync(string message, string title, string ok, string cancel, string initvalue = "")
+
+    public async Task<string> ShowPromptAsync(string? message, string? title, string? ok, string? cancel,
+        string initValue = "")
     {
         return await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            return await Application.Current.MainPage.DisplayPromptAsync(title, message, ok, cancel, initialValue: initvalue);
+            if (Application.Current != null && Application.Current.MainPage != null)
+                return await Application.Current.MainPage.DisplayPromptAsync(title, message, ok, cancel,
+                    initialValue: initValue);
+            return string.Empty;
         });
-
-
     }
 
-    public async Task<bool> ConfirmAsync(string message, string title, string ok, string cancel)
+    public async Task<bool> ConfirmAsync(string? message, string? title, string? ok, string? cancel)
     {
         return await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            return await Application.Current.MainPage.DisplayAlert(title, message, ok, cancel);
+            if (Application.Current != null && Application.Current.MainPage != null)
+                return await Application.Current.MainPage.DisplayAlert(title, message, ok, cancel);
+            return false;
         });
-
     }
 
-    public IProgressDialog GetProgress(string title)
+    public object GetProgress(string title)
     {
         var v = new ProgressDialogConfig();
         v.SetTitle(title);
         //v.MaskType = MaskType.Gradient;
         v.SetMaskType(MaskType.Gradient);
+#if IOS || ANDROID || MACCATALYST
         return UserDialogs.Instance.Progress(v);
+#endif
+#if WINDOWS
+        //TODO:WINDOWS
+        return null;
+#endif
     }
 
-    public void ShowToast(string message, ToastPosition toastPosition = ToastPosition.Top)
+    public void ShowToast(string message, int durationSecs = 3)
     {
-        // Add top and botton space to iOS
-        if (DeviceInfo.Platform == DevicePlatform.iOS)
-        {
-            message = "\n" + message + "\n";
-        }
+        // Add top and bottom space to iOS
+        if (DeviceInfo.Platform == DevicePlatform.iOS) message = "\n" + message + "\n";
         MainThread.BeginInvokeOnMainThread(() =>
-      {
-          UserDialogs.Instance.Toast(new ToastConfig(message)
-                 .SetBackgroundColor(System.Drawing.Color.Gray)
-                 .SetMessageTextColor(System.Drawing.Color.White)
-                 .SetDuration(TimeSpan.FromSeconds(5))
-                 .SetPosition(toastPosition)
-
-
-             );
-      });
+        {
+#if IOS || ANDROID || MACCATALYST
+            UserDialogs.Instance.Toast(new ToastConfig(message)
+                .SetBackgroundColor(Color.Gray)
+                .SetMessageTextColor(Color.White)
+                .SetDuration(TimeSpan.FromSeconds(durationSecs))
+                .SetPosition(ToastPosition.Top));
+#endif
+#if WINDOWS
+          //TODO:WINDOWS
+#endif
+        });
     }
-
 }

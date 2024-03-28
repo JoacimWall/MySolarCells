@@ -1,20 +1,29 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Text.Json.Serialization;
+using System.Web;
 
 namespace MySolarCells.Services;
 
 public interface IRestClient
 {
-    Task<Result<T>> ExecutePostAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Tuple<Result<T>, HttpResponseHeaders>> ExecutePostReturnResponseHeadersAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecutePostBoolAsync(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<T>> ExecuteGetAsync<T>(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecuteDeleteBoolAsync(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<T>> ExecuteDeleteAsync<T>(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<T>> ExecutePatchAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true);
+
+    Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     public bool RemoveTokens();
     public void ReInit();
     public void ClearCookieContainer();
@@ -27,653 +36,838 @@ public interface IMyRestClientGeneric
 }
 public class RestClient : IRestClient
 {
-    HttpClient client;
-    // private JsonSerializer serializer = new JsonSerializer();
-    private bool initIsDone;
+    private readonly IInternetConnectionHelper internetConnectionHelper;
     private readonly JsonSerializerOptions jsonOptions;
+    private readonly ILogService logService;
     private readonly bool logTimeToDebugWindows = true;
-    public RestClient()
+    private readonly IMyRestClientGeneric myRestClientGeneric;
+    private HttpClient client;
+    private bool initIsDone;
+
+    public RestClient(IInternetConnectionHelper internetConnectionHelper, ILogService logService,
+        IMyRestClientGeneric myRestClientGeneric)
     {
+        client = new HttpClient();
+        this.internetConnectionHelper = internetConnectionHelper;
+        this.logService = logService;
+        this.myRestClientGeneric = myRestClientGeneric;
         jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
     }
 
+    #region Private
+
+    private string AddParameters(string query, Dictionary<string, string> parameters)
+    {
+        var first = true;
+
+        foreach (var item in parameters)
+            if (first)
+            {
+                var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
+                if (array.Count() > 1)
+                    foreach (var itemstrig in array)
+                        query = query + $@"?{item.Key}={HttpUtility.UrlEncode(itemstrig)}";
+                else
+                    query = query + $@"?{item.Key}={HttpUtility.UrlEncode(item.Value)}";
+
+                first = false;
+            }
+            else
+            {
+                var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
+                if (array.Count() > 1)
+                    foreach (var itemstrig in array)
+                        query = query + string.Format(@"&{0}={1}", item.Key, HttpUtility.UrlEncode(itemstrig));
+                else
+                    query = query + string.Format(@"&{0}={1}", item.Key, HttpUtility.UrlEncode(item.Value));
+            }
+
+        return query;
+    }
+
+    #endregion
+
     #region Public
-    public ApiSettings ApiSettings { get; set; }
+
+    public ApiSettings ApiSettings { get; set; } = new();
 
     public void ReInit()
     {
+        client = new HttpClient();
 
-        this.client = new HttpClient();
+        client.BaseAddress = new Uri(ApiSettings.BaseUrl);
+        client.Timeout = new TimeSpan(0, 0, 60);
 
-        this.client.BaseAddress = new Uri(this.ApiSettings.BaseUrl);
-        this.client.Timeout = new TimeSpan(0, 0, 60);
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
 
-        this.client.DefaultRequestHeaders.Accept.Clear();
-        this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-        this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-        this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
-        this.client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
-        this.client.DefaultRequestHeaders.Add("Connection", "keep-alive");
-        if (ApiSettings.defaultRequestHeaders != null)
-            foreach (var header in ApiSettings.defaultRequestHeaders)
-            {
-                client.DefaultRequestHeaders.Add(header.Key, header.Value);
-            }
+        foreach (var header in ApiSettings.DefaultRequestHeaders)
+            client.DefaultRequestHeaders.Add(header.Key, header.Value);
 
 
-
-        this.initIsDone = true;
+        initIsDone = true;
     }
+
     public Result<bool> UpdateToken(Dictionary<string, string> defaultRequestHeaders)
     {
         try
         {
             foreach (var header in defaultRequestHeaders)
             {
-                this.client.DefaultRequestHeaders.Remove(header.Key);
+                client.DefaultRequestHeaders.Remove(header.Key);
                 client.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
+
             return new Result<bool>(true);
         }
         catch (Exception e)
         {
-
             return new Result<bool>(e.Message);
         }
-
     }
+
     public void ClearCookieContainer()
     {
         // DependencyService.Resolve<IMyHttpClientHandler>().ClearCookieContainer(_httpClientHandler);
-
     }
-    private void LogExecuteTime(DateTime start, string quary)
+
+    private void LogExecuteTime(DateTime start, string query)
     {
 #if DEBUG
-        MySolarCellsGlobals.ConsoleWriteLineDebug(String.Format("Log Api: {0} milliseconds for Api call:{1}", (DateTime.Now - start).TotalMilliseconds.ToString(), quary));
+        logService.ConsoleWriteLineDebug(
+            $"Log Api: {(DateTime.Now - start).TotalMilliseconds.ToString(CultureInfo.InvariantCulture)} milliseconds for Api call:{query}");
 #endif
     }
-    public async Task<Result<T>> ExecuteGetAsync<T>(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
-    {
+public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
+{
+    var logTime = DateTime.Now;
+    var retryCount = 0;
+    
+        retryCount++;
         try
         {
-            //This so only run this when needded 
-            if (!this.initIsDone)
+            //This so only run this when needed 
+            if (!initIsDone)
                 ReInit();
-
-            if (InternetConnectionHelper.InternetAccess())
+            if (internetConnectionHelper.InternetAccess())
             {
+                StringContent content = new StringContent("");
+                if (data != null) //, Encoding.UTF8, "application/json")
+                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-                //Logger
-                DateTime logTime = DateTime.Now;
+                if (parameters != null && retryCount == 1)
+                    query = AddParameters(query, parameters);
 
-                var result = await this.client.GetAsync(quary).ConfigureAwait(false);
+                var result = await client.PostAsync(query, content).ConfigureAwait(false);
 
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
+                if (logTimeToDebugWindows)
+                    LogExecuteTime(logTime, query);
 
                 using (var stream = await result.Content.ReadAsStreamAsync())
                 {
                     if (result.IsSuccessStatusCode)
                     {
-                        if (typeof(T).Name == "Boolean")
+                        var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                        if (model is null)
+                            return new Tuple<Result<T>, HttpResponseHeaders?>(
+                                new Result<T>("Unable to Deserialize model"), null);
+
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(model), result.Headers);
+
+                    }
+                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+
+                        // if (autoLogInOnUnauthorized)
+                        // {
+                        //     var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
+                        //     var resultLogin = await generic.SilentLogin(true);
+                        //     if (resultLogin)
+                        //         return await ExecutePostReturnResponseHeadersAsync<T>(query, data, null, false);
+                        // }
+
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("User_Need_To_Log_In_Again"),
+                            null);
+                    }
+                    else if (result.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(
+                            new Result<T>("Current_API_Not_Found_On_Server"), null);
+                    }
+                    else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("AppResources.Server_Error"),
+                            null);
+
+                    }
+                    else
+                    {
+                        try
                         {
+                            var resultmodel =
+                                await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                            return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(resultmodel), null);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            var logdic = new Dictionary<string, string>();
+                            logdic.Add("Info", "Error in ExecutePostAsync");
+                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
+                            return new Tuple<Result<T>, HttpResponseHeaders?>(
+                                new Result<T>("AppResources.Server_Error" + Environment.NewLine +
+                                              result.Content.ReadAsStringAsync().Result), null);
+                        }
+
+                    }
+                }
+
+
+            }
+
+
+            return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("No_Internet"), null);
+
+        }
+        catch (Exception ex)
+        {
+            var logic = new Dictionary<string, string>
+            {
+                { "Info", "Error in ExecuteDeleteBoolAsync" },
+                { "Query", query },
+                { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                { "RequestAttempts", retryCount.ToString() }
+            };
+            logService.ReportErrorToAppCenter(ex, logic);
+
+            if (retryCount < ApiSettings.RequestRetryAttempts)
+                await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+            else
+                return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(ex.Message), null);
+        }
+        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("Error in ExecutePostReturnResponseHeadersAsync"), null);
+}
+
+    public async Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true)
+    {
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
+        {
+            retryCount++;
+            try
+            {
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+
+                if (internetConnectionHelper.InternetAccess())
+                {
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
+                    //Logger
+                    logTime = DateTime.Now;
+
+                    var result = await client.GetAsync(query);
+
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        if (typeof(T).Name == "Boolean" || result.StatusCode == HttpStatusCode.NoContent)
                             return new Result<T>(true);
-                        }
-                        else if (typeof(T) == new BoolModel().GetType())
+
+                        if (typeof(T) == new BoolModel().GetType())
                         {
-                            var answer = new BoolModel { ApiResponse = await JsonSerializer.DeserializeAsync<bool>(stream, jsonOptions) };
+                            var answer = new BoolModel
+                                { ApiResponse = await JsonSerializer.DeserializeAsync<bool>(stream, jsonOptions) };
                             //"rememberMe": true
-                            string modelstring = JsonSerializer.Serialize(answer, jsonOptions);
-                            return new Result<T>(JsonSerializer.Deserialize<T>(modelstring, jsonOptions));
+                            var modelString = JsonSerializer.Serialize(answer, jsonOptions);
+
+                            var model = JsonSerializer.Deserialize<T>(modelString, jsonOptions);
+                            if (model is null)
+                                return new Result<T>("Unable to deserialize to model");
+                            return new Result<T>(model);
                         }
                         else
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
+                        {
+                            logService.ConsoleWriteLineDebug(typeof(T).ToString());
+                            var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                            if (model is null)
+                                return new Result<T>("Unable to Deserialize model");
+                            return new Result<T>(model);
+                        }
                     }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         if (autoLogInOnUnauthorized)
                         {
-                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                            var resultLogin = await generic.SilentLogin(true);
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
                             if (resultLogin)
-                                return await ExecuteGetAsync<T>(quary, null, false);
+                                return await ExecuteGetAsync<T>(query, null, false);
                         }
 
-                        return new Result<T>("User_Need_To_Log_In_Again");
+                        return new Result<T>(AppResources.User_Need_To_Log_In_Again);
                     }
-                    else if (result.StatusCode == HttpStatusCode.NotFound)
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<T>(AppResources.Current_API_Not_Found_On_Server);
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<T>(AppResources.Server_Error);
+                    try
                     {
-                        return new Result<T>("Current_API_Not_Found_On_Server");
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<T>("Unable to convert to GenericResponse");
+                        return new Result<T>(t);
                     }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                    catch (Exception ex)
                     {
-                        return new Result<T>("TmResources.Server_Error");
-                    }
-                    else
-                    {
-                        try
+                        var logic = new Dictionary<string, string>
                         {
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecuteGetAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                        }
-
+                            { "Info", "Error in ExecuteGetAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<T>(AppResources.Server_Error + Environment.NewLine +
+                                             result.Content.ReadAsStringAsync().Result);
                     }
                 }
 
-            }
-            return new Result<T>("No_Internet");
-        }
-        catch (Exception ex)
-        {
-            return new Result<T>(ex.Message);
-        }
-    }
-
-    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
-    {
-        try
-        {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
-            {
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-                //Logger
-                DateTime logTime = DateTime.Now;
-
-
-                var result = await this.client.DeleteAsync(quary).ConfigureAwait(false);
-
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
-
-                if (result.IsSuccessStatusCode)
-                {
-                    return new Result<bool>(true);
-                }
-                else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    if (autoLogInOnUnauthorized)
-                    {
-                        var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                        var resultLogin = await generic.SilentLogin(true);
-                        if (resultLogin)
-                            return await ExecuteDeleteBoolAsync(quary, null, false);
-                    }
-                    return new Result<bool>("User_Need_To_Log_In_Again");
-                }
-                else if (result.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return new Result<bool>("Current_API_Not_Found_On_Server");
-                }
-                else if (result.StatusCode == HttpStatusCode.InternalServerError)
-                {
-                    return new Result<bool>("TmResources.Server_Error");
-                }
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
                 else
-                {
-                    using (var stream = await result.Content.ReadAsStreamAsync())
-                    {
-                        try
-                        {
-                            return new Result<bool>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecuteDeleteBoolAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Result<bool>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                        }
-
-                    }
-                }
-
+                    return new Result<T>(AppResources.No_Internet);
             }
-            return new Result<bool>("No_Internet");
+
+            catch (Exception ex)
+            {
+                var logic = new Dictionary<string, string>
+                {
+                    { "Info", "Exception in ExecuteGetAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            return new Result<bool>(ex.Message);
-        }
+
+        return new Result<T>("Logic error in code");
     }
 
-    public async Task<Result<T>> ExecuteDeleteAsync<T>(string quary, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
+    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true)
     {
-        try
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
         {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
+            retryCount++;
+            try
             {
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-
-                //Logger
-                DateTime logTime = DateTime.Now;
-
-
-                var result = await this.client.DeleteAsync(quary).ConfigureAwait(false);
-
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
-
-                using (var stream = await result.Content.ReadAsStreamAsync())
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+                if (internetConnectionHelper.InternetAccess())
                 {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
+                    //Logger
+                    logTime = DateTime.Now;
+
+
+                    var result = await client.DeleteAsync(query);
+
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    if (result.IsSuccessStatusCode) return new Result<bool>(true);
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         if (autoLogInOnUnauthorized)
                         {
-                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                            var resultLogin = await generic.SilentLogin(true);
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
                             if (resultLogin)
-                                return await ExecuteDeleteAsync<T>(quary, null, false);
+                                return await ExecuteDeleteBoolAsync(query, null, false);
                         }
-                        return new Result<T>("User_Need_To_Log_In_Again");
+
+                        return new Result<bool>(AppResources.User_Need_To_Log_In_Again);
                     }
-                    else if (result.StatusCode == HttpStatusCode.NotFound)
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<bool>(AppResources.Current_API_Not_Found_On_Server);
+
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<bool>(AppResources.Server_Error);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    try
                     {
-                        return new Result<T>("Current_API_Not_Found_On_Server");
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<bool>("Unable to convert to GenericResponse");
+                        return new Result<bool>(t);
                     }
-                    else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                    catch (Exception ex)
                     {
-                        return new Result<T>("TmResources.Server_Error");
-                    }
-                    else
-                    {
-                        try
+                        var logic = new Dictionary<string, string>
                         {
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecuteDeleteAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                        }
+                            { "Info", "Error in ExecuteDeleteBoolAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<bool>(AppResources.Server_Error + Environment.NewLine +
+                                                result.Content.ReadAsStringAsync().Result);
                     }
                 }
 
-
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<bool>(AppResources.No_Internet);
             }
-            return new Result<T>("No_Internet");
-        }
-        catch (Exception ex)
-        {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in ExecuteDeleteAsync");
-            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-            return new Result<T>(ex.Message);
-        }
-    }
-    public async Task<Tuple<Result<T>, HttpResponseHeaders>> ExecutePostReturnResponseHeadersAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
-    {
-        try
-        {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
+            catch (Exception ex)
             {
-                StringContent content = new StringContent("");
-                if (data != null) //, Encoding.UTF8, "application/json")
-                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
-
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-
-                //Logger
-                DateTime logTime = DateTime.Now;
-
-
-                var result = await this.client.PostAsync(quary, content).ConfigureAwait(false);
-
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
-
-                using (var stream = await result.Content.ReadAsStreamAsync())
+                var logic = new Dictionary<string, string>
                 {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var resultmodel = new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
-                        return new Tuple<Result<T>, HttpResponseHeaders>(resultmodel, result.Headers);
+                    { "Info", "Error in ExecuteDeleteBoolAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
 
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-                        if (autoLogInOnUnauthorized)
-                        {
-                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                            var resultLogin = await generic.SilentLogin(true);
-                            if (resultLogin)
-                                return await ExecutePostReturnResponseHeadersAsync<T>(quary, data, null, false);
-                        }
-                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("User_Need_To_Log_In_Again"), null);
-                    }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("Current_API_Not_Found_On_Server"), null);
-                    }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                    {
-                        return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error"), null);
-
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var resultmodel = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
-                            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(resultmodel), null);
-
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecutePostAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result), null);
-                        }
-
-                    }
-                }
-
-
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<bool>(ex.Message);
             }
-            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>("No_Internet"), null);
-
-        }
-        catch (Exception ex)
-        {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in ExecutePostAsync");
-            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-            return new Tuple<Result<T>, HttpResponseHeaders>(new Result<T>(ex.Message), null);
-
         }
 
-    }
-    public async Task<Result<T>> ExecutePostAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
-    {
-        try
-        {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
-            {
-                StringContent content = new StringContent("");
-                if (data != null) //, Encoding.UTF8, "application/json")
-                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
-
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-
-                //Logger
-                DateTime logTime = DateTime.Now;
-
-
-                var result = await this.client.PostAsync(quary, content).ConfigureAwait(false);
-
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
-
-                using (var stream = await result.Content.ReadAsStreamAsync())
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-
-                        if (typeof(T) == typeof(string))
-                            return new Result<T>(result.Content.ReadAsStringAsync().Result);
-                        else
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
-
-
-
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-                        if (autoLogInOnUnauthorized)
-                        {
-                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                            var resultLogin = await generic.SilentLogin(true);
-                            if (resultLogin)
-                                return await ExecutePostAsync<T>(quary, data, null, false);
-                        }
-                        return new Result<T>("User_Need_To_Log_In_Again");
-                    }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        return new Result<T>("Current_API_Not_Found_On_Server");
-                    }
-                    else if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                    {
-                        return new Result<T>("TmResources.Server_Error");
-                    }
-                    else
-                    {
-                        try
-                        {
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecutePostAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                        }
-
-                    }
-                }
-
-
-            }
-            return new Result<T>("No_Internet");
-        }
-        catch (Exception ex)
-        {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in ExecutePostAsync");
-            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-            return new Result<T>(ex.Message);
-        }
-
+        return new Result<bool>("Logic error in code");
     }
 
-    public async Task<Result<bool>> ExecutePostBoolAsync(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
+    public async Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,
+        bool autoLogInOnUnauthorized = true)
     {
-        try
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
         {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
+            retryCount++;
+            try
             {
-                StringContent content = new StringContent("");
-                if (data != null)
-                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
-
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-
-                //Logger
-                DateTime logTime = DateTime.Now;
-
-
-                var result = await this.client.PostAsync(quary, content).ConfigureAwait(false);
-
-                if (this.logTimeToDebugWindows)
-                    LogExecuteTime(logTime, quary);
-
-                using (var stream = await result.Content.ReadAsStreamAsync())
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+                if (internetConnectionHelper.InternetAccess())
                 {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        return new Result<bool>(true);
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-                        if (autoLogInOnUnauthorized)
-                        {
-                            var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                            var resultLogin = await generic.SilentLogin(true);
-                            if (resultLogin)
-                                return await ExecutePostAsync<bool>(quary, data, null, false);
-                        }
-                        return new Result<bool>("User_Need_To_Log_In_Again");
-                    }
-                    else if (result.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        return new Result<bool>("Current_API_Not_Found_On_Server");
-                    }
-                    else if (result.StatusCode == HttpStatusCode.InternalServerError)
-                    {
-                        return new Result<bool>("TmResources.Server_Error");
-                    }
-                    else
-                    {
-                        try
-                        {
-                            return new Result<bool>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecutePostBoolAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Result<bool>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                        }
-
-                    }
-                }
-
-
-            }
-            return new Result<bool>("No_Internet");
-        }
-        catch (Exception ex)
-        {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in ExecutePostBoolAsync");
-            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-            return new Result<bool>(ex.Message);
-        }
-
-    }
-    public async Task<Result<T>> ExecutePatchAsync<T>(string quary, object data = null, Dictionary<string, string> parameters = null, bool autoLogInOnUnauthorized = true)
-    {
-        try
-        {
-            //This so only run this when needded 
-            if (!initIsDone)
-                ReInit();
-            if (InternetConnectionHelper.InternetAccess())
-            {
-                StringContent content = new StringContent("");
-                if (data != null)
-                    content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
-
-                if (parameters != null)
-                    quary = AddParamters(quary, parameters);
-
-                using (HttpRequestMessage RequestMessage = new HttpRequestMessage(new HttpMethod("PATCH"), quary))
-                {
-                    RequestMessage.Content = content;
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
 
                     //Logger
-                    DateTime logTime = DateTime.Now;
+                    logTime = DateTime.Now;
 
-                    var result = await this.client.SendAsync(RequestMessage).ConfigureAwait(false);
 
-                    if (this.logTimeToDebugWindows)
-                        LogExecuteTime(logTime, quary);
+                    var result = await client.DeleteAsync(query);
 
-                    using (var stream = await result.Content.ReadAsStreamAsync())
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    if (result.IsSuccessStatusCode)
                     {
-                        if (result.IsSuccessStatusCode)
-                        {
-                            return new Result<T>(await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions));
-                        }
-                        else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                        {
-                            if (autoLogInOnUnauthorized)
-                            {
-                                var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                                var resultLogin = await generic.SilentLogin(true);
-                                if (resultLogin)
-                                    return await ExecutePatchAsync<T>(quary, data, null, false);
-                            }
-                            return new Result<T>("User_Need_To_Log_In_Again");
-                        }
-                        else if (result.StatusCode == HttpStatusCode.NotFound)
-                        {
-                            return new Result<T>("Current_API_Not_Found_On_Server");
-                        }
-                        else if (result.StatusCode == HttpStatusCode.InternalServerError)
-                        {
-                            return new Result<T>("TmResources.Server_Error");
-                        }
-                        else
-                        {
-                            try
-                            {
-                                return new Result<T>(await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions));
-                            }
-                            catch (Exception ex)
-                            {
-                                var logdic = new Dictionary<string, string>();
-                                logdic.Add("Info", "Error in ExecutePatchAsync");
-                                MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                                return new Result<T>("TmResources.Server_Error" + Environment.NewLine + result.Content.ReadAsStringAsync().Result);
-                            }
+                        var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                        if (model is null)
+                            return new Result<T>("Unable to Deserialize model");
+                        return new Result<T>(model);
+                    }
 
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (autoLogInOnUnauthorized)
+                        {
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
+                            if (resultLogin)
+                                return await ExecuteDeleteAsync<T>(query, null, false);
                         }
+
+                        return new Result<T>(AppResources.User_Need_To_Log_In_Again);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<T>(AppResources.Current_API_Not_Found_On_Server);
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<T>(AppResources.Server_Error);
+                    try
+                    {
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<T>("Unable to convert to GenericResponse");
+                        return new Result<T>(t);
+                    }
+                    catch (Exception ex)
+                    {
+                        var logic = new Dictionary<string, string>
+                        {
+                            { "Info", "Error in ExecuteDeleteAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<T>(AppResources.Server_Error + Environment.NewLine +
+                                             result.Content.ReadAsStringAsync().Result);
                     }
                 }
 
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(AppResources.No_Internet);
             }
-            return new Result<T>("No_Internet");
-        }
-        catch (Exception ex)
-        {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in ExecutePatchAsync");
-            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-            return new Result<T>(ex.Message);
+            catch (Exception ex)
+            {
+                var logic = new Dictionary<string, string>
+                {
+                    { "Info", "Error in ExecuteDeleteAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(ex.Message);
+            }
         }
 
+        return new Result<T>("Logic error in code");
     }
+
+    public async Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
+    {
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
+        {
+            retryCount++;
+            try
+            {
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+                if (internetConnectionHelper.InternetAccess())
+                {
+                    var content = new StringContent("");
+                    if (data != null) //, Encoding.UTF8, "application/json")
+                        content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
+
+                    //Logger
+                    logTime = DateTime.Now;
+
+
+                    var result = await client.PostAsync(query, content);
+
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                        if (model is null)
+                            return new Result<T>("Unable to Deserialize model");
+                        return new Result<T>(model);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (autoLogInOnUnauthorized)
+                        {
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
+                            if (resultLogin)
+                                return await ExecutePostAsync<T>(query, data, null, false);
+                        }
+
+                        return new Result<T>(AppResources.User_Need_To_Log_In_Again);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<T>(AppResources.Current_API_Not_Found_On_Server);
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<T>(AppResources.Server_Error);
+                    try
+                    {
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<T>("Unable to convert to GenericResponse");
+                        return new Result<T>(t);
+                    }
+                    catch (Exception ex)
+                    {
+                        var logic = new Dictionary<string, string>
+                        {
+                            { "Info", "Error in ExecutePostAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<T>(AppResources.Server_Error + Environment.NewLine +
+                                             result.Content.ReadAsStringAsync().Result);
+                    }
+                }
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(AppResources.No_Internet);
+            }
+            catch (Exception ex)
+            {
+                var logic = new Dictionary<string, string>
+                {
+                    { "Info", "Error in ExecutePostAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(ex.Message);
+            }
+        }
+
+        return new Result<T>("Logic error in code");
+    }
+
+    public async Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
+    {
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
+        {
+            retryCount++;
+            try
+            {
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+                if (internetConnectionHelper.InternetAccess())
+                {
+                    var content = new StringContent("");
+                    if (data != null)
+                        content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
+
+                    //Logger
+                    logTime = DateTime.Now;
+
+
+                    var result = await client.PostAsync(query, content);
+
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    if (result.IsSuccessStatusCode) return new Result<bool>(true);
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (autoLogInOnUnauthorized)
+                        {
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
+                            if (resultLogin)
+                                return await ExecutePostAsync<bool>(query, data, null, false);
+                        }
+
+                        return new Result<bool>(AppResources.User_Need_To_Log_In_Again);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<bool>(AppResources.Current_API_Not_Found_On_Server);
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<bool>(AppResources.Server_Error);
+                    try
+                    {
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<bool>("Unable to convert to GenericResponse");
+                        return new Result<bool>(t);
+                    }
+                    catch (Exception ex)
+                    {
+                        var logic = new Dictionary<string, string>
+                        {
+                            { "Info", "Error in ExecutePostBoolAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<bool>(AppResources.Server_Error + Environment.NewLine +
+                                                result.Content.ReadAsStringAsync().Result);
+                    }
+                }
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<bool>(AppResources.No_Internet);
+            }
+            catch (Exception ex)
+            {
+                var logic = new Dictionary<string, string>
+                {
+                    { "Info", "Error in ExecutePostBoolAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<bool>(ex.Message);
+            }
+        }
+
+        return new Result<bool>("Logic error in code");
+    }
+
+    public async Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null,
+        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
+    {
+        var logTime = DateTime.Now;
+        var retryCount = 0;
+        while (retryCount < ApiSettings.RequestRetryAttempts)
+        {
+            retryCount++;
+            try
+            {
+                //This so only run this when needed 
+                if (!initIsDone)
+                    ReInit();
+                if (internetConnectionHelper.InternetAccess())
+                {
+                    var content = new StringContent("");
+                    if (data != null)
+                        content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+                    if (parameters != null && retryCount == 1)
+                        query = AddParameters(query, parameters);
+
+                    using var requestMessage = new HttpRequestMessage(new HttpMethod("PATCH"), query);
+                    requestMessage.Content = content;
+
+                    //Logger
+                    logTime = DateTime.Now;
+
+                    var result = await client.SendAsync(requestMessage);
+
+                    if (logTimeToDebugWindows)
+                        LogExecuteTime(logTime, query);
+
+                    await using var stream = await result.Content.ReadAsStreamAsync();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                        if (model is null)
+                            return new Result<T>("Unable to Deserialize model");
+                        return new Result<T>(model);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (autoLogInOnUnauthorized)
+                        {
+                            var resultLogin = await myRestClientGeneric.SilentLogin(true);
+                            if (resultLogin)
+                                return await ExecutePatchAsync<T>(query, data, null, false);
+                        }
+
+                        return new Result<T>(AppResources.User_Need_To_Log_In_Again);
+                    }
+
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                        return new Result<T>(AppResources.Current_API_Not_Found_On_Server);
+                    if (result.StatusCode == HttpStatusCode.InternalServerError)
+                        return new Result<T>(AppResources.Server_Error);
+                    try
+                    {
+                        var t = await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        if (t is null)
+                            return new Result<T>("Unable to convert to GenericResponse");
+                        return new Result<T>(t);
+                    }
+                    catch (Exception ex)
+                    {
+                        var logic = new Dictionary<string, string>
+                        {
+                            { "Info", "Error in ExecutePatchAsync" },
+                            { "Query", query }
+                        };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Result<T>(AppResources.Server_Error + Environment.NewLine +
+                                             result.Content.ReadAsStringAsync().Result);
+                    }
+                }
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(AppResources.No_Internet);
+            }
+            catch (Exception ex)
+            {
+                var logic = new Dictionary<string, string>
+                {
+                    { "Info", "Error in ExecutePatchAsync" },
+                    { "Query", query },
+                    { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
+                    { "RequestAttempts", retryCount.ToString() }
+                };
+                logService.ReportErrorToAppCenter(ex, logic);
+
+                if (retryCount < ApiSettings.RequestRetryAttempts)
+                    await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
+                else
+                    return new Result<T>(ex.Message);
+            }
+        }
+
+        return new Result<T>("Logic error in code");
+    }
+
     public bool RemoveTokens()
     {
-        this.client.DefaultRequestHeaders.Remove("AUTHENTICATION_TOKEN");
-        this.client.DefaultRequestHeaders.Remove("Authorization");
+        client.DefaultRequestHeaders.Remove("AUTHENTICATION_TOKEN");
+        client.DefaultRequestHeaders.Remove("Authorization");
         return true;
-
     }
     //public bool AddTokens()
     //{
@@ -682,69 +876,30 @@ public class RestClient : IRestClient
     //    return true;
     //}
 
-
     #endregion
-    #region Private
-    private string AddParamters(string quary, Dictionary<string, string> parameters)
-    {
-        bool first = true;
-
-        foreach (var item in parameters)
-        {
-            if (first)
-            {
-                var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
-                if (array.Count() > 1)
-                {
-                    foreach (var itemstrig in array)
-                    {
-                        quary = quary + string.Format(@"?{0}={1}", item.Key, itemstrig);
-                    }
-                }
-                else
-                {
-                    quary = quary + string.Format(@"?{0}={1}", item.Key, item.Value);
-                }
-
-                first = false;
-            }
-            else
-            {
-                var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
-                if (array.Count() > 1)
-                {
-                    foreach (var itemstrig in array)
-                    {
-                        quary = quary + string.Format(@"&{0}={1}", item.Key, itemstrig);
-                    }
-                }
-                else
-                {
-                    quary = quary + string.Format(@"&{0}={1}", item.Key, item.Value);
-                }
-
-            }
-
-        }
-        return quary;
-
-    }
-    #endregion
-
-
 }
-
+public class MyRestClientGeneric : IMyRestClientGeneric
+{
+    public async Task<bool> SilentLogin(bool navigateToLoginOnError = false)
+    {
+        //IMemberService? memberService = ServiceHelper.GetService<IMemberService>();
+        //return await memberService.SilentLogin(navigateToLoginOnError);
+        return false;
+    }
+}
 public class TokenModel
 {
-    public string Token { get; set; }
+    public string? Token { get; set; }
 
     public DateTime TokenExpire { get; set; }
 }
 public class ApiSettings
 {
-    //Propertys used for the App Backend
-    public string BaseUrl { get; set; }
-    public Dictionary<string, string> defaultRequestHeaders { get; set; }
-    public string Enviroment { get; set; }
+    //Property's used for the App Backend
+    public int RequestRetryAttempts { get; set; } = 3;
+    public int RequestRetryAttemptsSleepTime { get; set; } = 5;
+    public string BaseUrl { get; set; } = "";
+    public Dictionary<string, string> DefaultRequestHeaders { get; set; } = new Dictionary<string, string>();
+    public string Enviroment { get; set; } = "";
 
 }

@@ -1,4 +1,4 @@
-﻿//using System;
+﻿#nullable disable
 #if IOS || MACCATALYST
 using Foundation;
 using QuickLook;
@@ -18,10 +18,10 @@ public interface ISaveAndView
 public class SaveService : ISaveAndView
 {
     //Method to save document as a file and view the saved document.
-    public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
-    {
+    
 #if IOS
-        string exception = string.Empty;
+public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
+    {
         string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         string filePath = Path.Combine(path, filename);
         try
@@ -34,30 +34,34 @@ public class SaveService : ISaveAndView
            // await Launcher.OpenAsync(new OpenFileRequest("TEst" , new ReadOnlyFile(filePath)));
             
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            exception = e.ToString();
-            return false;
+            return await Task.FromResult(false);
         }
         
-#pragma warning disable CA1416
-            UIViewController? currentController = UIApplication.SharedApplication!.KeyWindow!.RootViewController;
-#pragma warning restore CA1416
+
+#pragma warning disable CA1422
+        if (UIApplication.SharedApplication.KeyWindow != null)
+#pragma warning restore CA1422
+        {
+#pragma warning disable CA1422
+            UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+#pragma warning restore CA1422
+
             while (currentController!.PresentedViewController != null)
                 currentController = currentController.PresentedViewController;
 
             QLPreviewController qlPreview = new();
             QLPreviewItem item = new QLPreviewItemBundle(filename, filePath);
             qlPreview.DataSource = new PreviewControllerDS(item);
-            currentController.PresentViewController((UIViewController)qlPreview, true, null);
+            currentController.PresentViewController(qlPreview, true, null);
+        }
 
-        return true;
-
-
-
-
-
+        return await Task.FromResult(true);
+ }
 #elif MACCATALYST
+public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
+    {
         string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         string filePath = Path.Combine(path, filename);
         stream.Position = 0;
@@ -68,22 +72,26 @@ public class SaveService : ISaveAndView
         fileStream.Dispose();
 #pragma warning disable CA1416
         //Launch the file
-        UIViewController? currentController = UIApplication.SharedApplication!.KeyWindow!.RootViewController;
+#pragma warning disable CA1422
+        UIViewController currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+#pragma warning restore CA1422
 #pragma warning restore CA1416
         while (currentController!.PresentedViewController != null)
             currentController = currentController.PresentedViewController;
-        UIView? currentView = currentController.View;
+        UIView currentView = currentController.View;
 
         QLPreviewController qlPreview = new();
         QLPreviewItem item = new QLPreviewItemBundle(filename, filePath);
         qlPreview.DataSource = new PreviewControllerDS(item);
         currentController.PresentViewController((UIViewController)qlPreview, true, null);
 
-        return true;
-
+        return await Task.FromResult(true);
+ }
 #else
+    public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
+    {
         string exception = string.Empty;
-         string? root = null;
+         string root = null;
 
       if (Android.OS.Environment.IsExternalStorageEmulated)
       {
@@ -115,7 +123,7 @@ public class SaveService : ISaveAndView
       }
       if (file.Exists())
       {
-        if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.N)
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.N)
         {
           var fileUri = AndroidX.Core.Content.FileProvider.GetUriForFile(Android.App.Application.Context, Android.App.Application.Context.PackageName + ".provider", file);
           var intent = new Intent(Intent.ActionView);
@@ -134,35 +142,25 @@ public class SaveService : ISaveAndView
           Android.App.Application.Context.StartActivity(intent);
         }
       }
-        return true;
-#endif
+        return await Task.FromResult(true);
     }
+#endif
+   
 }
 #if IOS || MACCATALYST
-public class QLPreviewItemFileSystem : QLPreviewItem
+public class QlPreviewItemFileSystem : QLPreviewItem
 {
     readonly string _fileName, _filePath;
 
-    public QLPreviewItemFileSystem(string fileName, string filePath)
+    public QlPreviewItemFileSystem(string fileName, string filePath)
     {
         _fileName = fileName;
         _filePath = filePath;
     }
 
-    public override string PreviewItemTitle
-    {
-        get
-        {
-            return _fileName;
-        }
-    }
-    public override NSUrl PreviewItemUrl
-    {
-        get
-        {
-            return NSUrl.FromFilename(_filePath);
-        }
-    }
+    public override string PreviewItemTitle => _fileName;
+
+    public override NSUrl PreviewItemUrl => NSUrl.FromFilename(_filePath);
 }
 public class QLPreviewItemBundle : QLPreviewItem
 {
@@ -173,13 +171,8 @@ public class QLPreviewItemBundle : QLPreviewItem
         _filePath = filePath;
     }
 
-    public override string PreviewItemTitle
-    {
-        get
-        {
-            return _fileName;
-        }
-    }
+    public override string PreviewItemTitle => _fileName;
+
     public override NSUrl PreviewItemUrl
     {
         get

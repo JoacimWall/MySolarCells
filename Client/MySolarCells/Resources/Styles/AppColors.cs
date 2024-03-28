@@ -156,8 +156,6 @@ public static class AppColors
     public static Brush WhiteBrush = Color.FromArgb("#ffffff");
     public static Brush AccentBrush = Color.FromArgb("#FF675C");
     //----------------  Controls colors check TietoEvryMauiStyles.xaml  ----------------------//
-    //Här ska vi endast lägga till ifall det är så att det inte går att
-    //ha detta i en style i ovan nämnda fil;
     public static Color TemplateTaskButtonTextColor = Color.FromArgb("#000000");
     public static Color PageBackgroundColor = Color.FromArgb("#FAFAFA");
     public static Color DefaultTextColor = Color.FromArgb("#000000");

@@ -1,4 +1,6 @@
 ﻿using System.Web;
+using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
 
 namespace MySolarCells.Services.Inverter;
 
@@ -6,7 +8,7 @@ public class SolarEdgeService : IInverterServiceInterface
 {
     private readonly IRestClient restClient;
     private readonly MscDbContext mscDbContext;
-    private InverterLoginResponse inverterLoginResponse;
+    private InverterLoginResponse? inverterLoginResponse;
 
 
     public string InverterGuideText => AppResources.SolarEdge_Intro_Guide_Text;
@@ -24,25 +26,28 @@ public class SolarEdgeService : IInverterServiceInterface
         this.restClient = restClient;
         this.mscDbContext = mscDbContext;
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
-        this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://monitoringapi.solaredge.com", defaultRequestHeaders = defaultRequestHeaders };
+        this.restClient.ApiSettings = new ApiSettings { BaseUrl = "https://monitoringapi.solaredge.com", DefaultRequestHeaders = defaultRequestHeaders };
         this.restClient.ReInit();
     }
-    public async Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
+    public Task<Result<InverterLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey)
     {
-        this.inverterLoginResponse = new InverterLoginResponse
+        inverterLoginResponse = new InverterLoginResponse
         {
             token = apiKey,
             expiresIn = 0,
             tokenType = "",
         };
 
-        return new Result<InverterLoginResponse>(this.inverterLoginResponse);
+        return Task.FromResult(new Result<InverterLoginResponse>(inverterLoginResponse));
     }
     public async Task<Result<List<InverterSite>>> GetPickerOne()
     {
-        string query = string.Format("/sites/list?api_key={0}", this.inverterLoginResponse.token);
-        var resultSites = await this.restClient.ExecuteGetAsync<SolarEdgeSiteListResponse>(query);
-        if (!resultSites.WasSuccessful)
+        if (inverterLoginResponse == null)
+            return new Result<List<InverterSite>>("Inverter login response missing");
+        
+        string query = string.Format("/sites/list?api_key={0}", inverterLoginResponse.token);
+        var resultSites = await restClient.ExecuteGetAsync<SolarEdgeSiteListResponse>(query);
+        if (!resultSites.WasSuccessful || resultSites.Model == null)
         {
             return new Result<List<InverterSite>>(resultSites.ErrorMessage);
         }
@@ -54,27 +59,35 @@ public class SolarEdgeService : IInverterServiceInterface
         }
         return new Result<List<InverterSite>>(returnlist);
     }
-    public async Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
+    public Task<Result<GetInverterResponse>> GetInverter(InverterSite inverterSite)
     {
 
-        return new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Id, Name = inverterSite.InverterName });
+        return Task.FromResult(new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Id, Name = inverterSite.InverterName }));
     }
 
     
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-         var inverter = await this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefaultAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
-        ////LOGIN
-        var loginResult = await TestConnection("", "", "", StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey));
+         var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
 
+         string apiKey="";
+        if (inverter.ApiKey != null)
+        {
+             apiKey = StringHelper.Decrypt(inverter.ApiKey, AppConstants.Secretkey);
+        }
 
+        var loginResult = await TestConnection("", "", "", apiKey);
+
+        if (!loginResult.WasSuccessful || loginResult.Model == null)
+            return new Result<DataSyncResponse>("login result null");
+        
         try
         {
             int batch100 = 0;
             string processingDateFrom;
             string processingDateTo;
             int homeId = MySolarCellsGlobals.SelectedHome.HomeId;
-            List<SQLite.Sqlite.Models.Energy> eneryList = new List<SQLite.Sqlite.Models.Energy>();
+            List<Energy> eneryList = new List<Energy>();
             DateTime end = DateTime.Now;
             DateTime nextStart = new DateTime();
             int maxWeek = 0;
@@ -98,8 +111,10 @@ public class SolarEdgeService : IInverterServiceInterface
                 List<SolarEdgeSumHour> sumes = new List<SolarEdgeSumHour>();
                 //Add Production and feed in and selfconsumption
                 var query = string.Format("/site/{0}/energyDetails?timeUnit=HOUR&api_key={1}&startTime={2}&endTime={3}", inverter.SubSystemEntityId, loginResult.Model.token, processingDateFrom, processingDateTo);
-                var resultEnergy = await this.restClient.ExecuteGetAsync<SolarEdgeEnegyDetialsResponse>(query);
-
+                var resultEnergy = await restClient.ExecuteGetAsync<SolarEdgeEnegyDetialsResponse>(query);
+                if (!resultEnergy.WasSuccessful || resultEnergy.Model == null)
+                    return new Result<DataSyncResponse>("ResultEnergy is null");
+                
                 foreach (var item in resultEnergy.Model.energyDetails.meters)
                 {
                     foreach (var value in item.values)
@@ -162,8 +177,8 @@ public class SolarEdgeService : IInverterServiceInterface
                     }
 
                     query = string.Format("/site/{0}/storageData?api_key={1}&startTime={2}&endTime={3}", inverter.SubSystemEntityId, loginResult.Model.token, processingDateFrom, processingDateTo);
-                    var resultBattery = await this.restClient.ExecuteGetAsync<SolarEdgeStorageDataResponse>(query);
-                    if (resultBattery.WasSuccessful && resultBattery.Model.storageData != null)
+                    var resultBattery = await restClient.ExecuteGetAsync<SolarEdgeStorageDataResponse>(query);
+                    if (resultBattery.Model != null && resultBattery.WasSuccessful && resultBattery.Model.storageData != null)
                     {
                         foreach (var item in resultBattery.Model.storageData.batteries[0].telemetries)
                         {
@@ -196,7 +211,7 @@ public class SolarEdgeService : IInverterServiceInterface
                 {
                     progressStartNr++;
                     batch100++;
-                    var energyExist = this.mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == sumes[i].TimeStamp);
+                    var energyExist = mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == sumes[i].TimeStamp);
                     if (energyExist != null)
                     {
 
@@ -235,8 +250,8 @@ public class SolarEdgeService : IInverterServiceInterface
                         progress.Report(progressStartNr);
 
                         batch100 = 0;
-                        await this.mscDbContext.BulkUpdateAsync(eneryList);
-                        eneryList = new List<SQLite.Sqlite.Models.Energy>();
+                        await mscDbContext.BulkUpdateAsync(eneryList);
+                        eneryList = new List<Energy>();
                     }
 
                 }
@@ -250,8 +265,8 @@ public class SolarEdgeService : IInverterServiceInterface
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
-                await this.mscDbContext.BulkUpdateAsync(eneryList);
-                eneryList = new List<SQLite.Sqlite.Models.Energy>();
+                await mscDbContext.BulkUpdateAsync(eneryList);
+                eneryList = new List<Energy>();
             }
             
         }
@@ -274,51 +289,51 @@ public class SolarEdgeService : IInverterServiceInterface
 
 public class SolarEdgeEnergyDetails
 {
-    public string timeUnit { get; set; }
-    public string unit { get; set; }
-    public List<SolarEdgeEnergyMeter> meters { get; set; }
+    public string timeUnit { get; set; } = "";
+    public string unit { get; set; } = "";
+    public List<SolarEdgeEnergyMeter> meters { get; set; }= new();
 }
 
 public class SolarEdgeEnergyMeter
 {
-    public string type { get; set; }
-    public List<SolarEdgeEnergyValue> values { get; set; }
+    public string type { get; set; } = "";
+    public List<SolarEdgeEnergyValue> values { get; set; }= new();
 }
 
 public class SolarEdgeEnegyDetialsResponse
 {
-    public SolarEdgeEnergyDetails energyDetails { get; set; }
+    public SolarEdgeEnergyDetails energyDetails { get; set; }= new();
 }
 
 public class SolarEdgeEnergyValue
 {
-    public string date { get; set; }
+    public string date { get; set; } = "";
     public double? value { get; set; }
 }
 
 public class SolarEdgeBattery
 {
     public double nameplate { get; set; }
-    public string serialNumber { get; set; }
-    public string modelNumber { get; set; }
-    public int telemetryCount { get; set; }
-    public List<SolarEdgeTelemetry> telemetries { get; set; }
+    public string serialNumber { get; set; } = "";
+    public string modelNumber { get; set; } = "";
+    public int telemetryCount { get; set; } 
+    public List<SolarEdgeTelemetry> telemetries { get; set; }= new();
 }
 
 public class SolarEdgeStorageDataResponse
 {
-    public SolarEdgeStorageData storageData { get; set; }
+    public SolarEdgeStorageData storageData { get; set; }= new();
 }
 
 public class SolarEdgeStorageData
 {
     public int batteryCount { get; set; }
-    public List<SolarEdgeBattery> batteries { get; set; }
+    public List<SolarEdgeBattery> batteries { get; set; }= new();
 }
 
 public class SolarEdgeTelemetry
 {
-    public string timeStamp { get; set; }
+    public string timeStamp { get; set; } = "";
     public double? power { get; set; }
     public int batteryState { get; set; }
     public int lifeTimeEnergyDischarged { get; set; }
@@ -343,62 +358,62 @@ public class SolarEdgeSumHour
 //Response
 public class SolarEdgeSiteListResponse
 {
-    public SolarEdgeSites sites { get; set; }
+    public SolarEdgeSites sites { get; set; }= new();
 
 }
 
 public class SolarEdgeSite
 {
     public int id { get; set; }
-    public string name { get; set; }
+    public string name { get; set; } = "";
     public int accountId { get; set; }
-    public string status { get; set; }
+    public string status { get; set; } = "";
     public double peakPower { get; set; }
-    public string lastUpdateTime { get; set; }
-    public string installationDate { get; set; }
-    public object ptoDate { get; set; }
-    public string notes { get; set; }
-    public string type { get; set; }
-    public SolarEdgePrimaryModule primaryModule { get; set; }
+    public string lastUpdateTime { get; set; } = "";
+    public string installationDate { get; set; } = "";
+    public object ptoDate { get; set; }= new();
+    public string notes { get; set; } = "";
+    public string type { get; set; } = "";
+    public SolarEdgePrimaryModule primaryModule { get; set; }= new();
 
 }
 
 public class SolarEdgeSites
 {
     public int count { get; set; }
-    public List<SolarEdgeSite> site { get; set; }
+    public List<SolarEdgeSite> site { get; set; }= new();
 }
 
 public class SolarEdgePrimaryModule
 {
-    public string manufacturerName { get; set; }
-    public string modelName { get; set; }
+    public string manufacturerName { get; set; } = "";
+    public string modelName { get; set; } = "";
     public double maximumPower { get; set; }
     public double temperatureCoef { get; set; }
 }
 
 public class SolarEdgeMeter
 {
-    public string type { get; set; }
-    public List<SolarEdgeValue> values { get; set; }
+    public string type { get; set; } = "";
+    public List<SolarEdgeValue> values { get; set; }= new();
 }
 
 public class SolarEdgePowerDetails
 {
-    public string timeUnit { get; set; }
-    public string unit { get; set; }
-    public List<SolarEdgeMeter> meters { get; set; }
+    public string timeUnit { get; set; } = "";
+    public string unit { get; set; } = "";
+    public List<SolarEdgeMeter> meters { get; set; } = new();
 }
 
 public class SolarEdgePowerDetailsResults
 {
-    public SolarEdgePowerDetails powerDetails { get; set; }
+    public SolarEdgePowerDetails powerDetails { get; set; } = new();
 }
 
 public class SolarEdgeValue
 {
-    public string date { get; set; }
-    public double value { get; set; }
+    public string date { get; set; } = "";
+    public double value { get; set; } 
 }
 
 

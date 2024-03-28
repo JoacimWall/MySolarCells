@@ -6,10 +6,6 @@ public partial class EnergyView : BaseContentPage
 	{
 		InitializeComponent();
         BindingContext = vm;
-		//this.StatusbarBackgroundColor = AppColors.Primary800Color;
     }
 
-    void RefreshView_Refreshing(System.Object sender, System.EventArgs e)
-    {
-    }
 }

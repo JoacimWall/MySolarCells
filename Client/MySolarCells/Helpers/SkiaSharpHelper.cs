@@ -1,24 +1,23 @@
-﻿using System;
-using SkiaSharp;
+﻿using SkiaSharp;
 using System.Reflection;
 
 namespace MySolarCells.Helpers;
 
     public static class SkiaSharpHelper
     {
-    private static SKTypeface open_sans_regular;
-    public static SKTypeface OpenSansRegular
+    private static SKTypeface? openSansRegular;
+    public static SKTypeface? OpenSansRegular
     {
         get
         {
-            if (open_sans_regular == null)
+            if (openSansRegular == null)
             {
-                var assembly = IntrospectionExtensions.GetTypeInfo(typeof(SkiaSharpHelper)).Assembly;
-                Stream stream = assembly.GetManifestResourceStream("MySolarCells.Resources.Fonts.OpenSans-Regular.ttf");
+                var assembly = typeof(SkiaSharpHelper).GetTypeInfo().Assembly;
+                Stream? stream = assembly.GetManifestResourceStream("MySolarCells.Resources.Fonts.OpenSans-Regular.ttf");
 
-                open_sans_regular = SKTypeface.FromStream(stream);
+                openSansRegular = SKTypeface.FromStream(stream);
             }
-            return open_sans_regular;
+            return openSansRegular;
         }
     }
 }

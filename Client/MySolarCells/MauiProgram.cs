@@ -1,10 +1,6 @@
 ﻿namespace MySolarCells;
-
 using CommunityToolkit.Maui;
-using MySolarCells.Jobs;
 using Plugin.LocalNotification;
-using Shiny;
-using Shiny.Jobs;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
 public static class MauiProgram
@@ -21,7 +17,6 @@ public static class MauiProgram
             .ConfigureSyncfusionCore()
             .UseSkiaSharp()
             .UseMauiCommunityToolkit()
-            .UseShiny()
             .ConfigureServices()
             .ConfigureViewModels()
             .ConfigureViews()

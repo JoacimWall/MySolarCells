@@ -1,11 +1,10 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace MySolarCells.Converters
 {
     public class StringToImageSourceConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
 
             if (value == null)
@@ -15,23 +14,14 @@ namespace MySolarCells.Converters
 
             if (someValue.Contains("Resources.EmbeddedImages."))
             {
-                return ImageSource.FromResource(someValue, MySolarCellsGlobals.App.GetType().Assembly);
+                if (MySolarCellsGlobals.App != null)
+                    return ImageSource.FromResource(someValue, MySolarCellsGlobals.App.GetType().Assembly);
             }
 
-            if (someValue.StartsWith("http"))
-                return someValue;
-
-            //if (!string.IsNullOrEmpty(someValue))
-            //{
-            //    var filePath = Path.Combine(TietoGlobals.PrivMediaFolder(), someValue);
-            //    return FileImageSource.FromFile(filePath);
-            //}
-
-            return null;
-           
+            return someValue.StartsWith("http") ? someValue : null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             // Usually unused, but inverse the above logic if needed
             throw new NotImplementedException();

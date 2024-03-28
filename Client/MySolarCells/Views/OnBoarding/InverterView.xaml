@@ -5,7 +5,6 @@
                         x:Class="MySolarCells.Views.OnBoarding.InverterView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:InverterViewModel">
      <Shell.TitleView>

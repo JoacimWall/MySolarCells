@@ -1,46 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
-using MySolarCells.SQLite.Sqlite.Models;
+using MySolarCellsSQLite.Sqlite.Models;
+using Preferences = MySolarCellsSQLite.Sqlite.Models.Preferences;
 
-namespace MySolarCells.Services.Sqlite;
+namespace MySolarCellsSQLite.Sqlite;
 
 public class MscDbContext : DbContext
 {
-    //---------- THIS CODE SHOULD BE ENABLE WEHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
+    //---------- THIS CODE SHOULD BE ENABLE WHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
     // Constructor with no argument/empty is required and it is used when adding/removing migrations from class library
-    //public MscDbContext()
-    //{
-    //}
-    //protected override void OnConfiguring(DbContextOptionsBuilder options)
-    //        => options.UseSqlite();
+    // public MscDbContext()
+    // {
+    // }
+    // protected override void OnConfiguring(DbContextOptionsBuilder options)
+    //         => options.UseSqlite();
 
 
-    //---------- THIS CODE SHOULD BE ENABLE WEHEN WE RUN THE APP -------------------------------
+    //---------- THIS CODE SHOULD BE ENABLE WHEN WE RUN THE APP -------------------------------
     public MscDbContext()
     {
         SQLitePCL.Batteries_V2.Init();
         try
         {
-            //this.Database.EnsureCreated();
-            this.Database.Migrate();
+            Database.Migrate();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-
+            // ignored
         }
     }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //använd i app mode
-        string fodlderPath = FileSystem.AppDataDirectory;
-        string filename = "Db_v_1.db3";
+        var folderPath = FileSystem.AppDataDirectory;
+        const string filename = "Db_v_1.db3";
         if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
         {
             //detta som mac catalyst local
-            fodlderPath = Path.Combine(fodlderPath, "MySolarCells");
-            if (!Directory.Exists(fodlderPath))
+            folderPath = Path.Combine(folderPath, "MySolarCells");
+            if (!Directory.Exists(folderPath))
             {
                 Directory.SetCurrentDirectory(FileSystem.AppDataDirectory);
                 Directory.CreateDirectory("MySolarCells");
@@ -48,21 +47,21 @@ public class MscDbContext : DbContext
         }
         try
         {
-            optionsBuilder.UseSqlite($"Filename={Path.Combine(fodlderPath, filename)}");
+            optionsBuilder.UseSqlite($"Filename={Path.Combine(folderPath, filename)}");
         }
         catch
         {
-
+            // ignored
         }
     }
 
-    // ----------------------- ALLWAYS ENABLED --------------------------------
+    // ----------------------- ALWAYS ENABLED --------------------------------
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //UniqueIndex
         modelBuilder.Entity<Energy>().HasIndex(u => u.Timestamp).IsUnique();
-        modelBuilder.Entity<SQLite.Sqlite.Models.Preferences>().HasIndex(u => u.Name).IsUnique();
+        modelBuilder.Entity<Preferences>().HasIndex(u => u.Name).IsUnique();
         modelBuilder.Entity<EnergyCalculationParameter>().HasIndex(u => u.FromDate).IsUnique();
         modelBuilder.Entity<InvestmentAndLoan>().HasIndex(u => u.FromDate).IsUnique();
         modelBuilder.Entity<InvestmentAndLoan>().HasMany(c => c.Interest);
@@ -75,9 +74,9 @@ public class MscDbContext : DbContext
     public DbSet<EnergyCalculationParameter> EnergyCalculationParameter { get; set; }
     public DbSet<InvestmentAndLoan> InvestmentAndLon { get; set; }
     public DbSet<InvestmentAndLoanInterest> InvestmentAndLonInterest { get; set; }
-    public DbSet<SQLite.Sqlite.Models.Preferences> Preferences { get; set; }
+    public DbSet<Preferences> Preferences { get; set; }
     public DbSet<Log> Log { get; set; }
-    public DbSet<SavingEssitmateParameters> SavingEssitmateParameters { get; set; }
+    public DbSet<SavingEstimateParameters> SavingEstimateParameters { get; set; }
     public DbSet<PowerTariffParameters> PowerTariffParameters { get; set; }
     
 

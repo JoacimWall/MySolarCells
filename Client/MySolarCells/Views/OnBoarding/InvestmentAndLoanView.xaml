@@ -6,7 +6,6 @@
                         x:Class="MySolarCells.Views.OnBoarding.InvestmentAndLoanView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:InvestmentAndLoanViewModel">
     <Shell.TitleView>
@@ -30,18 +29,18 @@
             Text="{x:Static trans:AppResources.Investment_Loan_Intro_Text}" VerticalOptions="Center" HorizontalTextAlignment="Center" />
 
             <Label  Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource LabelEntryTitleStyle}" Text="{x:Static trans:AppResources.Investment_slash_Loan}"  />
-            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndloan}" ItemDisplayBinding="{Binding Description}"/>
-            <Button  Style="{StaticResource ButtonBaseStyle}" Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInestlonCommand}"/>
+            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding InvestmentAndLoans}" SelectedItem="{Binding SelectedInvestmentAndLoan}" ItemDisplayBinding="{Binding Description}"/>
+            <Button  Style="{StaticResource ButtonBaseStyle}" Grid.Row="3"  Grid.Column="3" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInvestmentLonCommand}"/>
             <!--Description-->
             <Label Grid.Row="4" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
-            <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndloan.Description}" />
+            <Entry Grid.Row="5" Grid.ColumnSpan="3" Text="{Binding SelectedInvestmentAndLoan.Description}" />
             <!--FromDate-->
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
-            <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInvestmentAndloan.FromDate}" />
+            <DatePicker Grid.Row="7" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInvestmentAndLoan.FromDate}" />
 
             <!--Investment-->
             <Label Grid.Row="8"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Investment}" Style="{StaticResource LabelEntryTitleStyle}"/>
-            <Entry Grid.Row="9" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndloan.Investment}" >
+            <Entry Grid.Row="9" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndLoan.Investment}" >
                 <Entry.Behaviors>
                     <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0" MaximumValue="1000000" MaximumDecimalPlaces="0" />
                 </Entry.Behaviors>
@@ -49,21 +48,21 @@
 
             <!--Loan-->
             <Label Grid.Row="10" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Loan_Press_Add_For_Adding_Interest_Information}" Style="{StaticResource LabelEntryTitleStyle}"/>
-            <Entry Grid.Row="11" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndloan.Loan}" >
+            <Entry Grid.Row="11" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedInvestmentAndLoan.Loan}" >
                 <Entry.Behaviors>
                     <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0" MaximumValue="1000000" MaximumDecimalPlaces="0" />
                 </Entry.Behaviors>
             </Entry>
            
 
-            <!--Inerest picker-->
+            <!--Interest picker-->
             <Label  Grid.Row="12" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Interest_Saved}" Style="{StaticResource LabelEntryTitleStyle}"/>
-            <Picker Margin="0" Grid.Row="13" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndloan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
+            <Picker Margin="0" Grid.Row="13" Grid.ColumnSpan="2" HeightRequest="30" ItemsSource="{Binding SelectedInvestmentAndLoan.Interest}" SelectedItem="{Binding SelectedInterest}" ItemDisplayBinding="{Binding Description}"/>
             <Button Grid.Row="13"  Grid.Column="3" Style="{StaticResource ButtonBaseStyle}" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddInterestCommand}"/>
             <!--Description-->
             <Label Grid.Row="15"  Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Description}" Style="{StaticResource LabelEntryTitleStyle}" />
             <Entry Grid.Row="16" Grid.ColumnSpan="3" Text="{Binding SelectedInterest.Description}" />
-            <!--FromDate iterest-->
+            <!--FromDate interest-->
             <Label Grid.Row="17" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.From_Date}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <DatePicker Grid.Row="18" Grid.ColumnSpan="3" Format="yyyy-MM" Date="{Binding SelectedInterest.FromDate}" />
 

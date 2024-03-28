@@ -6,10 +6,10 @@ namespace MySolarCells.Controls;
 
 public class ProgressBar : SKCanvasView
 {
-    public Animation _animation;
+    private Animation? animation;
 
     public static BindableProperty PercentageProperty = BindableProperty.Create(nameof(Percentage), typeof(float),
-        typeof(ProgressBar), 0f, BindingMode.OneWay,
+        typeof(ProgressBar), 0f,
         validateValue: (_, value) => value != null,
         propertyChanged: OnPropertyChangedInvalidate);
 
@@ -21,9 +21,9 @@ public class ProgressBar : SKCanvasView
 
 
     public static BindableProperty PercentageAnimateProperty = BindableProperty.Create(nameof(PercentageAnimate), typeof(float),
-        typeof(ProgressBar), 0f, BindingMode.OneWay,
+        typeof(ProgressBar), 0f,
         validateValue: (_, value) => value != null,
-        propertyChanged: OnPropertyChangedProcentAnimate);
+        propertyChanged: OnPropertyChangedPercentAnimate);
 
     public float PercentageAnimate
     {
@@ -33,7 +33,7 @@ public class ProgressBar : SKCanvasView
 
 
     public static BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CornerRadius), typeof(float),
-        typeof(ProgressBar), 5f, BindingMode.OneWay,
+        typeof(ProgressBar), 5f,
         validateValue: (_, value) => value != null && (float)value >= 0,
         propertyChanged: OnPropertyChangedInvalidate);
 
@@ -44,7 +44,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty BarBackgroundColorProperty = BindableProperty.Create(nameof(BarBackgroundColor), typeof(Color),
-        typeof(ProgressBar), AppColors.WhiteColor, BindingMode.OneWay,
+        typeof(ProgressBar), AppColors.WhiteColor,
         validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
     public Color BarBackgroundColor
@@ -54,7 +54,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty FontSizeProperty = BindableProperty.Create(nameof(FontSize), typeof(float),
-        typeof(ProgressBar), 12f, BindingMode.OneWay,
+        typeof(ProgressBar), 12f,
         validateValue: (_, value) => value != null && (float)value >= 0,
         propertyChanged: OnPropertyChangedInvalidate);
 
@@ -65,7 +65,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty GradientStartColorProperty = BindableProperty.Create(nameof(GradientStartColor), typeof(Color),
-        typeof(ProgressBar), AppColors.Primary500Color, BindingMode.OneWay,
+        typeof(ProgressBar), AppColors.Primary500Color,
         validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
     public Color GradientStartColor
@@ -75,7 +75,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty GradientEndColorProperty = BindableProperty.Create(nameof(GradientEndColor), typeof(Color),
-        typeof(ProgressBar), AppColors.Primary500Color, BindingMode.OneWay,
+        typeof(ProgressBar), AppColors.Primary500Color,
         validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
     public Color GradientEndColor
@@ -85,7 +85,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty TextColorProperty = BindableProperty.Create(nameof(TextColor), typeof(Color),
-        typeof(ProgressBar), AppColors.WhiteColor, BindingMode.OneWay,
+        typeof(ProgressBar), AppColors.WhiteColor,
         validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
     public Color TextColor
@@ -95,7 +95,7 @@ public class ProgressBar : SKCanvasView
     }
 
     public static BindableProperty AlternativeTextColorProperty = BindableProperty.Create(nameof(AlternativeTextColor), typeof(Color),
-        typeof(ProgressBar), AppColors.Primary500Color, BindingMode.OneWay,
+        typeof(ProgressBar), AppColors.Primary500Color,
         validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
     public Color AlternativeTextColor
@@ -104,40 +104,31 @@ public class ProgressBar : SKCanvasView
         set => SetValue(AlternativeTextColorProperty, value);
     }
 
-    public static BindableProperty ShowProcentTextProperty = BindableProperty.Create(nameof(ShowProcentText), typeof(bool),
-    typeof(ProgressBar), true, BindingMode.OneWay,
+    public static BindableProperty ShowPercentTextProperty = BindableProperty.Create(nameof(ShowPercentText), typeof(bool),
+    typeof(ProgressBar), true,
     validateValue: (_, value) => value != null, propertyChanged: OnPropertyChangedInvalidate);
 
-    public bool ShowProcentText
+    public bool ShowPercentText
     {
-        get => (bool)GetValue(ShowProcentTextProperty);
-        set => SetValue(ShowProcentTextProperty, value);
+        get => (bool)GetValue(ShowPercentTextProperty);
+        set => SetValue(ShowPercentTextProperty, value);
     }
-    
-
-    private static void PercentageAnimationPropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
+   
+    private static void OnPropertyChangedPercentAnimate(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (ProgressBar)bindable;
 
-       // if (oldvalue != newvalue)
-
-       
-    }
-    private static void OnPropertyChangedProcentAnimate(BindableObject bindable, object oldvalue, object newvalue)
-    {
-        var control = (ProgressBar)bindable;
-
-        if (oldvalue != newvalue)
+        if (oldValue != newValue)
         {
             var startValue = 0;
-            var desiredValue = (float)newvalue;
+            var desiredValue = (float)newValue;
 
-            if (control._animation != null)
+            if (control.animation != null)
             {
                 control.AbortAnimation("Percentage");
             }
 
-            control._animation = new Animation(v =>
+            control.animation = new Animation(v =>
             {
                 if (v == 0)
                 {
@@ -149,8 +140,8 @@ public class ProgressBar : SKCanvasView
             }, startValue, desiredValue * 100, easing: Easing.SinInOut);
 
            
-            control._animation.Commit(control, "Percentage", length: 4000,
-                finished: (l, c) => { control._animation = null; });
+            control.animation.Commit(control, "Percentage", length: 4000,
+                finished: (_, _) => { control.animation = null; });
 
 
         }
@@ -168,8 +159,7 @@ public class ProgressBar : SKCanvasView
     {
         var info = e.Info;
         var canvas = e.Surface.Canvas;
-        //TODO: borde vi inte ha dencity här för att det ska bli rätt
-        var s = DeviceDisplay.Current.MainDisplayInfo.Width;    
+      
         float width = (float)Width;
         var scale = CanvasSize.Width / width;
 
@@ -194,8 +184,9 @@ public class ProgressBar : SKCanvasView
 
         canvas.DrawRoundRect(backgroundBar, background);
 
-        using (var paint = new SKPaint() { IsAntialias = true })
+        using (var paint = new SKPaint())
         {
+            paint.IsAntialias = true;
             float x = percentageWidth;
             float y = info.Height;
             var rect = new SKRect(0, 0, x, y);
@@ -222,15 +213,15 @@ public class ProgressBar : SKCanvasView
 
         textPaint.MeasureText(str, ref textBounds);
 
-        var xText = percentageWidth / 2 - textBounds.MidX;
+        var xText = percentageWidth / 2f - textBounds.MidX;
         if (xText < 0)
         {
-            xText = info.Width / 2 - textBounds.MidX;
+            xText = info.Width / 2f - textBounds.MidX;
             textPaint.Color = AlternativeTextColor.ToSKColor();
         }
 
-        var yText = info.Height / 2 - textBounds.MidY;
-        if (ShowProcentText)
-        canvas.DrawText(str, xText, yText, textPaint);
+        var yText = info.Height / 2f - textBounds.MidY;
+        if (ShowPercentText)
+            canvas.DrawText(str, xText, yText, textPaint);
     }
 }

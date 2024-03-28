@@ -6,6 +6,5 @@ public partial class ReportView : BaseContentPage
 	{
 		InitializeComponent();
         BindingContext = vm;
-		//this.StatusbarBackgroundColor = AppColors.Primary800Color;
-    }
+	}
 }

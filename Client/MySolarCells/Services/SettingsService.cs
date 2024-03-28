@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using MySolarCellsSQLite.Sqlite;
+using Preferences = MySolarCellsSQLite.Sqlite.Models.Preferences;
 
 namespace MySolarCells.Services;
 
@@ -7,7 +9,7 @@ public interface ISettingsService
     OnboardingStatusEnum OnboardingStatus { get; set; }
     int SelectedHomeId { get; set; }
     CountryEnum UserCountry { get; set; }
-    void SetCurentCultureOnAllThreds(CountryEnum country);
+    void SetCurrentCultureOnAllThreads(CountryEnum country);
 }
 
 public class SettingsService : ISettingsService
@@ -23,7 +25,7 @@ public class SettingsService : ISettingsService
     {
         get
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
             if (exist == null)
                 return OnboardingStatusEnum.Unknown;
             else
@@ -31,19 +33,19 @@ public class SettingsService : ISettingsService
         }
         set
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(OnboardingStatus));
             if (exist == null)
-                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(OnboardingStatus), IntValue = (int)value });
             else
                 exist.IntValue = (int)value;
-            this.mscDbContext.SaveChanges();
+            mscDbContext.SaveChanges();
         }
     }
     public int SelectedHomeId
     {
         get
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
             if (exist == null)
                 return 0;
             else
@@ -51,16 +53,16 @@ public class SettingsService : ISettingsService
         }
         set
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(SelectedHomeId));
             if (exist == null && value != 0)
             {
-                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(SelectedHomeId), IntValue = (int)value });
-                this.mscDbContext.SaveChanges();
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(SelectedHomeId), IntValue = value });
+                mscDbContext.SaveChanges();
             }
             else if (exist != null)
             {
-                exist.IntValue = (int)value;
-                this.mscDbContext.SaveChanges();
+                exist.IntValue = value;
+                mscDbContext.SaveChanges();
             }
 
             
@@ -70,29 +72,29 @@ public class SettingsService : ISettingsService
     {
         get
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
             if (exist == null)
-                return CountryEnum.En_US;
+                return CountryEnum.EnUs;
             else
                 return (CountryEnum)exist.IntValue;
         }
         set
         {
-            var exist = this.mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserCountry));
             if (exist == null)
-                this.mscDbContext.Preferences.Add(new SQLite.Sqlite.Models.Preferences { Name = nameof(UserCountry), IntValue = (int)value });
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(UserCountry), IntValue = (int)value });
             else
                 exist.IntValue = (int)value;
-            this.mscDbContext.SaveChanges();
-            SetCurentCultureOnAllThreds(value);
+            mscDbContext.SaveChanges();
+            SetCurrentCultureOnAllThreads(value);
         }
     }
 
-    public void SetCurentCultureOnAllThreds(CountryEnum country)
+    public void SetCurrentCultureOnAllThreads(CountryEnum country)
     {
         switch (country)
         {
-            case CountryEnum.Sv_SE:
+            case CountryEnum.SvSe:
             case CountryEnum.Undefined:
             default:
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("sv-SE");
@@ -100,7 +102,7 @@ public class SettingsService : ISettingsService
                 AppResources.Culture = Thread.CurrentThread.CurrentUICulture;
                
                 break;
-            case CountryEnum.En_US:
+            case CountryEnum.EnUs:
            
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US"); //en-US
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture;

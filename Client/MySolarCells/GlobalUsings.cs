@@ -14,7 +14,7 @@ global using CommunityToolkit.Mvvm.Messaging.Messages;
 
 global using Microsoft.EntityFrameworkCore;
 global using EFCore.BulkExtensions;
-
+global using Acr.UserDialogs;
 global using Microsoft.Extensions.Logging;
 
 // ___ MySolarCells -----------
@@ -23,7 +23,6 @@ global using MySolarCells.Resources.Translations;
 global using MySolarCells.Helpers;
 global using MySolarCells.Resources.Styles;
 global using MySolarCells.Models;
-global using MySolarCells.Helpers.Messages;
 //Views
 global using MySolarCells.Views;
 global using MySolarCells.Views.OnBoarding;
@@ -38,9 +37,7 @@ global using MySolarCells.ViewModels.Energy;
 global using MySolarCells.ViewModels.More;
 //Service
 global using MySolarCells.Services;
-global using MySolarCells.Services.Sqlite;
 global using MySolarCells.Services.Inverter;
 global using MySolarCells.Services.GridSupplier;
 
 //SQLITE
-global using MySolarCells.SQLite.Sqlite.Models;

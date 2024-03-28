@@ -1,16 +1,16 @@
-﻿namespace MySolarCells.SQLite.Sqlite.Models;
+﻿namespace MySolarCellsSQLite.Sqlite.Models;
 
-public class SavingEssitmateParameters : ObservableObject
+public class SavingEstimateParameters : ObservableObject
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int SavingEssitmateParametersId { get; set; }
+    public int SavingEstimateParametersId { get; set; }
     private DateTime fromDate = DateTime.Today;
     [Required]
     public DateTime FromDate
     {
         get => fromDate;
-        set {   SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));  }
+        set => SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));
     }
 
     private double realDevelopmentElectricityPrice = 1.05;
@@ -18,7 +18,7 @@ public class SavingEssitmateParameters : ObservableObject
     public double RealDevelopmentElectricityPrice
     {
         get => realDevelopmentElectricityPrice;
-        set { SetProperty(ref realDevelopmentElectricityPrice, value); }
+        set => SetProperty(ref realDevelopmentElectricityPrice, value);
     }
 
     private double panelDegradationPerYear = 0.25;
@@ -26,10 +26,9 @@ public class SavingEssitmateParameters : ObservableObject
     public double PanelDegradationPerYear
     {
         get => panelDegradationPerYear;
-        set { SetProperty(ref panelDegradationPerYear, value); }
+        set => SetProperty(ref panelDegradationPerYear, value);
     }
 
-    //FK's
     public int HomeId { get; set; } = 1;
 }
 

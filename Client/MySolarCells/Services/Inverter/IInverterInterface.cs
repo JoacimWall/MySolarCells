@@ -19,35 +19,35 @@ public interface IInverterServiceInterface
 public class InverterLoginResponse
 {
 
-    public string token { get; set; }
-    public string tokenType { get; set; }
+    public string token { get; set; }= "";
+    public string tokenType { get; set; }= "";
     public int expiresIn { get; set; }
 }
 public class SiteListResponse
 {
 
-    public string token { get; set; }
-    public string tokenType { get; set; }
+    public string token { get; set; }= "";
+    public string tokenType { get; set; }= "";
     public int expiresIn { get; set; }
 }
 public class InverterSite
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string InverterName { get; set; }
+    public string Id { get; set; }= "";
+    public string Name { get; set; }= "";
+    public string InverterName { get; set; }= "";
     public DateTime InstallationDate { get; set; } = DateTime.Today;
 }
 public class GetInverterResponse
 {
 
-    public string InverterId { get; set; }
-    public string Name { get; set; }
+    public string InverterId { get; set; }= "";
+    public string Name { get; set; }= "";
 
 }
 public class DataSyncResponse
 {
     public DataSyncState SyncState { get; set; }
-    public string Message { get; set; }
+    public string Message { get; set; } = "";
 
 }
 public enum DataSyncState

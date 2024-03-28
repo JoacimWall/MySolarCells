@@ -1,8 +1,10 @@
-﻿namespace MySolarCells;
+﻿using MySolarCellsSQLite.Sqlite.Models;
+
+namespace MySolarCells;
 
 public class MySolarCellsGlobals
 {
-    private static Home selectedHome; 
+    private static Home selectedHome = new(){ Name = "", SubSystemEntityId = ""}; 
     public static Home SelectedHome
     {
         get => selectedHome;
@@ -17,7 +19,7 @@ public class MySolarCellsGlobals
     public static DateTime LastOnSleep { get; set; }
     public static DateTime LastOnStart { get; set; }
     public static DateTime LastOnResume { get; set; }
-    public static Application App { get; set; }
+    public static Application? App { get; set; }
     public static ChartDataRequest ChartDataRequest = new ChartDataRequest();
     public static ApplicationState ApplicationState { get; set; }
 

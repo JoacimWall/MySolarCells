@@ -1,10 +1,15 @@
-﻿namespace MySolarCells.ViewModels.OnBoarding;
+﻿using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
+
+namespace MySolarCells.ViewModels.OnBoarding;
 
 public class ElectricitySupplierViewModel : BaseViewModel
 {
-    IGridSupplierInterface gridSupplierService;
+    IGridSupplierInterface? gridSupplierService;
     private readonly MscDbContext mscDbContext;
-    public ElectricitySupplierViewModel(MscDbContext mscDbContext)
+    public ElectricitySupplierViewModel(MscDbContext mscDbContext,IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Tibber.ToString(), ItemValue = (int)ElectricitySupplier.Tibber });
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Unknown.ToString(), ItemValue = (int)ElectricitySupplier.Unknown });
@@ -24,8 +29,8 @@ public class ElectricitySupplierViewModel : BaseViewModel
                     break;
                 }
             }
-            SelecteddHome = home;
-            ApiKey = StringHelper.Decrypt(selecteddHome.ApiKey, AppConstants.Secretkey);
+            SelectedHome = home;
+            ApiKey = selectedHome.ApiKey.Decrypt(AppConstants.Secretkey);
             //TestConnection();
         }
 
@@ -44,8 +49,9 @@ public class ElectricitySupplierViewModel : BaseViewModel
     
     private async Task TestConnection()
     {
-        //this.gridSupplierService.Init(this.tibberAccessToken);
-        var result = await this.gridSupplierService.TestConnection(this.userName, this.password, this.apiUrl, this.apiKey);
+        if (gridSupplierService == null)
+            return;
+        var result = await gridSupplierService.TestConnection(userName, password, apiUrl, apiKey);
 
         if (!result.WasSuccessful)
         {
@@ -54,8 +60,8 @@ public class ElectricitySupplierViewModel : BaseViewModel
         }
         else
         {
-            var resultHomes = await this.gridSupplierService.GetPickerOne();
-            if (!resultHomes.WasSuccessful)
+            var resultHomes = await gridSupplierService.GetPickerOne();
+            if (!resultHomes.WasSuccessful || resultHomes.Model == null)
             {
                 await DialogService.ShowAlertAsync(resultHomes.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
                 return;
@@ -68,7 +74,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
             }
             if (Homes.Count > 0)
             {
-                SelecteddHome = Homes.First();
+                SelectedHome = Homes.First();
                 InstallDate = InstallYears.First();
                 ShowHomePicker = true;
             }
@@ -85,23 +91,23 @@ public class ElectricitySupplierViewModel : BaseViewModel
     {
 
         //check if Home exist in db
-        var homeExist = await this.mscDbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selecteddHome.SubSystemEntityId.ToString());
+        var homeExist = await mscDbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selectedHome.SubSystemEntityId);
         if (homeExist == null)
         {
-            homeExist = new Home();
-            await this.mscDbContext.Home.AddAsync(homeExist);
+            homeExist =  new(){ Name = "", SubSystemEntityId = ""};
+            await mscDbContext.Home.AddAsync(homeExist);
         }
 
         homeExist.ImportOnlySpotPrice = importOnlySpotPrice;
-        homeExist.ApiKey = StringHelper.Encrypt(selecteddHome.ApiKey, AppConstants.Secretkey);
-        homeExist.Name = selecteddHome.Name;
-        homeExist.SubSystemEntityId = selecteddHome.SubSystemEntityId.ToString();
-        homeExist.ElectricitySupplier = selecteddHome.ElectricitySupplier;
+        homeExist.ApiKey = selectedHome.ApiKey.Encrypt(AppConstants.Secretkey);
+        homeExist.Name = selectedHome.Name;
+        homeExist.SubSystemEntityId = selectedHome.SubSystemEntityId;
+        homeExist.ElectricitySupplier = selectedHome.ElectricitySupplier;
         homeExist.FromDate = new DateTime(installDate.ItemValue, 1, 1);
 
-        //TODO:Do we neeed more info from tibber homes
+        //TODO:Do we need more info from tibber homes
 
-        await this.mscDbContext.SaveChangesAsync();
+        await mscDbContext.SaveChangesAsync();
 
 
         SettingsService.SelectedHomeId = homeExist.HomeId;
@@ -127,31 +133,31 @@ public class ElectricitySupplierViewModel : BaseViewModel
 
     private async Task GoToNavigateUrl()
     {
-        await Launcher.OpenAsync(new Uri(this.navigationUrl));
+        await Launcher.OpenAsync(new Uri(navigationUrl));
     }
 
     private ObservableCollection<PickerItem> gridSupplierModels = new ObservableCollection<PickerItem>();
     public ObservableCollection<PickerItem> GridSupplierModels
     {
         get => gridSupplierModels;
-        set { SetProperty(ref gridSupplierModels, value); }
+        set => SetProperty(ref gridSupplierModels, value);
     }
-    private PickerItem selectedGridSupplierModel;
+    private PickerItem selectedGridSupplierModel= new();
     public PickerItem SelectedGridSupplierModel
     {
         get => selectedGridSupplierModel;
         set
         {
             SetProperty(ref selectedGridSupplierModel, value);
-            this.gridSupplierService = ServiceHelper.GetGridSupplierService(value.ItemValue);
-            this.ShowUserName = this.gridSupplierService.ShowUserName;
-            this.ShowPassword = this.gridSupplierService.ShowPassword;
-            this.ShowApiUrl = this.gridSupplierService.ShowApiUrl;
-            this.ShowApiKey = this.gridSupplierService.ShowApiKey;
-            this.GuideText = this.gridSupplierService.GuideText;
-            this.ApiUrl = this.gridSupplierService.DefaultApiUrl;
-            this.showNavigateUrl = this.gridSupplierService.ShowNavigateUrl;
-            this.navigationUrl = this.gridSupplierService.NavigationUrl;
+            gridSupplierService = ServiceHelper.GetGridSupplierService(value.ItemValue);
+            ShowUserName = gridSupplierService.ShowUserName;
+            ShowPassword = gridSupplierService.ShowPassword;
+            ShowApiUrl = gridSupplierService.ShowApiUrl;
+            ShowApiKey = gridSupplierService.ShowApiKey;
+            GuideText = gridSupplierService.GuideText;
+            ApiUrl = gridSupplierService.DefaultApiUrl;
+            showNavigateUrl = gridSupplierService.ShowNavigateUrl;
+            navigationUrl = gridSupplierService.NavigationUrl;
         }
     }
 
@@ -159,116 +165,112 @@ public class ElectricitySupplierViewModel : BaseViewModel
     public ObservableCollection<Home> Homes
     {
         get => homes;
-        set
-        {
-            SetProperty(ref homes, value);
-
-        }
+        set => SetProperty(ref homes, value);
     }
-    private Home selecteddHome;
-    public Home SelecteddHome
+    private Home selectedHome = new(){ Name = "", SubSystemEntityId = ""};
+    public Home SelectedHome
     {
-        get => selecteddHome;
-        set { SetProperty(ref selecteddHome, value); }
+        get => selectedHome;
+        set => SetProperty(ref selectedHome, value);
     }
     
-    private string guideText;
+    private string guideText = "";
     public string GuideText
     {
         get => guideText;
-        set { SetProperty(ref guideText, value); }
+        set => SetProperty(ref guideText, value);
     }
-    private string userName;
+    private string userName="";
     public string UserName
     {
         get => userName;
-        set { SetProperty(ref userName, value); }
+        set => SetProperty(ref userName, value);
     }
-    private string password;
+    private string password="";
     public string Password
     {
         get => password;
-        set { SetProperty(ref password, value); }
+        set => SetProperty(ref password, value);
     }
     
-    private string apiUrl;
+    private string apiUrl="";
     public string ApiUrl
     {
         get => apiUrl;
-        set { SetProperty(ref apiUrl, value); }
+        set => SetProperty(ref apiUrl, value);
     }
-    private string navigationUrl;
+    private string navigationUrl="";
     public string NavigationUrl
     {
         get => navigationUrl;
-        set { SetProperty(ref navigationUrl, value); }
+        set => SetProperty(ref navigationUrl, value);
     }
     private string apiKey = "";
     public string ApiKey
     {
         get => apiKey;
-        set { SetProperty(ref apiKey, value); }
+        set => SetProperty(ref apiKey, value);
     }
-    private bool showUserName = false;
+    private bool showUserName;
     public bool ShowUserName
     {
         get => showUserName;
-        set { SetProperty(ref showUserName, value); }
+        set => SetProperty(ref showUserName, value);
     }
-    private bool showPassword = false;
+    private bool showPassword;
     public bool ShowPassword
     {
         get => showPassword;
-        set { SetProperty(ref showPassword, value); }
+        set => SetProperty(ref showPassword, value);
     }
-    private bool showApiUrl = false;
+    private bool showApiUrl;
     public bool ShowApiUrl
     {
         get => showApiUrl;
-        set { SetProperty(ref showApiUrl, value); }
+        set => SetProperty(ref showApiUrl, value);
     }
-    private bool showApiKey = false;
+    private bool showApiKey;
     public bool ShowApiKey
     {
         get => showApiKey;
-        set { SetProperty(ref showApiKey, value); }
+        set => SetProperty(ref showApiKey, value);
     }
-    private bool showNavigateUrl = false;
+    private bool showNavigateUrl;
     public bool ShowNavigateUrl
     {
         get => showNavigateUrl;
-        set { SetProperty(ref showNavigateUrl, value); }
+        set => SetProperty(ref showNavigateUrl, value);
     }
     
     private ObservableCollection<PickerItem> installYears = new ObservableCollection<PickerItem>();
     public ObservableCollection<PickerItem> InstallYears
     {
         get => installYears;
-        set { SetProperty(ref installYears, value); }
+        set => SetProperty(ref installYears, value);
     }
-    private PickerItem installDate;
+    private PickerItem installDate=new();
     public PickerItem InstallDate
     {
         get => installDate;
-        set { SetProperty(ref installDate, value); }
+        set => SetProperty(ref installDate, value);
     }
-    private string tibberAccessToken;
+    private string tibberAccessToken="";
     public string TibberAccessToken
     {
         get => tibberAccessToken;
-        set { SetProperty(ref tibberAccessToken, value); }
+        set => SetProperty(ref tibberAccessToken, value);
     }
     private bool showHomePicker;
     public bool ShowHomePicker
     {
         get => showHomePicker;
-        set { SetProperty(ref showHomePicker, value); }
+        set => SetProperty(ref showHomePicker, value);
     }
     private bool importOnlySpotPrice;
     public bool ImportOnlySpotPrice
     {
         get => importOnlySpotPrice;
-        set { SetProperty(ref importOnlySpotPrice, value); }
+        set => SetProperty(ref importOnlySpotPrice, value);
     }
 }
 

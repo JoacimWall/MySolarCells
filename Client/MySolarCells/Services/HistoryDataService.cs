@@ -1,11 +1,15 @@
-﻿namespace MySolarCells.Services;
+﻿using System.Globalization;
+using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
+
+namespace MySolarCells.Services;
 
 public interface IHistoryDataService
 {
 
-    Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end, HistorySimulate historSimulate);
-    Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end);
-    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport(DateTime? start, DateTime? end);
+    Task<HistoryStats> CalculateTotals(DateTime start, DateTime end, HistorySimulate historySimulate);
+    Task<HistoryStats> CalculateTotals(DateTime start, DateTime end);
+    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end);
 
 }
 
@@ -16,31 +20,29 @@ public class HistoryDataService : IHistoryDataService
     {
         this.mscDbContext = mscDbContext;
     }
-    //This function should can prpduce wrong if the cahnge of calulation parameters in the middel of the date span 
+    //This function can produce wrong if the change of calculation parameters in the middle of the date span 
 
-    /// Return to collectins tuple 1 is for the overview summirized one Year per row
-    /// The second tuple is all months summirzed per year 
-    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPermonthReport(DateTime? start, DateTime? end)
+    /// Return to collections tuple 1 is for the overview summarized one Year per row
+    /// The second tuple is all months summarized per year 
+    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end)
     {
         List<ReportHistoryStats> result = new List<ReportHistoryStats>();
-        //var start = DateHelper.GetRelatedDates(MySolarCellsGlobals.SelectedHome.FromDate);
-        //var dates = DateHelper.GetRelatedDates(DateTime.Today);
-        var startDate = DateHelper.GetRelatedDates(start.Value);
-        var endDates = DateHelper.GetRelatedDates(end.Value);
+        var startDate = DateHelper.GetRelatedDates(start);
+        var endDates = DateHelper.GetRelatedDates(end);
         var current = startDate.ThisMonthStart;
 
-        var resultInvest = this.mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
-        var firstProductionDay = this.mscDbContext.Energy.AsNoTracking().Where(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).First();
+        var resultInvest = mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        var firstProductionDay = mscDbContext.Energy.AsNoTracking().First(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
 
         //Get alla data from start to now per month
         while (current < endDates.ThisMonthEnd)
         {
             var stats = await CalculateTotals(current, current.AddMonths(1), new HistorySimulate());
 
-            //Calulate Intrest currnt month
-            var resultInvestcalc = CalculateLonAndInterest(resultInvest, current);
-            stats.Investment = resultInvestcalc.Item1;
-            stats.InterestCost = Math.Round(resultInvestcalc.Item2, 2);
+            //Calculate Interest current month
+            var resultInvestmentCalculation = CalculateLonAndInterest(resultInvest, current);
+            stats.Investment = resultInvestmentCalculation.Item1;
+            stats.InterestCost = Math.Round(resultInvestmentCalculation.Item2, 2);
             //Correct balance with interest cost
             //stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
             result.Add(new ReportHistoryStats { FromDate = current, HistoryStats = stats, ReportPageTyp = (int)ReportPageTyp.YearDetails, FirstProductionDay = firstProductionDay.Timestamp });
@@ -49,74 +51,72 @@ public class HistoryDataService : IHistoryDataService
         // --- Group all per year and get total ----
         int year = result.First().FromDate.Year;
         List<List<ReportHistoryStats>> historyStatsGrpYearAll = new List<List<ReportHistoryStats>>();
-        List<ReportHistoryStats> historyStatsMounthGrpYear = new List<ReportHistoryStats>();
-        List<ReportHistoryStats> historStatsOvervView = new List<ReportHistoryStats>();
-        // double acumlimatedPodSavedAndMinusInterest = 0;
-        // double? previusYearRoi = null;
+        List<ReportHistoryStats> historyStatsMonthGrpYear = new List<ReportHistoryStats>();
+        List<ReportHistoryStats> historyStatsOverview = new List<ReportHistoryStats>();
+        
         for (int i = 0; i < result.Count; i++)
         {
             if (year == result[i].FromDate.Year)
-                historyStatsMounthGrpYear.Add(result[i]);
+                historyStatsMonthGrpYear.Add(result[i]);
 
             if (year != result[i].FromDate.Year || i == result.Count - 1)
             {
-                TimeSpan timeSpanYear = historyStatsMounthGrpYear.Last().FromDate - historyStatsMounthGrpYear.First().FromDate;
+                TimeSpan timeSpanYear = historyStatsMonthGrpYear.Last().FromDate - historyStatsMonthGrpYear.First().FromDate;
                 ReportHistoryStats newYearStats = new ReportHistoryStats
                 {
                     ReportPageTyp = (int)ReportPageTyp.YearsOverview,
-                    FromDate = historyStatsMounthGrpYear.First().FromDate,
-                    HistoryStats = SummerizeToOneRoiStats(historyStatsMounthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear),
+                    FromDate = historyStatsMonthGrpYear.First().FromDate,
+                    HistoryStats = SummarizeToOneRoiStats(historyStatsMonthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear),
                     FirstProductionDay = firstProductionDay.Timestamp
                 };
 
-                historStatsOvervView.Add(newYearStats);
+                historyStatsOverview.Add(newYearStats);
 
                 year = result[i].FromDate.Year;
-                historyStatsGrpYearAll.Add(historyStatsMounthGrpYear);
-                historyStatsMounthGrpYear = new List<ReportHistoryStats>();
-                historyStatsMounthGrpYear.Add(result[i]);
+                historyStatsGrpYearAll.Add(historyStatsMonthGrpYear);
+                historyStatsMonthGrpYear = new List<ReportHistoryStats>();
+                historyStatsMonthGrpYear.Add(result[i]);
             }
         }
-        //Check differnt rouls per year calc
-        foreach (var item in historStatsOvervView)
+        //Check different rules per year calc
+        foreach (var item in historyStatsOverview)
         {
-            //In sweden you only get Taxraduction for the amount of kwh that you bay
+            //In sweden you only get Tax reduction for the amount of kwh that you bay
             if (item.HistoryStats.ProductionSold > item.HistoryStats.Purchased)
             {
-                var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= item.FromDate);
+                var calcParams = mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= item.FromDate);
 
-                var oldvalue = item.HistoryStats.ProductionSoldTaxReductionProfit;
+                var oldValue = item.HistoryStats.ProductionSoldTaxReductionProfit;
                 item.HistoryStats.ProductionSoldTaxReductionProfit = Math.Round(item.HistoryStats.Purchased * calcParams.TaxReduction, 2);
-                //item.RoiStats.SumProductionSoldProfit = Math.Round((item.RoiStats.SumProductionSoldProfit - oldvalue) + item.RoiStats.ProductionSoldTaxReductionProfit,2);
-                item.HistoryStats.ProductionSoldTaxReductionProfitComment = string.Format(AppResources.Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption, Math.Round(oldvalue - item.HistoryStats.ProductionSoldTaxReductionProfit, 2).ToString());
+                item.HistoryStats.ProductionSoldTaxReductionProfitComment = string.Format(AppResources.Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption, Math.Round(oldValue - item.HistoryStats.ProductionSoldTaxReductionProfit, 2).ToString(CultureInfo.InvariantCulture));
             }
         }
 
-        return new Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>(new Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>(historStatsOvervView, historyStatsGrpYearAll));
+        return new Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>(new Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>(historyStatsOverview, historyStatsGrpYearAll));
     }
 
-    public async Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end)
+    public async Task<HistoryStats> CalculateTotals(DateTime start, DateTime end)
     {
 
-        return await CalculateTotalsInternal(start, end, new HistorySimulate { });
+        return await CalculateTotalsInternal(start, end, new HistorySimulate());
     }
-    public async Task<HistoryStats> CalculateTotals(DateTime? start, DateTime? end, HistorySimulate historySimulate)
+    public async Task<HistoryStats> CalculateTotals(DateTime start, DateTime end, HistorySimulate historySimulate)
     {
         List<HistoryStats> sumRoi = new List<HistoryStats>();
-        var difference = end.Value - start.Value;
+        var difference = end - start;
         var current = start;
         while (current < end)
         {
-            var stats = await CalculateTotalsInternal(current, current.Value.AddDays(1), historySimulate);
+            var stats = await CalculateTotalsInternal(current, current.AddDays(1), historySimulate);
             sumRoi.Add(stats);
-            current = current.Value.AddDays(1);
+            current = current.AddDays(1);
         }
 
-        return SummerizeToOneRoiStats(sumRoi, difference);
+        return SummarizeToOneRoiStats(sumRoi, difference);
 
     }
     #region Private
-    private HistoryStats SummerizeToOneRoiStats(List<HistoryStats> sumHistory, TimeSpan difference)
+    private HistoryStats SummarizeToOneRoiStats(List<HistoryStats> sumHistory, TimeSpan difference)
     {
         HistoryStats returnHistory = new HistoryStats
         {
@@ -151,7 +151,7 @@ public class HistoryDataService : IHistoryDataService
 
             PurchasedTaxCost = Math.Round(sumHistory.Sum(x => x.PurchasedTaxCost), 2),
 
-            //intrest
+            //interest
             InterestCost = Math.Round(sumHistory.Sum(x => x.InterestCost), 2),
             Investment = sumHistory.Last().Investment,
             ProductionSoldTaxReductionProfit = Math.Round(sumHistory.Sum(x => x.ProductionSoldTaxReductionProfit), 2)
@@ -159,7 +159,7 @@ public class HistoryDataService : IHistoryDataService
 
         };
 
-        //Devided per day
+        //Divided per day
         returnHistory.FactsProductionIndex = Math.Round(returnHistory.SumAllProduction / difference.TotalDays, 2);
         returnHistory.FactsPurchasedCostAveragePerKwhPurchased = returnHistory.Purchased == 0 ? 0 : Math.Round(returnHistory.SumPurchasedCost / returnHistory.Purchased, 2);
         returnHistory.FactsProductionSoldAveragePerKwhProfit = returnHistory.ProductionSold == 0 ? 0 : Math.Round(returnHistory.SumProductionSoldProfit / returnHistory.ProductionSold, 2);
@@ -168,14 +168,14 @@ public class HistoryDataService : IHistoryDataService
         //Peak
         if (difference.TotalDays < 32)
         {
-            int amountPeaks = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters.AmountOfPeaksToUse : 1;
-            double peakPricePerKwh = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters.PricePerKwh : 0;
+            int amountPeaks = sumHistory.First().PowerTariffParameters.AmountOfPeaksToUse;
+            double peakPricePerKwh =  sumHistory.First().PowerTariffParameters.PricePerKwh;
 
 
             var topPeakPurchased = sumHistory.OrderByDescending(x => x.PeakPurchased).Take(amountPeaks);
-            var topPeakPurchasedOwnuse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
+            var topPeakPurchasedOwnUse = sumHistory.OrderByDescending(x => x.PeakPurchasedAndOwnUsage).Take(amountPeaks);
             returnHistory.PeakPurchased = Math.Round(topPeakPurchased.Average(x => x.PeakPurchased), 2);
-            returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnuse.Average(x => x.PeakPurchasedAndOwnUsage), 2);
+            returnHistory.PeakPurchasedAndOwnUsage = Math.Round(topPeakPurchasedOwnUse.Average(x => x.PeakPurchasedAndOwnUsage), 2);
             returnHistory.PeakEnergyReduction = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakPurchasedAndOwnUsage - returnHistory.PeakPurchased, 2) : 0;
             returnHistory.PeakEnergyReductionSaved = returnHistory.PeakPurchased < returnHistory.PeakPurchasedAndOwnUsage ? Math.Round(returnHistory.PeakEnergyReduction * peakPricePerKwh, 2) : 0;
             returnHistory.PeakPurchasedCost = peakPricePerKwh > 0 ? Math.Round(returnHistory.PeakPurchased * peakPricePerKwh, 2) : 0;
@@ -191,15 +191,14 @@ public class HistoryDataService : IHistoryDataService
         }
         return returnHistory;
     }
-    private async Task<HistoryStats> CalculateTotalsInternal(DateTime? start, DateTime? end, HistorySimulate historySimulate)
+    private async Task<HistoryStats> CalculateTotalsInternal(DateTime start, DateTime end, HistorySimulate historySimulate)
     {
-        List<Energy> energy;
         HistoryStats historyStats = new HistoryStats();
-        var calcParams = this.mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
-        var powerParams = this.mscDbContext.PowerTariffParameters.AsNoTracking().OrderBy(o => o.FromDate).LastOrDefault(x => x.FromDate <= start);
-        energy = await this.mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start.Value && x.Timestamp <= end.Value).ToListAsync();
+        var calcParams = mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        var powerParams = mscDbContext.PowerTariffParameters.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        List<Energy> energy = await mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start && x.Timestamp <= end).ToListAsync();
 
-        if (historySimulate.DoSimulate && historySimulate.AddBattery)
+        if (historySimulate is { DoSimulate: true, AddBattery: true })
         {
             //Simulate battery 
             foreach (var item in energy)
@@ -222,19 +221,16 @@ public class HistoryDataService : IHistoryDataService
                 //Check if battery has more charge then Purchased
                 if (item.Purchased > 0 && historySimulate.CurrentBatteryPower > item.Purchased)
                 {
-                    historySimulate.CurrentBatteryPower = historySimulate.CurrentBatteryPower - item.Purchased;
+                    historySimulate.CurrentBatteryPower -= item.Purchased;
                     item.BatteryUsed = item.Purchased;
-                    if (calcParams.UseSpotPrice)
-                        item.BatteryUsedProfit = Math.Round(item.BatteryUsed * item.UnitPriceBuy, 2);
-                    else
-                        item.BatteryUsedProfit = Math.Round(item.BatteryUsed * calcParams.FixedPriceKwh, 2);
-                    //Minskad anvädning profit med batteri
+                    item.BatteryUsedProfit = calcParams.UseSpotPrice ? Math.Round(item.BatteryUsed * item.UnitPriceBuy, 2) : Math.Round(item.BatteryUsed * calcParams.FixedPriceKwh, 2);
+                    //Reduced usage profit with battery
                     item.Purchased = 0;
                     item.PurchasedCost = 0;
                 }
             }
         }
-        else if (historySimulate.DoSimulate && historySimulate.RemoveBattery)
+        else if (historySimulate is { DoSimulate: true, RemoveBattery: true })
         {
             //Simulate battery 
             foreach (var item in energy)
@@ -255,10 +251,7 @@ public class HistoryDataService : IHistoryDataService
                 if (item.BatteryUsed > 0)
                 {
                     item.Purchased = item.Purchased + item.BatteryUsed;
-                    if (calcParams.UseSpotPrice)
-                        item.PurchasedCost = Math.Round(item.Purchased * item.UnitPriceBuy, 2);
-                    else
-                        item.PurchasedCost = Math.Round(item.Purchased * calcParams.FixedPriceKwh, 2);
+                    item.PurchasedCost = calcParams.UseSpotPrice ? Math.Round(item.Purchased * item.UnitPriceBuy, 2) : Math.Round(item.Purchased * calcParams.FixedPriceKwh, 2);
 
                     item.BatteryUsed = 0;
                     item.BatteryUsedProfit = 0;
@@ -274,7 +267,7 @@ public class HistoryDataService : IHistoryDataService
         //--------- ProductionSold -------------------------------
         historyStats.ProductionSold = Math.Round(energy.Sum(x => x.ProductionSold), 2);
         historyStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(historyStats.ProductionSold * calcParams.FixedPriceKwh, 2);
-        historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowload, 2);
+        historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowLoad, 2);
         historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
 
         //--------- Production Own use ---------------------------
@@ -296,33 +289,34 @@ public class HistoryDataService : IHistoryDataService
         //------------ Peak Reduction ---------------------------------------
         if (energy.Count > 0)
         {
-            if (powerParams == null)
-            {
+            // if (powerParams == null)
+            // {
                 historyStats.PeakPurchased = energy.Max(x => x.Purchased);
                 historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
-            }
-            else
-            {
-                //Plocka ut månader
-                var valid = energy.Where(x => x.Timestamp.Month >= powerParams.PeriodMonthStart && x.Timestamp.Month <= powerParams.PeriodMonthEnd);
-                //plocka ut vardagar 
-                if (powerParams.Weekday && !powerParams.Weekend)
-                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
-                else if (!powerParams.Weekday && powerParams.Weekend) //Helger
-                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
-
-                //plockar ut timmar
-                valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
-                historyStats.PeakPurchased = valid.Max(x => x.Purchased);
-                historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
-            }
+            // }
+            //Refactor disable
+            // else
+            // {
+            //     //Pick out months
+            //     IEnumerable<Energy> valid;
+            //     //pick out weekdays
+            //     if (powerParams.Weekday && !powerParams.Weekend)
+            //         valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
+            //     else if (!powerParams.Weekday && powerParams.Weekend) //Weekends
+            //         valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
+            //
+            //     //picking out hours
+            //     valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
+            //     historyStats.PeakPurchased = valid.Max(x => x.Purchased);
+            //     historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+            // }
         }
 
         return historyStats;
 
     }
     
-    //returns total invest, Loanleft and Interestcost
+    //returns total invest, Loan left and Interest cost
     private Tuple<int, float> CalculateLonAndInterest(List<InvestmentAndLoan> investmentAndLoans, DateTime start)
     {
         int investmentTot = 0;
@@ -333,19 +327,19 @@ public class HistoryDataService : IHistoryDataService
         {
             if (start < item.FromDate)
                 continue;
-            //Summerize total investment 
+            //Summarize total investment 
             investmentTot = investmentTot + item.Investment + item.Loan;
 
             if (item.Loan > 0 && item.Interest.Any(x => x.FromDate <= start))
             {
-                if (item.LoanLeft is null)
-                    item.LoanLeft = item.Loan;
+                item.LoanLeft ??= item.Loan;
 
                 var interestCur = item.Interest.Where(x => x.FromDate <= start).OrderBy(o => o.FromDate).First();
 
                 var curInterest = ((item.LoanLeft * (interestCur.Interest / 100)) / 12);
 
-                interestTot = interestTot + curInterest.Value;
+                if (curInterest != null) 
+                    interestTot = interestTot + curInterest.Value;
 
                 item.LoanLeft = item.LoanLeft - interestCur.Amortization;
             }
@@ -359,11 +353,10 @@ public class HistoryDataService : IHistoryDataService
 }
 public class HistorySimulate : ObservableObject
 {
-    //DOSIMULATE
-    public Color ShowSimulateBackgrundColor { get { return doSimulate ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
-    public Color ShowSimulateBorderColor { get { return doSimulate ? AppColors.Gray500Color : AppColors.TransparentColor; } }
-    public Color ShowSimulateTextColor { get { return doSimulate ? AppColors.WhiteColor : AppColors.Gray900Color; } }
-
+    //DO SIMULATE
+    public Color ShowSimulateBackgroundColor => doSimulate ? AppColors.SignalBlueColor : AppColors.TransparentColor;
+    public Color ShowSimulateBorderColor => doSimulate ? AppColors.Gray500Color : AppColors.TransparentColor;
+    public Color ShowSimulateTextColor => doSimulate ? AppColors.WhiteColor : AppColors.Gray900Color;
 
 
     private bool doSimulate;
@@ -373,15 +366,15 @@ public class HistorySimulate : ObservableObject
         set
         {
             SetProperty(ref doSimulate, value);
-            OnPropertyChanged(nameof(ShowSimulateBackgrundColor));
+            OnPropertyChanged(nameof(ShowSimulateBackgroundColor));
             OnPropertyChanged(nameof(ShowSimulateBorderColor));
             OnPropertyChanged(nameof(ShowSimulateTextColor));
         }
     }
     //ADD Battery
-    public Color AddBatteryBackgrundColor { get { return addBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
-    public Color AddBatteryBorderColor { get { return addBattery ? AppColors.Gray500Color : AppColors.TransparentColor; } }
-    public Color AddBatteryTextColor { get { return addBattery ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+    public Color AddBatteryBackgroundColor => addBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor;
+    public Color AddBatteryBorderColor => addBattery ? AppColors.Gray500Color : AppColors.TransparentColor;
+    public Color AddBatteryTextColor => addBattery ? AppColors.WhiteColor : AppColors.Gray900Color;
 
     private bool addBattery = true;
     public bool AddBattery
@@ -391,19 +384,19 @@ public class HistorySimulate : ObservableObject
         {
             SetProperty(ref addBattery, value);
             removeBattery = !addBattery;
-            OnPropertyChanged(nameof(AddBatteryBackgrundColor));
+            OnPropertyChanged(nameof(AddBatteryBackgroundColor));
             OnPropertyChanged(nameof(AddBatteryBorderColor));
             OnPropertyChanged(nameof(AddBatteryTextColor));
-            OnPropertyChanged(nameof(RemoveBatteryBackgrundColor));
+            OnPropertyChanged(nameof(RemoveBatteryBackgroundColor));
             OnPropertyChanged(nameof(RemoveBatteryBorderColor));
             OnPropertyChanged(nameof(RemoveBatteryTextColor));
         }
 
     }
     //Remove battery
-    public Color RemoveBatteryBackgrundColor { get { return removeBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor; } }
-    public Color RemoveBatteryBorderColor { get { return removeBattery ? AppColors.Gray500Color : AppColors.TransparentColor; } }
-    public Color RemoveBatteryTextColor { get { return removeBattery ? AppColors.WhiteColor : AppColors.Gray900Color; } }
+    public Color RemoveBatteryBackgroundColor => removeBattery ? AppColors.SignalBlueColor : AppColors.TransparentColor;
+    public Color RemoveBatteryBorderColor => removeBattery ? AppColors.Gray500Color : AppColors.TransparentColor;
+    public Color RemoveBatteryTextColor => removeBattery ? AppColors.WhiteColor : AppColors.Gray900Color;
     private bool removeBattery;
     public bool RemoveBattery
     {
@@ -412,10 +405,10 @@ public class HistorySimulate : ObservableObject
         {
             SetProperty(ref removeBattery, value);
             addBattery = !removeBattery;
-            OnPropertyChanged(nameof(RemoveBatteryBackgrundColor));
+            OnPropertyChanged(nameof(RemoveBatteryBackgroundColor));
             OnPropertyChanged(nameof(RemoveBatteryBorderColor));
             OnPropertyChanged(nameof(RemoveBatteryTextColor));
-            OnPropertyChanged(nameof(AddBatteryBackgrundColor));
+            OnPropertyChanged(nameof(AddBatteryBackgroundColor));
             OnPropertyChanged(nameof(AddBatteryBorderColor));
             OnPropertyChanged(nameof(AddBatteryTextColor));
         }
@@ -424,23 +417,19 @@ public class HistorySimulate : ObservableObject
     public double MaxBatteryPower
     {
         get => maxBatteryPower;
-        set
-        {
-            SetProperty(ref maxBatteryPower, value);
-
-        }
+        set => SetProperty(ref maxBatteryPower, value);
     }
     private double chargeLoss = 0.1; //10%
     public double ChargeLoss
     {
         get => chargeLoss;
-        set { SetProperty(ref chargeLoss, value); }
+        set => SetProperty(ref chargeLoss, value);
     }
-    private double currentBatteryPower = 0; //10%
+    private double currentBatteryPower; //10%
     public double CurrentBatteryPower
     {
         get => currentBatteryPower;
-        set { SetProperty(ref currentBatteryPower, value); }
+        set => SetProperty(ref currentBatteryPower, value);
     }
 
 }

@@ -7,9 +7,9 @@ public partial class TemplatedContentPresenter : ContentView
         InitializeComponent();
     }
 
-    public static readonly BindableProperty DataTemplateSelectorProperty = BindableProperty.Create(nameof(DataTemplateSelector), typeof(DataTemplateSelector), typeof(TemplatedContentPresenter), null, propertyChanged: DataTemplateSelectorChanged);
-    public static readonly BindableProperty DataTemplateProperty = BindableProperty.Create(nameof(DataTemplate), typeof(DataTemplate), typeof(TemplatedContentPresenter), null, propertyChanged: DataTemplateChanged);
-    public static readonly BindableProperty DataProperty = BindableProperty.Create(nameof(Data), typeof(object), typeof(TemplatedContentPresenter), null, propertyChanged: DataChanged);
+    public static readonly BindableProperty DataTemplateSelectorProperty = BindableProperty.Create(nameof(DataTemplateSelector), typeof(DataTemplateSelector), typeof(TemplatedContentPresenter), propertyChanged: DataTemplateSelectorChanged);
+    public static readonly BindableProperty DataTemplateProperty = BindableProperty.Create(nameof(DataTemplate), typeof(DataTemplate), typeof(TemplatedContentPresenter), propertyChanged: DataTemplateChanged);
+    public static readonly BindableProperty DataProperty = BindableProperty.Create(nameof(Data), typeof(object), typeof(TemplatedContentPresenter),  propertyChanged: DataChanged);
 
     public DataTemplateSelector DataTemplateSelector
     {
@@ -48,7 +48,7 @@ public partial class TemplatedContentPresenter : ContentView
     {
         if (bindable is TemplatedContentPresenter contentPresenter)
         {
-            BindableLayout.SetItemsSource(contentPresenter.HostGrid, new object[] { newValue });
+            BindableLayout.SetItemsSource(contentPresenter.HostGrid, new[] { newValue });
         }
     }
 }

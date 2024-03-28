@@ -1,21 +1,24 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace MySolarCells.Converters
 {
     public class TimeStampToStringConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values[0] == null || values[1] == null)
+            if (values is { Length: < 3 })
                 return null;
 
-            DateTime dateTime = (DateTime)values[0];
-            ReportPageTyp reportPageTyp = (ReportPageTyp)values[1];
-            if (reportPageTyp == ReportPageTyp.YearsOverview)
-                return dateTime.ToString("yyyy");
-            if (reportPageTyp == ReportPageTyp.YearDetails)
-                return dateTime.ToString("MMM").ToUpper();
+            if (values != null)
+            {
+                DateTime dateTime = (DateTime)values[0];
+                ReportPageTyp reportPageTyp = (ReportPageTyp)values[1];
+                if (reportPageTyp == ReportPageTyp.YearsOverview)
+                    return dateTime.ToString("yyyy");
+                if (reportPageTyp == ReportPageTyp.YearDetails)
+                    return dateTime.ToString("MMM").ToUpper();
+            }
+
             return null;
         }
 

@@ -6,6 +6,9 @@ public static class StringHelper
 {
     public static string Decrypt(this string encryptedValue, string encryptionKey)
     {
+        if (string.IsNullOrEmpty(encryptedValue))
+            return string.Empty;
+
         string iv = encryptedValue.Substring(encryptedValue.IndexOf(';') + 1, encryptedValue.Length - encryptedValue.IndexOf(';') - 1);
         encryptedValue = encryptedValue.Substring(0, encryptedValue.IndexOf(';'));
 
@@ -13,28 +16,26 @@ public static class StringHelper
     }
     public static string Encrypt(this string clearValue, string encryptionKey)
     {
-        using (Aes aes = Aes.Create())
-        {
-            aes.Key = CreateKey(encryptionKey);
+        using Aes aes = Aes.Create();
+        aes.Key = CreateKey(encryptionKey);
 
-            byte[] encrypted = AesEncryptStringToBytes(clearValue, aes.Key, aes.IV);
-            return Convert.ToBase64String(encrypted) + ";" + Convert.ToBase64String(aes.IV);
-        }
+        byte[] encrypted = AesEncryptStringToBytes(clearValue, aes.Key, aes.IV);
+        return Convert.ToBase64String(encrypted) + ";" + Convert.ToBase64String(aes.IV);
     }
-    static public string EncodeTo64(string toEncode)
+    public static string EncodeTo64(string toEncode)
     {
         byte[] toEncodeAsBytes
-              = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
+              = System.Text.Encoding.ASCII.GetBytes(toEncode);
         string returnValue
-              = System.Convert.ToBase64String(toEncodeAsBytes);
+              = Convert.ToBase64String(toEncodeAsBytes);
         return returnValue;
     }
-    static public string DecodeFrom64(string encodedData)
+    public static string DecodeFrom64(string encodedData)
     {
         byte[] encodedDataAsBytes
-            = System.Convert.FromBase64String(encodedData);
+            = Convert.FromBase64String(encodedData);
         string returnValue =
-           System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+           System.Text.Encoding.ASCII.GetString(encodedDataAsBytes);
         return returnValue;
     }
 
@@ -58,24 +59,19 @@ public static class StringHelper
         if (iv == null || iv.Length <= 0)
             throw new ArgumentNullException($"{nameof(iv)}");
 
-        byte[] encrypted;
+        using Aes aes = Aes.Create();
+        aes.Key = key;
+        aes.IV = iv;
 
-        using (Aes aes = Aes.Create())
+        using MemoryStream memoryStream = new MemoryStream();
+        using (ICryptoTransform encryptor = aes.CreateEncryptor())
+        using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+        using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
         {
-            aes.Key = key;
-            aes.IV = iv;
-
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (ICryptoTransform encryptor = aes.CreateEncryptor())
-                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
-                {
-                    streamWriter.Write(plainText);
-                }
-                encrypted = memoryStream.ToArray();
-            }
+            streamWriter.Write(plainText);
         }
+        var encrypted = memoryStream.ToArray();
+
         return encrypted;
     }
     private static string AesDecryptStringFromBytes(byte[] cipherText, byte[] key, byte[] iv)
@@ -87,20 +83,15 @@ public static class StringHelper
         if (iv == null || iv.Length <= 0)
             throw new ArgumentNullException($"{nameof(iv)}");
 
-        string plaintext;
+        using Aes aes = Aes.Create();
+        aes.Key = key;
+        aes.IV = iv;
 
-        using (Aes aes = Aes.Create())
-        {
-            aes.Key = key;
-            aes.IV = iv;
-
-            using (MemoryStream memoryStream = new MemoryStream(cipherText))
-            using (ICryptoTransform decryptor = aes.CreateDecryptor())
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-            using (StreamReader streamReader = new StreamReader(cryptoStream))
-                plaintext = streamReader.ReadToEnd();
-
-        }
+        using MemoryStream memoryStream = new MemoryStream(cipherText);
+        using ICryptoTransform decryptor = aes.CreateDecryptor();
+        using CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+        using StreamReader streamReader = new StreamReader(cryptoStream);
+        var plaintext = streamReader.ReadToEnd();
         return plaintext;
     }
 

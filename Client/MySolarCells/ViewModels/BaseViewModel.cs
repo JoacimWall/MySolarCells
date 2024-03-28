@@ -1,49 +1,48 @@
-﻿namespace MySolarCells.ViewModels;
+﻿using CommunityToolkit.Mvvm.Input;
 
-public interface IAnalyticsService
-{
-    void LogEvent(string eventId);
-    void LogEvent(string eventId, string paramName, string value);
-    void LogEvent(string eventName, IDictionary<string, object> parameters);
-    void SetUserProperty(string name, string value);
-    void SetCurrentScreen(string screenName, string screenClass);
-    //Info: Denna ska returnera true ifall den aktuella vm tillhör en tabbpage
-    //så att vi får med den sidan i statistiken för visade view 
-    bool IsTabbedPageViewModel(string viewModelName);
-
-}
+namespace MySolarCells.ViewModels;
 
 public partial class BaseViewModel : ObservableObject, IQueryAttributable
 {
-    protected readonly IDialogService DialogService;
-    protected readonly IAnalyticsService AnalyticsService;
-    protected readonly ISettingsService SettingsService;
-    public BaseViewModel()
+    protected IDialogService DialogService { get; set; }
+    private IAnalyticsService AnalyticsService { get; set; }
+    private ILogService LogService { get; set; }
+    protected ISettingsService SettingsService { get; set; }
+    public BaseViewModel(IDialogService dialogService, IAnalyticsService analyticsService,
+        IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService)
     {
-        DialogService =  ServiceHelper.GetService<IDialogService>();
-        //AnalyticsService = ServiceHelper.GetService<IAnalyticsService>();
-        SettingsService =  ServiceHelper.GetService<ISettingsService>();
+        DialogService = dialogService;
+        AnalyticsService = analyticsService;
+        LogService = logService;
+        SettingsService =  settingsService;
         FirstTimeAppearing = true;
         FirstTimeNavigatingTo = true;
+        stateEmptyMessage = "";
+        stateSavingMessage = "";
     }
     #region Propertys
-    public virtual ICommand NavBackCommand => new Command(async () => await GoBack());
-    public virtual ICommand RefreshCommand => new Command(async (layoutState) => await RefreshAsync(layoutState));
+    public virtual ICommand NavBackCommand => new RelayCommand(async () => await GoBack());
+    public virtual ICommand RefreshCommand => new RelayCommand(async () => await RefreshAsync());
 
     private ChartDataRequest chartDataRequest = new ChartDataRequest();
     public ChartDataRequest ChartDataRequest
     {
-        get { return chartDataRequest; }
+        get => chartDataRequest;
         set
         {
             SetProperty(ref chartDataRequest, value);
             MySolarCellsGlobals.ChartDataRequest = value;
         }
     }
-   
+    private HistorySimulate roiSimulate = new HistorySimulate();
+    public HistorySimulate RoiSimulate
+    {
+        get => roiSimulate;
+        set => SetProperty(ref roiSimulate, value);
+    }
 
     [ObservableProperty]
-    bool showNavbarBackbutton;
+    bool showNavbarBackButton;
 
     [ObservableProperty]
     bool firstTimeAppearing;
@@ -52,7 +51,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     bool firstTimeNavigatingTo;
 
     [ObservableProperty]
-    bool reloadNeededOnappering;
+    bool reloadNeededOnAppearing;
 
     [ObservableProperty]
     string title = string.Empty;
@@ -76,45 +75,47 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     bool isSaving;
 
     [ObservableProperty]
-    string _stateEmptyMessage = "Nothing to Show";
+    string stateEmptyMessage;
     [ObservableProperty]
-    string _stateSavingMessage;
+    string stateSavingMessage;
     [ObservableProperty]
     private bool cleanupPerformed;
     #endregion
 
     #region Virutal functions
-    //Async
-    //public async virtual Task InitializeAsync(object navigationData, BaseViewModel parentViewModel = null) => await Task.FromResult(false);
-    //public async virtual Task OnBackButtonPressedAsync() => await GoBack(); //Android hardwear button
+    public virtual async Task OnDisappearingAsync() => await Task.FromResult(true);
+    public virtual async Task OnAppearingAsync() => await Task.FromResult(true);
 
-    public async virtual Task OnDisappearingAsync() => await Task.FromResult(true);
-    public async virtual Task OnAppearingAsync() => await Task.FromResult(true);
+    public virtual async Task RefreshAsync(TsViewState layoutState = TsViewState.Refreshing, bool showProgress = true)
+    {
+        await Task.FromResult(true);
+    }
 
-    public async virtual Task RefreshAsync(object layoutState) => await Task.FromResult(false);
-    public async virtual Task<bool> NavbackIsAllowed() => await Task.FromResult(true);
-    //Void
-    // public virtual void Initialize(object navigationData, BaseViewModel parentViewModel = null) { }
+    public virtual void Refresh(TsViewState layoutState = TsViewState.Refreshing, bool showProgress = true)
+    {
+    }
+
+    protected virtual async Task<bool> NavBackIsAllowed() => await Task.FromResult(true);
+    
     public virtual void CleanUp() { }
     public virtual void OnAppearing() => OnAppearingLocal();
     public virtual void OnDisappearing() { }
     public virtual void OnNavigatedTo(NavigatedToEventArgs args) => OnNavigatedToLocal();
     public virtual void RefreshTranslations() => RefreshTranslationsLocal();
-    //Denna funtion ska du lägga längst ned i din override
-    //base.ApplyQueryAttributes(query);
-    //Då funtionnen också körs på navigate back annars sätts sidan i samma state som första gången du laddad den. 
     public virtual void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         query.Clear();
     }
-    public virtual async Task PushModal(Page page)
+
+    protected virtual async Task PushModal(Page page)
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await Shell.Current.Navigation.PushModalAsync(page);
         });
     }
-    public virtual async Task GoToAsync(string page)
+
+    protected virtual async Task GoToAsync(string page)
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
@@ -132,70 +133,81 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         });
 
     }
-    public async virtual Task GoBack()
+    public virtual async Task GoBack()
     {
         try
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                var shellRoot = Application.Current.MainPage as Shell;
-                if (shellRoot != null && shellRoot.Navigation != null)
+                if (Application.Current != null)
                 {
-                    var result = await RunNavbackIsAllowed(shellRoot.CurrentPage);
-                    if (!result)
-                        return;
-                    RunCleanUp(shellRoot.CurrentPage);
-                    await Shell.Current.Navigation.PopAsync();
-                    //await navigationPage.Navigation.PopAsync();
-                }
-                else
-                {
-                    var navigationPage = Application.Current.MainPage as NavigationPage;
-                    var result = await RunNavbackIsAllowed(navigationPage.CurrentPage);
-                    if (!result)
-                        return;
+                    if (Application.Current.MainPage is Shell { Navigation: not null } shellRoot)
+                    {
+                        var result = await RunNavBackIsAllowed(shellRoot.CurrentPage);
+                        if (!result)
+                            return;
+                        RunCleanUp(shellRoot.CurrentPage);
+                        await Shell.Current.Navigation.PopAsync();
+                        //await navigationPage.Navigation.PopAsync();
+                    }
+                    else
+                    {
+                        var navigationPage = Application.Current.MainPage as NavigationPage;
+                        var result = navigationPage != null && await RunNavBackIsAllowed(navigationPage.CurrentPage);
+                        if (!result)
+                            return;
 
-                    RunCleanUp(navigationPage.CurrentPage);
-                    await navigationPage.Navigation.PopAsync();
+                        if (navigationPage != null)
+                        {
+                            RunCleanUp(navigationPage.CurrentPage);
+                            await navigationPage.Navigation.PopAsync();
+                        }
+                    }
                 }
             });
         }
         catch (Exception ex)
         {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in RemovePageAsync Function");
-            logdic.Add("Error", ex.StackTrace);
-           // TietoGlobals.ReportErrorToAppCenter(ex, logdic);
+            var logic = new Dictionary<string, string>
+            {
+                { "Info", "Error in GoBack Function" },
+                { "Error", ex.StackTrace ?? ex.Message }
+            };
+            LogService.ReportErrorToAppCenter(ex, logic);
         }
     }
-    public async virtual Task RemoveModalPageAsync()
+    public virtual async Task RemoveModalPageAsync()
     {
         try
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-
-                var shellRoot = Application.Current.MainPage as Shell;
-                if (shellRoot != null && shellRoot.Navigation != null)
+                if (Application.Current != null)
                 {
-                    RunCleanUp(shellRoot.CurrentPage);
-                    await Shell.Current.Navigation.PopModalAsync();
+                    if (Application.Current.MainPage is Shell { Navigation: not null } shellRoot)
+                    {
+                        RunCleanUp(shellRoot.CurrentPage);
+                        await Shell.Current.Navigation.PopModalAsync();
+                    }
+                    else
+                    {
+                        if (Application.Current.MainPage is NavigationPage navigationPage)
+                        {
+                            RunCleanUp(navigationPage.CurrentPage);
+                            await navigationPage.Navigation.PopAsync();
+                        }
+                    }
                 }
-                else
-                {
-                    var navigationPage = Application.Current.MainPage as NavigationPage;
-                    RunCleanUp(navigationPage.CurrentPage);
-                    await navigationPage.Navigation.PopAsync();
-                }
-
             });
         }
         catch (Exception ex)
         {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in RemoveModalPageAsync");
-            logdic.Add("Error", ex.StackTrace);
-            //TietoGlobals.ReportErrorToAppCenter(ex, logdic);
+            var logic = new Dictionary<string, string>
+            {
+                { "Info", "Error in RemoveModalPageAsync Function" },
+                { "Error", ex.StackTrace ?? ex.Message }
+            };
+            LogService.ReportErrorToAppCenter(ex, logic);
         }
     }
     public virtual void RemovePreviousPage()
@@ -203,7 +215,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         try
         {
             
-                if (Application.Current.MainPage is Shell mainPage)
+                if (Application.Current != null && Application.Current.MainPage is Shell mainPage)
                 {
                     // We cannot remove root page so lets check the count before we remove
                     var indexToRemove = mainPage.Navigation.NavigationStack.Count - 2;
@@ -217,20 +229,18 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         }
         catch (Exception ex)
         {
-            var logdic = new Dictionary<string, string>();
-            logdic.Add("Info", "Error in RemovePreviousPageAsync");
-            logdic.Add("Error", ex.StackTrace);
-           // TietoGlobals.ReportErrorToAppCenter(ex, logdic);
+            var logic = new Dictionary<string, string>
+            {
+                { "Info", "Error in RemovePageAsync Function" },
+                { "Error", ex.StackTrace ?? ex.Message }
+            };
+            LogService.ReportErrorToAppCenter(ex, logic);
         }
     }
     #endregion
-    #region Internal functions
-
-
-    #endregion
-
+   
     #region Public functions
-    public void ObservableCollectionCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+    public void ObservableCollectionCallback(IEnumerable collection, object context, Action? accessMethod, bool writeAccess)
     {
         // `lock` ensures that only one thread access the collection at a time
         lock (collection)
@@ -239,79 +249,49 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         }
     }
 
-    public bool PromptToConfirmExit
-    {
-        get
-        {
-
-            //bool promptToConfirmExit = false;
-            //if (App.Current.MainPage is ContentPage)
-            //{
-            //    return true;
-            //}
-            ////else if (App.Current.MainPage is MasterDetailPage masterDetailPage
-            ////    && masterDetailPage.Detail is NavigationPage detailNavigationPage)
-            ////{
-            ////    return detailNavigationPage.Navigation.NavigationStack.Count <= 1;
-            ////}
-            //else if (App.Current.MainPage is NavigationPage mainPage)
-            //{
-            //    if (mainPage.CurrentPage is TabbedPage tabbedPage
-            //        && tabbedPage.CurrentPage is NavigationPage navigationPage)
-            //    {
-            //        return navigationPage.Navigation.NavigationStack.Count <= 1;
-            //    }
-            //    else
-            //    {
-            //        return mainPage.Navigation.NavigationStack.Count <= 1;
-            //    }
-            //}
-            //else if (App.Current.MainPage is TabbedPage tabbedPage && tabbedPage.CurrentPage is NavigationPage navigationPage)
-            //{
-            //    return navigationPage.Navigation.NavigationStack.Count <= 1;
-            //}
-            return false;// promptToConfirmExit;
-        }
-    }
-    string _stateErrorMessage = string.Empty;
+    public bool PromptToConfirmExit =>
+        //bool promptToConfirmExit = false;
+        //if (App.Current.MainPage is ContentPage)
+        //{
+        //    return true;
+        //}
+        ////else if (App.Current.MainPage is MasterDetailPage masterDetailPage
+        ////    && masterDetailPage.Detail is NavigationPage detailNavigationPage)
+        ////{
+        ////    return detailNavigationPage.Navigation.NavigationStack.Count <= 1;
+        ////}
+        //else if (App.Current.MainPage is NavigationPage mainPage)
+        //{
+        //    if (mainPage.CurrentPage is TabbedPage tabbedPage
+        //        && tabbedPage.CurrentPage is NavigationPage navigationPage)
+        //    {
+        //        return navigationPage.Navigation.NavigationStack.Count <= 1;
+        //    }
+        //    else
+        //    {
+        //        return mainPage.Navigation.NavigationStack.Count <= 1;
+        //    }
+        //}
+        //else if (App.Current.MainPage is TabbedPage tabbedPage && tabbedPage.CurrentPage is NavigationPage navigationPage)
+        //{
+        //    return navigationPage.Navigation.NavigationStack.Count <= 1;
+        //}
+        false; // promptToConfirmExit;
+    string stateErrorMessage = string.Empty;
     public string StateErrorMessage
     {
-        get => _stateErrorMessage;
-        set => SetProperty(ref _stateErrorMessage, value);
+        get => stateErrorMessage;
+        set => SetProperty(ref stateErrorMessage, value);
     }
-    //public enum LayoutState
-    //{
-    //    None,
-    //    Loading,
-    //    Saving,
-    //    Success,
-    //    Error,
-    //    Empty,
-    //    Custom
-    //}
-    //LayoutState _currentLayoutState;
-    //public LayoutState CurrentLayoutState
-    //{
-    //    get => _currentLayoutState;
-    //    private set => SetProperty(ref _currentLayoutState, value);
-    //}
-    public enum ViewState : int
-    {
-        Loading = 0,
-        Refreshing = 1,
-        Empty = 2,
-        Success = 3,
-        Error = 4,
-        Saving = 5
-    }
+   
+    
     public ViewState CurrentViewState { get; set; }
-    public virtual void SetCurrentState(object currentState)
+    public virtual void SetCurrentState(TsViewState currentState)
     {
-        if (currentState is ViewState)
-        {
-            switch ((ViewState)currentState)
+        
+            switch (currentState)
             {
-                case ViewState.Refreshing:
+                case TsViewState.Refreshing:
                     IsRefreshing = true;
                     IsLoading = false;
                     IsError = false;
@@ -320,7 +300,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
                     IsSaving = false;
                     break;
 
-                case ViewState.Loading:
+                case TsViewState.Loading:
                     IsRefreshing = false;
                     IsLoading = true;
                     IsError = false;
@@ -328,7 +308,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
                     IsEmpty = false;
                     IsSaving = false;
                     break;
-                case ViewState.Success:
+                case TsViewState.Success:
                     IsRefreshing = false;
                     IsLoading = false;
                     IsError = false;
@@ -336,7 +316,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
                     IsEmpty = false;
                     IsSaving = false;
                     break;
-                case ViewState.Empty:
+                case TsViewState.Empty:
                     IsRefreshing = false;
                     IsLoading = false;
                     IsError = false;
@@ -344,7 +324,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
                     IsEmpty = true;
                     IsSaving = false;
                     break;
-                case ViewState.Saving:
+                case TsViewState.Saving:
                     IsRefreshing = false;
                     IsLoading = false;
                     IsError = false;
@@ -361,11 +341,10 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
                     IsSaving = false;
                     break;
             }
-            //TietoGlobals.ConsoleWriteLineDebug("CurrentViewState  " + CurrentViewState.ToString() + " Changed to " + (currentState).ToString());
-
+         
             if ((ViewState)currentState != CurrentViewState)
                 CurrentViewState = (ViewState)currentState;
-        }
+        
     }
 
 
@@ -376,14 +355,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     #region Private functions
     private void RunCleanUp(Page view)
     {
-        if (view.BindingContext != null)
-        {
-            if (view.BindingContext is BaseViewModel viewModelBase)
-            {
-                if (!viewModelBase.CleanupPerformed)
-                    viewModelBase.CleanUp();
-            }
-        }
+        if (view.BindingContext is BaseViewModel { CleanupPerformed: false } viewModelBase) viewModelBase.CleanUp();
     }
     private void RefreshTranslationsLocal()
     {
@@ -395,12 +367,11 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     {
         if (FirstTimeAppearing)
         {
-            if (AnalyticsService != null)
-                AnalyticsService.SetCurrentScreen(this.GetType().Name, this.GetType().Name);
+            AnalyticsService.SetCurrentScreen(GetType().Name, GetType().Name);
         }
-        else if (AnalyticsService != null && AnalyticsService.IsTabbedPageViewModel(this.GetType().Name))
+        else if (AnalyticsService.IsTabbedPageViewModel(GetType().Name))
         {
-            AnalyticsService.SetCurrentScreen(this.GetType().Name, this.GetType().Name);
+            AnalyticsService.SetCurrentScreen(GetType().Name, GetType().Name);
         }
 
         FirstTimeAppearing = false;
@@ -412,25 +383,22 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         FirstTimeNavigatingTo = false;
     }
 
-
-    private async Task<bool> RunNavbackIsAllowed(Page view)
+    private async Task<bool> RunNavBackIsAllowed(Page view)
     {
-        if (view.BindingContext != null)
+        if (view.BindingContext is BaseViewModel viewModelBase)
         {
-            if (view.BindingContext is BaseViewModel viewModelBase)
-            {
-
-                return await viewModelBase.NavbackIsAllowed();
-            }
+            return await viewModelBase.NavBackIsAllowed();
         }
         return true;
     }
-
-
-
-
     #endregion
-
-
-
+}
+public enum TsViewState
+{
+    Loading = 0,
+    Refreshing = 1,
+    Empty = 2,
+    Success = 3,
+    Error = 4,
+    Saving = 5
 }

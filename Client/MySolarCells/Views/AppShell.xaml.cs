@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace MySolarCells.Views;
+﻿namespace MySolarCells.Views;
 
 public partial class AppShell : Shell
 {

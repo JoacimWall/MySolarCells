@@ -5,7 +5,6 @@
                         x:Class="MySolarCells.Views.OnBoarding.ElectricitySupplierView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles" 
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:ElectricitySupplierViewModel">
     <Shell.TitleView >
@@ -49,7 +48,7 @@
 
             <!--Homes-->
             <Label  Grid.Row="6" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Select_The_Home_You_Want_To_Analyze}" IsVisible="{Binding ShowHomePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
-            <Picker Grid.Row="7" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" ItemsSource="{Binding Homes}" SelectedItem="{Binding SelecteddHome}" ItemDisplayBinding="{Binding Name}"/>
+            <Picker Grid.Row="7" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" ItemsSource="{Binding Homes}" SelectedItem="{Binding SelectedHome}" ItemDisplayBinding="{Binding Name}"/>
             <!--Install date-->
             <Label  Grid.Row="8" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Install_Year}" IsVisible="{Binding ShowHomePicker}" Style="{StaticResource LabelEntryTitleStyle}"/>
             <Picker Grid.Row="9" Grid.ColumnSpan="3" IsVisible="{Binding ShowHomePicker}" SelectedItem="{Binding InstallDate}" ItemsSource="{Binding InstallYears}" ItemDisplayBinding="{Binding ItemTitle}"  />

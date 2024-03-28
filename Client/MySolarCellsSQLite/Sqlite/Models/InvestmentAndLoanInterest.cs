@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.SQLite.Sqlite.Models;
+﻿namespace MySolarCellsSQLite.Sqlite.Models;
 
 public class InvestmentAndLoanInterest : ObservableObject
 {
@@ -7,19 +7,19 @@ public class InvestmentAndLoanInterest : ObservableObject
     public int InvestmentAndLoanInterestId { get; set; }
 
     private string description="";
-    [Required]
+    [Required,StringLength(50)]
     public string Description
     {
         get => description;
-        set { SetProperty(ref description, value); }
+        set => SetProperty(ref description, value);
     }
 
-    private float interest = 0;
+    private float interest;
     [Required]  //1.05;
     public float Interest
     {
         get => interest;
-        set { SetProperty(ref interest, value); }
+        set => SetProperty(ref interest, value);
     }
 
     private DateTime fromDate = DateTime.Today;
@@ -27,23 +27,20 @@ public class InvestmentAndLoanInterest : ObservableObject
     public DateTime FromDate
     {
         get =>  fromDate;
-        set  {  SetProperty(ref fromDate, new DateTime(value.Year,value.Month,1)); }
+        set => SetProperty(ref fromDate, new DateTime(value.Year,value.Month,1));
     }
 
-    private int amortization = 0;
+    private int amortization;
     [Required]
     public int Amortization
     {
         get => amortization;
-        set { SetProperty(ref amortization, value); }
+        set => SetProperty(ref amortization, value);
     }
-    //FK's
+   
     [Required]
     public int InvestmentAndLoanId { get; set; }
 
     [NotMapped]
-    public string Name
-    {
-        get { return FromDate.ToString("yyyy-MM"); }
-    }
+    public string Name => FromDate.ToString("yyyy-MM");
 }

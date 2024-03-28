@@ -4,8 +4,10 @@ public static class DateHelper
 {
     public static RelatedDateResult GetRelatedDates(DateTime input)
     {
-        RelatedDateResult result = new RelatedDateResult();
-         result.BaseDate = input;
+        RelatedDateResult result = new RelatedDateResult
+        {
+            BaseDate = input
+        };
         result.Yesterday = result.BaseDate.AddDays(-1);
         result.ThisWeekStart = result.BaseDate.AddDays(-(int)result.BaseDate.DayOfWeek);
             //fix for sunday
@@ -29,12 +31,12 @@ public static class DateHelper
     {
         return (long)((date.ToUniversalTime() - Jan1St1970).TotalMilliseconds);
     }
-    public static DateTime MillisToDateTime(long milis)
+    public static DateTime MillisToDateTime(long milliseconds)
     {
-        //double ticks = double.Parse(milis);
-        TimeSpan time = TimeSpan.FromMilliseconds(milis);
-        DateTime startdate = Jan1St1970 + time;
-        return startdate.ToLocalTime();
+      
+        TimeSpan time = TimeSpan.FromMilliseconds(milliseconds);
+        DateTime startDate = Jan1St1970 + time;
+        return startDate.ToLocalTime();
     }
     
 }

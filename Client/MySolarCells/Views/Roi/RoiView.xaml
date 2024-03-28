@@ -5,7 +5,6 @@
                         x:Class="MySolarCells.Views.Roi.RoiView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Roi"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls"
                         x:DataType="vm:RoiViewModel">
 
@@ -15,7 +14,7 @@
             <Border Margin="8" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}" Text="{x:Static trans:AppResources.Refresh}"/>
             </Border>
-            <control:DateNavigator  Grid.Row="1"  ShowUnitCurrencySeletor="False"
+            <control:DateNavigator  Grid.Row="1"  ShowUnitCurrencySelector="False"
                                GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}" RoiSimulate="{Binding RoiSimulate}" ShowRoiSimulate="True"/>
 
         </Grid>
@@ -51,7 +50,7 @@
 
 
                     <!-- COSTS AND REVENUES-->
-                    <Label Grid.Column="0" Grid.Row="10"   Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Costs_And_Rvenues}"/>
+                    <Label Grid.Column="0" Grid.Row="10"   Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text="{x:Static trans:AppResources.Costs_And_Revenues}"/>
                     <!--TotalProductionSoldProfit-->
                     <Label Grid.Column="0" Grid.Row="11"   Text="{x:Static trans:AppResources.Production_Profit_Sold}"/>
                     <!--TotalCompensationForProductionToGrid-->
@@ -78,7 +77,7 @@
                     <Label Grid.Column="0" Grid.Row="22"  Text="{x:Static trans:AppResources.Purchase_Transfer_Fee}"/>
                     <!--TotalTaxPurchased-->
                     <Label Grid.Column="0" Grid.Row="23"  Text="{x:Static trans:AppResources.Purchase_Energy_Tax}"/>
-                    <!--peak purched Cost-->
+                    <!--peak purchased Cost-->
                     <Label Grid.Column="0" Grid.Row="24"  Text="{x:Static trans:AppResources.Peak_Tariff_Purchase_Cost}"/>
                     <BoxView Grid.Column="0" Grid.Row="25"  Margin="0,4" HeightRequest="1" />
                     <!--Produced-->
@@ -118,7 +117,7 @@
                     <!--SumProductionOwnUseAndBattery-->
                     <Label Grid.Column="1" Grid.Row="7"  Text="{Binding RoiStats.SumAllProduction, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End"/>
                     <Label Grid.Column="1" Grid.Row="8"  Text="{Binding RoiStats.SumAllConsumption, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
-                    <Label Grid.Column="1" Grid.Row="9"  Text="{Binding RoiStats.BalanceProduction_Minus_Consumption, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
+                    <Label Grid.Column="1" Grid.Row="9"  Text="{Binding RoiStats.BalanceProductionMinusConsumption, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
 
                     <!-- COSTS AND REVENUES-->
                     <Label Grid.Column="1" Grid.Row="10"   Margin="0,16,0,0"  FontSize="17"  Text=" "/>
@@ -140,7 +139,7 @@
                     <BoxView Grid.Column="1" Grid.Row="25"  Margin="0,4" HeightRequest="1" />
                     <Label Grid.Column="1" Grid.Row="26"  Text="{Binding RoiStats.SumAllProductionSoldAndSaved, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
                     <Label Grid.Column="1" Grid.Row="27"  Text="{Binding RoiStats.SumPurchasedCost, StringFormat='{0:F2}'}" HorizontalTextAlignment="End"/>
-                    <Label Grid.Column="1" Grid.Row="28"  Text="{Binding RoiStats.BalanceProductionProfit_Minus_ConsumptionCost, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
+                    <Label Grid.Column="1" Grid.Row="28"  Text="{Binding RoiStats.BalanceProductionProfitMinusConsumptionCost, StringFormat='{0:F2}'}"  HorizontalTextAlignment="End" />
 
                     <!--FUN FACTS-->
                     <Label Grid.Column="1" Grid.Row="29"  Margin="0,16,0,0" FontSize="17" FontAttributes="Bold" Text=" "/>

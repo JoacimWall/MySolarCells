@@ -1,7 +1,7 @@
 ﻿Create a new Migration
 
 Check for this line in DbContext file
-//---------- THIS CODE SHOULD BE ENABLE WEHEN WE CREATE MIGRATION FROM TERMINAL PROMPT 
+//---------- THIS CODE SHOULD BE ENABLE WHEN WE CREATE MIGRATION FROM TERMINAL PROMPT 
 
 
 MAC

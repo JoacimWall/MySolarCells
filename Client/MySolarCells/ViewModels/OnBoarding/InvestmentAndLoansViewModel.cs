@@ -1,9 +1,14 @@
-﻿namespace MySolarCells.ViewModels.OnBoarding;
+﻿using MySolarCellsSQLite.Sqlite;
+using MySolarCellsSQLite.Sqlite.Models;
+
+namespace MySolarCells.ViewModels.OnBoarding;
 
 public class InvestmentAndLoanViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public InvestmentAndLoanViewModel(MscDbContext mscDbContext)
+    public InvestmentAndLoanViewModel(MscDbContext mscDbContext,IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
+        logService,settingsService)
     {
 
         this.mscDbContext = mscDbContext;
@@ -12,11 +17,9 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         {
             InvestmentAndLoans.Add(item);
         }
-        if (InvestmentAndLoans != null && InvestmentAndLoans.Count > 0)
+        if (InvestmentAndLoans.Count > 0)
         {
-            selectedInvestmentAndloan = InvestmentAndLoans.Last();
-            //if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count > 0)
-            //    SelectedInterest = selectedInvestmentAndloan.Interest.Last();
+            selectedInvestmentAndLoan = InvestmentAndLoans.Last();
         }
         else
         {
@@ -25,28 +28,28 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     }
 
-    public ICommand AddInestlonCommand => new Command( () =>  AddInvestLon());
-    public ICommand AddInterestCommand => new Command( () =>  AddInterest());
+    public ICommand AddInvestmentLonCommand => new Command( AddInvestLon);
+    public ICommand AddInterestCommand => new Command( AddInterest);
     public ICommand SaveCommand => new Command(async () => await Save());
     
 
     private async Task Save()
     {
         
-        if (selectedInvestmentAndloan.InvestmentAndLoanId == 0)
-            this.mscDbContext.InvestmentAndLon.Add(selectedInvestmentAndloan);
+        if (selectedInvestmentAndLoan.InvestmentAndLoanId == 0)
+            mscDbContext.InvestmentAndLon.Add(selectedInvestmentAndLoan);
         else //update
         {
-            var dbEntity = this.mscDbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLoanId == selectedInvestmentAndloan.InvestmentAndLoanId);
-            dbEntity.FromDate = selectedInvestmentAndloan.FromDate;
-            dbEntity.Investment = selectedInvestmentAndloan.Investment;
-            dbEntity.Description = selectedInvestmentAndloan.Description;
-            dbEntity.Loan = selectedInvestmentAndloan.Loan;
+            var dbEntity = mscDbContext.InvestmentAndLon.Include(i => i.Interest).First(x => x.InvestmentAndLoanId == selectedInvestmentAndLoan.InvestmentAndLoanId);
+            dbEntity.FromDate = selectedInvestmentAndLoan.FromDate;
+            dbEntity.Investment = selectedInvestmentAndLoan.Investment;
+            dbEntity.Description = selectedInvestmentAndLoan.Description;
+            dbEntity.Loan = selectedInvestmentAndLoan.Loan;
             
             //dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
         }
-        await this.mscDbContext.SaveChangesAsync();
+        await mscDbContext.SaveChangesAsync();
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
         {
             await GoBack();
@@ -61,20 +64,14 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     private void  AddInterest()
     {
-        if (SelectedInvestmentAndloan != null)
-        {
-            if (SelectedInvestmentAndloan.Interest == null)
-                SelectedInvestmentAndloan.Interest = new ObservableCollection<InvestmentAndLoanInterest>();
-
-            SelectedInvestmentAndloan.Interest.Add(new InvestmentAndLoanInterest { Description = AppResources.My_Description, FromDate = DateTime.Today });
-            SelectedInterest = SelectedInvestmentAndloan.Interest.Last();
-        }
+        SelectedInvestmentAndLoan.Interest.Add(new InvestmentAndLoanInterest { Description = AppResources.My_Description, FromDate = DateTime.Today });
+        SelectedInterest = SelectedInvestmentAndLoan.Interest.Last();
     }
 
     private void AddInvestLon()
     {
         InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.Investment_And_Loan, HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
-        SelectedInvestmentAndloan = InvestmentAndLoans.Last();
+        SelectedInvestmentAndLoan = InvestmentAndLoans.Last();
 
     }
 
@@ -82,59 +79,33 @@ public class InvestmentAndLoanViewModel : BaseViewModel
     public ObservableCollection<InvestmentAndLoan> InvestmentAndLoans
     {
         get => investmentAndLoans;
-        set
-        {
-            SetProperty(ref investmentAndLoans, value);
-            
-        }
-    }
-    private InvestmentAndLoan selectedInvestmentAndloan;
-    public InvestmentAndLoan SelectedInvestmentAndloan
-    {
-        get => selectedInvestmentAndloan;
-        set
-        {
-            SetProperty(ref selectedInvestmentAndloan, value);
-            if (selectedInvestmentAndloan.Interest != null && selectedInvestmentAndloan.Interest.Count >0)
-                SelectedInterest = selectedInvestmentAndloan.Interest.Last();
-        }
-    }
-    private InvestmentAndLoanInterest selectedInterest;
-    public InvestmentAndLoanInterest SelectedInterest
-    {
-        get => selectedInterest;
-        set { SetProperty(ref selectedInterest, value); }
-    }
-    private bool _isOnbordingMode = false;
-    public bool IsOnbordingMode
-    {
-        get { return _isOnbordingMode; }
-        set { SetProperty(ref _isOnbordingMode, value); }
+        set => SetProperty(ref investmentAndLoans, value);
     }
 
-    //private bool _showProgressStatus;
-    //public bool ShowProgressStatus
-    //{
-    //    get { return _showProgressStatus; }
-    //    set { SetProperty(ref _showProgressStatus, value); }
-    //}
-    //private string _progessStatus;
-    //public string ProgressStatus
-    //{
-    //    get { return _progessStatus; }
-    //    set { SetProperty(ref _progessStatus, value); }
-    //}
-    //private string _progressSubStatus;
-    //public string ProgressSubStatus
-    //{
-    //    get { return _progressSubStatus; }
-    //    set { SetProperty(ref _progressSubStatus, value); }
-    //}
-    //private float _progressProcent;
-    //public float ProgressProcent
-    //{
-    //    get { return _progressProcent; }
-    //    set { SetProperty(ref _progressProcent, value); }
-    //}
+    private InvestmentAndLoan selectedInvestmentAndLoan = new( ){ Description = "" };
+    public InvestmentAndLoan SelectedInvestmentAndLoan
+    {
+        get => selectedInvestmentAndLoan;
+        set
+        {
+            SetProperty(ref selectedInvestmentAndLoan, value);
+            if (selectedInvestmentAndLoan.Interest.Count >0)
+                SelectedInterest = selectedInvestmentAndLoan.Interest.Last();
+        }
+    }
+    private InvestmentAndLoanInterest? selectedInterest;
+    public InvestmentAndLoanInterest? SelectedInterest
+    {
+        get => selectedInterest;
+        set => SetProperty(ref selectedInterest, value);
+    }
+    private bool isOnboardingMode;
+    public bool IsOnbordingMode
+    {
+        get => isOnboardingMode;
+        set => SetProperty(ref isOnboardingMode, value);
+    }
+
+   
 }
 

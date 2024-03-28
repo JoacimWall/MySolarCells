@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
              xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-             x:Class="MySolarCells.Controls.DateNavigator">
+             xmlns:viewModels="clr-namespace:MySolarCells.ViewModels"
+             x:Class="MySolarCells.Controls.DateNavigator"
+             x:DataType="viewModels:BaseViewModel">
     <Grid Margin="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
         <!--FilterDate-->
         <Label Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding ChartDataRequest.TimeStampTitle}"
@@ -24,31 +25,31 @@
         </Label>
         <!--FilterDate picker-->
         <HorizontalStackLayout Grid.ColumnSpan="3" HorizontalOptions="{OnPlatform Android=Start, iOS=Start, MacCatalyst=Center}" Spacing="8" >
-            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.TodayBorderColor}"  BackgroundColor="{Binding ChartDataRequest.TodayBackgrundColor}" >
+            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.TodayBorderColor}"  BackgroundColor="{Binding ChartDataRequest.TodayBackgroundColor}" >
                 <Label  TextColor="{Binding ChartDataRequest.TodayTextColor}"  BackgroundColor="Transparent" Text="{x:Static trans:AppResources.Today}" InputTransparent="True"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Today_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
-            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.DayBorderColor}" BackgroundColor="{Binding ChartDataRequest.DayBackgrundColor}">
+            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.DayBorderColor}" BackgroundColor="{Binding ChartDataRequest.DayBackgroundColor}">
                 <Label  TextColor="{Binding ChartDataRequest.DayTextColor}"  Text="{x:Static trans:AppResources.Day}" InputTransparent="True" VerticalOptions="Center" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Day_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
-            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.WeekBorderColor}"  BackgroundColor="{Binding ChartDataRequest.WeekBackgrundColor}">
+            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.WeekBorderColor}"  BackgroundColor="{Binding ChartDataRequest.WeekBackgroundColor}">
                 <Label  TextColor="{Binding ChartDataRequest.WeekTextColor}" Text="{x:Static trans:AppResources.Week}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Week_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
-            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.MonthBorderColor}"  BackgroundColor="{Binding ChartDataRequest.MonthBackgrundColor}">
+            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.MonthBorderColor}"  BackgroundColor="{Binding ChartDataRequest.MonthBackgroundColor}">
                 <Label  TextColor="{Binding ChartDataRequest.MonthTextColor}"  Text="{x:Static trans:AppResources.Month}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Month_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
-            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.YearBorderColor}"  BackgroundColor="{Binding ChartDataRequest.YearBackgrundColor}">
+            <Border Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.YearBorderColor}"  BackgroundColor="{Binding ChartDataRequest.YearBackgroundColor}">
                 <Label   TextColor="{Binding ChartDataRequest.YearTextColor}" Text="{x:Static trans:AppResources.Year}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Year_Tapped" />
@@ -58,7 +59,7 @@
 
         </HorizontalStackLayout>
         <!--More-->
-        <Border x:Name="MoreButton" Grid.Column="2" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.MoreBorderColor}" BackgroundColor="{Binding ChartDataRequest.MoreBackgrundColor}">
+        <Border x:Name="MoreButton" Grid.Column="2" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.MoreBorderColor}" BackgroundColor="{Binding ChartDataRequest.MoreBackgroundColor}">
             <Label  FontSize="17"  TextColor="{Binding ChartDataRequest.MoreTextColor}"  Text="{x:Static theming:IconFont.More_vertical}" FontFamily="AppIconsFont"  InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="More_Tapped" />
@@ -66,20 +67,20 @@
         </Border>
         <!--More pickers-->
         <HorizontalStackLayout x:Name="MoreStack" Grid.Row="1" Grid.ColumnSpan="3" Spacing="8" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="false" >
-            <Border x:Name="ShowSimulateButton" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.ShowSimulateBorderColor}"  BackgroundColor="{Binding RoiSimulate.ShowSimulateBackgrundColor}">
+            <Border x:Name="ShowSimulateButton" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.ShowSimulateBorderColor}"  BackgroundColor="{Binding RoiSimulate.ShowSimulateBackgroundColor}">
                 <Label   TextColor="{Binding RoiSimulate.ShowSimulateTextColor}"  Text="{x:Static trans:AppResources.Simulate}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="ShowSimulate_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
 
-            <Border x:Name="UnitButton" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.KwhBorderColor}"  BackgroundColor="{Binding ChartDataRequest.KwhBackgrundColor}">
+            <Border x:Name="UnitButton" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.KwhBorderColor}"  BackgroundColor="{Binding ChartDataRequest.KwhBackgroundColor}">
                 <Label    TextColor="{Binding ChartDataRequest.KwhTextColor}"  Text="kWh" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Unit_Tapped" />
                 </Border.GestureRecognizers>
             </Border>
-            <Border x:Name="CurrencyButton"  Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.CurrencyBorderColor}"   BackgroundColor="{Binding ChartDataRequest.CurrencyBackgrundColor}">
+            <Border x:Name="CurrencyButton"  Style="{StaticResource BorderButtonStyle}" Stroke="{Binding ChartDataRequest.CurrencyBorderColor}"   BackgroundColor="{Binding ChartDataRequest.CurrencyBackgroundColor}">
                 <Label   TextColor="{Binding ChartDataRequest.CurrencyTextColor}"  Text="SEK" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="Currency_Tapped" />
@@ -94,7 +95,7 @@
             <Grid Padding="4" RowDefinitions="Auto,Auto,20,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8">
 
                 <!--Add Battery-->
-                <Border x:Name="RoiAddBatterySwith" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.AddBatteryBorderColor}" BackgroundColor="{Binding RoiSimulate.AddBatteryBackgrundColor}">
+                <Border x:Name="RoiAddBatterySwith" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.AddBatteryBorderColor}" BackgroundColor="{Binding RoiSimulate.AddBatteryBackgroundColor}">
                     <Label  Margin="12,2,12,2" TextColor="{Binding RoiSimulate.AddBatteryTextColor}"  Text="{x:Static trans:AppResources.Add_Battery}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddBattery_Tapped" />
@@ -102,16 +103,16 @@
                 </Border>
                
                 <!--Remove Battery-->
-                <Border x:Name="RoiRemoveBatterySwitch" Grid.Column="1" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.RemoveBatteryBorderColor}"   BackgroundColor="{Binding RoiSimulate.RemoveBatteryBackgrundColor}">
+                <Border x:Name="RoiRemoveBatterySwitch" Grid.Column="1" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.RemoveBatteryBorderColor}"   BackgroundColor="{Binding RoiSimulate.RemoveBatteryBackgroundColor}">
                     <Label  Margin="12,2,12,2" TextColor="{Binding RoiSimulate.RemoveBatteryTextColor}"  Text="{x:Static trans:AppResources.Remove_Battery}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="RmoveBattery_Tapped" />
+                        <TapGestureRecognizer Tapped="RemoveBattery_Tapped" />
                     </Border.GestureRecognizers>
                 </Border>
                 <!--Battery capacity-->
                 <Label Grid.Row="1"  Text="{x:Static trans:AppResources.Battery}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
-                <Slider x:Name="ROISBatteryKwh" Grid.Row="2" Grid.ColumnSpan="2" Minimum="5" Maximum="20"  />
-                <Label Grid.Row="2" Grid.Column="2"  Text="{Binding Source={x:Reference ROISBatteryKwh},Path=Value, Converter={StaticResource DoubleToIntConverter}}" HorizontalTextAlignment="End" HorizontalOptions="End" VerticalTextAlignment="Center"/>
+                <Slider x:Name="RoisBatteryKwh" Grid.Row="2" Grid.ColumnSpan="2" Minimum="5" Maximum="20"  />
+                <Label Grid.Row="2" Grid.Column="2"  Text="{Binding Source={x:Reference RoisBatteryKwh},Path=Value, Converter={StaticResource DoubleToIntConverter}}" HorizontalTextAlignment="End" HorizontalOptions="End" VerticalTextAlignment="Center"/>
                 <Label Grid.Row="2" Grid.Column="3" Text="{x:Static trans:AppResources.kWh}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
 
             </Grid>

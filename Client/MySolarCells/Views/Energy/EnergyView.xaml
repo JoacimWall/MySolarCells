@@ -6,7 +6,6 @@
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.Energy"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
                         xmlns:control="clr-namespace:MySolarCells.Controls" 
                         x:DataType="vm:EnergyViewModel">
 
@@ -21,7 +20,7 @@
         <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding SyncCommand}">
             <ScrollView>
                 <Grid Style="{StaticResource GridBasePage}" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <!--PRODUCTION GRAF-->
+                    <!--PRODUCTION GRAPH-->
                     <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3" FontSize="17" Margin="8,8,8,0" Text="{Binding ProductionChartTitle,StringFormat='{0:F0} '}"/>
                     <Grid HorizontalOptions="Center" Margin="8,8,8,4" Grid.Row="3" Grid.Column="0" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
 
@@ -29,7 +28,7 @@
                         <Label Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdSoldTitle}"/>
                         <BoxView Grid.Row="1" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorUsed}"  />
                         <Label Grid.Row="1" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
-                        <BoxView Grid.Row="2" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorbatteryCharge}"  />
+                        <BoxView Grid.Row="2" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorBatteryCharge}"  />
                         <Label Grid.Row="2" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
                     </Grid>
                     <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250">
@@ -38,13 +37,12 @@
                         </chart:SfCartesianChart.ZoomPanBehavior>
                         <chart:SfCartesianChart.XAxes>
                             <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis>
-                            </chart:CategoryAxis>
+                            <chart:CategoryAxis />
                         </chart:SfCartesianChart.XAxes>
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
                                 <chart:NumericalAxis.Title>
-                                    <chart:ChartAxisTitle Text="{Binding ProductionChartXtitle}"/>
+                                    <chart:ChartAxisTitle Text="{Binding ProductionChartXTitle}"/>
                                 </chart:NumericalAxis.Title>
                             </chart:NumericalAxis>
                         </chart:SfCartesianChart.YAxes>
@@ -54,36 +52,31 @@
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
-
-                        </chart:StackingColumnSeries>
+                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}" />
                         <chart:StackingColumnSeries Opacity="0.8" ItemsSource="{Binding DataSold}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                GroupingLabel="Test"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionSold}">
-                        </chart:StackingColumnSeries>
+                                                    XBindingPath="Label"
+                                                    YBindingPath="Value"
+                                                    GroupingLabel="Test"
+                                                    EnableTooltip="True"
+                                                    CornerRadius="0,0,0,0"
+                                                    PaletteBrushes="{Binding PaletteBrushesProductionSold}" />
                         <chart:StackingColumnSeries Opacity="0.8" ItemsSource="{Binding DataBatteryCharge}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                GroupingLabel="Test"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesBatteryCharge}">
-
-                        </chart:StackingColumnSeries>
+                                                    XBindingPath="Label"
+                                                    YBindingPath="Value"
+                                                    GroupingLabel="Test"
+                                                    EnableTooltip="True"
+                                                    CornerRadius="0,0,0,0"
+                                                    PaletteBrushes="{Binding PaletteBrushesBatteryCharge}" />
 
                     </chart:SfCartesianChart>
-                    <!--CONSUMTION GRAF-->
-                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,4" Grid.Column="0" FontSize="17" Text="{Binding ConsumtionChartTitle}"/>
+                    <!--CONSUMPTION GRAPH-->
+                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Row="5" Margin="8,8,8,4" Grid.Column="0" FontSize="17" Text="{Binding ConsumptionChartTitle}"/>
                     <Grid HorizontalOptions="Center" Margin="8,8,8,8" Grid.Row="6" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
                         <BoxView Grid.Column="0" Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorUsed}"  />
                         <Label Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartProdUsedTitle}"/>
                         <BoxView Grid.Row="1" Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorPurchased}"  />
                         <Label Grid.Row="1" Grid.Column="1" VerticalTextAlignment="Center"  Text="{Binding EnergyChartConsumedGridTitle}"/>
-                        <BoxView Grid.Row="2"  Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorbatteryUsed}"  />
+                        <BoxView Grid.Row="2"  Opacity="0.8" VerticalOptions="Center" WidthRequest="15" HeightRequest="15" BackgroundColor="{Binding ColorBatteryUsed}"  />
                         <Label Grid.Row="2" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyChartBatteryUsedTitle}"/>
                     </Grid>
                     <chart:SfCartesianChart Grid.Row="7" Grid.ColumnSpan="3" HeightRequest="250">
@@ -93,16 +86,13 @@
 
                         <chart:SfCartesianChart.XAxes>
                             <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis>
-
-
-                            </chart:CategoryAxis>
+                            <chart:CategoryAxis />
                         </chart:SfCartesianChart.XAxes>
 
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
                                 <chart:NumericalAxis.Title>
-                                    <chart:ChartAxisTitle Text="{Binding ProductionChartXtitle}"/>
+                                    <chart:ChartAxisTitle Text="{Binding ProductionChartXTitle}"/>
                                 </chart:NumericalAxis.Title>
                             </chart:NumericalAxis>
                         </chart:SfCartesianChart.YAxes>
@@ -113,31 +103,26 @@
                                 GroupingLabel="Test"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesPurchased}">
-                        </chart:StackingColumnSeries>
+                                PaletteBrushes="{Binding PaletteBrushesPurchased}" />
 
                         <chart:StackingColumnSeries Opacity="0.8" ItemsSource="{Binding DataUsed}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                GroupingLabel="Test"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesProductionUsed}">
-
-                        </chart:StackingColumnSeries>
+                                                    XBindingPath="Label"
+                                                    YBindingPath="Value"
+                                                    GroupingLabel="Test"
+                                                    EnableTooltip="True"
+                                                    CornerRadius="0,0,0,0"
+                                                    PaletteBrushes="{Binding PaletteBrushesProductionUsed}" />
 
                         <chart:StackingColumnSeries Opacity="0.8" ItemsSource="{Binding DataBatteryUsed}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                GroupingLabel="Test"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesBatteryUsed}">
-
-                        </chart:StackingColumnSeries>
+                                                    XBindingPath="Label"
+                                                    YBindingPath="Value"
+                                                    GroupingLabel="Test"
+                                                    EnableTooltip="True"
+                                                    CornerRadius="0,0,0,0"
+                                                    PaletteBrushes="{Binding PaletteBrushesBatteryUsed}" />
 
                     </chart:SfCartesianChart>
-                    <!--PRICE GRAF-->
+                    <!--PRICE GRAPH-->
                     <Label HorizontalTextAlignment="Center"  VerticalTextAlignment="Center" Grid.Row="8" Margin="8,8,8,8" Grid.Column="0" FontSize="17" Text="{Binding PriceChartTitle}"/>
                     <Grid HorizontalOptions="Center"  Margin="8,8,8,8" Grid.Row="9" ColumnSpacing="8" RowSpacing="4" Grid.ColumnSpan="3" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
                         <BoxView Grid.Column="0" Opacity="0.8"  VerticalOptions="Center" WidthRequest="15" HeightRequest="15"  BackgroundColor="{Binding ColorPriceBuy}"  />
@@ -151,13 +136,12 @@
                         </chart:SfCartesianChart.ZoomPanBehavior>
                         <chart:SfCartesianChart.XAxes>
                             <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis>
-                            </chart:CategoryAxis>
+                            <chart:CategoryAxis />
                         </chart:SfCartesianChart.XAxes>
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
                                 <chart:NumericalAxis.Title>
-                                    <chart:ChartAxisTitle Text="{Binding PriceChartXtitle}"/>
+                                    <chart:ChartAxisTitle Text="{Binding PriceChartXTitle}"/>
                                 </chart:NumericalAxis.Title>
                             </chart:NumericalAxis>
                         </chart:SfCartesianChart.YAxes>
@@ -166,15 +150,13 @@
                                 YBindingPath="Value"
                                 EnableTooltip="True"
                                 CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesPriceBuy}">
-                        </chart:ColumnSeries>
+                                PaletteBrushes="{Binding PaletteBrushesPriceBuy}" />
                         <chart:ColumnSeries Opacity="0.8" ItemsSource="{Binding PriceSell}"
-                                XBindingPath="Label"
-                                YBindingPath="Value"
-                                EnableTooltip="True"
-                                CornerRadius="0,0,0,0"
-                                PaletteBrushes="{Binding PaletteBrushesPriceSell}">
-                        </chart:ColumnSeries>
+                                            XBindingPath="Label"
+                                            YBindingPath="Value"
+                                            EnableTooltip="True"
+                                            CornerRadius="0,0,0,0"
+                                            PaletteBrushes="{Binding PaletteBrushesPriceSell}" />
                     </chart:SfCartesianChart>
                 </Grid>
             </ScrollView>

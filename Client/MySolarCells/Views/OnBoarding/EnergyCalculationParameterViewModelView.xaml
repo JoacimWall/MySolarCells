@@ -6,7 +6,7 @@
                         x:Class="MySolarCells.Views.OnBoarding.EnergyCalculationParameterView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.OnBoarding"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
-                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        xmlns:models="clr-namespace:MySolarCells.Models"
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:EnergyCalculationParameterViewModel">
 
@@ -28,7 +28,7 @@
             <Label Grid.Row="1" Grid.ColumnSpan="3" FontSize="17" Text="{x:Static trans:AppResources.Calculation_Factors_Intro_Text}" Style="{StaticResource LabelBaseStyle}" HorizontalTextAlignment="Center" />
 
             <Label Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static trans:AppResources.Calculation_Factors}" Style="{StaticResource LabelEntryTitleStyle}" />
-            <Picker Margin="0" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameters, Mode=TwoWay}" ItemDisplayBinding="{Binding DisplayName}"/>
+            <Picker  Margin="0" Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameters, Mode=TwoWay}" ItemDisplayBinding="{Binding DisplayName}"/>
             <Button  Grid.Row="3"  Grid.Column="3" Style="{StaticResource ButtonBaseStyle}" Text="{x:Static trans:AppResources.Add}" Command="{Binding AddParametersCommand}"/>
 
             <!--FromDate-->
@@ -38,7 +38,7 @@
 
             <!--ProdCompensationElectricityLowload-->
             <Label Grid.Row="6"  Grid.ColumnSpan="2" Text="{x:Static trans:AppResources.Compensation_Electricity_Load}" Style="{StaticResource LabelEntryTitleStyle}" />
-            <Entry Grid.Row="7" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedParameters.ProdCompensationElectricityLowload}" >
+            <Entry Grid.Row="7" Grid.ColumnSpan="3" Keyboard="Numeric" Text="{Binding SelectedParameters.ProdCompensationElectricityLowLoad}" >
                 <Entry.Behaviors>
                     <toolkit:NumericValidationBehavior  InvalidStyle="{StaticResource InvalidEntryStyle}" ValidStyle="{StaticResource ValidEntryStyle}" Flags="ValidateOnValueChanged" MinimumValue="0.0" MaximumValue="5.0" MaximumDecimalPlaces="3" />
                 </Entry.Behaviors>

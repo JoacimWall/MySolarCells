@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.SQLite.Sqlite.Models;
+﻿namespace MySolarCellsSQLite.Sqlite.Models;
 
 public class Energy
 {
@@ -8,54 +8,52 @@ public class Energy
     [Required]
     public DateTime Timestamp { get; set; }
     [Required]
-    public double ProductionSold { get; set; } = 0;
+    public double ProductionSold { get; set; } 
     [Required]
-    public double ProductionOwnUse { get; set; } = 0;
+    public double ProductionOwnUse { get; set; }
     [Required]
-    public double Purchased { get; set; } = 0;
+    public double Purchased { get; set; } 
     [Required]
-    public double BatteryCharge { get; set; } = 0;
+    public double BatteryCharge { get; set; } 
     [Required]
-    public double BatteryUsed { get; set; } = 0;
-    [Required]
+    public double BatteryUsed { get; set; } 
+    [Required,StringLength(10)]
     public string Unit { get; set; } = "kWh";
-    [Required]
+    [Required,StringLength(10)]
     public string Currency { get; set; } = "SEK";
     [Required]
-    public double ProductionSoldProfit { get; set; } = 0;
+    public double ProductionSoldProfit { get; set; } 
     [Required]
-    public double ProductionOwnUseProfit { get; set; } = 0;
+    public double ProductionOwnUseProfit { get; set; } 
     [Required]
-    public double PurchasedCost { get; set; } = 0;
-    //[Required]
-    //public double BatteryChargeProfitFake { get; set; } = 0;
+    public double PurchasedCost { get; set; } 
     [Required]
-    public double BatteryUsedProfit { get; set; } = 0;
+    public double BatteryUsedProfit { get; set; }
     [Required]
-    public double UnitPriceBuy { get; set; } = 0;
+    public double UnitPriceBuy { get; set; } 
     [Required]
-    public double UnitPriceVatBuy { get; set; } = 0;
+    public double UnitPriceVatBuy { get; set; }
     [Required]
-    public double UnitPriceSold { get; set; } = 0;
+    public double UnitPriceSold { get; set; } 
     [Required]
-    public double UnitPriceVatSold { get; set; } = 0;
-    [Required]
+    public double UnitPriceVatSold { get; set; } 
+    [Required,StringLength(20)]
     public string PriceLevel { get; set; } = "";
     [Required]
-    public int ElectricitySupplierProductionSold { get; set; } = 0;
+    public int ElectricitySupplierProductionSold { get; set; } 
     [Required]
-    public int InverterTypProductionOwnUse { get; set; } = 0;
+    public int InverterTypProductionOwnUse { get; set; } 
     [Required]
-    public int ElectricitySupplierPurchased { get; set; } = 0;
+    public int ElectricitySupplierPurchased { get; set; } 
     [Required]
-    public bool ProductionSoldSynced { get; set; } = false;
+    public bool ProductionSoldSynced { get; set; } 
     [Required]
-    public bool ProductionOwnUseSynced { get; set; } = false;
+    public bool ProductionOwnUseSynced { get; set; } 
     [Required]
-    public bool PurchasedSynced { get; set; } = false;
+    public bool PurchasedSynced { get; set; } 
     [Required]
-    public bool BatterySynced { get; set; } = false;
-    //FK's
+    public bool BatterySynced { get; set; } 
+    
     [Required]
     public int HomeId  { get; set; } 
 }

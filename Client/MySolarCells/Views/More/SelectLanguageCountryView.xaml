@@ -2,12 +2,10 @@
 <views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
                         xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                         x:Class="MySolarCells.Views.More.SelectLanguageCountryView"
                         xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
                         xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
                         xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
-                        xmlns:control="clr-namespace:MySolarCells.Controls"
                         Shell.NavBarIsVisible="True"
                         x:DataType="vm:SelectLanguageCountryViewModel">
 
@@ -16,7 +14,7 @@
         <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto">
             <!--Title-->
             <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Language}" />
-            <!--navback-->
+            <!--nav back-->
             <Border  Style="{StaticResource BorderButtonStyle}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
             </Border>
