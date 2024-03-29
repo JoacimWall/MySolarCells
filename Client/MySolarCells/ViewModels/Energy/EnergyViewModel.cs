@@ -41,8 +41,7 @@ public class EnergyViewModel : BaseViewModel
         using var dlg = (ProgressDialog)DialogService.GetProgress("");
         var resultSeries = await energyChartService.GetChartData(ChartDataRequest);
         //If there is no data try to fetch
-        if (fromOnAppearing && resultSeries is
-                { WasSuccessful: false, ErrorCode: ErrorCode.NoEnergyEntryOnCurrentDate })
+        if (fromOnAppearing && resultSeries is { WasSuccessful: false, ErrorCode: ErrorCode.NoEnergyEntryOnCurrentDate })
         {
             //await Sync();
             resultSeries = await energyChartService.GetChartData(ChartDataRequest);

@@ -168,8 +168,10 @@ public class HistoryDataService : IHistoryDataService
         //Peak
         if (difference.TotalDays < 32)
         {
-            int amountPeaks = sumHistory.First().PowerTariffParameters.AmountOfPeaksToUse;
-            double peakPricePerKwh =  sumHistory.First().PowerTariffParameters.PricePerKwh;
+            
+            int amountPeaks = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters!.AmountOfPeaksToUse : 1;
+            double peakPricePerKwh = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters!.PricePerKwh : 0;
+
 
 
             var topPeakPurchased = sumHistory.OrderByDescending(x => x.PeakPurchased).Take(amountPeaks);
@@ -195,7 +197,7 @@ public class HistoryDataService : IHistoryDataService
     {
         HistoryStats historyStats = new HistoryStats();
         var calcParams = mscDbContext.EnergyCalculationParameter.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
-        var powerParams = mscDbContext.PowerTariffParameters.AsNoTracking().OrderBy(o => o.FromDate).Last(x => x.FromDate <= start);
+        var powerParams = mscDbContext.PowerTariffParameters.AsNoTracking().OrderBy(o => o.FromDate).LastOrDefault(x => x.FromDate <= start);
         List<Energy> energy = await mscDbContext.Energy.AsNoTracking().Where(x => x.Timestamp > start && x.Timestamp <= end).ToListAsync();
 
         if (historySimulate is { DoSimulate: true, AddBattery: true })
@@ -289,27 +291,26 @@ public class HistoryDataService : IHistoryDataService
         //------------ Peak Reduction ---------------------------------------
         if (energy.Count > 0)
         {
-            // if (powerParams == null)
-            // {
+            if (powerParams == null)
+            {
                 historyStats.PeakPurchased = energy.Max(x => x.Purchased);
                 historyStats.PeakPurchasedAndOwnUsage = energy.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
-            // }
-            //Refactor disable
-            // else
-            // {
-            //     //Pick out months
-            //     IEnumerable<Energy> valid;
-            //     //pick out weekdays
-            //     if (powerParams.Weekday && !powerParams.Weekend)
-            //         valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
-            //     else if (!powerParams.Weekday && powerParams.Weekend) //Weekends
-            //         valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
-            //
-            //     //picking out hours
-            //     valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
-            //     historyStats.PeakPurchased = valid.Max(x => x.Purchased);
-            //     historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
-            // }
+            }
+            else
+            {
+                //Pick out months
+                IEnumerable<Energy> valid;
+                //pick out weekdays
+                if (powerParams.Weekday && !powerParams.Weekend)
+                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
+                else if (!powerParams.Weekday && powerParams.Weekend) //Weekends
+                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
+            
+                //picking out hours
+                valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
+                historyStats.PeakPurchased = valid.Max(x => x.Purchased);
+                historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
+            }
         }
 
         return historyStats;

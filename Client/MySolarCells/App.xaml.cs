@@ -23,6 +23,14 @@ public partial class App : Application
 
     private async Task<bool> InitApp(bool fromResume)
     {
+        if (settingsService.OnboardingStatus >= OnboardingStatusEnum.FirstImportElectricitySupplierIsDone)
+        {
+            if (!mscDbContext.Energy.Any())
+            {
+                settingsService.OnboardingStatus = OnboardingStatusEnum.InvestmentAndLoanDone;
+            }
+        }
+
         switch (settingsService.OnboardingStatus)
         {
             case OnboardingStatusEnum.Unknown:

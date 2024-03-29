@@ -77,7 +77,7 @@ public class HistoryStats
     public double PeakEnergyReductionSaved { get; set; } 
     
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; } = new();
-    public PowerTariffParameters PowerTariffParameters { get; set; }= new();
+    public PowerTariffParameters? PowerTariffParameters { get; set; }
 
     //This is only for fun you dont sell this kwh you load the battery  
     // public double TotalBatteryChargeProfitFake { get; set; } = 0;

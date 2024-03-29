@@ -22,7 +22,7 @@ public class DataSyncService : IDataSyncService
     {
         var gridSupplierInterface = ServiceHelper.GetGridSupplierService(mscDbContext.Home.First().ElectricitySupplier);
         var inverterService = ServiceHelper.GetInverterService(mscDbContext.Inverter.OrderByDescending(s => s.FromDate).First().InverterTyp);
-
+      
        
 
         mscDbContext.Log.Add(new Log
@@ -33,9 +33,12 @@ public class DataSyncService : IDataSyncService
             LogTyp = (int)LogTyp.Info
         });
         //Get last Sync Time for grid supplier
-        var lastSyncTime = mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
-        var lastSyncInverterTime = mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        var lastSyncTime = await mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
+        var lastSyncInverterTime = await mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
 
+        if (lastSyncTime == null || lastSyncInverterTime == null)
+            return new Result<DataSyncResponse>("No data in Energy table"); 
+            
         var previousHourDatetime = DateTime.Now.AddHours(-1);   
         var prevHoleHour = new DateTime(previousHourDatetime.Year, previousHourDatetime.Month, previousHourDatetime.Day, previousHourDatetime.Hour,0,0);
         if (lastSyncTime.Timestamp >= prevHoleHour && lastSyncInverterTime.Timestamp >= prevHoleHour)

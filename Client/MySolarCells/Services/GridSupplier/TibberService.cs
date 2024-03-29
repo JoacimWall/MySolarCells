@@ -182,7 +182,7 @@ public class TibberService : IGridSupplierInterface
                         }
                     }
 
-                    if (energyExist != null)
+                    if (energyExist == null)
                     {
                         //if already added
                         if (energyInsertList.Any(x => energy.from != null && x.Timestamp == energy.from.Value))
