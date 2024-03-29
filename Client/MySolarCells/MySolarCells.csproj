@@ -96,7 +96,10 @@
 		<CreatePackage>false</CreatePackage>
 		<CodesignProvision>My solar cells Beta</CodesignProvision>
 		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
+		<UseInterpreter>true</UseInterpreter>
+		<MtouchLink>None</MtouchLink>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
 		<CodesignProvision>My solar cells Beta</CodesignProvision>
@@ -132,26 +135,6 @@
 		<AndroidSigningKeyAlias>com.walltech.mysoloarcells.beta</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>Digital4818</AndroidSigningKeyPass>
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-	 <MtouchLink>None</MtouchLink>
-		<EnableCodeSigning>True</EnableCodeSigning>
-		<EnablePackageSigning>true</EnablePackageSigning>
-		<CreatePackage>true</CreatePackage>
-		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
-		<CodesignProvision>My solar cells Beta Mac Appstore</CodesignProvision>
-		<CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
-		<PackageSigningKey>3rd Party Mac Developer Installer: EVRY Sweden AB (EMV34W7ZW5)</PackageSigningKey>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-		<MtouchLink>None</MtouchLink>
-		<EnableCodeSigning>True</EnableCodeSigning>
-		<EnablePackageSigning>true</EnablePackageSigning>
-		<CreatePackage>true</CreatePackage>
-		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
-		<CodesignProvision>My solar cells Beta Mac Appstore</CodesignProvision>
-		<CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
-		<PackageSigningKey>3rd Party Mac Developer Installer: EVRY Sweden AB (EMV34W7ZW5)</PackageSigningKey>
-	</PropertyGroup>-->
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
 		<CodesignKey>Mac Developer</CodesignKey>
