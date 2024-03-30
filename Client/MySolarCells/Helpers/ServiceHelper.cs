@@ -21,9 +21,9 @@ public static class ServiceHelper
         switch (electricitySupplier)
         {
             case (int)ElectricitySupplier.Unknown:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>());
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<ILogService>());
             case (int)ElectricitySupplier.Tibber:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>());
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<ILogService>());
            
 
             default:

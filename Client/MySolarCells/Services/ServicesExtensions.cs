@@ -18,7 +18,7 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<IInternetConnectionHelper, InternetConnectionHelper>();
         builder.Services.AddSingleton<IDialogService, DialogService>();
         builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
-        builder.Services.AddSingleton<ILogService, TmLogService>();
+        builder.Services.AddSingleton<ILogService, LogService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         //Transient
         builder.Services.AddTransient<IMyRestClientGeneric, MyRestClientGeneric>();

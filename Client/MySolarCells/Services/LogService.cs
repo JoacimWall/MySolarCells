@@ -12,12 +12,12 @@ public interface ILogService
 }
 
 
-public class TmLogService : ILogService
+public class LogService : ILogService
 {
     // ReSharper disable once NotAccessedField.Local
     private readonly IInternetConnectionHelper internetConnectionHelper;
 
-    public TmLogService(IInternetConnectionHelper internetConnectionHelper)
+    public LogService(IInternetConnectionHelper internetConnectionHelper)
     {
         this.internetConnectionHelper = internetConnectionHelper;
     }
