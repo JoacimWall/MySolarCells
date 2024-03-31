@@ -15,7 +15,7 @@
             <Border Margin="8" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}" >
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}"  Text="{x:Static trans:AppResources.Refresh}" />
             </Border>
-            <control:DateNavigator  Grid.Row="1" ChartData="{Binding ChartDataRequest}" GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ShowRoiSimulate="False" />
+            <control:DateNavigator  Grid.Row="1" ChartData="{Binding ChartDataRequest}" CurrentHome="{Binding CurrentHome}" GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ShowRoiSimulate="False" />
         </Grid>
         <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding SyncCommand}">
             <ScrollView>

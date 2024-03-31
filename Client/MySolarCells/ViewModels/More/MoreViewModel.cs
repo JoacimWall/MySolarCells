@@ -13,13 +13,13 @@ public class MoreViewModel : BaseViewModel
 
     private readonly MscDbContext mscDbContext;
     public MoreViewModel(IHistoryDataService historyService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         this.historyService = historyService;
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;
-        Home = MySolarCellsGlobals.SelectedHome;
+        electricitySupplier = homeService.FirstElectricitySupplier();
         AppInfoVersion = AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
 
     }
@@ -27,7 +27,7 @@ public class MoreViewModel : BaseViewModel
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
     public ICommand ShowCalcParametersCommand => new Command(async () => await ShowCalcParameters());
     public ICommand ElectricitySupplierCommand => new Command(async () => await ShowElectricitySupplier());
-    public ICommand ExportExcelCommand => new Command(async () => await ExportExcelGroupYear(MySolarCellsGlobals.SelectedHome.HomeId));
+    public ICommand ExportExcelCommand => new Command(async () => await ExportExcelGroupYear(HomeService.CurrentHome().HomeId));
     public ICommand InverterSettingsCommand => new Command(async () => await ShowInverterSettings());
     public ICommand ShowReportCommand => new Command(async () => await ShowReport());
     public ICommand ShowPowerTariffCommand => new Command(async () => await ShowPowerTariff());
@@ -91,7 +91,7 @@ public class MoreViewModel : BaseViewModel
         get => logText;
         set => SetProperty(ref logText, value);
     }
-    private async Task<bool> GenerateYearWorkSheet(IWorksheet worksheet, List<ReportHistoryStats> roiStats, int homeId, bool isOverviewSheet)
+    private async Task<bool> GenerateYearWorkSheet(IWorksheet worksheet, List<ReportHistoryStats> roiStats, int electricitySupplierId, bool isOverviewSheet)
     {
         //Disable gridlines in the worksheet
         worksheet.IsGridLinesVisible = true;
@@ -245,7 +245,7 @@ public class MoreViewModel : BaseViewModel
         #region Calculation_Parameters
         if (!isOverviewSheet)
         {
-            var calculationParameter = await mscDbContext.EnergyCalculationParameter.Where(x => x.HomeId == homeId && x.FromDate < roiStats.Last().FromDate).OrderBy(o => o.FromDate).ToListAsync();
+            var calculationParameter = await mscDbContext.EnergyCalculationParameter.Where(x => x.ElectricitySupplierId == electricitySupplierId && x.FromDate < roiStats.Last().FromDate).OrderBy(o => o.FromDate).ToListAsync();
             //remove parameters that have no impact on current data
             bool existOne = false;
             for (int i = calculationParameter.Count - 1; i >= 0; i--)
@@ -357,7 +357,7 @@ public class MoreViewModel : BaseViewModel
     {
         using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
-        var result = await historyService.GenerateTotalPerMonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
+        var result = await historyService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today);
         
         var savingEstimate = mscDbContext.SavingEstimateParameters.FirstOrDefault() ?? new SavingEstimateParameters();
         if (result.Model == null) return false;
@@ -395,12 +395,12 @@ public class MoreViewModel : BaseViewModel
     {
         await GoToAsync(nameof(InvestmentAndLoanView));
     }
-    private readonly Home? home;
+    private readonly ElectricitySupplier electricitySupplier;
 
-    private Home? Home
+    private ElectricitySupplier ElectricitySupplier
     {
-        get => MySolarCellsGlobals.SelectedHome;
-        init => SetProperty(ref home, value);
+        get => electricitySupplier;
+        init => SetProperty(ref electricitySupplier, value);
     }
 
     public string HomeImageUrl => "MySolarCells.Resources.EmbeddedImages.house_with_solar_cells.png";
@@ -411,8 +411,8 @@ public class MoreViewModel : BaseViewModel
     {
         get
         {
-            if (home != null)
-                return ((ElectricitySupplier)home.ElectricitySupplier).ToString();
+            if (electricitySupplier != null)
+                return ((ElectricitySupplierEnum)electricitySupplier.ElectricitySupplierType).ToString();
             else
                 return "";
         }
@@ -423,12 +423,12 @@ public class MoreViewModel : BaseViewModel
         get
         {
 
-            var inverter = mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault(x => Home != null && x.HomeId == Home.HomeId);
+            var inverter = mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault(x => x.HomeId == HomeService.CurrentHome().HomeId);
             if (inverter != null)
             {
                 inverterModelText = inverter.Name;
                 OnPropertyChanged(nameof(InverterModelText));
-                return ((InverterTyp)inverter.InverterTyp).ToString();
+                return ((InverterTypeEnum)inverter.InverterTyp).ToString();
             }
 
             return "";

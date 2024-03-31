@@ -78,7 +78,7 @@ public class EnergyCalculationParameter : ObservableObject
         }
     }
     [Required]
-    public int HomeId { get; set; }
+    public int ElectricitySupplierId { get; set; }
 
    
     

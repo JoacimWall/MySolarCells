@@ -1,13 +1,9 @@
-﻿
-
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Services.GridSupplier
+﻿namespace MySolarCells.Services.GridSupplier
 {
 	public interface IGridSupplierInterface
 	{
         Task<Result<GridSupplierLoginResponse>> TestConnection(string userName, string password, string apiUrl, string apiKey);
-        Task<Result<List<Home>>> GetPickerOne();
+        Task<Result<List<ElectricitySupplier>>> GetPickerOne();
         Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr);
 
         string GuideText { get; }

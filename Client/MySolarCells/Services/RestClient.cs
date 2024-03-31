@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -10,20 +9,15 @@ namespace MySolarCells.Services;
 
 public interface IRestClient
 {
-    Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null,
-        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null,
-        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,
-        bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,
-        bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true);
     Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,
         bool autoLogInOnUnauthorized = true);
 
-    Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null,
-        Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     public bool RemoveTokens();
     public void ReInit();
     public void ClearCookieContainer();
@@ -36,7 +30,7 @@ public interface IMyRestClientGeneric
 }
 public class RestClient : IRestClient
 {
-    private readonly IInternetConnectionHelper internetConnectionHelper;
+    private readonly IInternetConnectionService internetConnectionService;
     private readonly JsonSerializerOptions jsonOptions;
     private readonly ILogService logService;
     private readonly bool logTimeToDebugWindows = true;
@@ -44,11 +38,11 @@ public class RestClient : IRestClient
     private HttpClient client;
     private bool initIsDone;
 
-    public RestClient(IInternetConnectionHelper internetConnectionHelper, ILogService logService,
+    public RestClient(IInternetConnectionService internetConnectionService, ILogService logService,
         IMyRestClientGeneric myRestClientGeneric)
     {
         client = new HttpClient();
-        this.internetConnectionHelper = internetConnectionHelper;
+        this.internetConnectionService = internetConnectionService;
         this.logService = logService;
         this.myRestClientGeneric = myRestClientGeneric;
         jsonOptions = new JsonSerializerOptions
@@ -60,7 +54,7 @@ public class RestClient : IRestClient
 
     #region Private
 
-    private string AddParameters(string query, Dictionary<string, string> parameters)
+    private static string AddParameters(string query, Dictionary<string, string> parameters)
     {
         var first = true;
 
@@ -69,10 +63,10 @@ public class RestClient : IRestClient
             {
                 var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
                 if (array.Count() > 1)
-                    foreach (var itemstrig in array)
-                        query = query + $@"?{item.Key}={HttpUtility.UrlEncode(itemstrig)}";
+                    foreach (var itemString in array)
+                        query += $@"?{item.Key}={HttpUtility.UrlEncode(itemString)}";
                 else
-                    query = query + $@"?{item.Key}={HttpUtility.UrlEncode(item.Value)}";
+                    query += $@"?{item.Key}={HttpUtility.UrlEncode(item.Value)}";
 
                 first = false;
             }
@@ -80,10 +74,10 @@ public class RestClient : IRestClient
             {
                 var array = item.Value.Split(Convert.ToChar(Environment.NewLine));
                 if (array.Count() > 1)
-                    foreach (var itemstrig in array)
-                        query = query + string.Format(@"&{0}={1}", item.Key, HttpUtility.UrlEncode(itemstrig));
+                    foreach (var itemString in array)
+                        query += $@"&{item.Key}={HttpUtility.UrlEncode(itemString)}";
                 else
-                    query = query + string.Format(@"&{0}={1}", item.Key, HttpUtility.UrlEncode(item.Value));
+                    query += $@"&{item.Key}={HttpUtility.UrlEncode(item.Value)}";
             }
 
         return query;
@@ -106,7 +100,7 @@ public class RestClient : IRestClient
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
         client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
-
+        client.DefaultRequestHeaders.Add("Connection", "keep-alive");
         foreach (var header in ApiSettings.DefaultRequestHeaders)
             client.DefaultRequestHeaders.Add(header.Key, header.Value);
 
@@ -147,21 +141,18 @@ public class RestClient : IRestClient
 public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
 {
     var logTime = DateTime.Now;
-    var retryCount = 0;
-    
-        retryCount++;
         try
         {
             //This so only run this when needed 
             if (!initIsDone)
                 ReInit();
-            if (internetConnectionHelper.InternetAccess())
+            if (internetConnectionService.InternetAccess())
             {
                 StringContent content = new StringContent("");
                 if (data != null) //, Encoding.UTF8, "application/json")
                     content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
-                if (parameters != null && retryCount == 1)
+                if (parameters != null)
                     query = AddParameters(query, parameters);
 
                 var result = await client.PostAsync(query, content).ConfigureAwait(false);
@@ -169,66 +160,61 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 if (logTimeToDebugWindows)
                     LogExecuteTime(logTime, query);
 
-                using (var stream = await result.Content.ReadAsStreamAsync())
+                await using var stream = await result.Content.ReadAsStreamAsync();
+                if (result.IsSuccessStatusCode)
                 {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
-                        if (model is null)
-                            return new Tuple<Result<T>, HttpResponseHeaders?>(
-                                new Result<T>("Unable to Deserialize model"), null);
-
-                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(model), result.Headers);
-
-                    }
-                    else if (result.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-                        // if (autoLogInOnUnauthorized)
-                        // {
-                        //     var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
-                        //     var resultLogin = await generic.SilentLogin(true);
-                        //     if (resultLogin)
-                        //         return await ExecutePostReturnResponseHeadersAsync<T>(query, data, null, false);
-                        // }
-
-                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("User_Need_To_Log_In_Again"),
-                            null);
-                    }
-                    else if (result.StatusCode == HttpStatusCode.NotFound)
-                    {
+                    var model = await JsonSerializer.DeserializeAsync<T>(stream, jsonOptions);
+                    if (model is null)
                         return new Tuple<Result<T>, HttpResponseHeaders?>(
-                            new Result<T>("Current_API_Not_Found_On_Server"), null);
-                    }
-                    else if (result.StatusCode == HttpStatusCode.InternalServerError)
-                    {
-                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("AppResources.Server_Error"),
-                            null);
+                            new Result<T>("Unable to Deserialize model"), null);
 
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var resultmodel =
-                                await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
-                            return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(resultmodel), null);
+                    return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(model), result.Headers);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            var logdic = new Dictionary<string, string>();
-                            logdic.Add("Info", "Error in ExecutePostAsync");
-                            MySolarCellsGlobals.ReportErrorToAppCenter(ex, logdic);
-                            return new Tuple<Result<T>, HttpResponseHeaders?>(
-                                new Result<T>("AppResources.Server_Error" + Environment.NewLine +
-                                              result.Content.ReadAsStringAsync().Result), null);
-                        }
-
-                    }
                 }
+                else if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
 
+                    // if (autoLogInOnUnauthorized)
+                    // {
+                    //     var generic = ServiceHelper.GetService<IMyRestClientGeneric>();
+                    //     var resultLogin = await generic.SilentLogin(true);
+                    //     if (resultLogin)
+                    //         return await ExecutePostReturnResponseHeadersAsync<T>(query, data, null, false);
+                    // }
 
+                    return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("User_Need_To_Log_In_Again"),
+                        null);
+                }
+                else if (result.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new Tuple<Result<T>, HttpResponseHeaders?>(
+                        new Result<T>("Current_API_Not_Found_On_Server"), null);
+                }
+                else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("AppResources.Server_Error"),
+                        null);
+
+                }
+                else
+                {
+                    try
+                    {
+                        var resultModel =
+                            await JsonSerializer.DeserializeAsync<GenericResponse>(stream, jsonOptions);
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(resultModel), null);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var logic = new Dictionary<string, string> { { "Info", "Error in ExecutePostAsync" } };
+                        logService.ReportErrorToAppCenter(ex, logic);
+                        return new Tuple<Result<T>, HttpResponseHeaders?>(
+                            new Result<T>("AppResources.Server_Error" + Environment.NewLine +
+                                          result.Content.ReadAsStringAsync().Result), null);
+                    }
+
+                }
             }
 
 
@@ -241,21 +227,18 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
             {
                 { "Info", "Error in ExecuteDeleteBoolAsync" },
                 { "Query", query },
-                { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) },
-                { "RequestAttempts", retryCount.ToString() }
+                { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) }
+               
             };
             logService.ReportErrorToAppCenter(ex, logic);
 
-            if (retryCount < ApiSettings.RequestRetryAttempts)
-                await Task.Delay(ApiSettings.RequestRetryAttemptsSleepTime * 1000);
-            else
-                return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(ex.Message), null);
+           
+           return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(ex.Message), null);
         }
-        return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>("Error in ExecutePostReturnResponseHeadersAsync"), null);
+      
 }
 
-    public async Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,
-        bool autoLogInOnUnauthorized = true)
+    public async Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -268,7 +251,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 if (!initIsDone)
                     ReInit();
 
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     if (parameters != null && retryCount == 1)
                         query = AddParameters(query, parameters);
@@ -371,8 +354,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         return new Result<T>("Logic error in code");
     }
 
-    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,
-        bool autoLogInOnUnauthorized = true)
+    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -384,7 +366,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 //This so only run this when needed 
                 if (!initIsDone)
                     ReInit();
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     if (parameters != null && retryCount == 1)
                         query = AddParameters(query, parameters);
@@ -464,8 +446,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         return new Result<bool>("Logic error in code");
     }
 
-    public async Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,
-        bool autoLogInOnUnauthorized = true)
+    public async Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -477,7 +458,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 //This so only run this when needed 
                 if (!initIsDone)
                     ReInit();
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     if (parameters != null && retryCount == 1)
                         query = AddParameters(query, parameters);
@@ -574,7 +555,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 //This so only run this when needed 
                 if (!initIsDone)
                     ReInit();
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     var content = new StringContent("");
                     if (data != null) //, Encoding.UTF8, "application/json")
@@ -676,7 +657,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 //This so only run this when needed 
                 if (!initIsDone)
                     ReInit();
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     var content = new StringContent("");
                     if (data != null)
@@ -772,7 +753,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 //This so only run this when needed 
                 if (!initIsDone)
                     ReInit();
-                if (internetConnectionHelper.InternetAccess())
+                if (internetConnectionService.InternetAccess())
                 {
                     var content = new StringContent("");
                     if (data != null)
@@ -869,13 +850,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         client.DefaultRequestHeaders.Remove("Authorization");
         return true;
     }
-    //public bool AddTokens()
-    //{
-    //    //_client.DefaultRequestHeaders.Add("AUTHENTICATION_TOKEN", _settingsService.AuthAccessToken);
-    //    //_client.DefaultRequestHeaders.Add(AppConstants.Authorization, string.Format("Bearer {0}", _settingsService.AuthAccessToken));
-    //    return true;
-    //}
-
+    
     #endregion
 }
 public class MyRestClientGeneric : IMyRestClientGeneric
@@ -884,7 +859,8 @@ public class MyRestClientGeneric : IMyRestClientGeneric
     {
         //IMemberService? memberService = ServiceHelper.GetService<IMemberService>();
         //return await memberService.SilentLogin(navigateToLoginOnError);
-        return false;
+       return await Task.FromResult(false);
+      
     }
 }
 public class TokenModel
@@ -900,6 +876,6 @@ public class ApiSettings
     public int RequestRetryAttemptsSleepTime { get; set; } = 5;
     public string BaseUrl { get; set; } = "";
     public Dictionary<string, string> DefaultRequestHeaders { get; set; } = new Dictionary<string, string>();
-    public string Enviroment { get; set; } = "";
+    public string Environment { get; set; } = "";
 
 }

@@ -1,6 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public static class ServicesExtensions
 {
@@ -15,11 +13,12 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<IEnergyChartService, EnergyChartService>();
         builder.Services.AddSingleton<IDataSyncService, DataSyncService>();
         builder.Services.AddSingleton<ISaveAndView, SaveService>();
-        builder.Services.AddSingleton<IInternetConnectionHelper, InternetConnectionHelper>();
+        builder.Services.AddSingleton<IInternetConnectionService, InternetConnectionService>();
         builder.Services.AddSingleton<IDialogService, DialogService>();
         builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
         builder.Services.AddSingleton<ILogService, LogService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
+        builder.Services.AddSingleton<IHomeService, HomeService>();
         //Transient
         builder.Services.AddTransient<IMyRestClientGeneric, MyRestClientGeneric>();
         builder.Services.AddTransient<IRestClient, RestClient>();

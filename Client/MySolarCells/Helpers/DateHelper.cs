@@ -4,7 +4,7 @@ public static class DateHelper
 {
     public static RelatedDateResult GetRelatedDates(DateTime input)
     {
-        RelatedDateResult result = new RelatedDateResult
+        var result = new RelatedDateResult
         {
             BaseDate = input
         };
@@ -22,7 +22,7 @@ public static class DateHelper
         result.LastMonthStart = result.ThisMonthStart.AddMonths(-1);
         result.LastMonthEnd = result.ThisMonthStart.AddSeconds(-1);
         result.ThisYearStart = new DateTime(result.ThisMonthStart.Year, 1, 1);
-        result.ThisYearhEnd = new DateTime(result.ThisMonthStart.Year, 12, 31).AddDays(1);
+        result.ThisYearEnd = new DateTime(result.ThisMonthStart.Year, 12, 31).AddDays(1);
         return result;
     }
     private static readonly DateTime Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -53,7 +53,7 @@ public class RelatedDateResult
     public DateTime LastMonthEnd { get; set; }
     public DateTime LastMonthStart { get; set; }
     public DateTime ThisYearStart { get; set; }
-    public DateTime ThisYearhEnd { get; set; }
+    public DateTime ThisYearEnd { get; set; }
 
 
 }

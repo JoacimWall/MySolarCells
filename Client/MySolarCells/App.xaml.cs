@@ -67,14 +67,14 @@ public partial class App : Application
         //if (((Shell)(App.Current.MainPage)).CurrentPage is StartupView)
         await InitApp(false);
         
-        MySolarCellsGlobals.SelectedHome = mscDbContext.Home.FirstOrDefault(x => x.HomeId == settingsService.SelectedHomeId) ?? new Home(){ Name = "", SubSystemEntityId = ""};
+        // MySolarCellsGlobals.SelectedHome = mscDbContext.ElectricitySupplier.FirstOrDefault(x => x.ElectricitySupplierId == settingsService.SelectedHomeId) ?? new ElectricitySupplier(){ Name = "", SubSystemEntityId = ""};
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
        // await SyncData();
     }
     protected override void OnResume()
     {
         //using var dbContext = new MscDbContext();
-        MySolarCellsGlobals.SelectedHome = mscDbContext.Home.FirstOrDefault(x => x.HomeId == settingsService.SelectedHomeId) ?? new Home(){ Name = "", SubSystemEntityId = ""};
+        //MySolarCellsGlobals.SelectedHome = mscDbContext.ElectricitySupplier.FirstOrDefault(x => x.ElectricitySupplierId == settingsService.SelectedHomeId) ?? new ElectricitySupplier(){ Name = "", SubSystemEntityId = ""};
 
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;

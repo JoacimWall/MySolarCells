@@ -1,13 +1,7 @@
-﻿
-using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 public interface IDataSyncService
 {
     Task<Result<DataSyncResponse>> Sync();
-
-
 }
 
 public class DataSyncService : IDataSyncService
@@ -20,7 +14,7 @@ public class DataSyncService : IDataSyncService
 
     public async Task<Result<DataSyncResponse>> Sync()
     {
-        var gridSupplierInterface = ServiceHelper.GetGridSupplierService(mscDbContext.Home.First().ElectricitySupplier);
+        var gridSupplierInterface = ServiceHelper.GetGridSupplierService(mscDbContext.ElectricitySupplier.First().ElectricitySupplierType);
         var inverterService = ServiceHelper.GetInverterService(mscDbContext.Inverter.OrderByDescending(s => s.FromDate).First().InverterTyp);
       
        
@@ -30,7 +24,7 @@ public class DataSyncService : IDataSyncService
             LogTitle = "Sync started",
             CreateDate = DateTime.Now,
             LogDetails = "",
-            LogTyp = (int)LogTyp.Info
+            LogTyp = (int)LogTypeEnum.Info
         });
         //Get last Sync Time for grid supplier
         var lastSyncTime = await mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
@@ -48,7 +42,7 @@ public class DataSyncService : IDataSyncService
                 LogTitle = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More,
                 CreateDate = DateTime.Now,
                 LogDetails = "",
-                LogTyp = (int)LogTyp.Info
+                LogTyp = (int)LogTypeEnum.Info
             });
             return new Result<DataSyncResponse>(new DataSyncResponse { Message = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More });
         }
@@ -101,7 +95,7 @@ public class DataSyncService : IDataSyncService
             LogTitle = "Sync done",
             CreateDate = DateTime.Now,
             LogDetails = "",
-            LogTyp = result.WasSuccessful ? (int)LogTyp.Info : (int)LogTyp.Error
+            LogTyp = result.WasSuccessful ? (int)LogTypeEnum.Info : (int)LogTypeEnum.Error
         });
        
         return resultInverter;
@@ -109,9 +103,9 @@ public class DataSyncService : IDataSyncService
     }
     private void CalculateProgress(long completed, long total)
     {
-        var comp = Convert.ToDouble(completed);
-        var tot = Convert.ToDouble(total);
-        var percentage = comp / tot;
+        // var comp = Convert.ToDouble(completed);
+        // var tot = Convert.ToDouble(total);
+        // var percentage = comp / tot;
     }
 
    

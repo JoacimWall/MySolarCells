@@ -1,18 +1,15 @@
-﻿using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.ViewModels.OnBoarding;
+﻿namespace MySolarCells.ViewModels.OnBoarding;
 
 public class InvestmentAndLoanViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
     public InvestmentAndLoanViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
 
         this.mscDbContext = mscDbContext;
-        var result = this.mscDbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
+        var result = this.mscDbContext.InvestmentAndLon.Include(i => i.Interest).Where(x => x.HomeId == HomeService.CurrentHome().HomeId).ToList();
         foreach (var item in result)
         {
             InvestmentAndLoans.Add(item);
@@ -70,7 +67,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     private void AddInvestLon()
     {
-        InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.Investment_And_Loan, HomeId = MySolarCellsGlobals.SelectedHome.HomeId });
+        InvestmentAndLoans.Add(new InvestmentAndLoan { Description = AppResources.Investment_And_Loan, HomeId = HomeService.CurrentHome().HomeId });
         SelectedInvestmentAndLoan = InvestmentAndLoans.Last();
 
     }

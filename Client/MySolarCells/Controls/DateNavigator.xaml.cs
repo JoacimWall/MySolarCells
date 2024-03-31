@@ -9,35 +9,40 @@ public partial class DateNavigator : ContentView
         ShowSimulateButton.IsVisible = true;
     }
 
+    #region GraphDataChangedCommand
     public static readonly BindableProperty GraphDataChangedCommandProperty = BindableProperty.Create(nameof(GraphDataChangedCommand), typeof(ICommand), typeof(DateNavigator));
     public ICommand? GraphDataChangedCommand
     {
         get => (ICommand)GetValue(GraphDataChangedCommandProperty);
         set => SetValue(GraphDataChangedCommandProperty, value);
     }
+    
+    #endregion
 
+    #region ChartData
 
     public static readonly BindableProperty ChartDataProperty = BindableProperty.Create(propertyName: nameof(ChartData),
-    returnType: typeof(ChartDataRequest), declaringType: typeof(ContentView),
-    defaultValue: new ChartDataRequest(), defaultBindingMode: BindingMode.TwoWay);
+        returnType: typeof(ChartDataRequest), declaringType: typeof(ContentView),
+        defaultValue: new ChartDataRequest(), defaultBindingMode: BindingMode.TwoWay);
     public ChartDataRequest ChartData
     {
         get => (ChartDataRequest)GetValue(ChartDataProperty);
         set => SetValue(ChartDataProperty, value);
     }
 
+    #endregion
+
+    #region ShowUnitCurrencey
 
     public static BindableProperty ShowUnitCurrencySelectorProperty = BindableProperty.Create(propertyName: nameof(ShowUnitCurrencySelector),
-    returnType: typeof(bool), declaringType: typeof(ContentView),
-    defaultValue: true, defaultBindingMode: BindingMode.OneWay, propertyChanged: ShowUnitCurrencySelectorPropertyChanged);
+        returnType: typeof(bool), declaringType: typeof(ContentView),
+        defaultValue: true, defaultBindingMode: BindingMode.OneWay, propertyChanged: ShowUnitCurrencySelectorPropertyChanged);
 
     public bool ShowUnitCurrencySelector
     {
         get => (bool)GetValue(ShowUnitCurrencySelectorProperty);
         set => SetValue(ShowUnitCurrencySelectorProperty, value);
     }
-
-
     private static void ShowUnitCurrencySelectorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
 
@@ -46,10 +51,13 @@ public partial class DateNavigator : ContentView
         control.UnitButton.IsVisible = value;
         control.CurrencyButton.IsVisible = value;
     }
+    #endregion
+
+    #region RoiSimulate
 
     public static BindableProperty RoiSimulateProperty = BindableProperty.Create(propertyName: nameof(RoiSimulate),
-    returnType: typeof(HistorySimulate), declaringType: typeof(ContentView),
-    defaultValue: new HistorySimulate(), defaultBindingMode: BindingMode.TwoWay, propertyChanged: RoiSimulatePropertyChanged);
+        returnType: typeof(HistorySimulate), declaringType: typeof(ContentView),
+        defaultValue: new HistorySimulate(), defaultBindingMode: BindingMode.TwoWay, propertyChanged: RoiSimulatePropertyChanged);
 
     public HistorySimulate RoiSimulate
     {
@@ -64,9 +72,13 @@ public partial class DateNavigator : ContentView
         
     }
 
+    #endregion
+
+    #region ShowRoiSimulate
+
     public static BindableProperty ShowRoiSimulateProperty = BindableProperty.Create(propertyName: nameof(ShowRoiSimulate),
-     returnType: typeof(bool), declaringType: typeof(ContentView),
-     defaultValue: true, defaultBindingMode: BindingMode.TwoWay, propertyChanged: ShowRoiSimulatePropertyChanged);
+        returnType: typeof(bool), declaringType: typeof(ContentView),
+        defaultValue: true, defaultBindingMode: BindingMode.TwoWay, propertyChanged: ShowRoiSimulatePropertyChanged);
 
     private static void ShowRoiSimulatePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -85,6 +97,27 @@ public partial class DateNavigator : ContentView
             ShowSimulateButton.IsVisible = value;
         }
     }
+
+    #endregion
+    
+    #region CurrentHome
+
+    public static BindableProperty CurrentHomeProperty = BindableProperty.Create(propertyName: nameof(CurrentHome),
+        returnType: typeof(Home), declaringType: typeof(ContentView),
+        defaultValue: null, defaultBindingMode: BindingMode.TwoWay);
+
+    public Home CurrentHome
+    {
+        get => (Home)GetValue(CurrentHomeProperty);
+        set
+        {
+            SetValue(CurrentHomeProperty, value);
+        }
+    }
+
+    #endregion
+    
+    #region Navigate date
 
     void Back_Tapped(Object sender, TappedEventArgs e)
     {
@@ -108,8 +141,10 @@ public partial class DateNavigator : ContentView
                 break;
 
         }
-        if (ChartData.TimeStamp.Date < MySolarCellsGlobals.SelectedHome.FromDate)
-            ChartData.TimeStamp = MySolarCellsGlobals.SelectedHome.FromDate;
+
+        var first = CurrentHome.ElectricitySuppliers!.OrderBy(x => x.FromDate).First();
+        if (ChartData.TimeStamp.Date < first.FromDate)
+            ChartData.TimeStamp = first.FromDate;
 
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
@@ -196,6 +231,9 @@ public partial class DateNavigator : ContentView
         if (GraphDataChangedCommand != null && GraphDataChangedCommand.CanExecute(null))
             GraphDataChangedCommand.Execute(null);
     }
+
+    #endregion
+    
 
     private bool simSettingsIsVisible;
     void ShowSimulate_Tapped(Object sender, TappedEventArgs e)

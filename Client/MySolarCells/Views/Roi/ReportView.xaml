@@ -143,7 +143,7 @@
                                                 <Label.Text>
                                                     <MultiBinding Converter="{StaticResource TimeStampToStringConverter}">
                                                         <Binding Path="FromDate" />
-                                                        <Binding Path="ReportPageTyp" />
+                                                        <Binding Path="ReportPageType" />
                                                     </MultiBinding>
                                                 </Label.Text>
                                             </Label>
@@ -225,7 +225,7 @@
                 </Label.GestureRecognizers>
             </Label>
             <!--More pickers-->
-            <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelectedReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
 
             <!--Left-->
             <Label   Grid.Row="1"  FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Left}" FontFamily="AppIconsFont"  VerticalTextAlignment="Center" HorizontalTextAlignment="Start" >
@@ -264,7 +264,7 @@
 
         <!--<ScrollView Grid.Row="1" Orientation="Both" >
           </ScrollView>-->
-        <control:TemplatedContentPresenter Grid.Row="1" Data="{Binding SelReportPage}" VerticalOptions="Fill" HorizontalOptions="Fill" DataTemplateSelector="{StaticResource ReportModelTemplatesSelector}" />
+        <control:TemplatedContentPresenter Grid.Row="1" Data="{Binding SelectedReportPage}" VerticalOptions="Fill" HorizontalOptions="Fill" DataTemplateSelector="{StaticResource ReportModelTemplatesSelector}" />
 
 
     </Grid>

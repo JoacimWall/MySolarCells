@@ -1,11 +1,11 @@
 ﻿namespace MySolarCellsSQLite.Sqlite;
 
-public enum ElectricitySupplier
+public enum ElectricitySupplierEnum
 {
     Unknown = 0,
     Tibber = 1,
 }
-public enum InverterTyp
+public enum InverterTypeEnum
 {
     Unknown = 0,
     Huawei = 2,
@@ -13,7 +13,7 @@ public enum InverterTyp
     SolarEdge = 4
 }
 
-public enum LogTyp
+public enum LogTypeEnum
 {
     Info = 0,
     Warning =1,

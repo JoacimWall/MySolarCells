@@ -17,10 +17,10 @@ public class Energy
     public double BatteryCharge { get; set; } 
     [Required]
     public double BatteryUsed { get; set; } 
-    [Required,StringLength(10)]
-    public string Unit { get; set; } = "kWh";
-    [Required,StringLength(10)]
-    public string Currency { get; set; } = "SEK";
+    // [Required,StringLength(10)]
+    // public string Unit { get; set; } = "kWh";
+    // [Required,StringLength(10)]
+    // public string Currency { get; set; } = "SEK";
     [Required]
     public double ProductionSoldProfit { get; set; } 
     [Required]
@@ -42,7 +42,7 @@ public class Energy
     [Required]
     public int ElectricitySupplierProductionSold { get; set; } 
     [Required]
-    public int InverterTypProductionOwnUse { get; set; } 
+    public int InverterTypeProductionOwnUse { get; set; } 
     [Required]
     public int ElectricitySupplierPurchased { get; set; } 
     [Required]

@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using MySolarCellsSQLite.Sqlite;
-using Preferences = MySolarCellsSQLite.Sqlite.Models.Preferences;
+﻿using Preferences = MySolarCellsSQLite.Sqlite.Models.Preferences;
 
 namespace MySolarCells.Services;
 

@@ -6,14 +6,13 @@ public class EnergyViewModel : BaseViewModel
     private readonly IDataSyncService dataSyncService;
 
     public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService,
-        IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,
-        ISettingsService settingsService) : base(dialogService, analyticsService, internetConnectionHelper,
-        logService, settingsService)
+        IDialogService dialogService,IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,
+        ISettingsService settingsService,IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService,homeService)
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
-        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        ChartDataRequest = homeService.CurrentChartDataRequest();
     }
 
     public ICommand SyncCommand => new Command(async () => await Sync());
@@ -143,7 +142,7 @@ public class EnergyViewModel : BaseViewModel
 
     public override async Task OnAppearingAsync()
     {
-        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        ChartDataRequest = HomeService.CurrentChartDataRequest();;
         await ReloadGraph(true);
         if (FirstTimeAppearing)
         {

@@ -1,18 +1,14 @@
-﻿using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-
-namespace MySolarCells.ViewModels.OnBoarding;
+﻿namespace MySolarCells.ViewModels.OnBoarding;
 
 public class PowerTariffParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
     public PowerTariffParameterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         this.mscDbContext = mscDbContext;
-        var list = this.mscDbContext.PowerTariffParameters.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
+        var list = this.mscDbContext.PowerTariffParameters.Where(x => x.ElectricitySupplierId == HomeService.FirstElectricitySupplier().ElectricitySupplierId).OrderBy(o => o.FromDate).ToList();
         if ( list.Count > 0)
         {
             Parameters = new ObservableCollection<PowerTariffParameters>(list);
@@ -43,8 +39,8 @@ public class PowerTariffParameterViewModel : BaseViewModel
         {
             Parameters.Add(new PowerTariffParameters
             {
-                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
-                FromDate = MySolarCellsGlobals.SelectedHome.FromDate,
+                ElectricitySupplierId = HomeService.FirstElectricitySupplier().ElectricitySupplierId,
+                FromDate = HomeService.FirstElectricitySupplier().FromDate,
             });
         }
         else
@@ -52,7 +48,7 @@ public class PowerTariffParameterViewModel : BaseViewModel
             var paramLast = Parameters.Last();
             Parameters.Add(new PowerTariffParameters
             {
-                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+                ElectricitySupplierId = HomeService.FirstElectricitySupplier().ElectricitySupplierId,
                 FromDate = paramLast.FromDate.AddMonths(1),
             });
         }

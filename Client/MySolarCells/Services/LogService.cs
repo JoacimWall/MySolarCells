@@ -15,11 +15,11 @@ public interface ILogService
 public class LogService : ILogService
 {
     // ReSharper disable once NotAccessedField.Local
-    private readonly IInternetConnectionHelper internetConnectionHelper;
+    private readonly IInternetConnectionService internetConnectionService;
 
-    public LogService(IInternetConnectionHelper internetConnectionHelper)
+    public LogService(IInternetConnectionService internetConnectionService)
     {
-        this.internetConnectionHelper = internetConnectionHelper;
+        this.internetConnectionService = internetConnectionService;
     }
 
     public void ConsoleWriteLineDebug(Exception ex)

@@ -4,8 +4,8 @@ public class SelectLanguageCountryViewModel : BaseViewModel
 {
    
     public SelectLanguageCountryViewModel(IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
        
 

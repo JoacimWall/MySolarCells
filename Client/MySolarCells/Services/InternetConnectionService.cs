@@ -1,11 +1,11 @@
 ﻿namespace MySolarCells.Services;
-public interface IInternetConnectionHelper
+public interface IInternetConnectionService
 {
     bool InternetAccess();
     bool InternetAccess(IDialogService dialogService, bool showError = true);
     bool OnWifi();
 }
-public class InternetConnectionHelper : IInternetConnectionHelper
+public class InternetConnectionService : IInternetConnectionService
 {
     private static DateTime lastMessage;
 
@@ -25,7 +25,7 @@ public class InternetConnectionHelper : IInternetConnectionHelper
         if (current == NetworkAccess.Internet) return true;
         if (showError)
         {
-            //Check if last mess was recently so we dont show to many mess
+            //Check if last mess was recently, so we don't show to many mess
             if (lastMessage > DateTime.Now)
                 return false;
 

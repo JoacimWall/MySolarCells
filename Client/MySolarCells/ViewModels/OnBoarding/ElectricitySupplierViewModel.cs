@@ -8,13 +8,13 @@ public class ElectricitySupplierViewModel : BaseViewModel
     IGridSupplierInterface? gridSupplierService;
     private readonly MscDbContext mscDbContext;
     public ElectricitySupplierViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
-        GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Tibber.ToString(), ItemValue = (int)ElectricitySupplier.Tibber });
-        GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplier.Unknown.ToString(), ItemValue = (int)ElectricitySupplier.Unknown });
+        GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplierEnum.Tibber.ToString(), ItemValue = (int)ElectricitySupplierEnum.Tibber });
+        GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplierEnum.Unknown.ToString(), ItemValue = (int)ElectricitySupplierEnum.Unknown });
         this.mscDbContext = mscDbContext;
-        var home = this.mscDbContext.Home.FirstOrDefault();
+        var home = this.mscDbContext.ElectricitySupplier.FirstOrDefault();
         if (home == null)
         {
             selectedGridSupplierModel = GridSupplierModels.First();
@@ -23,7 +23,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         {
             foreach (var item in GridSupplierModels)
             {
-                if (item.ItemValue == home.ElectricitySupplier)
+                if (item.ItemValue == home.ElectricitySupplierType)
                 {
                     selectedGridSupplierModel = item;
                     break;
@@ -89,29 +89,38 @@ public class ElectricitySupplierViewModel : BaseViewModel
 
     private async Task SaveHome()
     {
-
-        //check if Home exist in db
-        var homeExist = await mscDbContext.Home.FirstOrDefaultAsync(x => x.SubSystemEntityId == selectedHome.SubSystemEntityId);
+        //check that home exist
+        
+        var homeExist = await mscDbContext.Home.FirstOrDefaultAsync();
         if (homeExist == null)
         {
-            homeExist =  new(){ Name = "", SubSystemEntityId = ""};
+            homeExist = HomeService.CurrentHome();
             await mscDbContext.Home.AddAsync(homeExist);
+            await mscDbContext.SaveChangesAsync();
         }
 
-        homeExist.ImportOnlySpotPrice = importOnlySpotPrice;
-        homeExist.ApiKey = selectedHome.ApiKey.Encrypt(AppConstants.Secretkey);
-        homeExist.Name = selectedHome.Name;
-        homeExist.SubSystemEntityId = selectedHome.SubSystemEntityId;
-        homeExist.ElectricitySupplier = selectedHome.ElectricitySupplier;
-        homeExist.FromDate = new DateTime(installDate.ItemValue, 1, 1);
+        //check if Home exist in db
+        var electricitySupplierExist = await mscDbContext.ElectricitySupplier.FirstOrDefaultAsync(x => x.SubSystemEntityId == selectedHome.SubSystemEntityId);
+        if (electricitySupplierExist == null)
+        {
+            electricitySupplierExist =  new(){ Name = "", SubSystemEntityId = "", HomeId = homeExist.HomeId};
+            await mscDbContext.ElectricitySupplier.AddAsync(electricitySupplierExist);
+        }
+
+        electricitySupplierExist.ImportOnlySpotPrice = importOnlySpotPrice;
+        electricitySupplierExist.ApiKey = selectedHome.ApiKey.Encrypt(AppConstants.Secretkey);
+        electricitySupplierExist.Name = selectedHome.Name;
+        electricitySupplierExist.SubSystemEntityId = selectedHome.SubSystemEntityId;
+        electricitySupplierExist.ElectricitySupplierType = selectedHome.ElectricitySupplierType;
+        electricitySupplierExist.FromDate = new DateTime(installDate.ItemValue, 1, 1);
 
         //TODO:Do we need more info from tibber homes
 
         await mscDbContext.SaveChangesAsync();
 
 
-        SettingsService.SelectedHomeId = homeExist.HomeId;
-        MySolarCellsGlobals.SelectedHome = homeExist;
+        SettingsService.SelectedHomeId = electricitySupplierExist.ElectricitySupplierId;
+        HomeService.ResetCurrenHome();
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
         {
             await GoBack();
@@ -161,14 +170,14 @@ public class ElectricitySupplierViewModel : BaseViewModel
         }
     }
 
-    private ObservableCollection<Home> homes = new ObservableCollection<Home>();
-    public ObservableCollection<Home> Homes
+    private ObservableCollection<ElectricitySupplier> homes = new ObservableCollection<ElectricitySupplier>();
+    public ObservableCollection<ElectricitySupplier> Homes
     {
         get => homes;
         set => SetProperty(ref homes, value);
     }
-    private Home selectedHome = new(){ Name = "", SubSystemEntityId = ""};
-    public Home SelectedHome
+    private ElectricitySupplier selectedHome = new(){ Name = "", SubSystemEntityId = ""};
+    public ElectricitySupplier SelectedHome
     {
         get => selectedHome;
         set => SetProperty(ref selectedHome, value);

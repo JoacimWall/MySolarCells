@@ -1,6 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite;
-
-namespace MySolarCells.Helpers;
+﻿namespace MySolarCells.Helpers;
 public static class ServiceHelper
 {
 #nullable disable
@@ -20,10 +18,10 @@ public static class ServiceHelper
 
         switch (electricitySupplier)
         {
-            case (int)ElectricitySupplier.Unknown:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<ILogService>());
-            case (int)ElectricitySupplier.Tibber:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<ILogService>());
+            case (int)ElectricitySupplierEnum.Unknown:
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+            case (int)ElectricitySupplierEnum.Tibber:
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
            
 
             default:
@@ -37,12 +35,12 @@ public static class ServiceHelper
 
         switch (inverterModel)
         {
-            case (int)InverterTyp.Huawei:
-                return new HuaweiService(GetService<IRestClient>(), GetService<MscDbContext>());
-            case (int)InverterTyp.HomeAssistent:
-                return new HomeAssistentInverterService( GetService<MscDbContext>());
-            case (int)InverterTyp.SolarEdge:
-                return new SolarEdgeService(GetService<IRestClient>(), GetService<MscDbContext>());
+            case (int)InverterTypeEnum.Huawei:
+                return new HuaweiService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+            case (int)InverterTypeEnum.HomeAssistent:
+                return new HomeAssistentInverterService( GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+            case (int)InverterTypeEnum.SolarEdge:
+                return new SolarEdgeService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>());
 
             default:
                 return null;

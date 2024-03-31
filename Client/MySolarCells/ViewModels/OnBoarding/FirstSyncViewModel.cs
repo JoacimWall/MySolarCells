@@ -1,6 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite;
-
-namespace MySolarCells.ViewModels.OnBoarding;
+﻿namespace MySolarCells.ViewModels.OnBoarding;
 
 public class FirstSyncViewModel : BaseViewModel
 {
@@ -8,11 +6,11 @@ public class FirstSyncViewModel : BaseViewModel
     private readonly IInverterServiceInterface inverterService;
     private readonly MscDbContext mscDbContext;
     public FirstSyncViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         this.mscDbContext = mscDbContext;
-        gridSupplierService = ServiceHelper.GetGridSupplierService(this.mscDbContext.Home.First().ElectricitySupplier);
+        gridSupplierService = ServiceHelper.GetGridSupplierService(this.mscDbContext.ElectricitySupplier.First().ElectricitySupplierType);
         inverterService = ServiceHelper.GetInverterService(this.mscDbContext.Inverter.First().InverterTyp);
     }
 
@@ -21,7 +19,7 @@ public class FirstSyncViewModel : BaseViewModel
     private async Task Sync()
     {
         StartButtonEnable = false;
-        var difference = DateTime.Now - MySolarCellsGlobals.SelectedHome.FromDate;
+        var difference = DateTime.Now - HomeService.FirstElectricitySupplier().FromDate;
 
         var days = difference.Days;
         var hours = difference.Hours;
@@ -40,7 +38,7 @@ public class FirstSyncViewModel : BaseViewModel
             ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText,"1","2", AppResources.Import_Data_From_Electricity_Supplier);
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount,"0");
             await Task.Delay(200);
-            var result = await gridSupplierService.Sync(MySolarCellsGlobals.SelectedHome.FromDate, progress, 0);
+            var result = await gridSupplierService.Sync(HomeService.FirstElectricitySupplier().FromDate, progress, 0);
             if (!result.WasSuccessful)
             {
                 await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
@@ -60,13 +58,13 @@ public class FirstSyncViewModel : BaseViewModel
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
             
-            var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+            var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == HomeService.CurrentHome().HomeId);
 
             var differenceInverter = DateTime.Now - inverter.FromDate;
 
-            var daysInv = differenceInverter.Days;
-            var hoursInv = differenceInverter.Hours;
-            var totalHoursInverter = (daysInv * 24) + hoursInv;
+            var inverterDays = differenceInverter.Days;
+            var inverterHours = differenceInverter.Hours;
+            var totalHoursInverter = (inverterDays * 24) + inverterHours;
             progress = new Progress<int>(currentDay =>
            {
                CalculateProgress(currentDay, totalHoursInverter);

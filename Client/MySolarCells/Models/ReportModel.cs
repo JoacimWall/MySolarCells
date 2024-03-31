@@ -3,11 +3,11 @@ public class ReportModel
 {
     public List<ReportHistoryStats> Stats { get; set; } = new();
     public List<EstimateRoi> EstimateRoi { get; set; }= new();
-    public ReportPageTyp ReportPageTyp { get; set; }
+    public ReportPageType ReportPageType { get; set; }
     public string ReportTitle { get; set; } = "";
 
 }   
-public enum ReportPageTyp
+public enum ReportPageType
 {
     SavingEstimate = 1,
     YearsOverview = 2,
@@ -29,12 +29,12 @@ public class ReportModelTemplatesSelector : DataTemplateSelector
             var model = (ReportModel)item;
 
 
-            switch (model.ReportPageTyp)
+            switch (model.ReportPageType)
             {
-                case ReportPageTyp.SavingEstimate:
+                case ReportPageType.SavingEstimate:
                     return SavingEstimateTemplate;
-                case ReportPageTyp.YearsOverview:
-                case ReportPageTyp.YearDetails:
+                case ReportPageType.YearsOverview:
+                case ReportPageType.YearDetails:
                     return YearsOverviewTemplate;
                 default:
                     return new DataTemplate();

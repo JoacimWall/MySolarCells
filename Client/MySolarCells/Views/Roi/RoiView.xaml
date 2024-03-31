@@ -14,7 +14,7 @@
             <Border Margin="8" Style="{StaticResource BorderButtonStyle}" HorizontalOptions="End" IsVisible="{OnPlatform Android=false, iOS=false}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding SyncCommand}" Text="{x:Static trans:AppResources.Refresh}"/>
             </Border>
-            <control:DateNavigator  Grid.Row="1"  ShowUnitCurrencySelector="False"
+            <control:DateNavigator  Grid.Row="1"  ShowUnitCurrencySelector="False" CurrentHome="{Binding CurrentHome}"
                                GraphDataChangedCommand="{Binding ReloadGraphDataCommand}" ChartData="{Binding ChartDataRequest}" RoiSimulate="{Binding RoiSimulate}" ShowRoiSimulate="True"/>
 
         </Grid>

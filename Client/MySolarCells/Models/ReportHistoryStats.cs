@@ -1,20 +1,18 @@
-﻿using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Models;
+﻿namespace MySolarCells.Models;
 
 public class ReportHistoryStats
 {
     public DateTime FirstProductionDay { get; set; }
     public DateTime FromDate { get; set; }
     public HistoryStats HistoryStats { get; set; } = new();
-    public int ReportPageTyp { get; set; } = 3;
+    public int ReportPageType { get; set; } = 3;
 }
 
 public class HistoryStats
 {
     
-    public string Unit { get; set; } = "kWh";
-    public string Currency { get; set; } = "SEK";
+    public string Unit { get; set; } = "";
+    public string Currency { get; set; } = "";
 
     // ----------- Purchased ---------------------
     public double Purchased { get; set; }
@@ -48,7 +46,7 @@ public class HistoryStats
     // ----------- BatteryCharge ---------------------
     public double BatteryCharge { get; set; }
     // ----------- combine sum of many values ---------------------
-    public double SumProductionOwnUseAndBatterySaved => Math.Round(SumProductionOwnUseSaved + SumBatteryUseSaved + PeakEnergyReductionSaved, 2);
+    private double SumProductionOwnUseAndBatterySaved => Math.Round(SumProductionOwnUseSaved + SumBatteryUseSaved + PeakEnergyReductionSaved, 2);
     public double SumAllProductionSoldAndSaved => Math.Round(SumProductionSoldProfit + SumProductionOwnUseAndBatterySaved, 2);
     public double SumAllProduction => Math.Round(ProductionSold + ProductionOwnUse + BatteryCharge, 2);
 
@@ -78,13 +76,5 @@ public class HistoryStats
     
     public EnergyCalculationParameter EnergyCalculationParameter { get; set; } = new();
     public PowerTariffParameters? PowerTariffParameters { get; set; }
-
-    //This is only for fun you dont sell this kwh you load the battery  
-    // public double TotalBatteryChargeProfitFake { get; set; } = 0;
-    //public double TotalProductionNegativeSold { get; set; } = 0;
-    // public double TotalProductionSoldNegativeProfit { get; set; } = 0;
-    // public double TotalCompensationForProductionToGridChargeBatteryFake { get; set; } = 0;
-    //public double TotalSavedEnergyTaxReductionBatteryChargeFakeToGrid { get; set; } = 0;
-    //public double SumProductionBatteryChargeFakeSold { get; set; } = 0;
 }
 

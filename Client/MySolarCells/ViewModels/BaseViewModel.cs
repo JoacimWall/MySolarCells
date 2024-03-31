@@ -5,16 +5,20 @@ namespace MySolarCells.ViewModels;
 public partial class BaseViewModel : ObservableObject, IQueryAttributable
 {
     protected IDialogService DialogService { get; set; }
-    private IAnalyticsService AnalyticsService { get; set; }
-    private ILogService LogService { get; set; }
+    protected IAnalyticsService AnalyticsService { get; set; }
+    protected ILogService LogService { get; set; }
     protected ISettingsService SettingsService { get; set; }
+    protected IHomeService HomeService { get; set; }
+    protected IInternetConnectionService InternetConnectionService { get; set; }
     public BaseViewModel(IDialogService dialogService, IAnalyticsService analyticsService,
-        IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService)
+        IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService)
     {
         DialogService = dialogService;
         AnalyticsService = analyticsService;
+        InternetConnectionService = internetConnectionService;
         LogService = logService;
         SettingsService =  settingsService;
+        HomeService = homeService;
         FirstTimeAppearing = true;
         FirstTimeNavigatingTo = true;
         stateEmptyMessage = "";
@@ -31,8 +35,12 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         set
         {
             SetProperty(ref chartDataRequest, value);
-            MySolarCellsGlobals.ChartDataRequest = value;
+            HomeService.SetCurrentChartDataRequest(value);
         }
+    }
+    public Home CurrentHome
+    {
+        get => HomeService.CurrentHome();
     }
     private HistorySimulate roiSimulate = new HistorySimulate();
     public HistorySimulate RoiSimulate

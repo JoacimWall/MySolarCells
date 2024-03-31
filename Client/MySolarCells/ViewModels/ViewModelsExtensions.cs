@@ -1,5 +1,4 @@
 ﻿namespace MySolarCells.ViewModels;
-
 public static class ViewModelsExtensions
 {
     public static MauiAppBuilder ConfigureViewModels(this MauiAppBuilder builder)

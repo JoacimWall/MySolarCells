@@ -1,6 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 public interface IRoiService
 {
     Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats, SavingEstimateParameters savingEstimateParameters);
@@ -43,7 +41,7 @@ public class RoiService :IRoiService
                 for (int i = 1; i < 13; i++)
                 {
                     var afterCurrentDay = i > listCurrentYear.Count;
-                    var beforeFirstDay = i < listCurrentYear.Count ? listCurrentYear[i].FromDate < item.FirstProductionDay : false;
+                    var beforeFirstDay = i < listCurrentYear.Count && listCurrentYear[i].FromDate < item.FirstProductionDay;
                     if (beforeFirstDay || afterCurrentDay)
                     {
                         var calcParameters = listCurrentYear.First().HistoryStats.EnergyCalculationParameter;

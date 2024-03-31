@@ -7,11 +7,11 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
     public EnergyCalculationParameterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         this.mscDbContext = mscDbContext;
-        var list = this.mscDbContext.EnergyCalculationParameter.Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).OrderBy(o => o.FromDate).ToList();
+        var list = this.mscDbContext.EnergyCalculationParameter.Where(x => x.ElectricitySupplierId == HomeService.FirstElectricitySupplier().ElectricitySupplierId).OrderBy(o => o.FromDate).ToList();
         if (list.Count > 0)
         {
             Parameters = new ObservableCollection<EnergyCalculationParameter>(list);
@@ -37,13 +37,13 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
     }
     private void AddParameters(bool firstTime = false)
     {
-        //Clone previus
+        //Clone previous
         if (firstTime)
         {
             Parameters.Add(new EnergyCalculationParameter
             {
-                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
-                FromDate = MySolarCellsGlobals.SelectedHome.FromDate,
+                ElectricitySupplierId = HomeService.FirstElectricitySupplier().ElectricitySupplierId,
+                FromDate = HomeService.FirstElectricitySupplier().FromDate,
             });
         }
         else
@@ -51,7 +51,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
             var paramLast = Parameters.Last();
             Parameters.Add(new EnergyCalculationParameter
             {
-                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+                ElectricitySupplierId = HomeService.FirstElectricitySupplier().ElectricitySupplierId,
                 FromDate = paramLast.FromDate.AddMonths(1),
                 EnergyTax = paramLast.EnergyTax,
                 FixedPriceKwh = paramLast.FixedPriceKwh,

@@ -89,7 +89,7 @@ public class PowerTariffParameters : ObservableObject
     }
    
     [Required]
-    public int HomeId { get; set; }
+    public int ElectricitySupplierId { get; set; }
 
     [NotMapped]
     public string DisplayName => fromDate.ToString("yyyy-MM");

@@ -1,12 +1,8 @@
-﻿using MySolarCellsSQLite.Sqlite;
-
-namespace MySolarCells.Services;
-
+﻿namespace MySolarCells.Services;
 public interface IEnergyChartService
-{
+{ 
     Task<Result<ChartDataResult>> GetChartData(ChartDataRequest chartDataRequest);
 }
-
 public class EnergyChartService : IEnergyChartService
 {
     private readonly IHistoryDataService roiService;
@@ -465,7 +461,7 @@ public class ChartDataRequest : ObservableObject
                 break;
             case ChartDataRange.Year:
                 FilterStart = resultDates.ThisYearStart;
-                FilterEnd = resultDates.ThisYearhEnd;
+                FilterEnd = resultDates.ThisYearEnd;
                 break;
         }
         OnPropertyChanged(nameof(TimeStampTitle));
@@ -486,11 +482,11 @@ public class ChartDataRequest : ObservableObject
                     break;
                 case ChartDataRange.Day:
                     returnString =
-                        $"{FilterStart.ToString("ddd").ToUpper()} {FilterStart.ToString("dd")} {FilterStart.ToString("MMM").ToUpper()}";
+                        $"{FilterStart.ToString("ddd").ToUpper()} {FilterStart:dd} {FilterStart.ToString("MMM").ToUpper()}";
                     break;
                 case ChartDataRange.Week:
                     returnString =
-                        $"{FilterStart.ToString("dd")}{"/"}{FilterStart.ToString("MMM").ToUpper()}{"-"}{FilterEnd.ToString("dd")}{"/"}{FilterEnd.ToString("MMM").ToUpper()}";
+                        $"{FilterStart:dd}/{FilterStart.ToString("MMM").ToUpper()}-{FilterEnd:dd}/{FilterEnd.ToString("MMM").ToUpper()}";
                     break;
                 case ChartDataRange.Month:
                     returnString = FilterStart.ToString("MMMM").ToUpper();

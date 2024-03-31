@@ -12,10 +12,10 @@ namespace MySolarCells.Converters
             if (values != null)
             {
                 DateTime dateTime = (DateTime)values[0];
-                ReportPageTyp reportPageTyp = (ReportPageTyp)values[1];
-                if (reportPageTyp == ReportPageTyp.YearsOverview)
+                ReportPageType reportPageType = (ReportPageType)values[1];
+                if (reportPageType == ReportPageType.YearsOverview)
                     return dateTime.ToString("yyyy");
-                if (reportPageTyp == ReportPageTyp.YearDetails)
+                if (reportPageType == ReportPageType.YearDetails)
                     return dateTime.ToString("MMM").ToUpper();
             }
 

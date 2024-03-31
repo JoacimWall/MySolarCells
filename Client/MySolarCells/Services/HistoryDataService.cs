@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.Services;
+﻿namespace MySolarCells.Services;
 
 public interface IHistoryDataService
 {
@@ -16,9 +12,11 @@ public interface IHistoryDataService
 public class HistoryDataService : IHistoryDataService
 {
     private readonly MscDbContext mscDbContext;
-    public HistoryDataService(MscDbContext mscDbContext)
+    private readonly IHomeService homeService;
+    public HistoryDataService(MscDbContext mscDbContext,IHomeService homeService)
     {
         this.mscDbContext = mscDbContext;
+        this.homeService = homeService;
     }
     //This function can produce wrong if the change of calculation parameters in the middle of the date span 
 
@@ -31,8 +29,8 @@ public class HistoryDataService : IHistoryDataService
         var endDates = DateHelper.GetRelatedDates(end);
         var current = startDate.ThisMonthStart;
 
-        var resultInvest = mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId).ToList();
-        var firstProductionDay = mscDbContext.Energy.AsNoTracking().First(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == MySolarCellsGlobals.SelectedHome.HomeId);
+        var resultInvest = mscDbContext.InvestmentAndLon.AsNoTracking().Include(i => i.Interest).Where(x => x.HomeId == homeService.CurrentHome().HomeId).ToList();
+        var firstProductionDay = mscDbContext.Energy.AsNoTracking().First(x => x.ProductionSold > 0 || x.ProductionOwnUse > 0 && x.HomeId == homeService.CurrentHome().HomeId);
 
         //Get alla data from start to now per month
         while (current < endDates.ThisMonthEnd)
@@ -45,7 +43,7 @@ public class HistoryDataService : IHistoryDataService
             stats.InterestCost = Math.Round(resultInvestmentCalculation.Item2, 2);
             //Correct balance with interest cost
             //stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
-            result.Add(new ReportHistoryStats { FromDate = current, HistoryStats = stats, ReportPageTyp = (int)ReportPageTyp.YearDetails, FirstProductionDay = firstProductionDay.Timestamp });
+            result.Add(new ReportHistoryStats { FromDate = current, HistoryStats = stats, ReportPageType = (int)ReportPageType.YearDetails, FirstProductionDay = firstProductionDay.Timestamp });
             current = current.AddMonths(1);
         }
         // --- Group all per year and get total ----
@@ -64,7 +62,7 @@ public class HistoryDataService : IHistoryDataService
                 TimeSpan timeSpanYear = historyStatsMonthGrpYear.Last().FromDate - historyStatsMonthGrpYear.First().FromDate;
                 ReportHistoryStats newYearStats = new ReportHistoryStats
                 {
-                    ReportPageTyp = (int)ReportPageTyp.YearsOverview,
+                    ReportPageType = (int)ReportPageType.YearsOverview,
                     FromDate = historyStatsMonthGrpYear.First().FromDate,
                     HistoryStats = SummarizeToOneRoiStats(historyStatsMonthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear),
                     FirstProductionDay = firstProductionDay.Timestamp
@@ -121,8 +119,8 @@ public class HistoryDataService : IHistoryDataService
         HistoryStats returnHistory = new HistoryStats
         {
             EnergyCalculationParameter = sumHistory.First().EnergyCalculationParameter,
-            Currency = sumHistory.First().Currency,
-            Unit = sumHistory.First().Unit,
+            Currency = homeService.CurrentHome().CurrencyUnit, 
+            Unit = homeService.CurrentHome().CurrencyUnit,
 
             Purchased = Math.Round(sumHistory.Sum(x => x.Purchased), 2),
             PurchasedCost = Math.Round(sumHistory.Sum(x => x.PurchasedCost), 2),
@@ -301,7 +299,7 @@ public class HistoryDataService : IHistoryDataService
                 //Pick out months
                 IEnumerable<Energy> valid;
                 //pick out weekdays
-                if (powerParams.Weekday && !powerParams.Weekend)
+                if (powerParams is { Weekday: true, Weekend: false })
                     valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
                 else if (!powerParams.Weekday && powerParams.Weekend) //Weekends
                     valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);

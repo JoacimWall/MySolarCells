@@ -5,12 +5,12 @@ public class RoiViewModel : BaseViewModel
     readonly IHistoryDataService roiService;
     readonly IDataSyncService dataSyncService;
     public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;
-        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        ChartDataRequest = HomeService.CurrentChartDataRequest();
         WeakReferenceMessenger.Default.Register<RefreshRoiViewMessage>(this, async (_, _) =>
         {
             await ReloadData();
@@ -22,7 +22,7 @@ public class RoiViewModel : BaseViewModel
     public ICommand SyncCommand => new Command(async () => await Sync());
     public override async Task OnAppearingAsync()
     {
-        ChartDataRequest = MySolarCellsGlobals.ChartDataRequest;
+        ChartDataRequest = HomeService.CurrentChartDataRequest();
         await ReloadData();
         
     }

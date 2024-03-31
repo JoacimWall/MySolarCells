@@ -8,8 +8,8 @@ namespace MySolarCellsSQLite.Sqlite;
 
 public class MscDbContext : DbContext
 {
-    //---------- THIS CODE SHOULD BE ENABLE WHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
-    // Constructor with no argument/empty is required and it is used when adding/removing migrations from class library
+    //---------- THIS CODE SHOULD BE ENABLED WHEN WE CREATE MIGRATION FROM TERMINAL PROMPT -------------------------------
+    // Constructor with no argument/empty is required, and it is used when adding/removing migrations from class library
     // public MscDbContext()
     // {
     // }
@@ -34,7 +34,7 @@ public class MscDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var folderPath = FileSystem.AppDataDirectory;
-        const string filename = "Db_v_1.db3";
+        const string filename = "Db_v_2.db3";
         if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
         {
             //detta som mac catalyst local
@@ -67,8 +67,8 @@ public class MscDbContext : DbContext
         modelBuilder.Entity<InvestmentAndLoan>().HasMany(c => c.Interest);
         modelBuilder.Entity<InvestmentAndLoanInterest>().HasIndex(u => new { u.FromDate, u.InvestmentAndLoanId }).IsUnique();
     }
-
     public DbSet<Home> Home { get; set; }
+    public DbSet<ElectricitySupplier> ElectricitySupplier { get; set; }
     public DbSet<Inverter> Inverter { get; set; }
     public DbSet<Energy> Energy { get; set; }
     public DbSet<EnergyCalculationParameter> EnergyCalculationParameter { get; set; }

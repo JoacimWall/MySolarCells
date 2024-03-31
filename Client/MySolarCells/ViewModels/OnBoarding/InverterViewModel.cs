@@ -1,7 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.ViewModels.OnBoarding;
+﻿namespace MySolarCells.ViewModels.OnBoarding;
 
 public class InverterViewModel : BaseViewModel
 {
@@ -9,13 +6,13 @@ public class InverterViewModel : BaseViewModel
     private readonly MscDbContext mscDbContext;
     IInverterServiceInterface? inverterService;
     public InverterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService, homeService)
     {
         this.mscDbContext = mscDbContext;
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.HomeAssistent.ToString(), ItemValue = (int)InverterTyp.HomeAssistent });
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.Huawei.ToString(), ItemValue = (int)InverterTyp.Huawei });
-        InverterModels.Add(new PickerItem { ItemTitle = InverterTyp.SolarEdge.ToString(), ItemValue = (int)InverterTyp.SolarEdge });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.HomeAssistent.ToString(), ItemValue = (int)InverterTypeEnum.HomeAssistent });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.Huawei.ToString(), ItemValue = (int)InverterTypeEnum.Huawei });
+        InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.SolarEdge.ToString(), ItemValue = (int)InverterTypeEnum.SolarEdge });
        
         var inverter = this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault();
         if (inverter == null)
@@ -94,7 +91,7 @@ public class InverterViewModel : BaseViewModel
                 SubSystemEntityId = resultInverter.Model.InverterId,
                 InverterTyp = SelectedInverterModel.ItemValue,
                 FromDate = new DateTime(installDate.Year, installDate.Month, installDate.Day),
-                HomeId = MySolarCellsGlobals.SelectedHome.HomeId,
+                HomeId = HomeService.CurrentHome().HomeId,
                 Name = resultInverter.Model.Name,
                 UserName = userName,
                 Password = string.IsNullOrEmpty(password) ? "" : password.Encrypt(AppConstants.Secretkey),

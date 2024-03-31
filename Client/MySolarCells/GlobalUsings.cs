@@ -5,6 +5,7 @@ global using System.Threading.Tasks;
 global using System.Collections;
 global using System.Collections.ObjectModel;
 global using System.Windows.Input;
+global using System.Globalization;
 
 global using Microsoft.Maui.Graphics;
 
@@ -41,3 +42,5 @@ global using MySolarCells.Services.Inverter;
 global using MySolarCells.Services.GridSupplier;
 
 //SQLITE
+global using MySolarCellsSQLite.Sqlite;
+global using MySolarCellsSQLite.Sqlite.Models;

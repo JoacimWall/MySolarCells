@@ -1,7 +1,4 @@
-﻿using MySolarCellsSQLite.Sqlite;
-using MySolarCellsSQLite.Sqlite.Models;
-
-namespace MySolarCells.ViewModels.Roi;
+﻿namespace MySolarCells.ViewModels.Roi;
 
 public class ReportViewModel : BaseViewModel
 {
@@ -9,8 +6,8 @@ public class ReportViewModel : BaseViewModel
     readonly IRoiService roiService;
     private readonly MscDbContext mscDbContext;
     public ReportViewModel(IHistoryDataService historyDataService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionHelper internetConnectionHelper, ILogService logService,ISettingsService settingsService): base(dialogService, analyticsService, internetConnectionHelper,
-        logService,settingsService)
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
+        logService,settingsService,homeService)
     {
         
         this.historyDataService = historyDataService;
@@ -25,7 +22,7 @@ public class ReportViewModel : BaseViewModel
             this.mscDbContext.SaveChanges();
         }
         savingEstimateParameters = exist;
-        selReportPage = new ReportModel();
+        selectedReportPage = new ReportModel();
     }
     public ICommand MoreButtonCommand => new Command(async () => await MoreButton());
 
@@ -45,9 +42,9 @@ public class ReportViewModel : BaseViewModel
         await Task.Delay(300);
         for (int i = ReportData.Count - 1; i >= 0; i--)
         {
-            if (ReportData[i] == SelReportPage && i > 0)
+            if (ReportData[i] == SelectedReportPage && i > 0)
             {
-                SelReportPage = ReportData[i - 1];
+                SelectedReportPage = ReportData[i - 1];
                 return;
             }
         }
@@ -65,9 +62,9 @@ public class ReportViewModel : BaseViewModel
         await Task.Delay(300);
         for (int i = 0; i < ReportData.Count; i++)
         {
-            if (ReportData[i] == SelReportPage && i < ReportData.Count - 1)
+            if (ReportData[i] == SelectedReportPage && i < ReportData.Count - 1)
             {
-                SelReportPage = ReportData[i + 1];
+                SelectedReportPage = ReportData[i + 1];
                 return;
             }
         }
@@ -84,7 +81,7 @@ public class ReportViewModel : BaseViewModel
     private Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>? resultHistory;
     private async Task ReloadHistoryData()
     {
-        resultHistory = await historyDataService.GenerateTotalPerMonthReport(MySolarCellsGlobals.SelectedHome.FromDate, DateTime.Today);
+        resultHistory = await historyDataService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today);
         if (!resultHistory.WasSuccessful)
         {
             await DialogService.ShowAlertAsync(resultHistory.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
@@ -113,29 +110,29 @@ public class ReportViewModel : BaseViewModel
                         {
                             ReportData.Add(new ReportModel
                             {
-                                EstimateRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEstimate,
+                                EstimateRoi = resultRoi.Model, ReportPageType = ReportPageType.SavingEstimate,
                                 ReportTitle = AppResources.Savings_Calculation
                             });
                             ReportData.Add(new ReportModel
                             {
-                                Stats = resultHistory.Model.Item1, ReportPageTyp = ReportPageTyp.YearsOverview,
+                                Stats = resultHistory.Model.Item1, ReportPageType = ReportPageType.YearsOverview,
                                 ReportTitle = AppResources.Year_Overview
                             });
                             foreach (var item in resultHistory.Model.Item2)
                             {
                                 ReportData.Add(new ReportModel
                                 {
-                                    Stats = item, ReportPageTyp = ReportPageTyp.YearDetails,
+                                    Stats = item, ReportPageType = ReportPageType.YearDetails,
                                     ReportTitle = string.Format(AppResources.Details_Year, item.First().FromDate.Year)
                                 });
                             }
                             await Task.Delay(300);
-                            SelReportPage = ReportData.First();
+                            SelectedReportPage = ReportData.First();
                         }
                         else
                         {
-                            ReportData[0] = new ReportModel { EstimateRoi = resultRoi.Model, ReportPageTyp = ReportPageTyp.SavingEstimate, ReportTitle = AppResources.Savings_Calculation };
-                            SelReportPage = ReportData.First();
+                            ReportData[0] = new ReportModel { EstimateRoi = resultRoi.Model, ReportPageType = ReportPageType.SavingEstimate, ReportTitle = AppResources.Savings_Calculation };
+                            SelectedReportPage = ReportData.First();
                         }
                     }
                 }
@@ -164,11 +161,11 @@ public class ReportViewModel : BaseViewModel
         get => savingEstimateParameters;
         set => SetProperty(ref savingEstimateParameters, value);
     }
-    private ReportModel selReportPage;
-    public ReportModel SelReportPage
+    private ReportModel selectedReportPage;
+    public ReportModel SelectedReportPage
     {
-        get => selReportPage;
-        set => SetProperty(ref selReportPage, value);
+        get => selectedReportPage;
+        set => SetProperty(ref selectedReportPage, value);
     }
     private List<ReportModel> reportData = new List<ReportModel>();
     public List<ReportModel> ReportData
