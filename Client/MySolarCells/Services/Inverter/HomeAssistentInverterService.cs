@@ -217,7 +217,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
             int batch100 = 0;
             var energyList = new List<Energy>();
             var end = DateTime.Now;
-
+            progress.Report(progressStartNr);
             const int daysScope = 4;
             while (start < end)
             {
@@ -274,7 +274,6 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
                 foreach (var item in lastEnergyResult.result)
                 {
-                    progressStartNr++;
                     batch100++;
                     var timestampProd = Convert.ToDateTime(item.Key);
                     var energyExist = mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
@@ -295,35 +294,31 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                         }
                         energyExist.ProductionOwnUseSynced = true;
                         energyExist.InverterTypeProductionOwnUse = (int)InverterTypeEnum.HomeAssistent;
-
                         energyList.Add(energyExist);
 
                     }
-   
-
+                    if (batch100 == 100)
+                    {
+                        batch100 = 0;
+                        await mscDbContext.BulkUpdateAsync(energyList);
+                        energyList = new List<Energy>();
+                    }
                 }
-                if (batch100 == 100)
-                {
-                    await Task.Delay(100); //Så att GUI hinner uppdatera
-                    progress.Report(progressStartNr);
-
-                    batch100 = 0;
-                    await mscDbContext.BulkUpdateAsync(energyList);
-                    energyList = new List<Energy>();
-                }
-                if (lastEnergyResult.result.Count < (daysScope * 24))
-                {
-                    progressStartNr = progressStartNr + ((daysScope * 24) - lastEnergyResult.result.Count);
-                }
+                //Update progress
+                progressStartNr = progressStartNr + ((daysScope * 24));
+                progress.Report(progressStartNr);
+                await Task.Delay(200); //Så att GUI hinner uppdatera
                 start = nextStart;
             }
 
             if (energyList.Count > 0)
             {
-                await Task.Delay(100); //So that the GUI has time to update
-                progress.Report(progressStartNr);
+                
                 await mscDbContext.BulkUpdateAsync(energyList);
             }
+            
+            progress.Report(progressStartNr);
+            await Task.Delay(200); //So that the GUI has time to update
             return new Result<DataSyncResponse>(new DataSyncResponse
             {
                 SyncState = DataSyncState.ProductionSync,
