@@ -9,15 +9,14 @@ public class DataSyncService : IDataSyncService
     private readonly MscDbContext mscDbContext;
     public DataSyncService(MscDbContext mscDbContext)
     {
-        this.mscDbContext= mscDbContext;
+        this.mscDbContext = mscDbContext;
     }
 
     public async Task<Result<DataSyncResponse>> Sync()
     {
         var gridSupplierInterface = ServiceHelper.GetGridSupplierService(mscDbContext.ElectricitySupplier.First().ElectricitySupplierType);
-        var inverterService = ServiceHelper.GetInverterService(mscDbContext.Inverter.OrderByDescending(s => s.FromDate).First().InverterTyp);
-      
-       
+
+
 
         mscDbContext.Log.Add(new Log
         {
@@ -28,77 +27,68 @@ public class DataSyncService : IDataSyncService
         });
         //Get last Sync Time for grid supplier
         var lastSyncTime = await mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
-        var lastSyncInverterTime = await mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
 
-        if (lastSyncTime == null || lastSyncInverterTime == null)
-            return new Result<DataSyncResponse>("No data in Energy table"); 
-            
-        var previousHourDatetime = DateTime.Now.AddHours(-1);   
-        var prevHoleHour = new DateTime(previousHourDatetime.Year, previousHourDatetime.Month, previousHourDatetime.Day, previousHourDatetime.Hour,0,0);
-        if (lastSyncTime.Timestamp >= prevHoleHour && lastSyncInverterTime.Timestamp >= prevHoleHour)
+        if (lastSyncTime == null)
+            return new Result<DataSyncResponse>("No data in Energy table");
+
+        var previousHourDatetime = DateTime.Now.AddHours(-1);
+        var prevHoleHour = new DateTime(previousHourDatetime.Year, previousHourDatetime.Month, previousHourDatetime.Day, previousHourDatetime.Hour, 0, 0);
+        if (lastSyncTime.Timestamp < prevHoleHour)
         {
-            mscDbContext.Log.Add(new Log
+            var difference = DateTime.Now - lastSyncTime.Timestamp;
+            var days = difference.Days;
+            var hours = difference.Hours;
+            var totalHours = (days * 24) + hours;
+
+            var progress = new Progress<int>(currentDay =>
             {
-                LogTitle = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More,
-                CreateDate = DateTime.Now,
-                LogDetails = "",
-                LogTyp = (int)LogTypeEnum.Info
+                CalculateProgress(currentDay, totalHours);
             });
-            return new Result<DataSyncResponse>(new DataSyncResponse { Message = AppResources.Synchronization_Not_Started_As_We_Have_All_Data_And_More });
+
+          
+            await Task.Delay(200);
+            var result = await gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
+            if (!result.WasSuccessful)
+                return result;
+
         }
-
-        var difference = DateTime.Now - lastSyncTime.Timestamp;
-
-        var days = difference.Days;
-        var hours = difference.Hours;
-        var totalHours = (days * 24) + hours;
-
-        var progress = new Progress<int>(currentDay =>
-        {
-            CalculateProgress(currentDay, totalHours);
-        });
-
-        //await Task.Delay(200);
-        //keepUploading = true;
-
-        //ShowProgressStatus = true;
-        //ProgressStatus = "Import consumption and sold production.";
-        //ProgressSubStatus = "saved rows 0";
-        await Task.Delay(200);
-        var result = await gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
-        if (!result.WasSuccessful)
-            return result;
-
-
-        //ShowProgressStatus = true;
-        //ProgressStatus = "Import solar own use and calculate profit.";
-        //ProgressSubStatus = "saved rows 0";
+        
         await Task.Delay(200);
 
         //It needs to be updated after grid sync to be correct.
-         lastSyncInverterTime = mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
-
-        var differenceInverter = DateTime.Now - lastSyncInverterTime.Timestamp;
-
-        var daysInv = differenceInverter.Days;
-        var hoursInv = differenceInverter.Hours;
-        var totalHoursInverter = (daysInv * 24) + hoursInv;
-        progress = new Progress<int>(currentDay =>
+        var lastSyncInverterTime = mscDbContext.Energy.Where(x => x.ProductionOwnUseSynced == true && x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).First();
+        if (lastSyncInverterTime.Timestamp < prevHoleHour)
         {
-            CalculateProgress(currentDay, totalHoursInverter);
-        });
-        var resultInverter = await inverterService.Sync(lastSyncInverterTime.Timestamp, progress, 0);
-       
+            var differenceInverter = DateTime.Now - lastSyncInverterTime.Timestamp;
 
-        mscDbContext.Log.Add(new Log
+            var daysInv = differenceInverter.Days;
+            var hoursInv = differenceInverter.Hours;
+            var totalHoursInverter = (daysInv * 24) + hoursInv;
+            var progress = new Progress<int>(currentDay =>
+            {
+                CalculateProgress(currentDay, totalHoursInverter);
+            });
+            //INVERTER
+            var inverterService = ServiceHelper.GetInverterService(mscDbContext.Inverter.OrderByDescending(s => s.FromDate).First().InverterTyp);
+
+            var resultInverter = await inverterService.Sync(lastSyncInverterTime.Timestamp, progress, 0);
+            if (!resultInverter.WasSuccessful)
+                return resultInverter;
+        }
+
+        //mscDbContext.Log.Add(new Log
+        //{
+        //    LogTitle = "Sync done",
+        //    CreateDate = DateTime.Now,
+        //    LogDetails = "",
+        //    LogTyp = result.WasSuccessful ? (int)LogTypeEnum.Info : (int)LogTypeEnum.Error
+        //});
+
+         return new Result<DataSyncResponse>(new DataSyncResponse
         {
-            LogTitle = "Sync done",
-            CreateDate = DateTime.Now,
-            LogDetails = "",
-            LogTyp = result.WasSuccessful ? (int)LogTypeEnum.Info : (int)LogTypeEnum.Error
+            SyncState = DataSyncState.ProductionSync,
+            Message = AppResources.Import_Of_Production_Done
         });
-       
-        return resultInverter;
 
     }
     private void CalculateProgress(long completed, long total)
@@ -108,10 +98,10 @@ public class DataSyncService : IDataSyncService
         // var percentage = comp / tot;
     }
 
-   
+
 }
 
-    
+
 
 
 

@@ -1,4 +1,5 @@
 ﻿using MySolarCells.Services.GridSupplier.Models;
+using NetTopologySuite.Index.HPRtree;
 
 namespace MySolarCells.Services.GridSupplier;
 
@@ -22,7 +23,7 @@ public class TibberService : IGridSupplierInterface
 
     private GridSupplierLoginResponse? gridSupplierLoginResponse;
 
-    public TibberService(IRestClient restClient, MscDbContext mscDbContext,IHomeService homeService, ILogService logService)
+    public TibberService(IRestClient restClient, MscDbContext mscDbContext, IHomeService homeService, ILogService logService)
     {
         this.restClient = restClient;
         this.mscDbContext = mscDbContext;
@@ -31,7 +32,7 @@ public class TibberService : IGridSupplierInterface
         Dictionary<string, string> defaultRequestHeaders = new Dictionary<string, string>();
 
         this.restClient.ApiSettings = new ApiSettings
-            { BaseUrl = "https://api.tibber.com/v1-beta/gql", DefaultRequestHeaders = defaultRequestHeaders };
+        { BaseUrl = "https://api.tibber.com/v1-beta/gql", DefaultRequestHeaders = defaultRequestHeaders };
         ReInitRest();
     }
 
@@ -68,9 +69,9 @@ public class TibberService : IGridSupplierInterface
                 ? result.ErrorMessage
                 : AppResources.The_Login_Failed_Check_That_You_Entered_The_Correct_Information);
         gridSupplierLoginResponse = new GridSupplierLoginResponse
-            { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() };
+        { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() };
         return new Result<GridSupplierLoginResponse>(new GridSupplierLoginResponse
-            { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() });
+        { ApiKey = apiKey, ResponseText = result.Model.data.viewer.accountType.First() });
     }
 
     public async Task<Result<List<ElectricitySupplier>>> GetPickerOne()
@@ -110,7 +111,7 @@ public class TibberService : IGridSupplierInterface
 
             var dates = DateHelper.GetRelatedDates(DateTime.Today);
             DateTime end = dates.BaseDate.AddDays(1);
-            
+
             //We want to sync Spot Price prices hole day
             //other data only until last hour  
             while (start < end)
@@ -121,14 +122,14 @@ public class TibberService : IGridSupplierInterface
                 {
                     startDateForImport = start;
                     difference = start.AddMonths(3) - start;
-                    logService.ConsoleWriteLineDebug( $"Import from {start.ToShortDateString()} to {start.AddDays(difference.Days).ToShortDateString()}");
+                    logService.ConsoleWriteLineDebug($"Import from {start.ToShortDateString()} to {start.AddDays(difference.Days).ToShortDateString()}");
                     start = start.AddMonths(3);
                 }
                 else
                 {
                     startDateForImport = start;
                     difference = end - start;
-                    logService.ConsoleWriteLineDebug( $"Import from {start.ToShortDateString()} to {start.AddDays(difference.Days).ToShortDateString()}");
+                    logService.ConsoleWriteLineDebug($"Import from {start.ToShortDateString()} to {start.AddDays(difference.Days).ToShortDateString()}");
                     start = end;
                 }
 
@@ -146,12 +147,11 @@ public class TibberService : IGridSupplierInterface
                     },
                     query = "query getdata($homeid: ID!, $from: String, $first: Int) { viewer { home(id: $homeid) { consumption(resolution: HOURLY, after: $from, first: $first) { nodes { from to cost unitPrice unitPriceVAT consumption consumptionUnit currency } } production(resolution: HOURLY, after: $from, first: $first) { nodes { from to profit unitPrice unitPriceVAT production productionUnit currency}}}}}"
                 };
-                var resultSites =
-                    await restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
+                var resultSites = await restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibber);
                 if (resultSites.Model == null)
                     return new Result<DataSyncResponse>("No values");
-                var consumptionI = resultSites.Model.data.viewer.home.consumption.nodes.Count;
 
+                var consumptionI = resultSites.Model.data.viewer.home.consumption.nodes.Count;
 
                 //used to check så the backend not give the same value twice
                 var existCheckDb = true;
@@ -164,16 +164,11 @@ public class TibberService : IGridSupplierInterface
                     //Save Consumption
                     var energy = resultSites.Model.data.viewer.home.consumption.nodes[i];
 
-                    //jumps if it is the current hour or more
-                    //if (energy.from.Value > DateTime.Now.AddHours(-1))
-                    //    continue;
-
                     //check if exist in db
                     Energy? energyExist = null;
                     if (existCheckDb && energy.from != null)
                     {
-                        energyExist = await mscDbContext.Energy.FirstOrDefaultAsync(x =>
-                            x.Timestamp == energy.from.Value && x.HomeId == homeService.CurrentHome().HomeId);
+                        energyExist = await mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == homeService.CurrentHome().HomeId);
                         if (energyExist == null)
                         {
                             existCheckDb = false;
@@ -181,17 +176,15 @@ public class TibberService : IGridSupplierInterface
                         }
                         else
                         {
+                            energyExist.ElectricitySupplierPurchased = (int)ElectricitySupplierEnum.Tibber;
                             updateEntity = true;
                         }
                     }
 
-                    if (energyExist == null)
-                    {
-                        //if already added
-                        if (energyInsertList.Any(x => energy.from != null && x.Timestamp == energy.from.Value))
-                            continue;
 
-                        if (!updateEntity && energy.from != null)
+                    if (energy.from != null)
+                    {
+                        if (energyExist == null)
                         {
                             energyExist = new Energy
                             {
@@ -201,101 +194,118 @@ public class TibberService : IGridSupplierInterface
                                 Timestamp = energy.from.Value,
                                 ElectricitySupplierPurchased = (int)ElectricitySupplierEnum.Tibber
                             };
+                        }
 
+                        if (importOnlySpotPrice)
+                        {
+                            energyExist.Purchased = 0;
+                            energyExist.PurchasedCost = 0;
+                        }
+                        else
+                        {
+                            energyExist.Purchased = energy.consumption.HasValue ? Convert.ToDouble(energy.consumption.Value) : 0;
+                            energyExist.PurchasedCost = energy.cost.HasValue ? Convert.ToDouble(energy.cost.Value) : 0;
+                        }
 
+                        energyExist.UnitPriceBuy = energy.unitPrice.HasValue ? Convert.ToDouble(energy.unitPrice.Value) : 0;
+                        energyExist.UnitPriceVatBuy = energy.unitPriceVAT.HasValue ? Convert.ToDouble(energy.unitPriceVAT.Value) : 0;
+
+                        //production
+
+                        var energyProd = resultSites.Model.data.viewer.home.production.nodes.FirstOrDefault(x => x.from == energy.from.Value);
+                        if (energyProd != null)
+                        {
+                            energyExist.ElectricitySupplierProductionSold = (int)ElectricitySupplierEnum.Tibber;
                             if (importOnlySpotPrice)
                             {
-                                energyExist.Purchased = 0;
-                                energyExist.PurchasedCost = 0;
+                                energyExist.ProductionSold = 0;
+                                energyExist.ProductionSoldProfit = 0;
                             }
                             else
                             {
-                                energyExist.Purchased = energy.consumption.HasValue
-                                    ? Convert.ToDouble(energy.consumption.Value)
+                                energyExist.ProductionSold = energyProd.production.HasValue
+                                    ? Convert.ToDouble(energyProd.production.Value)
                                     : 0;
-                                energyExist.PurchasedCost =
-                                    energy.cost.HasValue ? Convert.ToDouble(energy.cost.Value) : 0;
+                                energyExist.ProductionSoldProfit = energyProd.profit.HasValue
+                                    ? Convert.ToDouble(energyProd.profit.Value)
+                                    : 0;
                             }
 
-                            energyExist.UnitPriceBuy =
-                                energy.unitPrice.HasValue ? Convert.ToDouble(energy.unitPrice.Value) : 0;
-                            energyExist.UnitPriceVatBuy = energy.unitPriceVAT.HasValue
-                                ? Convert.ToDouble(energy.unitPriceVAT.Value)
+                            energyExist.UnitPriceSold = energyProd.unitPrice.HasValue
+                                ? Convert.ToDouble(energyProd.unitPrice.Value)
                                 : 0;
-                            //only flag row as synced if time has passed we import spot price for future hours 
-                            if (energyExist.Timestamp < DateTime.Now.AddHours(-2))
+                            energyExist.UnitPriceVatSold = energyProd.unitPriceVAT.HasValue
+                                ? Convert.ToDouble(energyProd.unitPriceVAT.Value)
+                                : 0;
+                            //only flag row as synced if time has passed we import spot price for future hours
+                            var dateTimeMinus15MinHeltimma = DateTime.Now.AddMinutes(-15);
+                            if (energy!.to!.Value <= new DateTime(dateTimeMinus15MinHeltimma.Year, dateTimeMinus15MinHeltimma.Month, dateTimeMinus15MinHeltimma.Day, dateTimeMinus15MinHeltimma.Hour, 0, 0))
+                            {
+                                energyExist.ProductionSoldSynced = true;
                                 energyExist.PurchasedSynced = true;
-                            //production
-
-                            var energyProd =
-                                resultSites.Model.data.viewer.home.production.nodes.FirstOrDefault(x =>
-                                    x.from == energy.from.Value);
-                            if (energyProd != null)
-                            {
-                                energyExist.ElectricitySupplierProductionSold = (int)ElectricitySupplierEnum.Tibber;
-                                if (importOnlySpotPrice)
-                                {
-                                    energyExist.ProductionSold = 0;
-                                    energyExist.ProductionSoldProfit = 0;
-                                }
-                                else
-                                {
-                                    energyExist.ProductionSold = energyProd.production.HasValue
-                                        ? Convert.ToDouble(energyProd.production.Value)
-                                        : 0;
-                                    energyExist.ProductionSoldProfit = energyProd.profit.HasValue
-                                        ? Convert.ToDouble(energyProd.profit.Value)
-                                        : 0;
-                                }
-
-                                energyExist.UnitPriceSold = energyProd.unitPrice.HasValue
-                                    ? Convert.ToDouble(energyProd.unitPrice.Value)
-                                    : 0;
-                                energyExist.UnitPriceVatSold = energyProd.unitPriceVAT.HasValue
-                                    ? Convert.ToDouble(energyProd.unitPriceVAT.Value)
-                                    : 0;
-                                //only flag row as synced if time has passed we import spot price for future hours 
-                                if (energyExist.Timestamp < DateTime.Now.AddHours(-2))
-                                    energyExist.ProductionSoldSynced = true;
                             }
 
+                            
+                        }
+                        //add rows 
+                        if (!updateEntity)
+                        {
+                            var existInInsert = energyInsertList.FirstOrDefault(x => x.Timestamp == energyExist.Timestamp);
+                            if (existInInsert != null)
+                            {
+                                for (int j = 0; j < energyInsertList.Count; j++)
+                                {
+                                    if (energyInsertList[j].Timestamp == energyExist.Timestamp)
+                                    {
+                                        energyInsertList[j] = energyExist;
+                                        continue;
+                                    }
+                                }
 
-                            if (!updateEntity)
-                                energyInsertList.Add(energyExist);
+                            }
                             else
-                                energyUpdateList.Add(energyExist);
+                                energyInsertList.Add(energyExist);
+                        }
+                        else
+                        {
+                            energyUpdateList.Add(energyExist);
+                        }
+                        if (batch100 == 100)
+                        {
+                            await Task.Delay(100); //So that the GUI has time to update
+                            progress.Report(progressStartNr);
+
+                            batch100 = 0;
+                            await mscDbContext.BulkInsertAsync(energyInsertList);
+                            energyInsertList = new List<Energy>();
+                            Console.WriteLine("Bulk insert OK");
+                            await mscDbContext.BulkUpdateAsync(energyUpdateList);
+                            energyUpdateList = new List<Energy>();
+                            Console.WriteLine("Bulk update OK");
 
 
-                            if (batch100 == 100)
-                            {
-                                await Task.Delay(100); //So that the GUI has time to update
-                                progress.Report(progressStartNr);
-
-                                batch100 = 0;
-                                await mscDbContext.BulkInsertAsync(energyInsertList);
-                                await mscDbContext.BulkUpdateAsync(energyUpdateList);
-                                energyInsertList = new List<Energy>();
-                                energyUpdateList = new List<Energy>();
-                            }
                         }
                     }
                 }
+                
             }
-
-            if (energyInsertList.Count > 0)
+            //Last 100 or less
+            if (energyInsertList.Count > 0 || energyUpdateList.Count > 0)
             {
                 await Task.Delay(100); //So that the GUI has time to update
                 progress.Report(progressStartNr);
 
                 batch100 = 0;
                 await mscDbContext.BulkInsertAsync(energyInsertList);
+                energyInsertList = new List<Energy>();
                 await mscDbContext.BulkUpdateAsync(energyUpdateList);
-                energyInsertList = new();
+                energyUpdateList = new List<Energy>();
+                
             }
 
             //Fill all null productions so that we don't have to loop throw then on more time.
-            var emptyEnergyExist = mscDbContext.Energy.Where(x =>
-                x.ElectricitySupplierProductionSold == (int)InverterTypeEnum.Unknown && x.HomeId == homeId);
+            energyUpdateList = new List<Energy>();
+            var emptyEnergyExist = mscDbContext.Energy.Where(x => x.ElectricitySupplierProductionSold == (int)InverterTypeEnum.Unknown && x.HomeId == homeId);
             foreach (var energy in emptyEnergyExist)
             {
                 batch100++;
@@ -305,18 +315,18 @@ public class TibberService : IGridSupplierInterface
                 if (energy.Timestamp < DateTime.Now)
                     energy.ProductionSoldSynced = true;
 
-                energyInsertList.Add(energy);
+                energyUpdateList.Add(energy);
                 if (batch100 == 100)
                 {
                     batch100 = 0;
-                    await mscDbContext.BulkUpdateAsync(energyInsertList);
-                    energyInsertList = new List<Energy>();
+                    await mscDbContext.BulkUpdateAsync(energyUpdateList);
+                    energyUpdateList = new List<Energy>();
                 }
             }
 
-            if (energyInsertList.Count > 0)
+            if (energyUpdateList.Count > 0)
             {
-                await mscDbContext.BulkUpdateAsync(energyInsertList);
+                await mscDbContext.BulkUpdateAsync(energyUpdateList);
             }
 
             //-------- Sync future prices spot ---------------------
@@ -329,8 +339,7 @@ public class TibberService : IGridSupplierInterface
                 query =
                     "query getdata($homeid: ID!) { viewer { home(id: $homeid) { currentSubscription { priceInfo { today { total energy tax level startsAt currency } tomorrow { total energy tax level startsAt currency }}}}}}"
             };
-            var result =
-                await restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibberPrice);
+            var result = await restClient.ExecutePostAsync<TibberResponse>(string.Empty, graphQlRequestTibberPrice);
             if (!result.WasSuccessful || result.Model == null)
                 return new Result<DataSyncResponse>(result.ErrorMessage);
             List<TibberPrice> listPrice = new List<TibberPrice>();
@@ -342,7 +351,7 @@ public class TibberService : IGridSupplierInterface
             foreach (var priceItem in listPrice)
             {
                 var existPrice = await mscDbContext.Energy.FirstOrDefaultAsync(x =>
-                    x.Timestamp == priceItem.startsAt && x.HomeId ==homeService.CurrentHome().HomeId);
+                    x.Timestamp == priceItem.startsAt && x.HomeId == homeService.CurrentHome().HomeId);
                 if (existPrice == null)
                 {
                     existPrice = new Energy
@@ -365,7 +374,6 @@ public class TibberService : IGridSupplierInterface
                 existPrice.PriceLevel = priceItem.level;
                 await mscDbContext.SaveChangesAsync();
             }
-
             return new Result<DataSyncResponse>(new DataSyncResponse
             {
                 Message = AppResources.Import_Data_From_Electricity_Supplier_Done,

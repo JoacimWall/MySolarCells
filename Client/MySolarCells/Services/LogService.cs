@@ -47,10 +47,10 @@ public class LogService : ILogService
 #if RELEASE
         System.Collections.Generic.Dictionary<string, string> logInfo = new Dictionary<string, string>();
         logInfo.Add("AppPackageName", AppInfo.PackageName);
-        logInfo.Add("LastOnStart", TietoGlobals.LastOnStart.ToString());
-        logInfo.Add("LastOnSleep", TietoGlobals.LastOnSleep.ToString());
-        logInfo.Add("LastOnResume", TietoGlobals.LastOnResume.ToString());
-        logInfo.Add("HasInternetConnection", this.internetConnectionHelper.InternetAccess().ToString());
+        //logInfo.Add("LastOnStart", TietoGlobals.LastOnStart.ToString());
+        //logInfo.Add("LastOnSleep", TietoGlobals.LastOnSleep.ToString());
+        //logInfo.Add("LastOnResume", TietoGlobals.LastOnResume.ToString());
+        //logInfo.Add("HasInternetConnection", this.internetConnectionHelper.InternetAccess().ToString());
         logInfo.Add("HasReceivedMemoryWarningInLastSession",Crashes.HasReceivedMemoryWarningInLastSessionAsync().Result.ToString());
 
         foreach (var item in info)
@@ -71,10 +71,10 @@ public class LogService : ILogService
 #if RELEASE
         Dictionary<string, string> logInfo = new Dictionary<string, string>();
         logInfo.Add("AppPackageName", AppInfo.PackageName);
-        logInfo.Add("LastOnStart", TietoGlobals.LastOnStart.ToString());
-        logInfo.Add("LastOnSleep", TietoGlobals.LastOnSleep.ToString());
-        logInfo.Add("LastOnResume", TietoGlobals.LastOnResume.ToString());
-        logInfo.Add("HasInternetConnection", this.internetConnectionHelper.InternetAccess().ToString());
+        //logInfo.Add("LastOnStart", TietoGlobals.LastOnStart.ToString());
+        //logInfo.Add("LastOnSleep", TietoGlobals.LastOnSleep.ToString());
+        //logInfo.Add("LastOnResume", TietoGlobals.LastOnResume.ToString());
+        //logInfo.Add("HasInternetConnection", this.internetConnectionHelper.InternetAccess().ToString());
         logInfo.Add("HasReceivedMemoryWarningInLastSession", Crashes.HasReceivedMemoryWarningInLastSessionAsync().Result.ToString());
         if (!string.IsNullOrEmpty(info))
             logInfo.Add("Info", info);

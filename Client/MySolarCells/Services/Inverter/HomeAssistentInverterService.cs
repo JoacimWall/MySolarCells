@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using MySolarCells.Services.Inverter.Models;
+using MySolarCellsSQLite.Sqlite.Models;
 
 namespace MySolarCells.Services.Inverter;
 
@@ -235,8 +236,11 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     processingDateFrom = new DateTime(start.Year, start.Month, start.Day);//.ToString("yyyy-MM-dd");
                     processingDateTo = new DateTime(end.Year, end.Month, end.Day);//.ToString("yyyy-MM-dd");
                     //Sista dagen då kör vi till midnatt
-                    if (end.Day == start.Day)
-                        processingDateTo = processingDateTo.AddDays(1);
+                    if (end.Day == DateTime.Now.Day)
+                    {
+                        var nextDay = DateTime.Now.AddDays(1);
+                        processingDateTo = new DateTime(nextDay.Year, nextDay.Month, nextDay.Day);
+                    }
 
                     nextStart = end;
                 }
@@ -274,9 +278,11 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     batch100++;
                     var timestampProd = Convert.ToDateTime(item.Key);
                     var energyExist = mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
-                    if (energyExist != null && (energyExist.Timestamp < end.AddHours(-2)))
+                    var dateTimeMinus15MinHeltimma = DateTime.Now.AddMinutes(-15);
+                    
+                    if (energyExist != null && energyExist.ProductionSoldSynced && (energyExist.Timestamp <= new DateTime(dateTimeMinus15MinHeltimma.Year, dateTimeMinus15MinHeltimma.Month, dateTimeMinus15MinHeltimma.Day, dateTimeMinus15MinHeltimma.Hour,0,0)))
                     {
-                        if (item.Value > 0 && energyExist.ProductionSoldSynced)
+                        if (item.Value > 0)
                         {
                             energyExist.ProductionOwnUse = item.Value - Convert.ToDouble(energyExist.ProductionSold);
                             //Only add if price over zero
@@ -284,25 +290,26 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                                 energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
                             else
                                 energyExist.ProductionOwnUseProfit = 0;
-                        }
-                        energyExist.InverterTypeProductionOwnUse = (int)InverterTypeEnum.HomeAssistent;
 
+                            
+                        }
                         energyExist.ProductionOwnUseSynced = true;
+                        energyExist.InverterTypeProductionOwnUse = (int)InverterTypeEnum.HomeAssistent;
 
                         energyList.Add(energyExist);
 
                     }
+   
 
-                    if (batch100 == 100)
-                    {
-                        await Task.Delay(100); //Så att GUI hinner uppdatera
-                        progress.Report(progressStartNr);
+                }
+                if (batch100 == 100)
+                {
+                    await Task.Delay(100); //Så att GUI hinner uppdatera
+                    progress.Report(progressStartNr);
 
-                        batch100 = 0;
-                        await mscDbContext.BulkUpdateAsync(energyList);
-                        energyList = new List<Energy>();
-                    }
-
+                    batch100 = 0;
+                    await mscDbContext.BulkUpdateAsync(energyList);
+                    energyList = new List<Energy>();
                 }
                 if (lastEnergyResult.result.Count < (daysScope * 24))
                 {

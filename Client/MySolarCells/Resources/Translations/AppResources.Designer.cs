@@ -1148,5 +1148,11 @@ namespace MySolarCells.Resources.Translations {
                 return ResourceManager.GetString("Current_API_Not_Found_On_Server", resourceCulture);
             }
         }
+        
+        public static string Monkey {
+            get {
+                return ResourceManager.GetString("Monkey", resourceCulture);
+            }
+        }
     }
 }
