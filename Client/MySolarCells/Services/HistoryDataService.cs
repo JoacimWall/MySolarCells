@@ -120,7 +120,7 @@ public class HistoryDataService : IHistoryDataService
         {
             EnergyCalculationParameter = sumHistory.First().EnergyCalculationParameter,
             Currency = homeService.CurrentHome().CurrencyUnit, 
-            Unit = homeService.CurrentHome().CurrencyUnit,
+            Unit = homeService.CurrentHome().EnergyUnit,
 
             Purchased = Math.Round(sumHistory.Sum(x => x.Purchased), 2),
             PurchasedCost = Math.Round(sumHistory.Sum(x => x.PurchasedCost), 2),
@@ -310,7 +310,7 @@ public class HistoryDataService : IHistoryDataService
                 historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
             }
         }
-
+        
         return historyStats;
 
     }

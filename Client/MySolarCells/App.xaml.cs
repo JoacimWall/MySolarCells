@@ -10,7 +10,7 @@ public partial class App : Application
     public App(ISettingsService settingsService, MscDbContext mscDbContext) 
     {
         InitializeComponent();
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpceXRXQ2hdUER3Xkc=");
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzMzNDc5N0AzMjM2MmUzMDJlMzBRdGR3aTRhMmlUay8zNWt6RHB1bFIyWXNtbGlOMmtpSFBYRHhza1o3TlhjPQ==");
         this.settingsService = settingsService;
         this.mscDbContext = mscDbContext;
         MySolarCellsGlobals.App = this;

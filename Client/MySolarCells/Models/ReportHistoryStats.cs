@@ -11,8 +11,8 @@ public class ReportHistoryStats
 public class HistoryStats
 {
     
-    public string Unit { get; set; } = "";
-    public string Currency { get; set; } = "";
+    public string Unit { get; set; } = "kWh";
+    public string Currency { get; set; } = "Sek";
 
     // ----------- Purchased ---------------------
     public double Purchased { get; set; }
