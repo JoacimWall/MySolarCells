@@ -41,9 +41,12 @@ public class HistoryDataService : IHistoryDataService
             var resultInvestmentCalculation = CalculateLonAndInterest(resultInvest, current);
             stats.Investment = resultInvestmentCalculation.Item1;
             stats.InterestCost = Math.Round(resultInvestmentCalculation.Item2, 2);
+            stats.Title =current.ToString("MMMM");
             //Correct balance with interest cost
             //stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
-            result.Add(new ReportHistoryStats { FromDate = current, HistoryStats = stats, ReportPageType = (int)ReportPageType.YearDetails, FirstProductionDay = firstProductionDay.Timestamp });
+            result.Add(new ReportHistoryStats
+            { FromDate = current, HistoryStats = stats, ReportPageType = (int)ReportPageType.YearDetails, FirstProductionDay = firstProductionDay.Timestamp
+            });
             current = current.AddMonths(1);
         }
         // --- Group all per year and get total ----
@@ -67,7 +70,7 @@ public class HistoryDataService : IHistoryDataService
                     HistoryStats = SummarizeToOneRoiStats(historyStatsMonthGrpYear.Select(x => x.HistoryStats).ToList(), timeSpanYear),
                     FirstProductionDay = firstProductionDay.Timestamp
                 };
-
+                newYearStats.HistoryStats.Title = newYearStats.FromDate.Year.ToString();
                 historyStatsOverview.Add(newYearStats);
 
                 year = result[i].FromDate.Year;

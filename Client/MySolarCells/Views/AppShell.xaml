@@ -20,7 +20,10 @@
                       ContentTemplate="{DataTemplate roi:RoiView}"
                       Icon="coins.png"
                       Route="ROI" />
-       
+        <ShellContent Title="{Binding Source={x:Static trans:AppResources.Report}}"
+                      ContentTemplate="{DataTemplate roi:ReportView}"
+                      Icon="money.png"
+                      Route="Report" />
          <ShellContent Title="{Binding Source={x:Static trans:AppResources.More}}"
                       ContentTemplate="{DataTemplate more:MoreView}"
                       Icon="dots.png"

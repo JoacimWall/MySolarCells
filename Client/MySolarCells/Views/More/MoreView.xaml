@@ -65,7 +65,7 @@
                                     JustifyContent="SpaceAround"
                                     Wrap="Wrap">
                  <!--  ReportView  -->
-                <control:MenuGridItemView Margin="0,0,0,3"
+                <!--<control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
                         FontIcon="{x:Static theming:IconFont.Report}"
                         IsVisible="True"
@@ -73,7 +73,7 @@
                     <control:MenuGridItemView.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowReportCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
-                </control:MenuGridItemView>
+                </control:MenuGridItemView>-->
                 <!--  Export_To_Excel  -->
                 <control:MenuGridItemView Margin="0,0,0,3"
                         WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"

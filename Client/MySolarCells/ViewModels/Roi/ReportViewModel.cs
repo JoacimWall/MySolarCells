@@ -51,6 +51,14 @@ public class ReportViewModel : BaseViewModel
 
     }
 
+    public override async Task OnAppearingAsync()
+    {
+        if (FirstTimeAppearing)
+            await RefreshAsync();
+        
+        await base.OnAppearingAsync();
+    }
+
     public override async Task OnDisappearingAsync()
     {
         await mscDbContext.SaveChangesAsync();
@@ -141,13 +149,57 @@ public class ReportViewModel : BaseViewModel
 
         return true;
     }
+
+    
     //private HistorySimulate roiSimulate = new HistorySimulate();
     //public HistorySimulate RoiSimulate
     //{
     //    get { return roiSimulate; }
     //    set { SetProperty(ref roiSimulate, value); }
     //}
+    private float scaleFactor = 14;
+    public float ScaleFactor
+    {
+        get => scaleFactor;
+        set => SetProperty(ref scaleFactor, value);
+    }
 
+    public ColumnDefinitionCollection Columns
+    {
+        get
+        {   //64,44,44,64,64,64,64,88,108"
+            var columns = new ColumnDefinitionCollection();
+            var column1=new ColumnDefinition();
+            var column2 = new ColumnDefinition();
+            var column3 = new ColumnDefinition();
+            var column4 = new ColumnDefinition();
+            var column5 = new ColumnDefinition();
+            var column6 = new ColumnDefinition();
+            var column7 = new ColumnDefinition();
+            var column8 = new ColumnDefinition();
+            var column9 = new ColumnDefinition();
+            column1.Width = 6 * scaleFactor;
+            column2.Width = 4 * scaleFactor;
+            column3.Width =  4 * scaleFactor;
+            column4.Width =  6 * scaleFactor;
+            column5.Width =  6 * scaleFactor;
+            column6.Width =  6 * scaleFactor;
+            column7.Width =  6 * scaleFactor;
+            column8.Width =  9 * scaleFactor;
+            column9.Width =  11 * scaleFactor;
+            columns.Add(column1);
+            columns.Add(column2);
+            columns.Add(column3);
+            columns.Add(column4);
+            columns.Add(column5);
+            columns.Add(column6);
+            columns.Add(column7);
+            columns.Add(column8);
+            columns.Add(column9);
+            return columns;
+        }
+
+    }
     private bool showSavingEstimateIsVisible;
     public bool ShowSavingEstimateIsVisible
     {

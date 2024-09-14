@@ -10,7 +10,7 @@ public class ReportHistoryStats
 
 public class HistoryStats
 {
-    
+    public string Title { get; set; } = "";
     public string Unit { get; set; } = "kWh";
     public string Currency { get; set; } = "Sek";
 

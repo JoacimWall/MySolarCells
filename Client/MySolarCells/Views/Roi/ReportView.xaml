@@ -13,7 +13,8 @@
         <ResourceDictionary>
             <Style x:Key="ReportTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
                 <Setter Property="FontFamily" Value="OpenSansSemibold" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="{Binding ScaleFactor}" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
                 <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray400Color}" />
@@ -22,7 +23,8 @@
                 <Setter Property="FontFamily" Value="OpenSansSemibold" />
                 <Setter Property="HorizontalTextAlignment" Value="Start"/>
                 <Setter Property="VerticalTextAlignment" Value="End"/>
-                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontSize" Value="{Binding ScaleFactor}" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="HeightRequest" Value="17" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
@@ -32,7 +34,7 @@
                 <Setter Property="HorizontalTextAlignment" Value="End"/>
                 <Setter Property="HorizontalOptions" Value="Fill"/>
                 <Setter Property="VerticalTextAlignment" Value="End"/>
-                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontSize" Value="{Binding ScaleFactor}" />
                 <Setter Property="HeightRequest" Value="17" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
@@ -43,32 +45,31 @@
                 <ScrollView Grid.Column="1" Orientation="Horizontal">
                     <Grid RowDefinitions="Auto,Auto,*">
                         <!--Titles-->
-                        <HorizontalStackLayout Grid.Row="0">
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="60" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="84" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Prices}"/>
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Production}"/>
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="124" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Annual_Savings}"/>
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="84" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Yield}"/>
-                            <Label Style="{StaticResource ReportTitleStyle}" WidthRequest="104" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Investment}"/>
-
-
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Grid.Row="1">
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text=" "  HorizontalTextAlignment="End"/>
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="40" Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Sold}" HorizontalTextAlignment="End"/>
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="60" Text="{x:Static trans:AppResources.Own_Use}" HorizontalTextAlignment="End" />
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="84" Text=" "  HorizontalTextAlignment="End"/>
-                            <Label Style="{StaticResource ReportSubTitleStyle}" WidthRequest="104" Text=" "  HorizontalTextAlignment="End"/>
-                        </HorizontalStackLayout>
+                        <Grid Grid.Row="0" ColumnDefinitions="{Binding Source={RelativeSource AncestorType={x:Type vm:ReportViewModel}}, Path=Columns}">
+                            <Label Grid.Column="0" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Year}"/>
+                            <Label Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Prices}"/>
+                            <Label Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Production}"/>
+                            <Label Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Annual_Savings}"/>
+                            <Label Grid.Column="7" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Yield}"/>
+                            <Label Grid.Column="8" Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="Center" Text="{x:Static trans:AppResources.Investment}"/>
+                        </Grid>
+                        <!--SubTitle-->
+                        <Grid Grid.Row="1" ColumnDefinitions="{Binding Source={RelativeSource AncestorType={x:Type vm:ReportViewModel}}, Path=Columns}">
+                            <Label Grid.Column="0" Style="{StaticResource ReportSubTitleStyle}"  Text=" "  HorizontalTextAlignment="End"/>
+                            <Label Grid.Column="1" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
+                            <Label Grid.Column="2" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
+                            <Label Grid.Column="3" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Sold}"  HorizontalTextAlignment="End"/>
+                            <Label Grid.Column="4" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Own_Use}"  HorizontalTextAlignment="End" />
+                            <Label Grid.Column="5" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Sold}" HorizontalTextAlignment="End"/>
+                            <Label Grid.Column="6" Style="{StaticResource ReportSubTitleStyle}"  Text="{x:Static trans:AppResources.Own_Use}" HorizontalTextAlignment="End" />
+                            <Label Grid.Column="7" Style="{StaticResource ReportSubTitleStyle}"  Text=" "  HorizontalTextAlignment="End"/>
+                            <Label Grid.Column="8" Style="{StaticResource ReportSubTitleStyle}"  Text=" "  HorizontalTextAlignment="End"/>
+                        </Grid>
                         <ScrollView Grid.Row="2" Orientation="Vertical">
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding EstimateRoi}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="ml:EstimateRoi">
-                                        <Grid ColumnDefinitions="64,44,44,64,64,64,64,88,108">
+                                        <Grid ColumnDefinitions="{Binding Source={RelativeSource AncestorType={x:Type vm:ReportViewModel}}, Path=Columns}">
                                             <Label Grid.Column="0" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding YearTitle}" />
                                             <Label Grid.Column="1" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AveragePriceSold, StringFormat='{0:F2} kr'}" />
                                             <Label Grid.Column="2" Style="{StaticResource ReportTextValueStyle}" BackgroundColor="{Binding BackgroundColorValueField}" Text="{Binding AveragePrisOwnUse, StringFormat='{0:F2} kr'}" />
@@ -139,7 +140,7 @@
                                     <DataTemplate x:DataType="ml:ReportHistoryStats">
                                         <VerticalStackLayout >
                                             <!--Command="{Binding Source={RelativeSource AncestorType={x:Type vm:StoryViewModel}}, Path=CampaignTappedCommand}"-->
-                                            <Label Style="{StaticResource ReportTitleStyle}"  HorizontalTextAlignment="End" >
+                                            <Label Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="End" >
                                                 <Label.Text>
                                                     <MultiBinding Converter="{StaticResource TimeStampToStringConverter}">
                                                         <Binding Path="FromDate" />
@@ -147,6 +148,7 @@
                                                     </MultiBinding>
                                                 </Label.Text>
                                             </Label>
+                                            <Label Style="{StaticResource ReportTitleStyle}" Text="{Binding HistoryStats.Title}" />
                                             <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSold, StringFormat='{0:F0} kWh'}" />
                                             <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryCharge, StringFormat='{0:F0} kWh'}" />
                                             <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionOwnUse, StringFormat='{0:F0} kWh'}" />
@@ -197,13 +199,7 @@
                     </Grid>
                 </ScrollView>
             </DataTemplate>
-            <DataTemplate x:Key="YearDetailsTemplate" x:DataType="ml:ReportModel">
-                <Grid  RowDefinitions="Auto,Auto,30,*" >
-
-                    <Label TextColor="Black" Text=""/>
-
-                </Grid>
-            </DataTemplate>
+           
             <ml:ReportModelTemplatesSelector x:Key="ReportModelTemplatesSelector"
                                                  SavingEstimateTemplate="{StaticResource SavingEstimateTemplate}"
                                                  YearsOverviewTemplate="{StaticResource YearsOverviewTemplate}"
@@ -215,9 +211,9 @@
             <!--Title-->
             <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
             <!--nav back-->
-            <Border  Style="{StaticResource BorderButtonStyle}">
+            <!--<Border  Style="{StaticResource BorderButtonStyle}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
-            </Border>
+            </Border>-->
             <!--More-->
             <Label Grid.Column="2" Margin="12,2,12,2" FontSize="17"  TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.More_vertical}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
@@ -261,11 +257,7 @@
 
             </Border>
         </Grid>
-
-        <!--<ScrollView Grid.Row="1" Orientation="Both" >
-          </ScrollView>-->
+        <!--Report-->
         <control:TemplatedContentPresenter Grid.Row="1" Data="{Binding SelectedReportPage}" VerticalOptions="Fill" HorizontalOptions="Fill" DataTemplateSelector="{StaticResource ReportModelTemplatesSelector}" />
-
-
     </Grid>
 </views:BaseContentPage>

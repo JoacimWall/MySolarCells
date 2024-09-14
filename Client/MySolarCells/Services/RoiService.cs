@@ -38,21 +38,38 @@ public class RoiService :IRoiService
                 }
                 //Add missing production
                 double fakeProduction = 0;
+                double fakeOwnUse = 0;
                 for (int i = 1; i < 13; i++)
                 {
                     var afterCurrentDay = i > listCurrentYear.Count;
                     var beforeFirstDay = i < listCurrentYear.Count && listCurrentYear[i].FromDate < item.FirstProductionDay;
                     if (beforeFirstDay || afterCurrentDay)
                     {
-                        var calcParameters = listCurrentYear.First().HistoryStats.EnergyCalculationParameter;
-                        fakeProduction = fakeProduction + AverageProductionMonth.GetSnitMonth(i, calcParameters.TotalInstallKwhPanels);
-                      
+                        ReportHistoryStats? previusYearmonth = null;
+                        //Hämtar data från föregående år
+                        if (historyStats.Item2.Count > 1)
+                        {
+                            var previusYearCurrentMonth = historyStats.Item2[historyStats.Item2.Count-2];
+                            previusYearmonth = previusYearCurrentMonth.FirstOrDefault(x => x.FromDate.Month == i); 
+                        }
+                        if (previusYearmonth != null)
+                        {
+                            fakeProduction += previusYearmonth.HistoryStats.ProductionSold;
+                            fakeOwnUse += previusYearmonth.HistoryStats.ProductionOwnUse;
+                        }
+                        else
+                        {
+                            var calcParameters = listCurrentYear.First().HistoryStats.EnergyCalculationParameter;
+                            var fakeProd = AverageProductionMonth.GetSnitMonth(i, calcParameters.TotalInstallKwhPanels);
+                            fakeProduction += (fakeProd * 0.5);
+                            fakeOwnUse += (fakeProd * 0.5);
+                        }
                     }
 
                 }
 
-                item.HistoryStats.ProductionSold = item.HistoryStats.ProductionSold + (fakeProduction * 0.5);
-                item.HistoryStats.ProductionOwnUse = item.HistoryStats.ProductionOwnUse + (fakeProduction * 0.5);
+                item.HistoryStats.ProductionSold += (fakeProduction);
+                item.HistoryStats.ProductionOwnUse += (fakeOwnUse);
             }
             var averagePrisOwnUse = item.HistoryStats.FactsBatteryUsedAveragePerKwhSaved == 0 ?
                                    item.HistoryStats.FactsProductionOwnUseAveragePerKwhSaved :
@@ -61,7 +78,7 @@ public class RoiService :IRoiService
             var yearSavingsSold = Math.Round(item.HistoryStats.FactsProductionSoldAveragePerKwhProfit * item.HistoryStats.ProductionSold, 2);
             var yearSavingsOwnUse = Math.Round((item.HistoryStats.ProductionOwnUse + item.HistoryStats.BatteryUsed) * averagePrisOwnUse, 2);
             var savingThisYear = yearSavingsSold + yearSavingsOwnUse;
-            totalSaving = totalSaving + savingThisYear;
+            totalSaving += savingThisYear;
 
             list.Add(new EstimateRoi
             {
@@ -100,7 +117,7 @@ public class RoiService :IRoiService
             newYear.YearSavingsSold = Math.Round( newYear.ProductionSold * newYear.AveragePriceSold,2);
             newYear.YearSavingsOwnUse = Math.Round(newYear.ProductionOwnUse * newYear.AveragePrisOwnUse, 2);
             var savingThisYear = Math.Round(newYear.YearSavingsSold + newYear.YearSavingsOwnUse,2);
-            totalSaving = totalSaving + savingThisYear;
+            totalSaving += savingThisYear;
             newYear.RemainingOnInvestment = Math.Round(lastKnownInvestment - totalSaving, 0);
             if (newYear.RemainingOnInvestment < 0)
             {
