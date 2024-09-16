@@ -4,12 +4,13 @@ public class ReportViewModel : BaseViewModel
 {
     readonly IHistoryDataService historyDataService;
     readonly IRoiService roiService;
+    readonly ISetOrientationService setOrientationService;
     private readonly MscDbContext mscDbContext;
-    public ReportViewModel(IHistoryDataService historyDataService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
+    public ReportViewModel(ISetOrientationService setOrientationService,IHistoryDataService historyDataService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
         IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
         logService,settingsService,homeService)
     {
-        
+        this.setOrientationService = setOrientationService;
         this.historyDataService = historyDataService;
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;
@@ -23,9 +24,9 @@ public class ReportViewModel : BaseViewModel
         }
         savingEstimateParameters = exist;
         selectedReportPage = new ReportModel();
+        
     }
-    public ICommand MoreButtonCommand => new Command(async () => await MoreButton());
-
+    
     private Task MoreButton()
     {
         ShowSavingEstimateIsVisible = !showSavingEstimateIsVisible;
@@ -36,9 +37,25 @@ public class ReportViewModel : BaseViewModel
     public ICommand ReloadGraphDataCommand => new Command(async () => await RefreshAsync( ));
     public ICommand PrevPageCommand => new Command(async () => await PrevPage());
     public ICommand NextPageCommand => new Command(async () => await NextPage());
+    public ICommand MoreButtonCommand => new Command(async () => await MoreButton());
+    public ICommand FullScreenCommand => new Command(async () => await FullScreenButton());
+
+    private async Task FullScreenButton()
+    {
+        FullScreen = true;
+        ReportView? view = ServiceHelper.GetService<ReportView>();
+        ((ReportViewModel)view.BindingContext).SavingEstimateParameters = savingEstimateParameters;
+        ((ReportViewModel)view.BindingContext).SelectedReportPage = selectedReportPage;
+        ((ReportViewModel)view.BindingContext).ReportData = reportData;
+        ((ReportViewModel)view.BindingContext).FullScreen = true;
+        ((ReportViewModel)view.BindingContext).FirstTimeAppearing = false;
+        await PushModal(view);
+        FullScreen = false;
+    }
+
     private async Task PrevPage()
     {
-        _ = (ProgressDialog)DialogService.GetProgress(AppResources.Loading);
+        using var dlg  = (ProgressDialog)DialogService.GetProgress(AppResources.Loading);
         await Task.Delay(300);
         for (int i = ReportData.Count - 1; i >= 0; i--)
         {
@@ -50,11 +67,19 @@ public class ReportViewModel : BaseViewModel
         }
 
     }
-
+    
     public override async Task OnAppearingAsync()
     {
+        if (fullScreen)
+        {
+            setOrientationService.OnlyLandscape();
+        }
         if (FirstTimeAppearing)
+        {
+            
+
             await RefreshAsync();
+        }
         
         await base.OnAppearingAsync();
     }
@@ -62,6 +87,10 @@ public class ReportViewModel : BaseViewModel
     public override async Task OnDisappearingAsync()
     {
         await mscDbContext.SaveChangesAsync();
+        if (fullScreen)
+        {
+            setOrientationService.OnlyPortrait();
+        }
     }
 
     private async Task NextPage()
@@ -163,7 +192,12 @@ public class ReportViewModel : BaseViewModel
         get => scaleFactor;
         set => SetProperty(ref scaleFactor, value);
     }
-
+    private bool fullScreen = false;
+    public bool FullScreen
+    {
+        get => fullScreen;
+        set => SetProperty(ref fullScreen, value);
+    }
     public ColumnDefinitionCollection Columns
     {
         get

@@ -31,7 +31,7 @@
                         <BoxView Grid.Row="2" Opacity="0.8" VerticalOptions="Center" WidthRequest="16" HeightRequest="16" BackgroundColor="{Binding ColorBatteryCharge}"  />
                         <Label Grid.Row="2" Grid.Column="1" VerticalTextAlignment="Center" Text="{Binding EnergyBatteryChargeChartTitle}"/>
                     </Grid>
-                    <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250">
+                    <chart:SfCartesianChart Grid.Row="4" Grid.ColumnSpan="3" HeightRequest="250" >
                         <chart:SfCartesianChart.ZoomPanBehavior>
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
                         </chart:SfCartesianChart.ZoomPanBehavior>

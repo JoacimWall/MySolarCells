@@ -17,6 +17,7 @@
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
                 <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray400Color}" />
             </Style>
             <Style x:Key="ReportSubTitleStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
@@ -25,9 +26,10 @@
                 <Setter Property="VerticalTextAlignment" Value="End"/>
                 <Setter Property="FontSize" Value="{Binding ScaleFactor}" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
-                <Setter Property="HeightRequest" Value="17" />
+                <Setter Property="HeightRequest" Value="26" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
                 <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray400Color}" />
             </Style>
             <Style x:Key="ReportTextValueStyle" TargetType="Label" BasedOn="{x:StaticResource LabelBaseStyle}">
@@ -35,9 +37,10 @@
                 <Setter Property="HorizontalOptions" Value="Fill"/>
                 <Setter Property="VerticalTextAlignment" Value="End"/>
                 <Setter Property="FontSize" Value="{Binding ScaleFactor}" />
-                <Setter Property="HeightRequest" Value="17" />
+                <Setter Property="HeightRequest" Value="26" />
                 <Setter Property="Margin" Value="2,2,2,0" />
                 <Setter Property="Padding" Value="2,0,2,0"/>
+                <Setter Property="FontAutoScalingEnabled" Value="False"/>
                 <Setter Property="BackgroundColor" Value="{x:Static theming:AppColors.Gray200Color}" />
             </Style>
 
@@ -140,14 +143,14 @@
                                     <DataTemplate x:DataType="ml:ReportHistoryStats">
                                         <VerticalStackLayout >
                                             <!--Command="{Binding Source={RelativeSource AncestorType={x:Type vm:StoryViewModel}}, Path=CampaignTappedCommand}"-->
-                                            <Label Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="End" >
+                                            <!--<Label Style="{StaticResource ReportTitleStyle}" HorizontalTextAlignment="End" >
                                                 <Label.Text>
                                                     <MultiBinding Converter="{StaticResource TimeStampToStringConverter}">
                                                         <Binding Path="FromDate" />
                                                         <Binding Path="ReportPageType" />
                                                     </MultiBinding>
                                                 </Label.Text>
-                                            </Label>
+                                            </Label>-->
                                             <Label Style="{StaticResource ReportTitleStyle}" Text="{Binding HistoryStats.Title}" />
                                             <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.ProductionSold, StringFormat='{0:F0} kWh'}" />
                                             <Label Style="{StaticResource ReportTextValueStyle}" Text="{Binding HistoryStats.BatteryCharge, StringFormat='{0:F0} kWh'}" />
@@ -207,21 +210,27 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid RowDefinitions="Auto,*" >
-        <Grid Margin="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
+        <Grid Margin="8" ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4" HorizontalOptions="FillAndExpand">
             <!--Title-->
-            <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
+            <Label FontSize="20" Grid.ColumnSpan="4" Style="{StaticResource LabelPageTitleStyle}" Text="{x:Static trans:AppResources.Report}" />
             <!--nav back-->
-            <!--<Border  Style="{StaticResource BorderButtonStyle}">
+            <Border  Style="{StaticResource BorderButtonStyle}" IsVisible="{Binding FullScreen}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
-            </Border>-->
+            </Border>
+            <!--FullScreeen-->
+            <Label Grid.Column="2" Margin="12,2,12,2" FontSize="17" IsVisible="{Binding FullScreen, Converter={x:StaticResource InvertedBoolConverter}}" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Bargraph}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding FullScreenCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
             <!--More-->
-            <Label Grid.Column="2" Margin="12,2,12,2" FontSize="17"  TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.More_vertical}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+            <Label Grid.Column="3" Margin="12,2,12,2" FontSize="17"  TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.More_vertical}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MoreButtonCommand}" />
                 </Label.GestureRecognizers>
             </Label>
-            <!--More pickers-->
-            <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="3" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelectedReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <!--Report title-->
+            <Label FontSize="14" Grid.Row="1" Grid.ColumnSpan="4" TextColor="{x:Static theming:AppColors.Gray900Color}" Text="{Binding SelectedReportPage.ReportTitle}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
 
             <!--Left-->
             <Label   Grid.Row="1"  FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Left}" FontFamily="AppIconsFont"  VerticalTextAlignment="Center" HorizontalTextAlignment="Start" >
@@ -230,12 +239,12 @@
                 </Label.GestureRecognizers>
             </Label>
             <!--Right-->
-            <Label   Grid.Row="1" Grid.Column="2" FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
+            <Label   Grid.Row="1" Grid.Column="3" FontSize="30" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Right}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NextPageCommand}" />
                 </Label.GestureRecognizers>
             </Label>
-            <Border Padding="16,8" x:Name="SavingEstimate" Grid.ColumnSpan="3" IsVisible="{Binding ShowSavingEstimateIsVisible}" Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray800Color}"  Margin="-2,0"  
+            <Border Padding="16,8" x:Name="SavingEstimate" Grid.ColumnSpan="4" IsVisible="{Binding ShowSavingEstimateIsVisible}" Grid.Column="0" Grid.Row="2" Stroke="{x:Static theming:AppColors.Gray800Color}"  Margin="-2,0"  
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 16,16,16,16">
                 <Grid Padding="4" RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="4" ColumnSpacing="8">

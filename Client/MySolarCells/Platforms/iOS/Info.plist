@@ -18,6 +18,7 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -28,20 +29,11 @@
             <string>processing</string>
             <string>fetch</string>
         </array>
-    <key>BGTaskSchedulerPermittedIdentifiers</key>
-    	<array>
-            <string>com.shiny.job</string>
-            <string>com.shiny.jobpower</string>
-            <string>com.shiny.jobnet</string>
-            <string>com.shiny.jobpowernet</string>
-        </array>   
-	<key>XSAppIconAssets</key>
+    <key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UIRequiresFullScreen</key>
 	<true/>
-
-	
 </dict>
 </plist>

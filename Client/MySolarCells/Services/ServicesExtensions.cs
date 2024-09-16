@@ -19,6 +19,7 @@ public static class ServicesExtensions
         builder.Services.AddSingleton<ILogService, LogService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<IHomeService, HomeService>();
+        builder.Services.AddSingleton<ISetOrientationService, SetOrientationService>();
         //Transient
         builder.Services.AddTransient<IMyRestClientGeneric, MyRestClientGeneric>();
         builder.Services.AddTransient<IRestClient, RestClient>();
