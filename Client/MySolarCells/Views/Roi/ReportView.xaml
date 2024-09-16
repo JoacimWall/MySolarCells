@@ -217,7 +217,7 @@
             <Border  Style="{StaticResource BorderButtonStyle}" IsVisible="{Binding FullScreen}">
                 <Button Style="{StaticResource ButtonPrimaryStyle}"  Command="{Binding NavBackCommand}"  Text="{x:Static trans:AppResources.Close}" />
             </Border>
-            <!--FullScreeen-->
+            <!--FullScreen-->
             <Label Grid.Column="2" Margin="12,2,12,2" FontSize="17" IsVisible="{Binding FullScreen, Converter={x:StaticResource InvertedBoolConverter}}" TextColor="{x:Static theming:AppColors.Gray900Color}" HeightRequest="25" Text="{x:Static theming:IconFont.Bargraph}" FontFamily="AppIconsFont"  BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding FullScreenCommand}" />
