@@ -118,7 +118,7 @@ public class ReportViewModel : BaseViewModel
     private Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>? resultHistory;
     private async Task ReloadHistoryData()
     {
-        resultHistory = await historyDataService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today);
+        resultHistory = await historyDataService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today,new HistorySimulate());
         if (!resultHistory.WasSuccessful)
         {
             await DialogService.ShowAlertAsync(resultHistory.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);

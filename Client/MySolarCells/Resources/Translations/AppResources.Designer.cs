@@ -1154,5 +1154,11 @@ namespace MySolarCells.Resources.Translations {
                 return ResourceManager.GetString("Monkey", resourceCulture);
             }
         }
+        
+        public static string Remove_Tax_Reduction {
+            get {
+                return ResourceManager.GetString("Remove_Tax_Reduction", resourceCulture);
+            }
+        }
     }
 }

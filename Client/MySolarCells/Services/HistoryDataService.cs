@@ -5,7 +5,7 @@ public interface IHistoryDataService
 
     Task<HistoryStats> CalculateTotals(DateTime start, DateTime end, HistorySimulate historySimulate);
     Task<HistoryStats> CalculateTotals(DateTime start, DateTime end);
-    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end);
+    Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end, HistorySimulate historySimulate);
 
 }
 
@@ -22,7 +22,7 @@ public class HistoryDataService : IHistoryDataService
 
     /// Return to collections tuple 1 is for the overview summarized one Year per row
     /// The second tuple is all months summarized per year 
-    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end)
+    public async Task<Result<Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>>>> GenerateTotalPerMonthReport(DateTime start, DateTime end, HistorySimulate historySimulate)
     {
         List<ReportHistoryStats> result = new List<ReportHistoryStats>();
         var startDate = DateHelper.GetRelatedDates(start);
@@ -35,7 +35,7 @@ public class HistoryDataService : IHistoryDataService
         //Get alla data from start to now per month
         while (current < endDates.ThisMonthEnd)
         {
-            var stats = await CalculateTotals(current, current.AddMonths(1), new HistorySimulate());
+            var stats = await CalculateTotals(current, current.AddMonths(1), historySimulate);
 
             //Calculate Interest current month
             var resultInvestmentCalculation = CalculateLonAndInterest(resultInvest, current);
@@ -271,7 +271,10 @@ public class HistoryDataService : IHistoryDataService
         historyStats.ProductionSold = Math.Round(energy.Sum(x => x.ProductionSold), 2);
         historyStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(historyStats.ProductionSold * calcParams.FixedPriceKwh, 2);
         historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowLoad, 2);
-        historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
+        if (historySimulate.RemoveTaxReduction)
+            historyStats.ProductionSoldTaxReductionProfit = 0;
+        else
+            historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
 
         //--------- Production Own use ---------------------------
         historyStats.ProductionOwnUse = Math.Round(energy.Sum(x => x.ProductionOwnUse), 2);
@@ -433,6 +436,15 @@ public class HistorySimulate : ObservableObject
         get => currentBatteryPower;
         set => SetProperty(ref currentBatteryPower, value);
     }
-
+    private bool removeTaxReduction;
+    public bool RemoveTaxReduction
+    {
+        get => removeTaxReduction;
+        set
+        {
+            SetProperty(ref removeTaxReduction, value);
+            
+        }
+    }
 }
 

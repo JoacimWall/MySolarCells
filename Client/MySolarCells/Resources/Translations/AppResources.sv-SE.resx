@@ -549,4 +549,7 @@
   <data name="Language" xml:space="preserve">
     <value>Språk</value>
   <comment>Need review</comment></data>
+  <data name="Remove_Tax_Reduction" xml:space="preserve">
+    <value>Ta bort skattereduktionen</value>
+  </data>
 </root>

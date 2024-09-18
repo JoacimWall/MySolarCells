@@ -92,10 +92,10 @@
 
         <Border Padding="4" x:Name="SimulateSettings" Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="2"  Stroke="{x:Static theming:AppColors.Gray800Color}" StrokeThickness="1"
                     StrokeShape="RoundRectangle 16,16,16,16"  >
-            <Grid Padding="4" RowDefinitions="Auto,Auto,20,Auto" ColumnDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8">
+            <Grid Padding="4" RowDefinitions="Auto,Auto,20,Auto,Auto" ColumnDefinitions="Auto,Auto,*,Auto,Auto" RowSpacing="8" ColumnSpacing="8">
 
                 <!--Add Battery-->
-                <Border x:Name="RoiAddBatterySwith" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.AddBatteryBorderColor}" BackgroundColor="{Binding RoiSimulate.AddBatteryBackgroundColor}">
+                <Border Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.AddBatteryBorderColor}" BackgroundColor="{Binding RoiSimulate.AddBatteryBackgroundColor}">
                     <Label  Margin="12,2,12,2" TextColor="{Binding RoiSimulate.AddBatteryTextColor}"  Text="{x:Static trans:AppResources.Add_Battery}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="AddBattery_Tapped" />
@@ -103,7 +103,7 @@
                 </Border>
                
                 <!--Remove Battery-->
-                <Border x:Name="RoiRemoveBatterySwitch" Grid.Column="1" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.RemoveBatteryBorderColor}"   BackgroundColor="{Binding RoiSimulate.RemoveBatteryBackgroundColor}">
+                <Border Grid.Column="3" Grid.ColumnSpan="2" HorizontalOptions="End" Style="{StaticResource BorderButtonStyle}" Stroke="{Binding RoiSimulate.RemoveBatteryBorderColor}"   BackgroundColor="{Binding RoiSimulate.RemoveBatteryBackgroundColor}">
                     <Label  Margin="12,2,12,2" TextColor="{Binding RoiSimulate.RemoveBatteryTextColor}"  Text="{x:Static trans:AppResources.Remove_Battery}" InputTransparent="True" BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="RemoveBattery_Tapped" />
@@ -111,10 +111,25 @@
                 </Border>
                 <!--Battery capacity-->
                 <Label Grid.Row="1"  Text="{x:Static trans:AppResources.Battery}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
-                <Slider x:Name="RoisBatteryKwh" Grid.Row="2" Grid.ColumnSpan="2" Minimum="5" Maximum="20"  />
-                <Label Grid.Row="2" Grid.Column="2"  Text="{Binding Source={x:Reference RoisBatteryKwh},Path=Value, Converter={StaticResource DoubleToIntConverter}}" HorizontalTextAlignment="End" HorizontalOptions="End" VerticalTextAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="3" Text="{x:Static trans:AppResources.kWh}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
+                <Slider x:Name="RoisBatteryKwh" Grid.Row="2" Grid.ColumnSpan="4" Minimum="5" Maximum="20"  />
+                <HorizontalStackLayout  Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2">
+                    <Label Text="{Binding Source={x:Reference RoisBatteryKwh},Path=Value, Converter={StaticResource DoubleToIntConverter}}" HorizontalTextAlignment="End" HorizontalOptions="End" VerticalTextAlignment="Center"/>
+                    <Label Text="{x:Static trans:AppResources.kWh}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+                <!--Tax reduction-->
+                <HorizontalStackLayout Spacing="8" Grid.Row="3" Grid.ColumnSpan="3">
+                    <Switch  Margin="0,8" IsToggled="{Binding RoiSimulate.RemoveTaxReduction}"/>
+                    <Label  Text="{x:Static trans:AppResources.Remove_Tax_Reduction}" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalTextAlignment="Center"/>
 
+                </HorizontalStackLayout>
+                
+                <!--More-->
+                    <Label Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" FontSize="27"   Text="{x:Static theming:IconFont.Refresh}" FontFamily="AppIconsFont"  
+                           BackgroundColor="Transparent" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Refresh_Simulate" />
+                    </Label.GestureRecognizers>
+                </Label>
             </Grid>
 
         </Border>

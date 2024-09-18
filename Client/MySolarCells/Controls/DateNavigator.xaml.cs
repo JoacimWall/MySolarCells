@@ -257,13 +257,13 @@ public partial class DateNavigator : ContentView
     void AddBattery_Tapped(Object sender, TappedEventArgs e)
     {
         RoiSimulate.AddBattery = !RoiSimulate.AddBattery;
-        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
+        //WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 
     private void RemoveBattery_Tapped(Object sender, TappedEventArgs e)
     {
         RoiSimulate.RemoveBattery = !RoiSimulate.RemoveBattery;
-        WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
+        //WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
     }
 
     private bool moreStackIsVisible;
@@ -273,6 +273,9 @@ public partial class DateNavigator : ContentView
         moreStackIsVisible = MoreStack.IsVisible = !moreStackIsVisible;
     }
 
-   
 
+    private void Refresh_Simulate(object? sender, TappedEventArgs e)
+    {
+       WeakReferenceMessenger.Default.Send(new RefreshRoiViewMessage(true));
+    }
 }

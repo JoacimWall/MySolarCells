@@ -357,7 +357,7 @@ public class MoreViewModel : BaseViewModel
     {
         using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
-        var result = await historyService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today);
+        var result = await historyService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today,new HistorySimulate());
         
         var savingEstimate = mscDbContext.SavingEstimateParameters.FirstOrDefault() ?? new SavingEstimateParameters();
         if (result.Model == null) return false;

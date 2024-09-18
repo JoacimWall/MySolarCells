@@ -28,7 +28,7 @@ public class RoiViewModel : BaseViewModel
     }
     private async Task Sync()
     {
-        _ = (ProgressDialog)DialogService.GetProgress(AppResources.Import_Data);
+        using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Import_Data);
         await Task.Delay(200);
         var result = await dataSyncService.Sync();
         if (!result.WasSuccessful || result.Model == null)
@@ -44,13 +44,12 @@ public class RoiViewModel : BaseViewModel
     }
     private async Task ReloadData()
     {
-        //if (showProgressDlg)
-        //    using var dlg = DialogService.GetProgress("");
+        
         await Task.Delay(200);
         var difference = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
         if (difference.TotalDays > 31)
         {
-            var reportStats = await roiService.GenerateTotalPerMonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd);
+            var reportStats = await roiService.GenerateTotalPerMonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd,RoiSimulate);
             if (reportStats.Model != null) 
                 RoiStats = reportStats.Model.Item1.First().HistoryStats;
         }
