@@ -1,8 +1,9 @@
 ﻿
+
+#if IOS || MACCATALYST
+using System.Diagnostics.CodeAnalysis;
 using Foundation;
 using UIKit;
-#if IOS
-using System.Diagnostics.CodeAnalysis;
 
 #elif ANDROID
 using Android.Content.PM;
@@ -16,7 +17,7 @@ public interface ISetOrientationService
     void PortraitAndLandscape();
 }
 
-#if IOS
+#if IOS|| MACCATALYST
 public abstract class AppDelegateEx : MauiUIApplicationDelegate
 {
     public virtual UIInterfaceOrientationMask CurrentLockedOrientation { get; set; }

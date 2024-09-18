@@ -99,15 +99,26 @@ public class RoiService :IRoiService
         //Future years
         int startYear = historyStats.Item1.Last().FromDate.AddYears(1).Year;
         int endYear = historyStats.Item1.First().FromDate.AddYears(30).Year;
-
+        var calcParametersTax = historyStats.Item1.Last().HistoryStats.EnergyCalculationParameter;
+        
         bool roiYearSet = false;
         for (int i = startYear; i < endYear; i++)
         {
+            double averagePriceSold = 0;
+            //tax reduction removed 2026 in sweden
+            if (i == 2026)
+            {
+                averagePriceSold = Math.Round(list.Last().AveragePriceSold - calcParametersTax.TaxReduction, 2);
+            }
+            else
+            {
+                averagePriceSold = list.Last().AveragePriceSold;
+            }
             var newYear = new EstimateRoi
             {
                 Year = i,
-                YearFromStart = yearCountFromStart,
-                AveragePriceSold = Math.Round(list.Last().AveragePriceSold * (1 + savingEstimateParameters.RealDevelopmentElectricityPrice / 100), 2),
+                YearFromStart = yearCountFromStart, 
+                AveragePriceSold = Math.Round(averagePriceSold * (1 + savingEstimateParameters.RealDevelopmentElectricityPrice / 100), 2),
                 AveragePrisOwnUse = Math.Round(list.Last().AveragePrisOwnUse * (1 + savingEstimateParameters.RealDevelopmentElectricityPrice / 100), 2),
                 ProductionSold = Math.Round(list.Last().ProductionSold * (1 - savingEstimateParameters.PanelDegradationPerYear/100), 2),
                 ProductionOwnUse = Math.Round(list.Last().ProductionOwnUse * (1 - savingEstimateParameters.PanelDegradationPerYear/100), 2),
