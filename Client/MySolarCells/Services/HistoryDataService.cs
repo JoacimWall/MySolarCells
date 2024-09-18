@@ -271,7 +271,7 @@ public class HistoryDataService : IHistoryDataService
         historyStats.ProductionSold = Math.Round(energy.Sum(x => x.ProductionSold), 2);
         historyStats.ProductionSoldProfit = calcParams.UseSpotPrice ? Math.Round(energy.Sum(x => x.ProductionSoldProfit), 2) : Math.Round(historyStats.ProductionSold * calcParams.FixedPriceKwh, 2);
         historyStats.ProductionSoldGridCompensationProfit = Math.Round(historyStats.ProductionSold * calcParams.ProdCompensationElectricityLowLoad, 2);
-        if (historySimulate.RemoveTaxReduction)
+        if (historySimulate is { DoSimulate: true, RemoveTaxReduction: true })
             historyStats.ProductionSoldTaxReductionProfit = 0;
         else
             historyStats.ProductionSoldTaxReductionProfit = Math.Round(historyStats.ProductionSold * calcParams.TaxReduction, 2);
