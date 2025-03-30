@@ -400,3 +400,22 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 Client/MySolarCells/Resources/.DS_Store
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/playservicestasks_18_1_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/playserviceslocation_21_2_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/playservicesbasement_18_3_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/playservicesbase_18_4_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_kotlinx_serialization_core_jvm_1_7_1.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_kotlinx_serialization_core_1_7_1.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm_1_8_1.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_kotlinx_coroutines_core_1_8_1.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_kotlinx_coroutines_android_1_8_1.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_atomicfu_jvm_0_25_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlinx_atomicfu_0_25_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlin_kotlin_stdlib_common_2_0_10.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_kotlin_kotlin_stdlib_2_0_10.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/org_jetbrains_annotations_24_1_0.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/androidx_lifecycle_lifecycle_viewmodel_android.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/androidx_lifecycle_lifecycle_runtime_ktx_android.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/androidx_lifecycle_lifecycle_runtime_android.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/androidx_lifecycle_lifecycle_common_jvm.xml
+Client/MySolarCells/.idea/.idea.MySolarCells/.idea/libraries/androidx_collection_collection_jvm.xml

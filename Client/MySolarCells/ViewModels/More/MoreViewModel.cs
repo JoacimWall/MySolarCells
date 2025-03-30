@@ -9,16 +9,17 @@ public class MoreViewModel : BaseViewModel
 {
     private readonly IHistoryDataService historyService;
     private readonly IRoiService roiService;
-    
+    private readonly IDataSyncService dataSyncService;
 
     private readonly MscDbContext mscDbContext;
-    public MoreViewModel(IHistoryDataService historyService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
+    public MoreViewModel(IHistoryDataService historyService, IDataSyncService dataSyncService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
         IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
         logService,settingsService,homeService)
     {
         this.historyService = historyService;
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;
+        this.dataSyncService = dataSyncService;
         electricitySupplier = homeService.FirstElectricitySupplier();
         AppInfoVersion = AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
 
@@ -32,6 +33,22 @@ public class MoreViewModel : BaseViewModel
     public ICommand ShowReportCommand => new Command(async () => await ShowReport());
     public ICommand ShowPowerTariffCommand => new Command(async () => await ShowPowerTariff());
     public ICommand ShowPickCountryCommand => new Command(async () => await ShowPickCountry());
+    public ICommand FixTimeGampInDbCommand => new Command(async () => await FixTimeGampInDb());
+
+    private async Task FixTimeGampInDb()
+    {
+        using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Import_Data);
+        await Task.Delay(200);
+        var result = await dataSyncService.Sync(true);
+        if (result is { WasSuccessful: false })
+        {
+            await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
+        }
+        else
+        {
+            if (result.Model != null) DialogService.ShowToast(result.Model.Message);
+        }
+    }
 
     private async Task ShowPickCountry()
     {

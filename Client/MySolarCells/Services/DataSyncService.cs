@@ -1,7 +1,7 @@
 ﻿namespace MySolarCells.Services;
 public interface IDataSyncService
 {
-    Task<Result<DataSyncResponse>> Sync();
+    Task<Result<DataSyncResponse>> Sync(bool syncGaps = false);
 }
 
 public class DataSyncService : IDataSyncService
@@ -12,7 +12,7 @@ public class DataSyncService : IDataSyncService
         this.mscDbContext = mscDbContext;
     }
 
-    public async Task<Result<DataSyncResponse>> Sync()
+    public async Task<Result<DataSyncResponse>> Sync(bool syncGaps = false)
     {
         var gridSupplierInterface = ServiceHelper.GetGridSupplierService(mscDbContext.ElectricitySupplier.First().ElectricitySupplierType);
 
@@ -26,7 +26,28 @@ public class DataSyncService : IDataSyncService
             LogTyp = (int)LogTypeEnum.Info
         });
         //Get last Sync Time for grid supplier
-        var lastSyncTime = await mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
+        Energy? lastSyncTime=null;
+        if (syncGaps)
+        {   //so that we continue ro chekc if evry row exist in db
+            MySolarCellsGlobals.ImportErrorValidateEvrryRow = true;
+            lastSyncTime = await mscDbContext.Energy.OrderBy(o => o.Timestamp).FirstOrDefaultAsync();
+            if (lastSyncTime == null)
+                return new Result<DataSyncResponse>("No data in Energy table");
+            bool steppNext = true;
+            DateTime existTime = lastSyncTime.Timestamp; 
+            while (steppNext)
+            {
+               var existLastSyncTime= await mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == lastSyncTime.Timestamp.AddHours(1));
+               if (existLastSyncTime == null)
+                   steppNext = false;
+               else
+                   lastSyncTime = existLastSyncTime;
+            }
+        }
+        else
+        {
+            lastSyncTime = await mscDbContext.Energy.Where(x => x.PurchasedSynced == true).OrderByDescending(o => o.Timestamp).FirstOrDefaultAsync();
+        }
 
         if (lastSyncTime == null)
             return new Result<DataSyncResponse>("No data in Energy table");

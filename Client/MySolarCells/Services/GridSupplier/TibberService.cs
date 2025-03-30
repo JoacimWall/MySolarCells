@@ -156,6 +156,7 @@ public class TibberService : IGridSupplierInterface
                 //used to check så the backend not give the same value twice
                 var existCheckDb = true;
                 var updateEntity = true;
+                
                 for (int i = 0; i < consumptionI; i++)
                 {
                     progressStartNr++;
@@ -163,15 +164,42 @@ public class TibberService : IGridSupplierInterface
 
                     //Save Consumption
                     var energy = resultSites.Model.data.viewer.home.consumption.nodes[i];
+                    //tibber sänder sommar tid som 01:00 till 03:00 så 02:00 saknas
+                    var checkSommartid = energy.to - energy.from;
+                    if (checkSommartid != null && checkSommartid.Value.Hours > 1)
+                    {
+                        var energy2 = new TibberConsumptionNode
+                        {
+                            from = energy.from!.Value.AddHours(1),
+                            to = energy.to!.Value,
+                            cost = energy.cost/2,
+                            unitPrice = energy.unitPrice,
+                            unitPriceVAT = energy.unitPriceVAT,
+                            consumption = energy.consumption/2,
+                            consumptionUnit = energy.consumptionUnit,
+                            currency = energy.currency
+                        };
+                        
+                        resultSites.Model.data.viewer.home.consumption.nodes.Add(energy2);
+                        consumptionI += 1;
+                        //fixar första
+                        energy.to = energy.to.Value.AddHours(-1);
+                        energy.cost = energy2.cost;
+                        energy.consumption = energy2.consumption;
+                    }
 
                     //check if exist in db
-                    Energy? energyExist = null;
+                    Energy? energyExist = null; 
+                    //if the import row get out of sync this will prevent the app to import rows 
+                    //on error we set MySolarCellsGlobals.ImportErrorValidateEvrryRow = true ti validate every the rows
                     if (existCheckDb && energy.from != null)
                     {
                         energyExist = await mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == energy.from.Value && x.HomeId == homeService.CurrentHome().HomeId);
                         if (energyExist == null)
                         {
-                            existCheckDb = false;
+                            if (!MySolarCellsGlobals.ImportErrorValidateEvrryRow)
+                                existCheckDb = false;
+                            
                             updateEntity = false;
                         }
                         else
@@ -374,6 +402,7 @@ public class TibberService : IGridSupplierInterface
                 existPrice.PriceLevel = priceItem.level;
                 await mscDbContext.SaveChangesAsync();
             }
+            MySolarCellsGlobals.ImportErrorValidateEvrryRow = false;
             return new Result<DataSyncResponse>(new DataSyncResponse
             {
                 Message = AppResources.Import_Data_From_Electricity_Supplier_Done,
@@ -382,6 +411,7 @@ public class TibberService : IGridSupplierInterface
         }
         catch (Exception ex)
         {
+            MySolarCellsGlobals.ImportErrorValidateEvrryRow = true;
             return new Result<DataSyncResponse>(ex.Message);
         }
     }

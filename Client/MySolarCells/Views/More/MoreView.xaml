@@ -133,7 +133,16 @@
                         <TapGestureRecognizer Command="{Binding ShowPowerTariffCommand}" />
                     </control:MenuGridItemView.GestureRecognizers>
                 </control:MenuGridItemView>
-
+                 <!--  Fix Time Gap in DB  -->
+                 <control:MenuGridItemView Margin="0,0,0,3"
+                                           WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
+                                           FontIcon="{x:Static theming:IconFont.Dashbord}"
+                                           IsVisible="True"
+                                           TitleText="Fix time gap in db">
+                     <control:MenuGridItemView.GestureRecognizers>
+                         <TapGestureRecognizer Command="{Binding FixTimeGampInDbCommand}" />
+                     </control:MenuGridItemView.GestureRecognizers>
+                 </control:MenuGridItemView>
 
 
 
