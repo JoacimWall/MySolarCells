@@ -5,7 +5,7 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MySolarCells</RootNamespace>
 		<UseMaui>true</UseMaui>
-		<MauiVersion>9.0.50</MauiVersion>
+		<MauiVersion>9.0.90</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -16,7 +16,7 @@
 		<ApplicationId>com.walltech.mysolarcells.beta</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
-		<ApplicationVersion>44</ApplicationVersion>
+		<ApplicationVersion>46</ApplicationVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
@@ -50,21 +50,21 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.3" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.116.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Acr.UserDialogs" Version="9.2.1" />
+		<PackageReference Include="Acr.UserDialogs" Version="9.2.2" />
 		<PackageReference Include="EFCore.BulkExtensions" Version="9.0.1" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
 		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="29.1.33" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="29.1.33" />
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="29.1.33" />
-		<PackageReference Include="Plugin.LocalNotification" Version="11.1.4" />
+		<PackageReference Include="Plugin.LocalNotification" Version="12.0.1" />
 		<PackageReference Include="Syncfusion.Maui.Sliders" Version="29.1.33" />
 		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
 		
@@ -107,8 +107,6 @@
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
-		<CodesignProvision>My solar cells Beta</CodesignProvision>
-		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
 		<MtouchLink>SdkOnly</MtouchLink>
 		<RunAOTCompilation>true</RunAOTCompilation>
 		<!-- Optional -->
@@ -116,8 +114,8 @@
 		<!--Detta för annars funkar inte MediaElment på IOS i Release mode-->
 		<UseInterpreter>true</UseInterpreter>
 		<MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-		<CodesignExtraArgs>
-		</CodesignExtraArgs>
+		<CodesignProvision>My solar cells Beta</CodesignProvision>
+		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Debug'">
 		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Debug.plist</CodesignEntitlements>
@@ -126,6 +124,8 @@
 	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst')) and '$(Configuration)' == 'Release'">
 		<CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Release.plist</CodesignEntitlements>
 		<UseHardenedRuntime>true</UseHardenedRuntime>
+		<CodesignKey>Apple Distribution: EVRY Sweden AB (EMV34W7ZW5)</CodesignKey>
+		<CodesignProvision>Automatic:AppStore</CodesignProvision>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
