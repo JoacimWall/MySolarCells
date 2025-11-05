@@ -7,6 +7,9 @@ public interface ISettingsService
     OnboardingStatusEnum OnboardingStatus { get; set; }
     int SelectedHomeId { get; set; }
     CountryEnum UserCountry { get; set; }
+    bool BackgroundSyncEnabled { get; set; }
+    int BackgroundSyncIntervalMinutes { get; set; }
+    DateTime? LastBackgroundSyncTime { get; set; }
     void SetCurrentCultureOnAllThreads(CountryEnum country);
 }
 
@@ -85,6 +88,69 @@ public class SettingsService : ISettingsService
                 exist.IntValue = (int)value;
             mscDbContext.SaveChanges();
             SetCurrentCultureOnAllThreads(value);
+        }
+    }
+
+    public bool BackgroundSyncEnabled
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(BackgroundSyncEnabled));
+            if (exist == null)
+                return true; // Default: enabled
+            else
+                return exist.IntValue == 1;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(BackgroundSyncEnabled));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(BackgroundSyncEnabled), IntValue = value ? 1 : 0 });
+            else
+                exist.IntValue = value ? 1 : 0;
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public int BackgroundSyncIntervalMinutes
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(BackgroundSyncIntervalMinutes));
+            if (exist == null)
+                return 60; // Default: 60 minutes (1 hour)
+            else
+                return exist.IntValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(BackgroundSyncIntervalMinutes));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(BackgroundSyncIntervalMinutes), IntValue = value });
+            else
+                exist.IntValue = value;
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public DateTime? LastBackgroundSyncTime
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastBackgroundSyncTime));
+            if (exist == null || string.IsNullOrEmpty(exist.StringValue))
+                return null;
+            else
+                return DateTime.Parse(exist.StringValue);
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastBackgroundSyncTime));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(LastBackgroundSyncTime), StringValue = value?.ToString("O") ?? "" });
+            else
+                exist.StringValue = value?.ToString("O") ?? "";
+            mscDbContext.SaveChanges();
         }
     }
 

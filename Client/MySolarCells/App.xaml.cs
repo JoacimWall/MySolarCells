@@ -7,16 +7,19 @@ public partial class App : Application
 {
     private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
-    public App(ISettingsService settingsService, MscDbContext mscDbContext) 
+    private readonly IBackgroundSyncService backgroundSyncService;
+
+    public App(ISettingsService settingsService, MscDbContext mscDbContext, IBackgroundSyncService backgroundSyncService)
     {
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzc4NTkxOEAzMjM5MmUzMDJlMzAzYjMyMzkzYm1kK3BWV2EySTJldjNXNjBSSktxRW90NGU0Y3NJZjJJK0d5SFFweC9ldEk9");
         this.settingsService = settingsService;
         this.mscDbContext = mscDbContext;
+        this.backgroundSyncService = backgroundSyncService;
         MySolarCellsGlobals.App = this;
-        this.settingsService.SetCurrentCultureOnAllThreads(this.settingsService.UserCountry); 
+        this.settingsService.SetCurrentCultureOnAllThreads(this.settingsService.UserCountry);
          MainPage = new StartupShell();
-       
+
     }
 
    
@@ -62,14 +65,16 @@ public partial class App : Application
     }
     protected override async void OnStart()
     {
-        
-        //then we don't want the Init navigation to do the same thing. the app crash on IOS works on Android  
+
+        //then we don't want the Init navigation to do the same thing. the app crash on IOS works on Android
         //if (((Shell)(App.Current.MainPage)).CurrentPage is StartupView)
         await InitApp(false);
-        
+
         // MySolarCellsGlobals.SelectedHome = mscDbContext.ElectricitySupplier.FirstOrDefault(x => x.ElectricitySupplierId == settingsService.SelectedHomeId) ?? new ElectricitySupplier(){ Name = "", SubSystemEntityId = ""};
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
-       // await SyncData();
+
+        // Start background sync service
+        backgroundSyncService.StartBackgroundSync();
     }
     protected override void OnResume()
     {
@@ -78,15 +83,17 @@ public partial class App : Application
 
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.Active;
-        // SyncData();
 
+        // Resume background sync service
+        backgroundSyncService.StartBackgroundSync();
     }
     protected override void OnSleep()
     {
-       
+
         WeakReferenceMessenger.Default.Send(new AppSleepMessage(true));
 
-      
+        // Stop background sync service
+        backgroundSyncService.StopBackgroundSync();
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.InActive;
     }
