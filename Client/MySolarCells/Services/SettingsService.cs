@@ -10,6 +10,7 @@ public interface ISettingsService
     bool BackgroundSyncEnabled { get; set; }
     int BackgroundSyncIntervalMinutes { get; set; }
     DateTime? LastBackgroundSyncTime { get; set; }
+    AppTheme UserTheme { get; set; }
     void SetCurrentCultureOnAllThreads(CountryEnum country);
 }
 
@@ -150,6 +151,27 @@ public class SettingsService : ISettingsService
                 mscDbContext.Preferences.Add(new Preferences { Name = nameof(LastBackgroundSyncTime), StringValue = value?.ToString("O") ?? "" });
             else
                 exist.StringValue = value?.ToString("O") ?? "";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public AppTheme UserTheme
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserTheme));
+            if (exist == null)
+                return AppTheme.Unspecified; // Default: follow system theme
+            else
+                return (AppTheme)exist.IntValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(UserTheme));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(UserTheme), IntValue = (int)value });
+            else
+                exist.IntValue = (int)value;
             mscDbContext.SaveChanges();
         }
     }

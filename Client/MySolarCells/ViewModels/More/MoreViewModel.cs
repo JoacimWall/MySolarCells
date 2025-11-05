@@ -10,19 +10,30 @@ public class MoreViewModel : BaseViewModel
     private readonly IHistoryDataService historyService;
     private readonly IRoiService roiService;
     private readonly IDataSyncService dataSyncService;
-
+    private readonly IThemeService themeService;
     private readonly MscDbContext mscDbContext;
-    public MoreViewModel(IHistoryDataService historyService, IDataSyncService dataSyncService, IRoiService roiService,  MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+
+    public MoreViewModel(IHistoryDataService historyService, IDataSyncService dataSyncService, IRoiService roiService, MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService, IThemeService themeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.historyService = historyService;
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;
         this.dataSyncService = dataSyncService;
+        this.themeService = themeService;
         electricitySupplier = homeService.FirstElectricitySupplier();
         AppInfoVersion = AppInfo.VersionString + "(" + AppInfo.BuildString + ")";
 
+        // Subscribe to theme changes
+        themeService.ThemeChanged += OnThemeChanged;
+    }
+
+    private void OnThemeChanged(object sender, AppTheme theme)
+    {
+        OnPropertyChanged(nameof(CurrentThemeText));
+        OnPropertyChanged(nameof(CurrentThemeDisplayText));
+        OnPropertyChanged(nameof(ThemeIcon));
     }
 
     public ICommand ShowInvestAndLonCommand => new Command(async () => await ShowInvestAndLon());
@@ -34,6 +45,7 @@ public class MoreViewModel : BaseViewModel
     public ICommand ShowPowerTariffCommand => new Command(async () => await ShowPowerTariff());
     public ICommand ShowPickCountryCommand => new Command(async () => await ShowPickCountry());
     public ICommand FixTimeGampInDbCommand => new Command(async () => await FixTimeGampInDb());
+    public ICommand ToggleThemeCommand => new Command(async () => await ToggleTheme());
 
     private async Task FixTimeGampInDb()
     {
@@ -459,6 +471,55 @@ public class MoreViewModel : BaseViewModel
     {
         get => appInfoVersion;
         set => SetProperty(ref appInfoVersion, value);
+    }
+
+    public string CurrentThemeText
+    {
+        get
+        {
+            return themeService.UserThemePreference switch
+            {
+                AppTheme.Light => AppResources.Light_Theme,
+                AppTheme.Dark => AppResources.Dark_Theme,
+                _ => AppResources.System_Theme
+            };
+        }
+    }
+
+    public string CurrentThemeDisplayText
+    {
+        get
+        {
+            return $"{AppResources.Theme}: {CurrentThemeText}";
+        }
+    }
+
+    public string ThemeIcon
+    {
+        get
+        {
+            return themeService.UserThemePreference switch
+            {
+                AppTheme.Light => IconFont.Sun,
+                AppTheme.Dark => IconFont.Moon,
+                _ => IconFont.Settings
+            };
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        var currentTheme = themeService.UserThemePreference;
+        var newTheme = currentTheme switch
+        {
+            AppTheme.Unspecified => AppTheme.Light,
+            AppTheme.Light => AppTheme.Dark,
+            AppTheme.Dark => AppTheme.Unspecified,
+            _ => AppTheme.Unspecified
+        };
+
+        themeService.UserThemePreference = newTheme;
+        await Task.CompletedTask;
     }
 }
 

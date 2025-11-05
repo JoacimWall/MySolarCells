@@ -8,17 +8,23 @@ public partial class App : Application
     private readonly ISettingsService settingsService;
     private readonly MscDbContext mscDbContext;
     private readonly IBackgroundSyncService backgroundSyncService;
+    private readonly IThemeService themeService;
 
-    public App(ISettingsService settingsService, MscDbContext mscDbContext, IBackgroundSyncService backgroundSyncService)
+    public App(ISettingsService settingsService, MscDbContext mscDbContext, IBackgroundSyncService backgroundSyncService, IThemeService themeService)
     {
         InitializeComponent();
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH5edXVRRGlcWEJ1W0dWYEg=");
         this.settingsService = settingsService;
         this.mscDbContext = mscDbContext;
         this.backgroundSyncService = backgroundSyncService;
+        this.themeService = themeService;
         MySolarCellsGlobals.App = this;
         this.settingsService.SetCurrentCultureOnAllThreads(this.settingsService.UserCountry);
-         MainPage = new StartupShell();
+
+        // Initialize theme from user preference
+        themeService.ApplyTheme(settingsService.UserTheme);
+
+        MainPage = new StartupShell();
 
     }
 

@@ -4,15 +4,26 @@ public class EnergyViewModel : BaseViewModel
 {
     private readonly IEnergyChartService energyChartService;
     private readonly IDataSyncService dataSyncService;
+    private readonly IThemeService themeService;
 
     public EnergyViewModel(IEnergyChartService energyChartService, IDataSyncService dataSyncService,
-        IDialogService dialogService,IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,
-        ISettingsService settingsService,IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
-        logService, settingsService,homeService)
+        IDialogService dialogService, IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,
+        ISettingsService settingsService, IHomeService homeService, IThemeService themeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.energyChartService = energyChartService;
         this.dataSyncService = dataSyncService;
+        this.themeService = themeService;
         ChartDataRequest = homeService.CurrentChartDataRequest();
+
+        // Subscribe to theme changes
+        themeService.ThemeChanged += OnThemeChanged;
+    }
+
+    private async void OnThemeChanged(object sender, AppTheme theme)
+    {
+        // Reload graph with new theme colors
+        await ReloadGraph();
     }
 
     public ICommand SyncCommand => new Command(async () => await Sync());

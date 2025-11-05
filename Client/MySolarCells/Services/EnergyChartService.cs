@@ -7,10 +7,13 @@ public class EnergyChartService : IEnergyChartService
 {
     private readonly IHistoryDataService roiService;
     private readonly MscDbContext mscDbContext;
-    public EnergyChartService(IHistoryDataService roiService, MscDbContext mscDbContext)
+    private readonly IThemeService themeService;
+
+    public EnergyChartService(IHistoryDataService roiService, MscDbContext mscDbContext, IThemeService themeService)
     {
         this.roiService = roiService;
         this.mscDbContext = mscDbContext;
+        this.themeService = themeService;
     }
     public async Task<Result<ChartDataResult>> GetChartData(ChartDataRequest chartDataRequest)
     {
@@ -18,30 +21,33 @@ public class EnergyChartService : IEnergyChartService
         string entryLabel = string.Empty;
         var calcParameter = await mscDbContext.EnergyCalculationParameter.FirstAsync();
 
+        // Get current theme for chart colors
+        var currentTheme = themeService.CurrentTheme;
+
         // ------ Create 4  ---------------
         //Production Sold
         List<ChartEntry> listProductionSold = new List<ChartEntry>();
-        Color soldColor = Color.Parse("#640abf");
+        Color soldColor = AppColors.ChartColors.GetSoldColor(currentTheme);
         //Production used
         List<ChartEntry> listProductionUsed = new List<ChartEntry>();
-        Color usedColor = Color.Parse("#46a80d");
+        Color usedColor = AppColors.ChartColors.GetUsedColor(currentTheme);
 
         //Consumption
         List<ChartEntry> listCunsumtionGrid = new List<ChartEntry>();
-        Color consumGridColor = Color.Parse("#bf2522");
+        Color consumGridColor = AppColors.ChartColors.GetConsumedGridColor(currentTheme);
         //batteryUsedExist
         List<ChartEntry> listBatteryUsed = new List<ChartEntry>();
-        Color batteryUsedColor = Color.Parse("#2685e3");
+        Color batteryUsedColor = AppColors.ChartColors.GetBatteryUsedColor(currentTheme);
         //BatteryChargeExist
         List<ChartEntry> listBatteryCharge = new List<ChartEntry>();
-        Color batteryChargeColor = Color.Parse("#2685e3");
+        Color batteryChargeColor = AppColors.ChartColors.GetBatteryChargeColor(currentTheme);
 
         //Price buy
         List<ChartEntry> lisPriceBuy = new List<ChartEntry>();
-        Color priceBuyColor = Color.Parse("#640abf");
+        Color priceBuyColor = AppColors.ChartColors.GetPriceBuyColor(currentTheme);
         //price Sel
         List<ChartEntry> lisPriceSold = new List<ChartEntry>();
-        Color priceSellColor = Color.Parse("#46a80d");
+        Color priceSellColor = AppColors.ChartColors.GetPriceSellColor(currentTheme);
 
         int devPrice = 0;
         var dataRows = await mscDbContext.Energy.Where(x => x.Timestamp >= chartDataRequest.FilterStart && x.Timestamp < chartDataRequest.FilterEnd).ToListAsync();

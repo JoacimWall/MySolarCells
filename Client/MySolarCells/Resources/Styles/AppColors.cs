@@ -163,6 +163,73 @@ public static class AppColors
     public static Color StatusbarTextColor = Color.FromArgb("#2B0B98");
     public static Color TmButtonValidBackgroundColor = Color.FromArgb("#FF675C");
     public static Color TmButtonInValidBackgroundColor = Color.FromArgb("#FF675C");
+
+    //------------ Chart Colors ----------------------------------//
+    // Theme-aware chart colors
+    public static class ChartColors
+    {
+        // Light theme chart colors
+        public static Color LightSoldColor = Color.FromArgb("#640abf");          // Purple
+        public static Color LightUsedColor = Color.FromArgb("#46a80d");          // Green
+        public static Color LightConsumedGridColor = Color.FromArgb("#bf2522");  // Red
+        public static Color LightBatteryUsedColor = Color.FromArgb("#2685e3");   // Blue
+        public static Color LightBatteryChargeColor = Color.FromArgb("#2685e3"); // Blue
+        public static Color LightPriceBuyColor = Color.FromArgb("#640abf");      // Purple
+        public static Color LightPriceSellColor = Color.FromArgb("#46a80d");     // Green
+
+        // Dark theme chart colors (adjusted for better visibility)
+        public static Color DarkSoldColor = Color.FromArgb("#9d5fff");           // Lighter Purple
+        public static Color DarkUsedColor = Color.FromArgb("#6ed428");           // Lighter Green
+        public static Color DarkConsumedGridColor = Color.FromArgb("#ff5b58");   // Lighter Red
+        public static Color DarkBatteryUsedColor = Color.FromArgb("#5ab0ff");    // Lighter Blue
+        public static Color DarkBatteryChargeColor = Color.FromArgb("#5ab0ff");  // Lighter Blue
+        public static Color DarkPriceBuyColor = Color.FromArgb("#9d5fff");       // Lighter Purple
+        public static Color DarkPriceSellColor = Color.FromArgb("#6ed428");      // Lighter Green
+
+        public static Color GetSoldColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkSoldColor : LightSoldColor;
+        }
+
+        public static Color GetUsedColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkUsedColor : LightUsedColor;
+        }
+
+        public static Color GetConsumedGridColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkConsumedGridColor : LightConsumedGridColor;
+        }
+
+        public static Color GetBatteryUsedColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkBatteryUsedColor : LightBatteryUsedColor;
+        }
+
+        public static Color GetBatteryChargeColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkBatteryChargeColor : LightBatteryChargeColor;
+        }
+
+        public static Color GetPriceBuyColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkPriceBuyColor : LightPriceBuyColor;
+        }
+
+        public static Color GetPriceSellColor(AppTheme theme)
+        {
+            return GetEffectiveTheme(theme) == AppTheme.Dark ? DarkPriceSellColor : LightPriceSellColor;
+        }
+
+        private static AppTheme GetEffectiveTheme(AppTheme theme)
+        {
+            if (theme == AppTheme.Unspecified && Application.Current != null)
+            {
+                return Application.Current.RequestedTheme;
+            }
+            return theme;
+        }
+    }
 }
 public enum TmColors
 {

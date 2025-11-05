@@ -18,5 +18,8 @@ public static class IconFont
     public const string Add = "\uea0e";
     public const string Dashbord = "\uea0f";
     public const string Refresh = "\uea10";
+    public const string Sun = "\u2600";     // Sun symbol for light theme
+    public const string Moon = "\u263E";    // Moon symbol for dark theme
+    public const string Settings = "\u2699"; // Settings gear symbol
 }
 

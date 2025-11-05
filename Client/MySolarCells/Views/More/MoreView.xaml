@@ -143,6 +143,16 @@
                          <TapGestureRecognizer Command="{Binding FixTimeGampInDbCommand}" />
                      </control:MenuGridItemView.GestureRecognizers>
                  </control:MenuGridItemView>
+                 <!--  Theme Toggle  -->
+                 <control:MenuGridItemView Margin="0,0,0,3"
+                                           WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
+                                           FontIcon="{Binding ThemeIcon}"
+                                           IsVisible="True"
+                                           TitleText="{Binding CurrentThemeDisplayText}">
+                     <control:MenuGridItemView.GestureRecognizers>
+                         <TapGestureRecognizer Command="{Binding ToggleThemeCommand}" />
+                     </control:MenuGridItemView.GestureRecognizers>
+                 </control:MenuGridItemView>
 
 
 

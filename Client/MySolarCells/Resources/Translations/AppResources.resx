@@ -621,4 +621,20 @@
     <data name="Remove_Tax_Reduction" xml:space="preserve">
         <value>Remove tax reduction</value>
     </data>
+    <data name="Theme" xml:space="preserve">
+        <value>Theme</value>
+        <comment>Theme selection option</comment>
+    </data>
+    <data name="Light_Theme" xml:space="preserve">
+        <value>Light</value>
+        <comment>Light theme option</comment>
+    </data>
+    <data name="Dark_Theme" xml:space="preserve">
+        <value>Dark</value>
+        <comment>Dark theme option</comment>
+    </data>
+    <data name="System_Theme" xml:space="preserve">
+        <value>System</value>
+        <comment>System theme option (follows device settings)</comment>
+    </data>
 </root>
