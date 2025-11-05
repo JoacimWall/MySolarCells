@@ -5,7 +5,7 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MySolarCells</RootNamespace>
 		<UseMaui>true</UseMaui>
-		<MauiVersion>9.0.90</MauiVersion>
+		<MauiVersion>9.0.120</MauiVersion>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -45,7 +45,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />-->
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.0" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -53,13 +53,13 @@
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Acr.UserDialogs" Version="9.2.2" />
-		<PackageReference Include="EFCore.BulkExtensions" Version="9.0.1" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
-		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="29.1.33" />
-		<PackageReference Include="Syncfusion.Maui.Charts" Version="29.1.33" />
-		<PackageReference Include="Syncfusion.Maui.Picker" Version="29.1.33" />
-		<PackageReference Include="Plugin.LocalNotification" Version="12.0.1" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="29.1.33" />
+		<PackageReference Include="EFCore.BulkExtensions" Version="9.0.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
+		<PackageReference Include="Syncfusion.Xamarin.XlsIO" Version="30.2.4" />
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="31.2.5" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="31.2.5" />
+		<PackageReference Include="Plugin.LocalNotification" Version="12.0.2" />
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="31.2.5" />
 		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
 		
 	</ItemGroup>

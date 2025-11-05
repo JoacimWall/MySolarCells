@@ -12,7 +12,7 @@ public partial class App : Application
     public App(ISettingsService settingsService, MscDbContext mscDbContext, IBackgroundSyncService backgroundSyncService)
     {
         InitializeComponent();
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzc4NTkxOEAzMjM5MmUzMDJlMzAzYjMyMzkzYm1kK3BWV2EySTJldjNXNjBSSktxRW90NGU0Y3NJZjJJK0d5SFFweC9ldEk9");
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH5edXVRRGlcWEJ1W0dWYEg=");
         this.settingsService = settingsService;
         this.mscDbContext = mscDbContext;
         this.backgroundSyncService = backgroundSyncService;

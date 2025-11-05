@@ -36,8 +36,7 @@
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
                         </chart:SfCartesianChart.ZoomPanBehavior>
                         <chart:SfCartesianChart.XAxes>
-                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis />
+                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" LabelPlacement="BetweenTicks" EdgeLabelsDrawingMode="Shift" />
                         </chart:SfCartesianChart.XAxes>
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
@@ -85,8 +84,7 @@
                         </chart:SfCartesianChart.ZoomPanBehavior>
 
                         <chart:SfCartesianChart.XAxes>
-                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis />
+                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" LabelPlacement="BetweenTicks" EdgeLabelsDrawingMode="Shift" />
                         </chart:SfCartesianChart.XAxes>
 
                         <chart:SfCartesianChart.YAxes>
@@ -135,8 +133,7 @@
                             <chart:ChartZoomPanBehavior EnablePinchZooming="False"/>
                         </chart:SfCartesianChart.ZoomPanBehavior>
                         <chart:SfCartesianChart.XAxes>
-                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" />
-                            <chart:CategoryAxis />
+                            <chart:CategoryAxis LabelRotation="90" ShowMajorGridLines="False" LabelPlacement="BetweenTicks" EdgeLabelsDrawingMode="Shift" />
                         </chart:SfCartesianChart.XAxes>
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
