@@ -29,7 +29,7 @@ public class MoreViewModel : BaseViewModel
         themeService.ThemeChanged += OnThemeChanged;
     }
 
-    private void OnThemeChanged(object sender, AppTheme theme)
+    private void OnThemeChanged(object? sender, AppTheme theme)
     {
         OnPropertyChanged(nameof(CurrentThemeText));
         OnPropertyChanged(nameof(CurrentThemeDisplayText));

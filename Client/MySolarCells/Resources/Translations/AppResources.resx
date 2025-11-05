@@ -1,640 +1,639 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Cancel" xml:space="preserve">
+  </resheader>
+  <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
         <comment>Need review</comment></data>
-    <data name="Login" xml:space="preserve">
+  <data name="Login" xml:space="preserve">
     <value>Login</value>
         <comment>Need review</comment></data>
-    <data name="Password" xml:space="preserve">
+  <data name="Password" xml:space="preserve">
     <value>Password</value>
         <comment>Need review</comment></data>
-    <data name="Move_On" xml:space="preserve">
+  <data name="Move_On" xml:space="preserve">
     <value>Move on</value>
         <comment>Need review</comment></data>
-    <data name="In_Order_To_Retrieve_Information_From_Tibber_And_More" xml:space="preserve">
+  <data name="In_Order_To_Retrieve_Information_From_Tibber_And_More" xml:space="preserve">
     <value>In order to retrieve information from Tibber, we need an Access Token. You can get it by click on 'Goto Tibber Api site' below. Copy/paste the api key in to the field below.</value>
         <comment>Final</comment></data>
-    <data name="Access_Token" xml:space="preserve">
+  <data name="Access_Token" xml:space="preserve">
     <value>Access Token</value>
         <comment>Need review</comment></data>
-    <data name="My_Solar_Cells" xml:space="preserve">
+  <data name="My_Solar_Cells" xml:space="preserve">
     <value>My solar cells</value>
         <comment>Need review</comment></data>
-    <data name="Ok" xml:space="preserve">
+  <data name="Ok" xml:space="preserve">
     <value>Ok</value>
         <comment>Need review</comment></data>
-    <data name="More" xml:space="preserve">
+  <data name="More" xml:space="preserve">
     <value>More</value>
         <comment>Need review</comment></data>
-    <data name="Production" xml:space="preserve">
+  <data name="Production" xml:space="preserve">
     <value>Production</value>
         <comment>Need review</comment></data>
-    <data name="Electricity_Supplier" xml:space="preserve">
+  <data name="Electricity_Supplier" xml:space="preserve">
     <value>Electricity supplier</value>
         <comment>Need review</comment></data>
-    <data name="Save" xml:space="preserve">
+  <data name="Save" xml:space="preserve">
     <value>Save</value>
         <comment>Need review</comment></data>
-    <data name="Tibber" xml:space="preserve">
+  <data name="Tibber" xml:space="preserve">
     <value>Tibber</value>
         <comment>Need review</comment></data>
-    <data name="Validate" xml:space="preserve">
+  <data name="Validate" xml:space="preserve">
     <value>Validate</value>
         <comment>Need review</comment></data>
-    <data name="Select_The_Home_You_Want_To_Analyze" xml:space="preserve">
+  <data name="Select_The_Home_You_Want_To_Analyze" xml:space="preserve">
     <value>Select the home you want to analyze</value>
         <comment>Need review</comment></data>
-    <data name="Year" xml:space="preserve">
+  <data name="Year" xml:space="preserve">
     <value>Year</value>
         <comment>Need review</comment></data>
-    <data name="Import_Only_Spot_Prices" xml:space="preserve">
+  <data name="Import_Only_Spot_Prices" xml:space="preserve">
     <value>Import only spot prices</value>
         <comment>Need review</comment></data>
-    <data name="Import_Only_Spot_Prices_Desc" xml:space="preserve">
+  <data name="Import_Only_Spot_Prices_Desc" xml:space="preserve">
     <value>Use this if you get consumption and production from Inverter and only need Tibber for the Spot price per hour.</value>
         <comment>Need review</comment></data>
-    <data name="Goto_Tibber_Api_Site" xml:space="preserve">
+  <data name="Goto_Tibber_Api_Site" xml:space="preserve">
     <value>Goto Tibber Api site</value>
         <comment>Need review</comment></data>
-    <data name="Inverter" xml:space="preserve">
+  <data name="Inverter" xml:space="preserve">
     <value>Inverter</value>
         <comment>Need review</comment></data>
-    <data name="Pick_The_Invert_Desc" xml:space="preserve">
+  <data name="Pick_The_Invert_Desc" xml:space="preserve">
     <value>Pick the invert from the list below that represent you installation</value>
         <comment>Need review</comment></data>
-    <data name="Tibber_Guide_Text" xml:space="preserve">
+  <data name="Tibber_Guide_Text" xml:space="preserve">
     <value>To use Tibber you ned your private API key. You can get that by click on the button below and login.</value>
         <comment>Need review</comment></data>
-    <data name="Import_Data_From_Electricity_Supplier" xml:space="preserve">
+  <data name="Import_Data_From_Electricity_Supplier" xml:space="preserve">
     <value>Import data from electricity supplier.</value>
         <comment>Need review</comment></data>
-    <data name="Import_Data_From_Electricity_Supplier_Done" xml:space="preserve">
+  <data name="Import_Data_From_Electricity_Supplier_Done" xml:space="preserve">
     <value>Import data from electricity supplier Done</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Rows_Amount" xml:space="preserve">
+  <data name="Saved_Rows_Amount" xml:space="preserve">
     <value>Saved rows {0}</value>
         <comment>Need review</comment></data>
-    <data name="Import_Data_From_Inverter" xml:space="preserve">
+  <data name="Import_Data_From_Inverter" xml:space="preserve">
     <value>Import data from inverter</value>
         <comment>Need review</comment></data>
-    <data name="Error_Import_Data_From_Inverter" xml:space="preserve">
+  <data name="Error_Import_Data_From_Inverter" xml:space="preserve">
     <value>Error import data from inverter</value>
         <comment>Need review</comment></data>
-    <data name="My_Description" xml:space="preserve">
+  <data name="My_Description" xml:space="preserve">
     <value>My description</value>
         <comment>Need review</comment></data>
-    <data name="Description" xml:space="preserve">
+  <data name="Description" xml:space="preserve">
     <value>Description</value>
         <comment>Need review</comment></data>
-    <data name="Investment_And_Loan" xml:space="preserve">
+  <data name="Investment_And_Loan" xml:space="preserve">
     <value>Investment and loan</value>
         <comment>Need review</comment></data>
-    <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
+  <data name="There_Is_No_Data_To_Show_On_This_Date" xml:space="preserve">
     <value>There is no data to show on this date</value>
         <comment>Need review</comment></data>
-    <data name="Purchased" xml:space="preserve">
+  <data name="Purchased" xml:space="preserve">
     <value>Purchased</value>
         <comment>Need review</comment></data>
-    <data name="kWh" xml:space="preserve">
+  <data name="kWh" xml:space="preserve">
     <value>kWh</value>
         <comment>Need review</comment></data>
-    <data name="Currency" xml:space="preserve">
+  <data name="Currency" xml:space="preserve">
     <value>SEK</value>
         <comment>Need review</comment></data>
-    <data name="Transfer_Fee" xml:space="preserve">
+  <data name="Transfer_Fee" xml:space="preserve">
     <value>Transfer fee</value>
         <comment>Need review</comment></data>
-    <data name="Battery_Transfer_Fee" xml:space="preserve">
+  <data name="Battery_Transfer_Fee" xml:space="preserve">
     <value>Battery transfer fee</value>
         <comment>Need review</comment></data>
-    <data name="Energy_Tax" xml:space="preserve">
+  <data name="Energy_Tax" xml:space="preserve">
     <value>Energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Battery_Energy_Tax" xml:space="preserve">
+  <data name="Battery_Energy_Tax" xml:space="preserve">
     <value>Battery energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Amount" xml:space="preserve">
+  <data name="Amount" xml:space="preserve">
     <value>Amount</value>
         <comment>Need review</comment></data>
-    <data name="Production_To_Grid" xml:space="preserve">
+  <data name="Production_To_Grid" xml:space="preserve">
     <value>Production to grid</value>
         <comment>Need review</comment></data>
-    <data name="If_Battery_Is_Not_Used" xml:space="preserve">
+  <data name="If_Battery_Is_Not_Used" xml:space="preserve">
     <value>If battery is not used</value>
         <comment>Need review</comment></data>
-    <data name="Production_Own_Use" xml:space="preserve">
+  <data name="Production_Own_Use" xml:space="preserve">
     <value>Production own use</value>
         <comment>Need review</comment></data>
-    <data name="KWh_From_Battery" xml:space="preserve">
+  <data name="KWh_From_Battery" xml:space="preserve">
     <value>KWh from battery</value>
         <comment>Need review</comment></data>
-    <data name="Battery_Currency" xml:space="preserve">
+  <data name="Battery_Currency" xml:space="preserve">
     <value>Battery SEK</value>
         <comment>Need review</comment></data>
-    <data name="Total" xml:space="preserve">
+  <data name="Total" xml:space="preserve">
     <value>Total</value>
         <comment>Need review</comment></data>
-    <data name="Interest" xml:space="preserve">
+  <data name="Interest" xml:space="preserve">
     <value>Interest</value>
         <comment>Need review</comment></data>
-    <data name="Interest_Saved" xml:space="preserve">
+  <data name="Interest_Saved" xml:space="preserve">
     <value>Interest saved</value>
         <comment>Need review</comment></data>
-    <data name="Result" xml:space="preserve">
+  <data name="Result" xml:space="preserve">
     <value>Result</value>
         <comment>Need review</comment></data>
-    <data name="ROI" xml:space="preserve">
+  <data name="ROI" xml:space="preserve">
     <value>ROI</value>
         <comment>Need review</comment></data>
-    <data name="Years_Left_Until_ROI" xml:space="preserve">
+  <data name="Years_Left_Until_ROI" xml:space="preserve">
     <value>Years left until ROI</value>
         <comment>Need review</comment></data>
-    <data name="Total_Investment_And_Loan" xml:space="preserve">
+  <data name="Total_Investment_And_Loan" xml:space="preserve">
     <value>Total investment and loan</value>
         <comment>Need review</comment></data>
-    <data name="Total_Produced_And_Saved" xml:space="preserve">
+  <data name="Total_Produced_And_Saved" xml:space="preserve">
     <value>Total produced and saved</value>
         <comment>Need review</comment></data>
-    <data name="Left_Of_Investment_Cost" xml:space="preserve">
+  <data name="Left_Of_Investment_Cost" xml:space="preserve">
     <value>Left of investment cost</value>
         <comment>Need review</comment></data>
-    <data name="Calculation_Parameters" xml:space="preserve">
+  <data name="Calculation_Parameters" xml:space="preserve">
     <value>Calculation parameters</value>
         <comment>Need review</comment></data>
-    <data name="From_Date" xml:space="preserve">
+  <data name="From_Date" xml:space="preserve">
     <value>From Date</value>
         <comment>Need review</comment></data>
-    <data name="Compensation_Electricity_Load" xml:space="preserve">
+  <data name="Compensation_Electricity_Load" xml:space="preserve">
     <value>Compensation electricity load</value>
         <comment>Need review</comment></data>
-    <data name="Tax_Reduction" xml:space="preserve">
+  <data name="Tax_Reduction" xml:space="preserve">
     <value>Tax reduction</value>
         <comment>Need review</comment></data>
-    <data name="Tax_Reduction_Discription" xml:space="preserve">
+  <data name="Tax_Reduction_Discription" xml:space="preserve">
     <value>Tax reduction (produced/kWh to grid)</value>
         <comment>Need review</comment></data>
-    <data name="Energy_Tax_Comsumption" xml:space="preserve">
+  <data name="Energy_Tax_Comsumption" xml:space="preserve">
     <value>Energy tax (comsumption)</value>
         <comment>Need review</comment></data>
-    <data name="Total_Installed_Kwh" xml:space="preserve">
+  <data name="Total_Installed_Kwh" xml:space="preserve">
     <value>Total installed Kwh</value>
         <comment>Need review</comment></data>
-    <data name="Use_Spot_Prices" xml:space="preserve">
+  <data name="Use_Spot_Prices" xml:space="preserve">
     <value>Use Spot prices</value>
         <comment>Need review</comment></data>
-    <data name="Fixed_Price_Kwh" xml:space="preserve">
+  <data name="Fixed_Price_Kwh" xml:space="preserve">
     <value>Fixed price/Kwh</value>
         <comment>Need review</comment></data>
-    <data name="Refresh" xml:space="preserve">
+  <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
         <comment>Need review</comment></data>
-    <data name="Export_To_Excel" xml:space="preserve">
+  <data name="Export_To_Excel" xml:space="preserve">
     <value>Export to Excel</value>
         <comment>Need review</comment></data>
-    <data name="Install_Year" xml:space="preserve">
+  <data name="Install_Year" xml:space="preserve">
     <value>Install year</value>
         <comment>Need review</comment></data>
-    <data name="Pick_The_Brand_Of_Your_Electricity_Supplier" xml:space="preserve">
+  <data name="Pick_The_Brand_Of_Your_Electricity_Supplier" xml:space="preserve">
     <value>Pick the brand of your electricity supplier</value>
         <comment>Need review</comment></data>
-    <data name="Pick_The_Electricity_Supplier_Intro_Text" xml:space="preserve">
+  <data name="Pick_The_Electricity_Supplier_Intro_Text" xml:space="preserve">
     <value>Pick the brand of your electricity supplier</value>
         <comment>Need review</comment></data>
-    <data name="Username" xml:space="preserve">
+  <data name="Username" xml:space="preserve">
     <value>Username</value>
         <comment>Need review</comment></data>
-    <data name="Api_Url" xml:space="preserve">
+  <data name="Api_Url" xml:space="preserve">
     <value>Api url</value>
         <comment>Need review</comment></data>
-    <data name="Api_Key" xml:space="preserve">
+  <data name="Api_Key" xml:space="preserve">
     <value>Api key</value>
         <comment>Need review</comment></data>
-    <data name="Install_Date" xml:space="preserve">
+  <data name="Install_Date" xml:space="preserve">
     <value>Install date</value>
         <comment>Need review</comment></data>
-    <data name="Pick_Your_Site" xml:space="preserve">
+  <data name="Pick_Your_Site" xml:space="preserve">
     <value>Pick your site</value>
         <comment>Need review</comment></data>
-    <data name="Loan_Press_Add_For_Adding_Interest_Information" xml:space="preserve">
+  <data name="Loan_Press_Add_For_Adding_Interest_Information" xml:space="preserve">
     <value>Loan (press 'Add' for adding interest information)</value>
         <comment>Need review</comment></data>
-    <data name="Investment" xml:space="preserve">
+  <data name="Investment" xml:space="preserve">
     <value>Investment</value>
         <comment>Need review</comment></data>
-    <data name="Investment_slash_Loan" xml:space="preserve">
+  <data name="Investment_slash_Loan" xml:space="preserve">
     <value>Investment and loan</value>
         <comment>Need review</comment></data>
-    <data name="Investment_Loan_Intro_Text" xml:space="preserve">
+  <data name="Investment_Loan_Intro_Text" xml:space="preserve">
     <value>Here you can enter the investment and any loans taken out for your installation</value>
         <comment>Need review</comment></data>
-    <data name="Import_Data" xml:space="preserve">
+  <data name="Import_Data" xml:space="preserve">
     <value>Import data</value>
         <comment>Need review</comment></data>
-    <data name="First_Import_Intro_Text" xml:space="preserve">
+  <data name="First_Import_Intro_Text" xml:space="preserve">
     <value>Now its time to get all you historic data please don't turn of the app or switch to other app</value>
         <comment>Need review</comment></data>
-    <data name="Start" xml:space="preserve">
+  <data name="Start" xml:space="preserve">
     <value>Start import</value>
         <comment>Need review</comment></data>
-    <data name="Cost" xml:space="preserve">
+  <data name="Cost" xml:space="preserve">
     <value>Cost</value>
         <comment>Need review</comment></data>
-    <data name="Sum" xml:space="preserve">
+  <data name="Sum" xml:space="preserve">
     <value>Sum</value>
         <comment>Need review</comment></data>
-    <data name="Production_Sold" xml:space="preserve">
+  <data name="Production_Sold" xml:space="preserve">
     <value>Production sold</value>
         <comment>Need review</comment></data>
-    <data name="Battery_Charge" xml:space="preserve">
+  <data name="Battery_Charge" xml:space="preserve">
     <value>Battery charge</value>
         <comment>Need review</comment></data>
-    <data name="Profit" xml:space="preserve">
+  <data name="Profit" xml:space="preserve">
     <value>Profit</value>
         <comment>Need review</comment></data>
-    <data name="Compensation_For_Production_To_Grid" xml:space="preserve">
+  <data name="Compensation_For_Production_To_Grid" xml:space="preserve">
     <value>Compensation for production to grid</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Energy_Tax" xml:space="preserve">
+  <data name="Saved_Energy_Tax" xml:space="preserve">
     <value>Saved energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Battery_used" xml:space="preserve">
+  <data name="Battery_used" xml:space="preserve">
     <value>Battery used</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Cost" xml:space="preserve">
+  <data name="Saved_Cost" xml:space="preserve">
     <value>Saved cost</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Cost_Battery" xml:space="preserve">
+  <data name="Saved_Cost_Battery" xml:space="preserve">
     <value>Saved cost battery</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Transfer_Fee" xml:space="preserve">
+  <data name="Saved_Transfer_Fee" xml:space="preserve">
     <value>Saved transfer fee</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
+  <data name="Saved_Transfer_Fee_Battery" xml:space="preserve">
     <value>Saved transfer fee battery</value>
         <comment>Need review</comment></data>
-    <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
+  <data name="Saved_Energy_Tax_Battery" xml:space="preserve">
     <value>Saved energy tax battery</value>
         <comment>Need review</comment></data>
-    <data name="Total_Production_Sold_Own_Use" xml:space="preserve">
+  <data name="Total_Production_Sold_Own_Use" xml:space="preserve">
     <value>Total production (sold/own use)</value>
         <comment>Need review</comment></data>
-    <data name="Total_Production" xml:space="preserve">
+  <data name="Total_Production" xml:space="preserve">
     <value>Total production</value>
         <comment>Need review</comment></data>
-    <data name="Total_Interest" xml:space="preserve">
+  <data name="Total_Interest" xml:space="preserve">
     <value>Total interest</value>
         <comment>Need review</comment></data>
-    <data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
+  <data name="Production_Index_Desc_Prod_Per_Day_KWh" xml:space="preserve">
     <value>Production index (prod/day)</value>
         <comment>Need review</comment></data>
-    <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
+  <data name="Kostal_Intro_Guide_Text" xml:space="preserve">
     <value>Use the same login as in the kostal app/Kostal web portal login</value>
         <comment>Need review</comment></data>
-    <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
+  <data name="SolarEdge_Intro_Guide_Text" xml:space="preserve">
     <value>Account users should generate an Account Level API Key from https://monitoring.solaredge.com</value>
         <comment>Need review</comment></data>
-    <data name="Shortcuts" xml:space="preserve">
+  <data name="Shortcuts" xml:space="preserve">
     <value>Shortcuts</value>
         <comment>Need review</comment></data>
-    <data name="Tools_And_Features" xml:space="preserve">
+  <data name="Tools_And_Features" xml:space="preserve">
     <value>Tools and features</value>
         <comment>Need review</comment></data>
-    <data name="Sold" xml:space="preserve">
+  <data name="Sold" xml:space="preserve">
     <value>Sold</value>
         <comment>Need review</comment></data>
-    <data name="Own_Use" xml:space="preserve">
+  <data name="Own_Use" xml:space="preserve">
     <value>Own use</value>
         <comment>Need review</comment></data>
-    <data name="Consumption" xml:space="preserve">
+  <data name="Consumption" xml:space="preserve">
     <value>Consumption</value>
         <comment>Need review</comment></data>
-    <data name="Total_Purchased" xml:space="preserve">
+  <data name="Total_Purchased" xml:space="preserve">
     <value>Total purchased</value>
         <comment>Need review</comment></data>
-    <data name="Today" xml:space="preserve">
+  <data name="Today" xml:space="preserve">
     <value>Today</value>
         <comment>Need review</comment></data>
-    <data name="Day" xml:space="preserve">
+  <data name="Day" xml:space="preserve">
     <value>Day</value>
         <comment>Need review</comment></data>
-    <data name="Week" xml:space="preserve">
+  <data name="Week" xml:space="preserve">
     <value>Week</value>
         <comment>Need review</comment></data>
-    <data name="Month" xml:space="preserve">
+  <data name="Month" xml:space="preserve">
     <value>Month</value>
         <comment>Need review</comment></data>
-    <data name="Simulate_Battery" xml:space="preserve">
+  <data name="Simulate_Battery" xml:space="preserve">
     <value>Simulate battery</value>
         <comment>Need review</comment></data>
-    <data name="Simulate" xml:space="preserve">
+  <data name="Simulate" xml:space="preserve">
     <value>Simulate</value>
         <comment>Need review</comment></data>
-    <data name="Battery_Kwh" xml:space="preserve">
+  <data name="Battery_Kwh" xml:space="preserve">
     <value>Battery kWh</value>
         <comment>Need review</comment></data>
-    <data name="Production_And_Consumption" xml:space="preserve">
+  <data name="Production_And_Consumption" xml:space="preserve">
     <value>Production And consumption</value>
         <comment>Need review</comment></data>
-    <data name="Costs_And_Revenues" xml:space="preserve">
+  <data name="Costs_And_Revenues" xml:space="preserve">
     <value>Costs and revenues</value>
         <comment>Need review</comment></data>
-    <data name="Production_Profit_Sold" xml:space="preserve">
+  <data name="Production_Profit_Sold" xml:space="preserve">
     <value>Production profit sold</value>
         <comment>Need review</comment></data>
-    <data name="Production_Grid_Compensation" xml:space="preserve">
+  <data name="Production_Grid_Compensation" xml:space="preserve">
     <value>Production grid compensation</value>
         <comment>Need review</comment></data>
-    <data name="Production_Saved_Energy_Tax" xml:space="preserve">
+  <data name="Production_Saved_Energy_Tax" xml:space="preserve">
     <value>Production saved energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Own_Use_Saved_Cost" xml:space="preserve">
+  <data name="Own_Use_Saved_Cost" xml:space="preserve">
     <value>Own use saved cost</value>
         <comment>Need review</comment></data>
-    <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
+  <data name="Own_Use_Saved_Transfer_Fee" xml:space="preserve">
     <value>Own Use Saved Transfer Fee</value>
         <comment>Need review</comment></data>
-    <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
+  <data name="Own_Use_Saved_Energy_Tax" xml:space="preserve">
     <value>Own use saved energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Purchase_Cost" xml:space="preserve">
+  <data name="Purchase_Cost" xml:space="preserve">
     <value>Purchase cost</value>
         <comment>Need review</comment></data>
-    <data name="Purchase_Transfer_Fee" xml:space="preserve">
+  <data name="Purchase_Transfer_Fee" xml:space="preserve">
     <value>Purchase transfer fee</value>
         <comment>Need review</comment></data>
-    <data name="Purchase_Energy_Tax" xml:space="preserve">
+  <data name="Purchase_Energy_Tax" xml:space="preserve">
     <value>Purchase energy tax</value>
         <comment>Need review</comment></data>
-    <data name="Add_Battery" xml:space="preserve">
+  <data name="Add_Battery" xml:space="preserve">
     <value>Add battery</value>
         <comment>Need review</comment></data>
-    <data name="Remove_Battery" xml:space="preserve">
+  <data name="Remove_Battery" xml:space="preserve">
     <value>Remove battery</value>
         <comment>Need review</comment></data>
-    <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
+  <data name="Balance_Production_Minus_Consumption" xml:space="preserve">
     <value>Balance (production minus consumption)</value>
         <comment>Need review</comment></data>
-    <data name="Battery" xml:space="preserve">
+  <data name="Battery" xml:space="preserve">
     <value>Battery</value>
         <comment>Need review</comment></data>
-    <data name="Generating_Report_Please_Wait" xml:space="preserve">
+  <data name="Generating_Report_Please_Wait" xml:space="preserve">
     <value>Generating report please wait</value>
         <comment>Need review</comment></data>
-    <data name="The_Login_Failed_Check_That_You_Entered_The_Correct_Information" xml:space="preserve">
+  <data name="The_Login_Failed_Check_That_You_Entered_The_Correct_Information" xml:space="preserve">
     <value>The login failed, check that you entered the correct information</value>
         <comment>Need review</comment></data>
-    <data name="Back" xml:space="preserve">
+  <data name="Back" xml:space="preserve">
     <value>Back</value>
         <comment>Need review</comment></data>
-    <data name="Calculation_Factors" xml:space="preserve">
+  <data name="Calculation_Factors" xml:space="preserve">
     <value>Calculation factors</value>
         <comment>Need review</comment></data>
-    <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
+  <data name="Calculation_Factors_Intro_Text" xml:space="preserve">
     <value>Calculation factors for costs and revenues related to solar cell production.</value>
         <comment>Need review</comment></data>
-    <data name="Total_Installed_Panels_Kw" xml:space="preserve">
+  <data name="Total_Installed_Panels_Kw" xml:space="preserve">
     <value>Total installed panels (kW)</value>
         <comment>Need review</comment></data>
-    <data name="Application_Version" xml:space="preserve">
+  <data name="Application_Version" xml:space="preserve">
     <value>Application version</value>
         <comment>Need review</comment></data>
-    <data name="Support_And_Feedback" xml:space="preserve">
+  <data name="Support_And_Feedback" xml:space="preserve">
     <value>Support and feedback</value>
         <comment>Need review</comment></data>
-    <data name="Add" xml:space="preserve">
+  <data name="Add" xml:space="preserve">
     <value>Add</value>
         <comment>Need review</comment></data>
-    <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
+  <data name="Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More" xml:space="preserve">
     <value>Importing data from your inverter ended as it only allows {0} days of sync per day. You impored {1} days, now have data up to {2}</value>
         <comment>Need review</comment></data>
-    <data name="Import_Of_Production_Done" xml:space="preserve">
+  <data name="Import_Of_Production_Done" xml:space="preserve">
     <value>Import of production done</value>
         <comment>Need review</comment></data>
-    <data name="Step_Nr_of_Nr_InfoText" xml:space="preserve">
+  <data name="Step_Nr_of_Nr_InfoText" xml:space="preserve">
     <value>Step {0} of {1} {2}</value>
         <comment>Need review</comment></data>
-    <data name="Fun_Facts" xml:space="preserve">
+  <data name="Fun_Facts" xml:space="preserve">
     <value>Fun facts</value>
         <comment>Need review</comment></data>
-    <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
+  <data name="Average_Purchased_Cost_Per_Kwh" xml:space="preserve">
     <value>Average purchased cost/kWh</value>
         <comment>Need review</comment></data>
-    <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
+  <data name="Average_Production_Sold_Profit_Per_Kwh" xml:space="preserve">
     <value>Average production sold profit/kWh</value>
         <comment>Need review</comment></data>
-    <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
+  <data name="Average_Production_Own_Use_Saved_Per_Kwh" xml:space="preserve">
     <value>Average production own use saved/Kwh</value>
         <comment>Need review</comment></data>
-    <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
+  <data name="Average_Battery_Used_Saved_Per_Kwh" xml:space="preserve">
     <value>Average battery used saved/Kwh</value>
         <comment>Need review</comment></data>
-    <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
+  <data name="Synchronization_Not_Started_As_We_Have_All_Data_And_More" xml:space="preserve">
     <value>Synchronization not started as we have all data up to the previous full hour.</value>
         <comment>Need review</comment></data>
-    <data name="Amortization" xml:space="preserve">
+  <data name="Amortization" xml:space="preserve">
     <value>Amortization</value>
         <comment>Need review</comment></data>
-    <data name="Prices" xml:space="preserve">
+  <data name="Prices" xml:space="preserve">
     <value>Prices</value>
         <comment>Need review</comment></data>
-    <data name="Buy_Transfer_Fee_Tax" xml:space="preserve">
+  <data name="Buy_Transfer_Fee_Tax" xml:space="preserve">
     <value>Buy (transfer fee/tax)</value>
         <comment>Need review</comment></data>
-    <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
+  <data name="Sell_Tax_Red_Net_Ben" xml:space="preserve">
     <value>Sell (tax red../net ben..)</value>
         <comment>Need review</comment></data>
-    <data name="Grid" xml:space="preserve">
+  <data name="Grid" xml:space="preserve">
     <value>Grid</value>
         <comment>Need review</comment></data>
-    <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
+  <data name="Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption" xml:space="preserve">
     <value>Missed {0} sec tax reduction, production higher than consumption.</value>
         <comment>Need review</comment></data>
-    <data name="Peak_Hour_Purchased" xml:space="preserve">
+  <data name="Peak_Hour_Purchased" xml:space="preserve">
     <value>Peak purchased kwh/hour</value>
         <comment>Need review</comment></data>
-    <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
+  <data name="Peak_Hour_Purchased_And_Own_Use" xml:space="preserve">
     <value>Peak purchased and own use Kwh/Hour</value>
         <comment>Need review</comment></data>
-    <data name="Energy_Peak_Reduction" xml:space="preserve">
+  <data name="Energy_Peak_Reduction" xml:space="preserve">
     <value>Energy peak reduction</value>
         <comment>Need review</comment></data>
-    <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
+  <data name="Energy_Peak_Reduction_Saved" xml:space="preserve">
     <value>Energy peak reduction saved</value>
         <comment>Need review</comment></data>
-    <data name="Show_Report" xml:space="preserve">
+  <data name="Show_Report" xml:space="preserve">
     <value>Show report</value>
         <comment>Need review</comment></data>
-    <data name="Price" xml:space="preserve">
+  <data name="Price" xml:space="preserve">
     <value>Price</value>
         <comment>Need review</comment></data>
-    <data name="Annual_Savings" xml:space="preserve">
+  <data name="Annual_Savings" xml:space="preserve">
     <value>Annual savings</value>
         <comment>Need review</comment></data>
-    <data name="Yield" xml:space="preserve">
+  <data name="Yield" xml:space="preserve">
     <value>Yield</value>
         <comment>Need review</comment></data>
-    <data name="Report" xml:space="preserve">
+  <data name="Report" xml:space="preserve">
     <value>Report</value>
         <comment>Need review</comment></data>
-    <data name="Savings_Calculation" xml:space="preserve">
+  <data name="Savings_Calculation" xml:space="preserve">
     <value>Savings calculation</value>
         <comment>Need review</comment></data>
-    <data name="Year_Overview" xml:space="preserve">
+  <data name="Year_Overview" xml:space="preserve">
     <value>Year overview</value>
         <comment>Need review</comment></data>
-    <data name="Details_Year" xml:space="preserve">
+  <data name="Details_Year" xml:space="preserve">
     <value>Details {0}</value>
         <comment>Need review</comment></data>
-    <data name="Loading" xml:space="preserve">
+  <data name="Loading" xml:space="preserve">
     <value>Loading</value>
         <comment>Need review</comment></data>
-    <data name="Close" xml:space="preserve">
+  <data name="Close" xml:space="preserve">
     <value>Close</value>
         <comment>Need review</comment></data>
-    <data name="Production_And_Consumption_Short" xml:space="preserve">
+  <data name="Production_And_Consumption_Short" xml:space="preserve">
     <value>Production and consumption</value>
         <comment>Need review</comment></data>
-    <data name="Real_Development_Electricity_Price" xml:space="preserve">
+  <data name="Real_Development_Electricity_Price" xml:space="preserve">
     <value>Real development electricity price</value>
         <comment>Need review</comment></data>
-    <data name="Panel_Degradation_Per_Year" xml:space="preserve">
+  <data name="Panel_Degradation_Per_Year" xml:space="preserve">
     <value>Panel degradation per year</value>
         <comment>Need review</comment></data>
-    <data name="Power_Tariff" xml:space="preserve">
+  <data name="Power_Tariff" xml:space="preserve">
     <value>Power tariff</value>
         <comment>Need review</comment></data>
-    <data name="Power_Tariff_Intro_Text" xml:space="preserve">
+  <data name="Power_Tariff_Intro_Text" xml:space="preserve">
     <value>Power tariffs are something that some electricity companies charge to reduce high loads in the network.</value>
         <comment>Need review</comment></data>
-    <data name="Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month" xml:space="preserve">
+  <data name="Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month" xml:space="preserve">
     <value>Number of peaks to calculate the fee on per month</value>
         <comment>Need review</comment></data>
-    <data name="Use_Peaks_From_Same_Day_In_Calculation" xml:space="preserve">
+  <data name="Use_Peaks_From_Same_Day_In_Calculation" xml:space="preserve">
     <value>Use peaks from same day in calculation</value>
         <comment>Need review</comment></data>
-    <data name="Period" xml:space="preserve">
+  <data name="Period" xml:space="preserve">
     <value>Period</value>
         <comment>Need review</comment></data>
-    <data name="Weekday" xml:space="preserve">
+  <data name="Weekday" xml:space="preserve">
     <value>Weekday</value>
         <comment>Need review</comment></data>
-    <data name="Weekend" xml:space="preserve">
+  <data name="Weekend" xml:space="preserve">
     <value>Weekend</value>
         <comment>Need review</comment></data>
-    <data name="Hour" xml:space="preserve">
+  <data name="Hour" xml:space="preserve">
     <value>Hour</value>
         <comment>Need review</comment></data>
-    <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
+  <data name="Peak_Tariff_Purchase_Cost" xml:space="preserve">
     <value>Peak tariff purchase cost</value>
         <comment>Need review</comment></data>
-    <data name="Swedish" xml:space="preserve">
+  <data name="Swedish" xml:space="preserve">
     <value>Swedish</value>
         <comment>Need review</comment></data>
-    <data name="English" xml:space="preserve">
+  <data name="English" xml:space="preserve">
     <value>English</value>
         <comment>Need review</comment></data>
-    <data name="Language" xml:space="preserve">
+  <data name="Language" xml:space="preserve">
     <value>Language</value>
         <comment>Need review</comment></data>
-    <data name="Internet_Connection_Missing" xml:space="preserve">
+  <data name="Internet_Connection_Missing" xml:space="preserve">
     <value>Internet connection missing</value>
         <comment>Final</comment></data>
-    <data name="User_Need_To_Log_In_Again" xml:space="preserve">
+  <data name="User_Need_To_Log_In_Again" xml:space="preserve">
     <value>User need to log in again.</value>
         <comment>Final</comment></data>
-    <data name="Server_Error" xml:space="preserve">
+  <data name="Server_Error" xml:space="preserve">
     <value>Server Error</value>
         <comment>Final</comment></data>
-    <data name="No_Internet" xml:space="preserve">
+  <data name="No_Internet" xml:space="preserve">
     <value>No internet</value>
         <comment>Final</comment></data>
-    <data name="Current_API_Not_Found_On_Server" xml:space="preserve">
+  <data name="Current_API_Not_Found_On_Server" xml:space="preserve">
     <value>Server responded that API not exist</value>
         <comment>Final</comment></data>
-    <data name="Monkey" xml:space="preserve">
+  <data name="Monkey" xml:space="preserve">
         <value>Monkey</value>
-    </data>
-    <data name="Remove_Tax_Reduction" xml:space="preserve">
+    <comment>Need review</comment></data>
+  <data name="Remove_Tax_Reduction" xml:space="preserve">
         <value>Remove tax reduction</value>
-    </data>
-    <data name="Theme" xml:space="preserve">
+    <comment>Need review</comment></data>
+  <data name="Theme" xml:space="preserve">
         <value>Theme</value>
-        <comment>Theme selection option</comment>
+        <comment>Need review</comment>
     </data>
-    <data name="Light_Theme" xml:space="preserve">
+  <data name="Light_Theme" xml:space="preserve">
         <value>Light</value>
-        <comment>Light theme option</comment>
+        <comment>Need review</comment>
     </data>
-    <data name="Dark_Theme" xml:space="preserve">
+  <data name="Dark_Theme" xml:space="preserve">
         <value>Dark</value>
-        <comment>Dark theme option</comment>
+        <comment>Need review</comment>
     </data>
-    <data name="System_Theme" xml:space="preserve">
+  <data name="System_Theme" xml:space="preserve">
         <value>System</value>
-        <comment>System theme option (follows device settings)</comment>
+        <comment>Need review</comment>
     </data>
 </root>

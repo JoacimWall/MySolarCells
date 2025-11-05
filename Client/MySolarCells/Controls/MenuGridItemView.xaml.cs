@@ -26,28 +26,28 @@ public partial class MenuGridItemView : ContentView
         control.Title.Text = newValue.ToString() ?? string.Empty;
     }
 
-    public static readonly BindableProperty FontIconTextProperty = BindableProperty.Create(
+    public static readonly BindableProperty FontIconProperty = BindableProperty.Create(
                                                     propertyName: nameof(FontIcon),
                                                     returnType: typeof(string),
                                                     declaringType: typeof(MenuGridItemView),
                                                     defaultValue: "",
                                                     defaultBindingMode: BindingMode.TwoWay,
-                                                    propertyChanged: FontIconTextPropertyChanged);
+                                                    propertyChanged: FontIconPropertyChanged);
 
     public string FontIcon
     {
-        get => (string)GetValue(FontIconTextProperty);
-        set => SetValue(FontIconTextProperty, value);
+        get => (string)GetValue(FontIconProperty);
+        set => SetValue(FontIconProperty, value);
     }
 
-    private static void FontIconTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void FontIconPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (MenuGridItemView)bindable;
         control.IconLabel.Text = newValue.ToString() ?? string.Empty;
     }
 
     public static readonly BindableProperty FontIconExternalProperty = BindableProperty.Create(
-                                                   propertyName: nameof(FontIcon),
+                                                   propertyName: nameof(FontIconExternal),
                                                    returnType: typeof(string),
                                                    declaringType: typeof(MenuGridItemView),
                                                    defaultValue: "",

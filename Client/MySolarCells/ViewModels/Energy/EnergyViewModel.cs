@@ -1,4 +1,4 @@
-﻿namespace MySolarCells.ViewModels.Energy;
+﻿﻿namespace MySolarCells.ViewModels.Energy;
 
 public class EnergyViewModel : BaseViewModel
 {
@@ -20,7 +20,7 @@ public class EnergyViewModel : BaseViewModel
         themeService.ThemeChanged += OnThemeChanged;
     }
 
-    private async void OnThemeChanged(object sender, AppTheme theme)
+    private async void OnThemeChanged(object? sender, AppTheme theme)
     {
         // Reload graph with new theme colors
         await ReloadGraph();

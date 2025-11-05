@@ -1160,5 +1160,29 @@ namespace MySolarCells.Resources.Translations {
                 return ResourceManager.GetString("Remove_Tax_Reduction", resourceCulture);
             }
         }
+        
+        public static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        public static string Light_Theme {
+            get {
+                return ResourceManager.GetString("Light_Theme", resourceCulture);
+            }
+        }
+        
+        public static string Dark_Theme {
+            get {
+                return ResourceManager.GetString("Dark_Theme", resourceCulture);
+            }
+        }
+        
+        public static string System_Theme {
+            get {
+                return ResourceManager.GetString("System_Theme", resourceCulture);
+            }
+        }
     }
 }

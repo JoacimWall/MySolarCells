@@ -318,9 +318,6 @@
   <data name="Battery_Kwh" xml:space="preserve">
     <value>Batteri kWh</value>
   <comment>Need review</comment></data>
-  <data name="Costs_And_Rvenues" xml:space="preserve">
-    <value>Omkostninger og indtægter</value>
-  <comment>Need review</comment></data>
   <data name="Production_Profit_Sold" xml:space="preserve">
     <value>Produktionsavance solgt</value>
   <comment>Need review</comment></data>
@@ -549,4 +546,44 @@
   <data name="Language" xml:space="preserve">
     <value>Sprog</value>
   <comment>Need review</comment></data>
+  <data name="Costs_And_Revenues" xml:space="preserve">
+    <value>Omkostninger og indtægter</value>
+        <comment>Need review</comment></data>
+  <data name="Internet_Connection_Missing" xml:space="preserve">
+    <value>Internetforbindelse mangler</value>
+        <comment>Need review</comment></data>
+  <data name="User_Need_To_Log_In_Again" xml:space="preserve">
+    <value>Brugeren skal logge på igen.</value>
+        <comment>Need review</comment></data>
+  <data name="Server_Error" xml:space="preserve">
+    <value>Serverfejl</value>
+        <comment>Need review</comment></data>
+  <data name="No_Internet" xml:space="preserve">
+    <value>Intet internet</value>
+        <comment>Need review</comment></data>
+  <data name="Current_API_Not_Found_On_Server" xml:space="preserve">
+    <value>Server svarede, at API ikke eksisterede</value>
+        <comment>Need review</comment></data>
+  <data name="Monkey" xml:space="preserve">
+        <value>Abe</value>
+    <comment>Need review</comment></data>
+  <data name="Remove_Tax_Reduction" xml:space="preserve">
+        <value>Fjern skattenedsættelsen</value>
+    <comment>Need review</comment></data>
+  <data name="Theme" xml:space="preserve">
+        <value>Tema</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Light_Theme" xml:space="preserve">
+        <value>Lys</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Dark_Theme" xml:space="preserve">
+        <value>Mørk</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="System_Theme" xml:space="preserve">
+        <value>System</value>
+        <comment>Need review</comment>
+    </data>
 </root>

@@ -319,9 +319,6 @@
   <data name="Battery_Kwh" xml:space="preserve">
     <value>Akku kWh</value>
   <comment>Need review</comment></data>
-  <data name="Costs_And_Rvenues" xml:space="preserve">
-    <value>Kustannukset ja tulot</value>
-  <comment>Need review</comment></data>
   <data name="Production_Profit_Sold" xml:space="preserve">
     <value>Tuotantovoitto myyty</value>
   <comment>Need review</comment></data>
@@ -550,4 +547,44 @@
   <data name="Language" xml:space="preserve">
     <value>Kieli</value>
   <comment>Need review</comment></data>
+  <data name="Costs_And_Revenues" xml:space="preserve">
+    <value>Kustannukset ja tulot</value>
+        <comment>Need review</comment></data>
+  <data name="Internet_Connection_Missing" xml:space="preserve">
+    <value>Internet-yhteys puuttuu</value>
+        <comment>Need review</comment></data>
+  <data name="User_Need_To_Log_In_Again" xml:space="preserve">
+    <value>Käyttäjän on kirjauduttava sisään uudelleen.</value>
+        <comment>Need review</comment></data>
+  <data name="Server_Error" xml:space="preserve">
+    <value>Palvelinvirhe</value>
+        <comment>Need review</comment></data>
+  <data name="No_Internet" xml:space="preserve">
+    <value>Ei Internetiä</value>
+        <comment>Need review</comment></data>
+  <data name="Current_API_Not_Found_On_Server" xml:space="preserve">
+    <value>Palvelin vastasi, että API:ta ei ole olemassa</value>
+        <comment>Need review</comment></data>
+  <data name="Monkey" xml:space="preserve">
+        <value>Apina</value>
+    <comment>Need review</comment></data>
+  <data name="Remove_Tax_Reduction" xml:space="preserve">
+        <value>Veronalennus pois</value>
+    <comment>Need review</comment></data>
+  <data name="Theme" xml:space="preserve">
+        <value>Teema</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Light_Theme" xml:space="preserve">
+        <value>Kevyt</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Dark_Theme" xml:space="preserve">
+        <value>Tumma</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="System_Theme" xml:space="preserve">
+        <value>Järjestelmä</value>
+        <comment>Need review</comment>
+    </data>
 </root>

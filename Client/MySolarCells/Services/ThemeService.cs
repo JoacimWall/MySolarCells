@@ -13,7 +13,7 @@ public class ThemeService : IThemeService
     private readonly ISettingsService settingsService;
     private AppTheme currentTheme;
 
-    public event EventHandler<AppTheme> ThemeChanged;
+    public event EventHandler<AppTheme> ThemeChanged = delegate { };
 
     public ThemeService(ISettingsService settingsService)
     {
