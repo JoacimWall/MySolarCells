@@ -11,6 +11,17 @@ public interface ISettingsService
     int BackgroundSyncIntervalMinutes { get; set; }
     DateTime? LastBackgroundSyncTime { get; set; }
     AppTheme UserTheme { get; set; }
+
+    // Cloud Sync Settings
+    bool CloudSyncEnabled { get; set; }
+    string? AzureBlobConnectionString { get; set; }
+    string? AzureBlobContainerName { get; set; }
+    DateTime? LastCloudBackupTime { get; set; }
+    DateTime? LastCloudRestoreTime { get; set; }
+    string? DeviceId { get; set; }
+    bool AutoCloudBackupEnabled { get; set; }
+    int CloudBackupIntervalMinutes { get; set; }
+
     void SetCurrentCultureOnAllThreads(CountryEnum country);
 }
 
@@ -172,6 +183,175 @@ public class SettingsService : ISettingsService
                 mscDbContext.Preferences.Add(new Preferences { Name = nameof(UserTheme), IntValue = (int)value });
             else
                 exist.IntValue = (int)value;
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    // Cloud Sync Settings Implementation
+    public bool CloudSyncEnabled
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(CloudSyncEnabled));
+            if (exist == null)
+                return false; // Default: disabled until configured
+            else
+                return exist.IntValue == 1;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(CloudSyncEnabled));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(CloudSyncEnabled), IntValue = value ? 1 : 0 });
+            else
+                exist.IntValue = value ? 1 : 0;
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public string? AzureBlobConnectionString
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AzureBlobConnectionString));
+            return exist?.StringValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AzureBlobConnectionString));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(AzureBlobConnectionString), StringValue = value ?? "" });
+            else
+                exist.StringValue = value ?? "";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public string? AzureBlobContainerName
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AzureBlobContainerName));
+            if (exist == null || string.IsNullOrEmpty(exist.StringValue))
+                return "mysolarcells-backup"; // Default container name
+            return exist.StringValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AzureBlobContainerName));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(AzureBlobContainerName), StringValue = value ?? "mysolarcells-backup" });
+            else
+                exist.StringValue = value ?? "mysolarcells-backup";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public DateTime? LastCloudBackupTime
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastCloudBackupTime));
+            if (exist == null || string.IsNullOrEmpty(exist.StringValue))
+                return null;
+            else
+                return DateTime.Parse(exist.StringValue);
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastCloudBackupTime));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(LastCloudBackupTime), StringValue = value?.ToString("O") ?? "" });
+            else
+                exist.StringValue = value?.ToString("O") ?? "";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public DateTime? LastCloudRestoreTime
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastCloudRestoreTime));
+            if (exist == null || string.IsNullOrEmpty(exist.StringValue))
+                return null;
+            else
+                return DateTime.Parse(exist.StringValue);
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(LastCloudRestoreTime));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(LastCloudRestoreTime), StringValue = value?.ToString("O") ?? "" });
+            else
+                exist.StringValue = value?.ToString("O") ?? "";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public string? DeviceId
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(DeviceId));
+            if (exist == null || string.IsNullOrEmpty(exist.StringValue))
+            {
+                // Generate a new device ID if not exists
+                var newDeviceId = Guid.NewGuid().ToString();
+                DeviceId = newDeviceId;
+                return newDeviceId;
+            }
+            return exist.StringValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(DeviceId));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(DeviceId), StringValue = value ?? "" });
+            else
+                exist.StringValue = value ?? "";
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public bool AutoCloudBackupEnabled
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AutoCloudBackupEnabled));
+            if (exist == null)
+                return false; // Default: disabled
+            else
+                return exist.IntValue == 1;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(AutoCloudBackupEnabled));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(AutoCloudBackupEnabled), IntValue = value ? 1 : 0 });
+            else
+                exist.IntValue = value ? 1 : 0;
+            mscDbContext.SaveChanges();
+        }
+    }
+
+    public int CloudBackupIntervalMinutes
+    {
+        get
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(CloudBackupIntervalMinutes));
+            if (exist == null)
+                return 360; // Default: 6 hours
+            else
+                return exist.IntValue;
+        }
+        set
+        {
+            var exist = mscDbContext.Preferences.FirstOrDefault(x => x.Name == nameof(CloudBackupIntervalMinutes));
+            if (exist == null)
+                mscDbContext.Preferences.Add(new Preferences { Name = nameof(CloudBackupIntervalMinutes), IntValue = value });
+            else
+                exist.IntValue = value;
             mscDbContext.SaveChanges();
         }
     }

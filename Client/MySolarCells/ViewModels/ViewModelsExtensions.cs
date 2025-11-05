@@ -21,6 +21,7 @@ public static class ViewModelsExtensions
         builder.Services.AddTransient<MoreViewModel>();
         builder.Services.AddTransient<SelectLanguageCountryViewModel>();
         builder.Services.AddTransient<ParametersOverviewViewModel>();
+        builder.Services.AddTransient<CloudSyncSettingsViewModel>();
         return builder;
     }
 }

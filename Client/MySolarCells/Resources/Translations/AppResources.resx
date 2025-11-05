@@ -636,4 +636,92 @@
         <value>System</value>
         <comment>Need review</comment>
     </data>
+  <data name="Cloud_Backup_Sync" xml:space="preserve">
+        <value>Cloud Backup & Sync</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Cloud_Sync_Settings" xml:space="preserve">
+        <value>Cloud Sync Settings</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Enable_Cloud_Sync" xml:space="preserve">
+        <value>Enable Cloud Sync</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Azure_Connection_String" xml:space="preserve">
+        <value>Azure Connection String</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Azure_Container_Name" xml:space="preserve">
+        <value>Container Name</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Auto_Cloud_Backup" xml:space="preserve">
+        <value>Automatic Cloud Backup</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Cloud_Backup_Interval" xml:space="preserve">
+        <value>Backup Interval (hours)</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Backup_Now" xml:space="preserve">
+        <value>Backup Now</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Restore_From_Cloud" xml:space="preserve">
+        <value>Restore From Cloud</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Test_Connection" xml:space="preserve">
+        <value>Test Connection</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Last_Backup" xml:space="preserve">
+        <value>Last Backup</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Last_Restore" xml:space="preserve">
+        <value>Last Restore</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Never" xml:space="preserve">
+        <value>Never</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Connection_Successful" xml:space="preserve">
+        <value>Connection successful!</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Connection_Failed" xml:space="preserve">
+        <value>Connection failed. Please check your settings.</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Backup_Successful" xml:space="preserve">
+        <value>Backup successful!</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Backup_Failed" xml:space="preserve">
+        <value>Backup failed: {0}</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Restore_Successful" xml:space="preserve">
+        <value>Database restored successfully! Please restart the app.</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Restore_Failed" xml:space="preserve">
+        <value>Restore failed: {0}</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Cloud_Sync_Description" xml:space="preserve">
+        <value>Configure cloud backup to sync your data across multiple devices using Azure Blob Storage.</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Device_Id" xml:space="preserve">
+        <value>Device ID</value>
+        <comment>Need review</comment>
+    </data>
+  <data name="Available_Backups" xml:space="preserve">
+        <value>Available Backups</value>
+        <comment>Need review</comment>
+    </data>
 </root>

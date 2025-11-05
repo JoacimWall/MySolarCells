@@ -153,6 +153,16 @@
                          <TapGestureRecognizer Command="{Binding ToggleThemeCommand}" />
                      </control:MenuGridItemView.GestureRecognizers>
                  </control:MenuGridItemView>
+                 <!--  Cloud Backup & Sync  -->
+                 <control:MenuGridItemView Margin="0,0,0,3"
+                                           WidthRequest="{Binding WidthRequest, Source={x:Reference CalcWithDev2Ctl}}"
+                                           FontIcon="{x:Static theming:IconFont.Cloud}"
+                                           IsVisible="True"
+                                           TitleText="{x:Static trans:AppResources.Cloud_Backup_Sync}">
+                     <control:MenuGridItemView.GestureRecognizers>
+                         <TapGestureRecognizer Command="{Binding ShowCloudSyncCommand}" />
+                     </control:MenuGridItemView.GestureRecognizers>
+                 </control:MenuGridItemView>
 
 
 

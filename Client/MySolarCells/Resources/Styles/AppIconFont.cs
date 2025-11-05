@@ -21,5 +21,6 @@ public static class IconFont
     public const string Sun = "\u2600";     // Sun symbol for light theme
     public const string Moon = "\u263E";    // Moon symbol for dark theme
     public const string Settings = "\u2699"; // Settings gear symbol
+    public const string Cloud = "\u2601";    // Cloud symbol for cloud sync
 }
 

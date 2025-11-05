@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  xmlns:views="clr-namespace:MySolarCells.Views"
+                        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        x:Class="MySolarCells.Views.More.CloudSyncSettingsView"
+                        xmlns:vm="clr-namespace:MySolarCells.ViewModels.More"
+                        xmlns:trans="clr-namespace:MySolarCells.Resources.Translations"
+                        xmlns:theming="clr-namespace:MySolarCells.Resources.Styles"
+                        Shell.NavBarIsVisible="True"
+                        x:DataType="vm:CloudSyncSettingsViewModel">
+
+    <ScrollView>
+        <Grid Style="{StaticResource GridBasePage}" RowSpacing="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+
+            <!-- Header -->
+            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,*,Auto">
+                <Label FontSize="20" Grid.ColumnSpan="3" Style="{StaticResource LabelPageTitleStyle}"
+                       Text="{x:Static trans:AppResources.Cloud_Sync_Settings}" />
+                <Border Style="{StaticResource BorderButtonStyle}">
+                    <Button Style="{StaticResource ButtonPrimaryStyle}" Command="{Binding NavBackCommand}"
+                            Text="{x:Static trans:AppResources.Close}" />
+                </Border>
+            </Grid>
+
+            <!-- Description -->
+            <Border Grid.Row="1" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                <Label Text="{x:Static trans:AppResources.Cloud_Sync_Description}"
+                       Style="{StaticResource LabelBaseStyle}" LineBreakMode="WordWrap"/>
+            </Border>
+
+            <!-- Enable Cloud Sync Toggle -->
+            <Border Grid.Row="2" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="{x:Static trans:AppResources.Enable_Cloud_Sync}"
+                           Style="{StaticResource LabelEntryTitleStyle}" VerticalTextAlignment="Center"/>
+                    <Switch Grid.Column="1" IsToggled="{Binding CloudSyncEnabled}" />
+                </Grid>
+            </Border>
+
+            <!-- Azure Connection String -->
+            <Border Grid.Row="3" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{x:Static trans:AppResources.Azure_Connection_String}"
+                           Style="{StaticResource LabelEntryTitleStyle}"/>
+                    <Entry Text="{Binding AzureConnectionString}"
+                           Placeholder="DefaultEndpointsProtocol=https;AccountName=..."
+                           IsPassword="True"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Azure Container Name -->
+            <Border Grid.Row="4" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{x:Static trans:AppResources.Azure_Container_Name}"
+                           Style="{StaticResource LabelEntryTitleStyle}"/>
+                    <Entry Text="{Binding AzureContainerName}"
+                           Placeholder="mysolarcells-backup"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Device ID -->
+            <Border Grid.Row="5" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{x:Static trans:AppResources.Device_Id}"
+                           Style="{StaticResource LabelEntryTitleStyle}"/>
+                    <Label Text="{Binding DeviceId}"
+                           Style="{StaticResource LabelBaseStyle}" FontSize="12"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Auto Backup Settings -->
+            <Border Grid.Row="6" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="{x:Static trans:AppResources.Auto_Cloud_Backup}"
+                               Style="{StaticResource LabelEntryTitleStyle}" VerticalTextAlignment="Center"/>
+                        <Switch Grid.Column="1" IsToggled="{Binding AutoCloudBackupEnabled}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding AutoCloudBackupEnabled}">
+                        <Label Text="{x:Static trans:AppResources.Cloud_Backup_Interval}"
+                               Style="{StaticResource LabelEntryTitleStyle}" VerticalTextAlignment="Center"/>
+                        <Stepper Grid.Column="1" Minimum="1" Maximum="24" Increment="1"
+                                 Value="{Binding CloudBackupIntervalHours}"/>
+                    </Grid>
+                    <Label IsVisible="{Binding AutoCloudBackupEnabled}"
+                           Text="{Binding CloudBackupIntervalHours, StringFormat='Every {0} hour(s)'}"
+                           Style="{StaticResource LabelBaseStyle}" FontSize="12"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Border Grid.Row="7" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="12">
+                    <Button Text="{x:Static trans:AppResources.Test_Connection}"
+                            Command="{Binding TestConnectionCommand}"
+                            IsEnabled="{Binding IsTestingConnection, Converter={StaticResource InvertedBoolConverter}}"
+                            Style="{StaticResource ButtonPrimaryStyle}"/>
+
+                    <Button Text="{x:Static trans:AppResources.Backup_Now}"
+                            Command="{Binding BackupNowCommand}"
+                            IsEnabled="{Binding IsBackingUp, Converter={StaticResource InvertedBoolConverter}}"
+                            Style="{StaticResource ButtonPrimaryStyle}"/>
+
+                    <Button Text="{x:Static trans:AppResources.Restore_From_Cloud}"
+                            Command="{Binding RestoreFromCloudCommand}"
+                            IsEnabled="{Binding IsRestoring, Converter={StaticResource InvertedBoolConverter}}"
+                            Style="{StaticResource ButtonPrimaryStyle}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Last Backup/Restore Times -->
+            <Border Grid.Row="8" Padding="16" StrokeShape="RoundRectangle 10,10,10,10"
+                    BackgroundColor="{x:Static theming:AppColors.Gray200Color}"
+                    IsVisible="{Binding CloudSyncEnabled}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="{x:Static trans:AppResources.Last_Backup}"
+                               Style="{StaticResource LabelEntryTitleStyle}"/>
+                        <Label Grid.Column="1" Text="{Binding LastBackupText}"
+                               Style="{StaticResource LabelBaseStyle}" FontSize="12"
+                               HorizontalTextAlignment="End"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Text="{x:Static trans:AppResources.Last_Restore}"
+                               Style="{StaticResource LabelEntryTitleStyle}"/>
+                        <Label Grid.Column="1" Text="{Binding LastRestoreText}"
+                               Style="{StaticResource LabelBaseStyle}" FontSize="12"
+                               HorizontalTextAlignment="End"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading Indicators -->
+            <ActivityIndicator Grid.Row="9" IsRunning="{Binding IsTestingConnection}" />
+            <ActivityIndicator Grid.Row="9" IsRunning="{Binding IsBackingUp}" />
+            <ActivityIndicator Grid.Row="9" IsRunning="{Binding IsRestoring}" />
+
+        </Grid>
+    </ScrollView>
+</views:BaseContentPage>
