@@ -36,13 +36,7 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
-		<!--DEBUG ON DEVICE-->
-		<!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
-		<!--DEBUG ON SIMULATOR-->
-		<!--<ForceSimulatorX64ArchitectureInIDE>true</ForceSimulatorX64ArchitectureInIDE>-->
-		<!--<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>-->
-	</PropertyGroup>
+	
 <!--	<PropertyGroup Condition="$(TargetFramework.Contains('-maccatalyst'))">
 		<RuntimeIdentifiers>maccatalyst-arm64;maccatalyst-x64</RuntimeIdentifiers>
 	</PropertyGroup>-->
@@ -153,5 +147,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\MySolarCellsSQLite\MySolarCellsSQLite.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="OldDB\" />
 	</ItemGroup>
 </Project>

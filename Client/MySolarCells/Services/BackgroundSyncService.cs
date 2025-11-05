@@ -157,7 +157,7 @@ public class BackgroundSyncService : IBackgroundSyncService, IDisposable
             logService.ConsoleWriteLineDebug("Background sync started");
 
             // Check internet connection
-            if (!await internetConnectionService.IsConnected())
+            if (!internetConnectionService.InternetAccess())
             {
                 logService.ConsoleWriteLineDebug("No internet connection, skipping sync");
                 return;
@@ -168,7 +168,7 @@ public class BackgroundSyncService : IBackgroundSyncService, IDisposable
 
             if (result.WasSuccessful)
             {
-                logService.ConsoleWriteLineDebug($"Background sync completed successfully: {result.Value?.Message}");
+                logService.ConsoleWriteLineDebug($"Background sync completed successfully: {result.ErrorMessage}");
 
                 // Update last sync time in settings
                 settingsService.LastBackgroundSyncTime = DateTime.Now;
