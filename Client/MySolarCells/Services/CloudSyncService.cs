@@ -1,6 +1,5 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MySolarCells.Services;
 
@@ -38,7 +37,7 @@ public class CloudSyncService : ICloudSyncService
     {
         try
         {
-            if (!internetConnectionService.IsInternetConnected())
+            if (!internetConnectionService.InternetAccess())
             {
                 return false;
             }
@@ -63,13 +62,7 @@ public class CloudSyncService : ICloudSyncService
         }
         catch (Exception ex)
         {
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Sync Connection Test Failed",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            logService.ReportErrorToAppCenter(ex, "Cloud Sync Connection Test Failed");
             return false;
         }
     }
@@ -93,7 +86,7 @@ public class CloudSyncService : ICloudSyncService
 
         try
         {
-            if (!internetConnectionService.IsInternetConnected())
+            if (!internetConnectionService.InternetAccess())
             {
                 throw new InvalidOperationException("No internet connection available");
             }
@@ -127,13 +120,7 @@ public class CloudSyncService : ICloudSyncService
         }
         catch (Exception ex)
         {
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Failed to List Cloud Backups",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            logService.ReportErrorToAppCenter(ex, "Failed to List Cloud Backups");
         }
 
         return backups.OrderByDescending(b => b.Timestamp).ToList();
@@ -164,7 +151,7 @@ public class CloudSyncService : ICloudSyncService
                 };
             }
 
-            if (!internetConnectionService.IsInternetConnected())
+            if (!internetConnectionService.InternetAccess())
             {
                 return new CloudSyncResult
                 {
@@ -245,13 +232,7 @@ public class CloudSyncService : ICloudSyncService
 
             progress?.Report(1.0);
 
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Backup Successful",
-                LogDetails = $"Database backed up to cloud: {blobName}",
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Info
-            });
+            logService.ConsoleWriteLineDebug($"Cloud Backup Successful: Database backed up to cloud: {blobName}");
 
             return new CloudSyncResult
             {
@@ -268,13 +249,7 @@ public class CloudSyncService : ICloudSyncService
         }
         catch (Exception ex)
         {
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Backup Failed",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            logService.ReportErrorToAppCenter(ex, "Cloud Backup Failed");
 
             return new CloudSyncResult
             {
@@ -312,7 +287,7 @@ public class CloudSyncService : ICloudSyncService
                 };
             }
 
-            if (!internetConnectionService.IsInternetConnected())
+            if (!internetConnectionService.InternetAccess())
             {
                 return new CloudSyncResult
                 {
@@ -388,13 +363,7 @@ public class CloudSyncService : ICloudSyncService
 
             progress?.Report(1.0);
 
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Restore Successful",
-                LogDetails = $"Database restored from cloud: {latestBackup.BlobName}",
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Info
-            });
+            logService.ConsoleWriteLineDebug($"Cloud Restore Successful: Database restored from cloud: {latestBackup.BlobName}");
 
             return new CloudSyncResult
             {
@@ -405,13 +374,7 @@ public class CloudSyncService : ICloudSyncService
         }
         catch (Exception ex)
         {
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Restore Failed",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            logService.ReportErrorToAppCenter(ex, "Cloud Restore Failed");
 
             return new CloudSyncResult
             {
@@ -433,8 +396,6 @@ public class CloudSyncService : ICloudSyncService
 
             // Get latest cloud backup info
             var latestCloudBackup = await GetLatestBackupInfoAsync(cancellationToken);
-
-            progress?.Report(0.3);
 
             // Get local database last modified time
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Db_v_2.db3");
@@ -464,13 +425,7 @@ public class CloudSyncService : ICloudSyncService
         }
         catch (Exception ex)
         {
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Sync Failed",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            logService.ReportErrorToAppCenter(ex, "Cloud Sync Failed");
 
             return new CloudSyncResult
             {
@@ -509,13 +464,7 @@ public class CloudSyncService : ICloudSyncService
         catch (Exception ex)
         {
             // Log but don't fail the backup operation if cleanup fails
-            await logService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Backup Cleanup Warning",
-                LogDetails = $"Failed to clean up old backups: {ex.Message}",
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Warning
-            });
+            logService.ConsoleWriteLineDebug($"Cloud Backup Cleanup Warning: Failed to clean up old backups: {ex.Message}");
         }
     }
 }
@@ -549,3 +498,4 @@ public class CloudBackupInfo
 
     public string FormattedTimestamp => Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
 }
+

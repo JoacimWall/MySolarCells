@@ -22,6 +22,7 @@ public static class ViewsExtensions
         builder.Services.AddTransient<MoreView>();
         builder.Services.AddTransient<SelectLanguageCountryView>();
         builder.Services.AddTransient<ParametersOverviewView>();
+        builder.Services.AddTransient<CloudSyncSettingsView>();
         return builder;
     }
 }

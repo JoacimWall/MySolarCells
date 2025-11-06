@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MySolarCells.ViewModels.More;
 
@@ -52,11 +51,12 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
         this.cloudSyncService = cloudSyncService;
     }
 
-    public override async Task OnPageAppearing()
+    public override async Task OnAppearingAsync()
     {
-        await base.OnPageAppearing();
+        await base.OnAppearingAsync();
         LoadSettings();
     }
+
 
     private void LoadSettings()
     {
@@ -103,9 +103,41 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
         SettingsService.CloudBackupIntervalMinutes = value * 60;
     }
 
-    public ICommand TestConnectionCommand => new Command(async () => await TestConnection());
-    public ICommand BackupNowCommand => new Command(async () => await BackupNow());
-    public ICommand RestoreFromCloudCommand => new Command(async () => await RestoreFromCloud());
+    public ICommand TestConnectionCommand => new Command(async () =>
+    {
+        try
+        {
+            await TestConnection();
+        }
+        catch (Exception ex)
+        {
+            LogService.ReportErrorToAppCenter(ex, "TestConnectionCommand");
+        }
+    });
+    
+    public ICommand BackupNowCommand => new Command(async () =>
+    {
+        try
+        {
+            await BackupNow();
+        }
+        catch (Exception ex)
+        {
+            LogService.ReportErrorToAppCenter(ex, "BackupNowCommand");
+        }
+    });
+    
+    public ICommand RestoreFromCloudCommand => new Command(async () =>
+    {
+        try
+        {
+            await RestoreFromCloud();
+        }
+        catch (Exception ex)
+        {
+            LogService.ReportErrorToAppCenter(ex, "RestoreFromCloudCommand");
+        }
+    });
 
     private async Task TestConnection()
     {
@@ -117,7 +149,7 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (string.IsNullOrEmpty(AzureConnectionString))
             {
-                await DialogService.AlertAsync(AppResources.Connection_Failed, "Please enter a connection string", AppResources.Ok);
+                await DialogService.ShowAlertAsync("Please enter a connection string", AppResources.Connection_Failed, AppResources.Ok);
                 return;
             }
 
@@ -125,23 +157,17 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (success)
             {
-                await DialogService.AlertAsync(AppResources.Connection_Successful, "", AppResources.Ok);
+                await DialogService.ShowAlertAsync("", AppResources.Connection_Successful, AppResources.Ok);
             }
             else
             {
-                await DialogService.AlertAsync(AppResources.Connection_Failed, "", AppResources.Ok);
+                await DialogService.ShowAlertAsync("", AppResources.Connection_Failed, AppResources.Ok);
             }
         }
         catch (Exception ex)
         {
-            await DialogService.AlertAsync(AppResources.Connection_Failed, ex.Message, AppResources.Ok);
-            await LogService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Connection Test Error",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            await DialogService.ShowAlertAsync(ex.Message, AppResources.Connection_Failed, AppResources.Ok);
+            LogService.ReportErrorToAppCenter(ex, "Cloud Connection Test Error");
         }
         finally
         {
@@ -159,17 +185,17 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (!CloudSyncEnabled)
             {
-                await DialogService.AlertAsync("Cloud Sync Disabled", "Please enable cloud sync first", AppResources.Ok);
+                await DialogService.ShowAlertAsync("Please enable cloud sync first", "Cloud Sync Disabled", AppResources.Ok);
                 return;
             }
 
             if (string.IsNullOrEmpty(AzureConnectionString))
             {
-                await DialogService.AlertAsync("Configuration Required", "Please configure Azure connection string", AppResources.Ok);
+                await DialogService.ShowAlertAsync("Please configure Azure connection string", "Configuration Required", AppResources.Ok);
                 return;
             }
 
-            var progress = new Progress<double>(value =>
+            var progress = new Progress<double>(_ =>
             {
                 // Update progress if needed
             });
@@ -178,24 +204,18 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (result.Success)
             {
-                await DialogService.AlertAsync(AppResources.Backup_Successful, result.Message, AppResources.Ok);
+                await DialogService.ShowAlertAsync(result.Message, AppResources.Backup_Successful, AppResources.Ok);
                 LoadSettings(); // Refresh the UI
             }
             else
             {
-                await DialogService.AlertAsync(string.Format(AppResources.Backup_Failed, result.Message), "", AppResources.Ok);
+                await DialogService.ShowAlertAsync("", string.Format(AppResources.Backup_Failed, result.Message), AppResources.Ok);
             }
         }
         catch (Exception ex)
         {
-            await DialogService.AlertAsync(string.Format(AppResources.Backup_Failed, ex.Message), "", AppResources.Ok);
-            await LogService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Backup Error",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            await DialogService.ShowAlertAsync("", string.Format(AppResources.Backup_Failed, ex.Message), AppResources.Ok);
+            LogService.ReportErrorToAppCenter(ex, "Cloud Backup Error");
         }
         finally
         {
@@ -223,17 +243,17 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (!CloudSyncEnabled)
             {
-                await DialogService.AlertAsync("Cloud Sync Disabled", "Please enable cloud sync first", AppResources.Ok);
+                await DialogService.ShowAlertAsync("Please enable cloud sync first", "Cloud Sync Disabled", AppResources.Ok);
                 return;
             }
 
             if (string.IsNullOrEmpty(AzureConnectionString))
             {
-                await DialogService.AlertAsync("Configuration Required", "Please configure Azure connection string", AppResources.Ok);
+                await DialogService.ShowAlertAsync("Please configure Azure connection string", "Configuration Required", AppResources.Ok);
                 return;
             }
 
-            var progress = new Progress<double>(value =>
+            var progress = new Progress<double>(_ =>
             {
                 // Update progress if needed
             });
@@ -242,29 +262,23 @@ public partial class CloudSyncSettingsViewModel : BaseViewModel
 
             if (result.Success)
             {
-                await DialogService.AlertAsync(AppResources.Restore_Successful, result.Message, AppResources.Ok);
+                await DialogService.ShowAlertAsync(result.Message, AppResources.Restore_Successful, AppResources.Ok);
 
-                // Restart the app
-                if (Application.Current != null)
+                // Restart the app by replacing the window's page
+                if (Application.Current?.Windows.Count > 0)
                 {
-                    Application.Current.MainPage = new AppShell();
+                    Application.Current.Windows[0].Page = new AppShell();
                 }
             }
             else
             {
-                await DialogService.AlertAsync(string.Format(AppResources.Restore_Failed, result.Message), "", AppResources.Ok);
+                await DialogService.ShowAlertAsync("", string.Format(AppResources.Restore_Failed, result.Message), AppResources.Ok);
             }
         }
         catch (Exception ex)
         {
-            await DialogService.AlertAsync(string.Format(AppResources.Restore_Failed, ex.Message), "", AppResources.Ok);
-            await LogService.AddLogAsync(new MySolarCellsSQLite.Sqlite.Models.Log
-            {
-                LogTitle = "Cloud Restore Error",
-                LogDetails = ex.Message,
-                CreateDate = DateTime.Now,
-                LogTyp = LogTypeEnum.Error
-            });
+            await DialogService.ShowAlertAsync("", string.Format(AppResources.Restore_Failed, ex.Message), AppResources.Ok);
+            LogService.ReportErrorToAppCenter(ex, "Cloud Restore Error");
         }
         finally
         {

@@ -64,16 +64,20 @@
   </resheader>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
-        <comment>Need review</comment></data>
+    <comment>Need review</comment>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
-        <comment>Need review</comment></data>
+    <comment>Need review</comment>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
-        <comment>Need review</comment></data>
+    <comment>Need review</comment>
+  </data>
   <data name="Move_On" xml:space="preserve">
     <value>Move on</value>
-        <comment>Need review</comment></data>
+    <comment>Need review</comment>
+  </data>
   <data name="In_Order_To_Retrieve_Information_From_Tibber_And_More" xml:space="preserve">
     <value>In order to retrieve information from Tibber, we need an Access Token. You can get it by click on 'Goto Tibber Api site' below. Copy/paste the api key in to the field below.</value>
         <comment>Final</comment></data>
@@ -637,7 +641,7 @@
         <comment>Need review</comment>
     </data>
   <data name="Cloud_Backup_Sync" xml:space="preserve">
-        <value>Cloud Backup & Sync</value>
+        <value>Cloud Backup And Sync</value>
         <comment>Need review</comment>
     </data>
   <data name="Cloud_Sync_Settings" xml:space="preserve">
