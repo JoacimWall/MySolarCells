@@ -4,9 +4,9 @@ public class RoiViewModel : BaseViewModel
 {
     readonly IHistoryDataService roiService;
     readonly IDataSyncService dataSyncService;
-    public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public RoiViewModel(IHistoryDataService roiService, IDataSyncService dataSyncService, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.roiService = roiService;
         this.dataSyncService = dataSyncService;
@@ -24,7 +24,7 @@ public class RoiViewModel : BaseViewModel
     {
         ChartDataRequest = HomeService.CurrentChartDataRequest();
         await ReloadData();
-        
+
     }
     private async Task Sync()
     {
@@ -44,13 +44,13 @@ public class RoiViewModel : BaseViewModel
     }
     private async Task ReloadData()
     {
-        
+
         await Task.Delay(200);
         var difference = ChartDataRequest.FilterEnd - ChartDataRequest.FilterStart;
         if (difference.TotalDays > 31)
         {
-            var reportStats = await roiService.GenerateTotalPerMonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd,RoiSimulate);
-            if (reportStats.Model != null) 
+            var reportStats = await roiService.GenerateTotalPerMonthReport(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
+            if (reportStats.Model != null)
                 RoiStats = reportStats.Model.Item1.First().HistoryStats;
         }
         else
@@ -58,7 +58,7 @@ public class RoiViewModel : BaseViewModel
             RoiStats = await roiService.CalculateTotals(ChartDataRequest.FilterStart, ChartDataRequest.FilterEnd, RoiSimulate);
         }
     }
-   
+
     private HistoryStats roiStats = new HistoryStats();
     public HistoryStats RoiStats
     {

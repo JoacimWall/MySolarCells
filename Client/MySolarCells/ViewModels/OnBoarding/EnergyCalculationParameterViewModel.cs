@@ -6,9 +6,9 @@ namespace MySolarCells.ViewModels.OnBoarding;
 public class EnergyCalculationParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public EnergyCalculationParameterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public EnergyCalculationParameterViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.mscDbContext = mscDbContext;
         var list = this.mscDbContext.EnergyCalculationParameter.Where(x => x.ElectricitySupplierId == HomeService.FirstElectricitySupplier().ElectricitySupplierId).OrderBy(o => o.FromDate).ToList();
@@ -47,7 +47,7 @@ public class EnergyCalculationParameterViewModel : BaseViewModel
             });
         }
         else
-        { 
+        {
             var paramLast = Parameters.Last();
             Parameters.Add(new EnergyCalculationParameter
             {

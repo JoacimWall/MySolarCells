@@ -13,14 +13,14 @@ using Java.IO;
 namespace MySolarCells.Services;
 public interface ISaveAndView
 {
-     Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream);
+    Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream);
 }
 public class SaveService : ISaveAndView
 {
     //Method to save document as a file and view the saved document.
-    
+
 #if IOS
-public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
+    public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
     {
         string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         string filePath = Path.Combine(path, filename);
@@ -31,14 +31,14 @@ public async Task<bool> SaveAndView(string filename, string contentType, MemoryS
             stream.CopyTo(fileStream);
             fileStream.Flush();
             fileStream.Close();
-           // await Launcher.OpenAsync(new OpenFileRequest("TEst" , new ReadOnlyFile(filePath)));
-            
+            // await Launcher.OpenAsync(new OpenFileRequest("TEst" , new ReadOnlyFile(filePath)));
+
         }
         catch (Exception)
         {
             return await Task.FromResult(false);
         }
-        
+
 
 #pragma warning disable CA1422
         if (UIApplication.SharedApplication.KeyWindow != null)
@@ -58,7 +58,7 @@ public async Task<bool> SaveAndView(string filename, string contentType, MemoryS
         }
 
         return await Task.FromResult(true);
- }
+    }
 #elif MACCATALYST
 public async Task<bool> SaveAndView(string filename, string contentType, MemoryStream stream)
     {
@@ -145,7 +145,7 @@ public async Task<bool> SaveAndView(string filename, string contentType, MemoryS
         return await Task.FromResult(true);
     }
 #endif
-   
+
 }
 #if IOS || MACCATALYST
 public class QlPreviewItemFileSystem : QLPreviewItem

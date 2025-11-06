@@ -1,6 +1,6 @@
 ﻿namespace MySolarCells.Services;
 public interface IEnergyChartService
-{ 
+{
     Task<Result<ChartDataResult>> GetChartData(ChartDataRequest chartDataRequest);
 }
 public class EnergyChartService : IEnergyChartService
@@ -295,7 +295,7 @@ public class ChartEntry
 {
 
 
-    
+
 
     public float? Value { get; set; }
 
@@ -309,7 +309,7 @@ public class ChartEntry
     /// Gets or sets the label associated to the value.
     /// </summary>
     /// <value>The value label.</value>
-    public string ValueLabel { get; set; }= "";
+    public string ValueLabel { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the color of the fill.
@@ -337,19 +337,19 @@ public class ChartEntry
     /// </summary>
     /// <value>The color of the value label.</value>
     public Color ValueLabelColor { get; set; } = Colors.Black;
-   
+
 
 }
 public class ChartDataResult
 {
-    public string PriceChartTitle { get; set; }= "";
+    public string PriceChartTitle { get; set; } = "";
     public List<ChartEntry> ChartSeriesPriceBuy { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesPriceSell { get; set; } = new List<ChartEntry>();
-    public string PriceBuyTile { get; set; }= "";
-    public string PriceSellTile { get; set; }= "";
+    public string PriceBuyTile { get; set; } = "";
+    public string PriceSellTile { get; set; } = "";
 
-    public string ConsumtionChartTitle { get; set; }= "";
-    public string ProductionChartTitle { get; set; }= "";
+    public string ConsumtionChartTitle { get; set; } = "";
+    public string ProductionChartTitle { get; set; } = "";
     public List<ChartEntry> ChartSeriesBatteryCharge { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesProductionUsed { get; set; } = new List<ChartEntry>();
     public List<ChartEntry> ChartSeriesProductionSold { get; set; } = new List<ChartEntry>();
@@ -358,11 +358,11 @@ public class ChartDataResult
     public float MaxValueYAxes { get; set; }
 
 
-    public string BatteryChargeTitle { get; set; }= "";
-    public string ProductionSoldTile { get; set; }= "";
-    public string ProductionUsedTile { get; set; }= "";
-    public string BatteryUsedTile { get; set; }= "";
-    public string ConsumedGridTile { get; set; }= "";
+    public string BatteryChargeTitle { get; set; } = "";
+    public string ProductionSoldTile { get; set; } = "";
+    public string ProductionUsedTile { get; set; } = "";
+    public string BatteryUsedTile { get; set; } = "";
+    public string ConsumedGridTile { get; set; } = "";
 }
 public class ChartDataRequest : ObservableObject
 {
@@ -399,7 +399,7 @@ public class ChartDataRequest : ObservableObject
             OnPropertyChanged(nameof(YearTextColor));
 
             SetFilterDates();
-            
+
         }
     }
     private ChartDataUnit chartDataUnit = ChartDataUnit.KWh;
@@ -441,7 +441,7 @@ public class ChartDataRequest : ObservableObject
         {
             SetProperty(ref timeStamp, value);
             SetFilterDates();
-           
+
         }
     }
     private void SetFilterDates()

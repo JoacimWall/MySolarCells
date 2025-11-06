@@ -3,8 +3,8 @@ using System.Reflection;
 
 namespace MySolarCells.Helpers;
 
-    public static class SkiaSharpHelper
-    {
+public static class SkiaSharpHelper
+{
     private static SKTypeface? openSansRegular;
     public static SKTypeface? OpenSansRegular
     {

@@ -4,7 +4,7 @@ public interface IRoiService
     Result<List<EstimateRoi>> CalcSavingsEstimate(Tuple<List<ReportHistoryStats>, List<List<ReportHistoryStats>>> historyStats, SavingEstimateParameters savingEstimateParameters);
 }
 
-public class RoiService :IRoiService
+public class RoiService : IRoiService
 {
     /// <summary>
     /// 
@@ -26,7 +26,7 @@ public class RoiService :IRoiService
             //if current year 
             if (item.FromDate.Year == DateTime.Now.Year)
             {
-                List<ReportHistoryStats> listCurrentYear=new List<ReportHistoryStats>();
+                List<ReportHistoryStats> listCurrentYear = new List<ReportHistoryStats>();
                 //Get months for current year
                 foreach (var itemMonth in historyStats.Item2)
                 {
@@ -49,8 +49,8 @@ public class RoiService :IRoiService
                         //Hämtar data från föregående år
                         if (historyStats.Item2.Count > 1)
                         {
-                            var previusYearCurrentMonth = historyStats.Item2[historyStats.Item2.Count-2];
-                            previusYearmonth = previusYearCurrentMonth.FirstOrDefault(x => x.FromDate.Month == i); 
+                            var previusYearCurrentMonth = historyStats.Item2[historyStats.Item2.Count - 2];
+                            previusYearmonth = previusYearCurrentMonth.FirstOrDefault(x => x.FromDate.Month == i);
                         }
                         if (previusYearmonth != null)
                         {
@@ -90,17 +90,17 @@ public class RoiService :IRoiService
                 ProductionOwnUse = item.HistoryStats.ProductionOwnUse + item.HistoryStats.BatteryUsed,
                 YearSavingsSold = yearSavingsSold,
                 YearSavingsOwnUse = yearSavingsOwnUse,
-                RemainingOnInvestment = Math.Round(item.HistoryStats.Investment - totalSaving,0),
-                ReturnPercentage = Math.Round((savingThisYear/ item.HistoryStats.Investment)*100,1)
+                RemainingOnInvestment = Math.Round(item.HistoryStats.Investment - totalSaving, 0),
+                ReturnPercentage = Math.Round((savingThisYear / item.HistoryStats.Investment) * 100, 1)
             });
             yearCountFromStart++;
-             lastKnownInvestment = item.HistoryStats.Investment;
+            lastKnownInvestment = item.HistoryStats.Investment;
         }
         //Future years
         int startYear = historyStats.Item1.Last().FromDate.AddYears(1).Year;
         int endYear = historyStats.Item1.First().FromDate.AddYears(30).Year;
         var calcParametersTax = historyStats.Item1.Last().HistoryStats.EnergyCalculationParameter;
-        
+
         bool roiYearSet = false;
         for (int i = startYear; i < endYear; i++)
         {
@@ -117,17 +117,17 @@ public class RoiService :IRoiService
             var newYear = new EstimateRoi
             {
                 Year = i,
-                YearFromStart = yearCountFromStart, 
+                YearFromStart = yearCountFromStart,
                 AveragePriceSold = Math.Round(averagePriceSold * (1 + savingEstimateParameters.RealDevelopmentElectricityPrice / 100), 2),
                 AveragePrisOwnUse = Math.Round(list.Last().AveragePrisOwnUse * (1 + savingEstimateParameters.RealDevelopmentElectricityPrice / 100), 2),
-                ProductionSold = Math.Round(list.Last().ProductionSold * (1 - savingEstimateParameters.PanelDegradationPerYear/100), 2),
-                ProductionOwnUse = Math.Round(list.Last().ProductionOwnUse * (1 - savingEstimateParameters.PanelDegradationPerYear/100), 2),
-              
+                ProductionSold = Math.Round(list.Last().ProductionSold * (1 - savingEstimateParameters.PanelDegradationPerYear / 100), 2),
+                ProductionOwnUse = Math.Round(list.Last().ProductionOwnUse * (1 - savingEstimateParameters.PanelDegradationPerYear / 100), 2),
+
             };
-            
-            newYear.YearSavingsSold = Math.Round( newYear.ProductionSold * newYear.AveragePriceSold,2);
+
+            newYear.YearSavingsSold = Math.Round(newYear.ProductionSold * newYear.AveragePriceSold, 2);
             newYear.YearSavingsOwnUse = Math.Round(newYear.ProductionOwnUse * newYear.AveragePrisOwnUse, 2);
-            var savingThisYear = Math.Round(newYear.YearSavingsSold + newYear.YearSavingsOwnUse,2);
+            var savingThisYear = Math.Round(newYear.YearSavingsSold + newYear.YearSavingsOwnUse, 2);
             totalSaving += savingThisYear;
             newYear.RemainingOnInvestment = Math.Round(lastKnownInvestment - totalSaving, 0);
             if (newYear.RemainingOnInvestment < 0)
@@ -144,9 +144,9 @@ public class RoiService :IRoiService
             list.Add(newYear);
             yearCountFromStart++;
         }
-        return new Result<List<EstimateRoi>>(list); 
+        return new Result<List<EstimateRoi>>(list);
     }
-   
+
 }
 
 

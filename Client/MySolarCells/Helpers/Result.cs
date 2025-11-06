@@ -36,7 +36,7 @@ public class Result<T>
     public Result(string error, string errorType = "")
     {
         ErrorMessage = error;
-       
+
         WasSuccessful = false;
     }
 
@@ -45,7 +45,7 @@ public class Result<T>
     public bool WasSuccessful { get; set; }
 
     public string ErrorMessage { get; set; } = "";
-    
+
     public ErrorCode ErrorCode { get; set; }
 }
 
@@ -64,7 +64,7 @@ public class GenericResponse
 
     //this is used to know if there was a server error not a server message like email format error message
     public bool ServerError { get; set; }
-  
+
 
     //BackendServerErrorResponse
     public string ErrorCode { get; set; } = "";
@@ -94,7 +94,7 @@ public class GenericResponse
 
             if (!string.IsNullOrEmpty(message))
                 return
-                    "A server error occurred please try again later"; 
+                    "A server error occurred please try again later";
 
             return message ?? "";
         }
@@ -106,6 +106,6 @@ public class GenericResponse
 
 public enum ErrorCode
 {
-    Unknown=0,
-    NoEnergyEntryOnCurrentDate =100
+    Unknown = 0,
+    NoEnergyEntryOnCurrentDate = 100
 }

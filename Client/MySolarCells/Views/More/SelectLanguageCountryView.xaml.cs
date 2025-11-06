@@ -2,9 +2,9 @@
 
 public partial class SelectLanguageCountryView : BaseContentPage
 {
-	public SelectLanguageCountryView(SelectLanguageCountryViewModel vm)
-	{
-		InitializeComponent();
+    public SelectLanguageCountryView(SelectLanguageCountryViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

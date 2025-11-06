@@ -28,7 +28,7 @@ public partial class App : Application
 
     }
 
-   
+
 
     private async Task<bool> InitApp(bool fromResume)
     {
@@ -65,8 +65,8 @@ public partial class App : Application
                 break;
         }
 
-      
-           
+
+
         return true;
     }
     protected override async void OnStart()
@@ -103,5 +103,5 @@ public partial class App : Application
 
         MySolarCellsGlobals.ApplicationState = ApplicationState.InActive;
     }
-   
+
 }

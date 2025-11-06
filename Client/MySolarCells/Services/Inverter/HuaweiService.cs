@@ -23,7 +23,7 @@ public class HuaweiService : IInverterServiceInterface
 
     public bool ShowApiKey => false;
 
-    public HuaweiService(IRestClient restClient, MscDbContext mscDbContext,IHomeService homeService,ILogService logService)
+    public HuaweiService(IRestClient restClient, MscDbContext mscDbContext, IHomeService homeService, ILogService logService)
     {
         this.restClient = restClient;
         this.mscDbContext = mscDbContext;
@@ -71,19 +71,19 @@ public class HuaweiService : IInverterServiceInterface
         //SITES
         var body = new SiteListRequest { pageNo = 1, pageSize = 100 };
         var resultSites = await restClient.ExecutePostAsync<HuaweiSiteResponse>("/thirdData/stations", body);
-           
+
         if (resultSites is { WasSuccessful: false, Model: null })
-            return new Result<List<InverterSite>>(resultSites.ErrorMessage );
+            return new Result<List<InverterSite>>(resultSites.ErrorMessage);
         if (resultSites is { WasSuccessful: false, Model: not null })
             return new Result<List<InverterSite>>(resultSites.Model.message!);
         if (resultSites is not { WasSuccessful: true, Model: not null })
             return new Result<List<InverterSite>>("Error getting pickerOne");
-        
+
         sitesResponse = resultSites.Model;
         var returnList = new List<InverterSite>();
         foreach (var item in sitesResponse.data.list)
             returnList.Add(new InverterSite { Id = item.plantCode, Name = item.plantName, InstallationDate = Convert.ToDateTime(item.gridConnectionDate) });
-        
+
         return new Result<List<InverterSite>>(returnList);
 
     }
@@ -91,11 +91,11 @@ public class HuaweiService : IInverterServiceInterface
     {
         HuaweiDevListRequest body = new HuaweiDevListRequest { stationCodes = inverterSite.Id };
         var resultDevice = await restClient.ExecutePostAsync<HuaweiDevicesResponse>("/thirdData/getDevList", body);
-        
+
         if (resultDevice is { WasSuccessful: false, Model: null })
         {
-            return new Result<GetInverterResponse>(resultDevice.ErrorMessage );  
-        }  
+            return new Result<GetInverterResponse>(resultDevice.ErrorMessage);
+        }
         if (resultDevice is { WasSuccessful: false, Model: not null })
         {
             return new Result<GetInverterResponse>(resultDevice.Model.message.ToString()!);
@@ -118,12 +118,12 @@ public class HuaweiService : IInverterServiceInterface
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
 
-        
+
         var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == homeService.CurrentHome().HomeId);
         //LOGIN
         var loginResult = await TestConnection(inverter.UserName!, inverter.Password!.Decrypt(AppConstants.Secretkey), "", "");
         inverterLoginResponse = loginResult.Model;
-        var returnValue = new Result<DataSyncResponse>(new DataSyncResponse { SyncState = DataSyncState.ProductionSync, Message = AppResources.Import_Of_Production_Done});
+        var returnValue = new Result<DataSyncResponse>(new DataSyncResponse { SyncState = DataSyncState.ProductionSync, Message = AppResources.Import_Of_Production_Done });
 
         try
         {
@@ -145,33 +145,33 @@ public class HuaweiService : IInverterServiceInterface
                 //Result<HuaweiProductionResponse> resultDay = new Result<HuaweiProductionResponse>("sdasd");
                 if (resultDay is { WasSuccessful: false, Model: null })
                 {
-                    returnValue= new Result<DataSyncResponse>(resultDay.ErrorMessage );  
-                }  
+                    returnValue = new Result<DataSyncResponse>(resultDay.ErrorMessage);
+                }
                 if (!resultDay.WasSuccessful || resultDay.Model is { success: false })
                 {
-                    if (resultDay.Model is { failCode: 407 } )
+                    if (resultDay.Model is { failCode: 407 })
                     {
                         logService.ConsoleWriteLineDebug("Antal Huawei " + countApiRequests);
-                        returnValue= new Result<DataSyncResponse>(new DataSyncResponse
+                        returnValue = new Result<DataSyncResponse>(new DataSyncResponse
                         {
                             SyncState = DataSyncState.ProductionSync,
-                            Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More, "24", countApiRequests.ToString(),start.ToShortDateString())
-                            
+                            Message = string.Format(AppResources.Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More, "24", countApiRequests.ToString(), start.ToShortDateString())
+
                         });
                     }
-                    else 
+                    else
                     {//error
-                        returnValue=  new Result<DataSyncResponse>(new DataSyncResponse
+                        returnValue = new Result<DataSyncResponse>(new DataSyncResponse
                         {
                             SyncState = DataSyncState.ProductionSync,
-                            Message =  resultDay.Model!.message.ToString()!
+                            Message = resultDay.Model!.message.ToString()!
                         }, false);
                     }
                     break;
                 }
                 else if (resultDay.Model != null)
                 {
-                    countApiRequests ++;
+                    countApiRequests++;
                     var dayProduction = resultDay.Model;
                     List<HuaweiPoint> listPoints = new List<HuaweiPoint>();
                     foreach (var item in dayProduction.data)
@@ -180,7 +180,8 @@ public class HuaweiService : IInverterServiceInterface
                             listPoints.Add(new HuaweiPoint
                             {
                                 timestamp = DateHelper.MillisToDateTime(item.collectTime.Value),
-                                value = item.dataItemMap.inverter_power, __typename = "totalprod"
+                                value = item.dataItemMap.inverter_power,
+                                __typename = "totalprod"
                             });
                     }
 
@@ -194,7 +195,7 @@ public class HuaweiService : IInverterServiceInterface
                         if (energyExist != null)
                         {
                             HuaweiPoint value = listPoints[i];
-                            if ( value.value > 0)
+                            if (value.value > 0)
                             {
                                 if (value.value - energyExist.ProductionSold < 0)
                                     logService.ConsoleWriteLineDebug("minus prod");

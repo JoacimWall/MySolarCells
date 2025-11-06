@@ -5,10 +5,10 @@ using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-       
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+
         builder
             .UseMauiApp<App>()
             .ConfigureSyncfusionCore()
@@ -18,9 +18,9 @@ public static class MauiProgram
             .ConfigureViewModels()
             .ConfigureViews()
             .ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("MySolarCells.ttf", "AppIconsFont");
             });
 
@@ -34,12 +34,12 @@ public static class MauiProgram
         //we must initialize our service helper before using it
         ServiceHelper.Initialize(app.Services);
 
-		var logService = ServiceHelper.GetService<ILogService>();
-		logService.ConsoleWriteLineDebug("CacheDirectory   " + FileSystem.CacheDirectory);
-		logService.ConsoleWriteLineDebug("AppDataDirectory   " + FileSystem.AppDataDirectory);
+        var logService = ServiceHelper.GetService<ILogService>();
+        logService.ConsoleWriteLineDebug("CacheDirectory   " + FileSystem.CacheDirectory);
+        logService.ConsoleWriteLineDebug("AppDataDirectory   " + FileSystem.AppDataDirectory);
 
         return app;
-	}
-    
+    }
+
 }
 

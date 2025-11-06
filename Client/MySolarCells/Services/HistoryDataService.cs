@@ -13,7 +13,7 @@ public class HistoryDataService : IHistoryDataService
 {
     private readonly MscDbContext mscDbContext;
     private readonly IHomeService homeService;
-    public HistoryDataService(MscDbContext mscDbContext,IHomeService homeService)
+    public HistoryDataService(MscDbContext mscDbContext, IHomeService homeService)
     {
         this.mscDbContext = mscDbContext;
         this.homeService = homeService;
@@ -41,11 +41,15 @@ public class HistoryDataService : IHistoryDataService
             var resultInvestmentCalculation = CalculateLonAndInterest(resultInvest, current);
             stats.Investment = resultInvestmentCalculation.Item1;
             stats.InterestCost = Math.Round(resultInvestmentCalculation.Item2, 2);
-            stats.Title =current.ToString("MMMM");
+            stats.Title = current.ToString("MMMM");
             //Correct balance with interest cost
             //stats.BalanceProductionProfit_Minus_ConsumptionCost = stats.BalanceProductionProfit_Minus_ConsumptionCost - stats.InterestCost;
             result.Add(new ReportHistoryStats
-            { FromDate = current, HistoryStats = stats, ReportPageType = (int)ReportPageType.YearDetails, FirstProductionDay = firstProductionDay.Timestamp
+            {
+                FromDate = current,
+                HistoryStats = stats,
+                ReportPageType = (int)ReportPageType.YearDetails,
+                FirstProductionDay = firstProductionDay.Timestamp
             });
             current = current.AddMonths(1);
         }
@@ -54,7 +58,7 @@ public class HistoryDataService : IHistoryDataService
         List<List<ReportHistoryStats>> historyStatsGrpYearAll = new List<List<ReportHistoryStats>>();
         List<ReportHistoryStats> historyStatsMonthGrpYear = new List<ReportHistoryStats>();
         List<ReportHistoryStats> historyStatsOverview = new List<ReportHistoryStats>();
-        
+
         for (int i = 0; i < result.Count; i++)
         {
             if (year == result[i].FromDate.Year)
@@ -122,7 +126,7 @@ public class HistoryDataService : IHistoryDataService
         HistoryStats returnHistory = new HistoryStats
         {
             EnergyCalculationParameter = sumHistory.First().EnergyCalculationParameter,
-            Currency = homeService.CurrentHome().CurrencyUnit, 
+            Currency = homeService.CurrentHome().CurrencyUnit,
             Unit = homeService.CurrentHome().EnergyUnit,
 
             Purchased = Math.Round(sumHistory.Sum(x => x.Purchased), 2),
@@ -169,7 +173,7 @@ public class HistoryDataService : IHistoryDataService
         //Peak
         if (difference.TotalDays < 32)
         {
-            
+
             int amountPeaks = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters!.AmountOfPeaksToUse : 1;
             double peakPricePerKwh = sumHistory.First().PowerTariffParameters != null ? sumHistory.First().PowerTariffParameters!.PricePerKwh : 0;
 
@@ -306,21 +310,21 @@ public class HistoryDataService : IHistoryDataService
                 IEnumerable<Energy> valid;
                 //pick out weekdays
                 if (powerParams is { Weekday: true, Weekend: false })
-                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday ||  x.Timestamp.DayOfWeek == DayOfWeek.Friday);
+                    valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Monday || x.Timestamp.DayOfWeek == DayOfWeek.Tuesday || x.Timestamp.DayOfWeek == DayOfWeek.Wednesday || x.Timestamp.DayOfWeek == DayOfWeek.Thursday || x.Timestamp.DayOfWeek == DayOfWeek.Friday);
                 else if (!powerParams.Weekday && powerParams.Weekend) //Weekends
                     valid = energy.Where(x => x.Timestamp.DayOfWeek == DayOfWeek.Saturday || x.Timestamp.DayOfWeek == DayOfWeek.Sunday);
-            
+
                 //picking out hours
                 valid = energy.Where(x => x.Timestamp.Hour >= powerParams.DayTimeStart && x.Timestamp.Hour <= powerParams.DayTimeEnd);
                 historyStats.PeakPurchased = valid.Max(x => x.Purchased);
                 historyStats.PeakPurchasedAndOwnUsage = valid.Max(x => x.Purchased + x.ProductionOwnUse + x.BatteryUsed);
             }
         }
-        
+
         return historyStats;
 
     }
-    
+
     //returns total invest, Loan left and Interest cost
     private Tuple<int, float> CalculateLonAndInterest(List<InvestmentAndLoan> investmentAndLoans, DateTime start)
     {
@@ -343,7 +347,7 @@ public class HistoryDataService : IHistoryDataService
 
                 var curInterest = ((item.LoanLeft * (interestCur.Interest / 100)) / 12);
 
-                if (curInterest != null) 
+                if (curInterest != null)
                     interestTot = interestTot + curInterest.Value;
 
                 item.LoanLeft = item.LoanLeft - interestCur.Amortization;
@@ -443,7 +447,7 @@ public class HistorySimulate : ObservableObject
         set
         {
             SetProperty(ref removeTaxReduction, value);
-            
+
         }
     }
 }

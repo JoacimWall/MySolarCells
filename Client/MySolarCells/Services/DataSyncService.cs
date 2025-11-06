@@ -26,7 +26,7 @@ public class DataSyncService : IDataSyncService
             LogTyp = (int)LogTypeEnum.Info
         });
         //Get last Sync Time for grid supplier
-        Energy? lastSyncTime=null;
+        Energy? lastSyncTime = null;
         if (syncGaps)
         {   //so that we continue ro chekc if evry row exist in db
             MySolarCellsGlobals.ImportErrorValidateEvrryRow = true;
@@ -34,14 +34,14 @@ public class DataSyncService : IDataSyncService
             if (lastSyncTime == null)
                 return new Result<DataSyncResponse>("No data in Energy table");
             bool steppNext = true;
-            DateTime existTime = lastSyncTime.Timestamp; 
+            DateTime existTime = lastSyncTime.Timestamp;
             while (steppNext)
             {
-               var existLastSyncTime= await mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == lastSyncTime.Timestamp.AddHours(1));
-               if (existLastSyncTime == null)
-                   steppNext = false;
-               else
-                   lastSyncTime = existLastSyncTime;
+                var existLastSyncTime = await mscDbContext.Energy.FirstOrDefaultAsync(x => x.Timestamp == lastSyncTime.Timestamp.AddHours(1));
+                if (existLastSyncTime == null)
+                    steppNext = false;
+                else
+                    lastSyncTime = existLastSyncTime;
             }
         }
         else
@@ -66,14 +66,14 @@ public class DataSyncService : IDataSyncService
                 CalculateProgress(currentDay, totalHours);
             });
 
-          
+
             await Task.Delay(200);
             var result = await gridSupplierInterface.Sync(lastSyncTime.Timestamp, progress, 0);
             if (!result.WasSuccessful)
                 return result;
 
         }
-        
+
         await Task.Delay(200);
 
         //It needs to be updated after grid sync to be correct.
@@ -105,7 +105,7 @@ public class DataSyncService : IDataSyncService
         //    LogTyp = result.WasSuccessful ? (int)LogTypeEnum.Info : (int)LogTypeEnum.Error
         //});
 
-         return new Result<DataSyncResponse>(new DataSyncResponse
+        return new Result<DataSyncResponse>(new DataSyncResponse
         {
             SyncState = DataSyncState.ProductionSync,
             Message = AppResources.Import_Of_Production_Done

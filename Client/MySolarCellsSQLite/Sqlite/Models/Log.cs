@@ -7,11 +7,11 @@ public class Log : ObservableObject
     public int LogId { get; set; }
     [Required]
     public DateTime CreateDate { get; set; } = DateTime.Now;
-    [Required,StringLength(100)]
+    [Required, StringLength(100)]
     public string LogTitle { get; set; } = string.Empty;
-    [Required,StringLength(200)]
+    [Required, StringLength(200)]
     public string LogDetails { get; set; } = string.Empty;
     [Required]
-    public int LogTyp { get; set; } 
+    public int LogTyp { get; set; }
 }
 

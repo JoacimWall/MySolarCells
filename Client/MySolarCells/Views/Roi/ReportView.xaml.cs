@@ -2,15 +2,15 @@
 
 public partial class ReportView : BaseContentPage
 {
-	//private ISetOrientationService setOrientationService;
-	public ReportView(ReportViewModel vm)
-	{
-		InitializeComponent();
+    //private ISetOrientationService setOrientationService;
+    public ReportView(ReportViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
-       // setOrientationService = ServiceHelper.GetService<ISetOrientationService>();
+        // setOrientationService = ServiceHelper.GetService<ISetOrientationService>();
 
-	}
-	/*protected override void OnAppearing()
+    }
+    /*protected override void OnAppearing()
 	{
 		//TODO: MAUI
 		setOrientationService.OnlyLandscape();
@@ -20,7 +20,7 @@ public partial class ReportView : BaseContentPage
       
 	}*/
 
-	/*protected async override void OnDisappearing()
+    /*protected async override void OnDisappearing()
 	{
 		
 		setOrientationService.OnlyPortrait();

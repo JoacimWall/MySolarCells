@@ -27,12 +27,12 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
     public bool ShowApiKey => true;
 
-    public HomeAssistentInverterService(MscDbContext mscDbContext,IHomeService homeService,ILogService logService)
+    public HomeAssistentInverterService(MscDbContext mscDbContext, IHomeService homeService, ILogService logService)
     {
         this.mscDbContext = mscDbContext;
         this.homeService = homeService;
         this.logService = logService;
-       
+
         client = new ClientWebSocket();
         cts = new CancellationTokenSource();
         apiKey = "";
@@ -43,7 +43,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
     #region WebSocket
 
     private string apiKey;
-    private string receiveMode="";
+    private string receiveMode = "";
     private ClientWebSocket client;
     private CancellationTokenSource cts;
 
@@ -127,7 +127,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 energyDataResponseExist = true;
             }
             logService.ConsoleWriteLineDebug($"Received: {receivedMessage}");
-        
+
         }
         while (!result.EndOfMessage);
     }
@@ -159,7 +159,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                 await Task.Delay(1000);
             if (inverterLoginResponse == null)
                 return new Result<InverterLoginResponse>("inverterLoginResponse is null");
-            
+
             return new Result<InverterLoginResponse>(inverterLoginResponse);
         }
         catch (Exception ex)
@@ -202,12 +202,12 @@ public class HomeAssistentInverterService : IInverterServiceInterface
         int websocketId = 11;
         var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == homeService.CurrentHome().HomeId);
         //LOGIN
-        string inverterApiKey="";
-        
+        string inverterApiKey = "";
+
         if (inverter.ApiKey != null)
             inverterApiKey = inverter.ApiKey.Decrypt(AppConstants.Secretkey);
-        
-        var loginResult = await TestConnection("", "", inverter.ApiUrl?? "", inverterApiKey);
+
+        var loginResult = await TestConnection("", "", inverter.ApiUrl ?? "", inverterApiKey);
         if (!loginResult.WasSuccessful)
             return new Result<DataSyncResponse>(loginResult.ErrorMessage);
         inverterLoginResponse = loginResult.Model;
@@ -278,8 +278,8 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                     var timestampProd = Convert.ToDateTime(item.Key);
                     var energyExist = mscDbContext.Energy.FirstOrDefault(x => x.Timestamp == timestampProd);
                     var dateTimeMinus15MinHeltimma = DateTime.Now.AddMinutes(-15);
-                    
-                    if (energyExist != null && energyExist.ProductionSoldSynced && (energyExist.Timestamp <= new DateTime(dateTimeMinus15MinHeltimma.Year, dateTimeMinus15MinHeltimma.Month, dateTimeMinus15MinHeltimma.Day, dateTimeMinus15MinHeltimma.Hour,0,0)))
+
+                    if (energyExist != null && energyExist.ProductionSoldSynced && (energyExist.Timestamp <= new DateTime(dateTimeMinus15MinHeltimma.Year, dateTimeMinus15MinHeltimma.Month, dateTimeMinus15MinHeltimma.Day, dateTimeMinus15MinHeltimma.Hour, 0, 0)))
                     {
                         if (item.Value > 0)
                         {
@@ -290,7 +290,7 @@ public class HomeAssistentInverterService : IInverterServiceInterface
                             else
                                 energyExist.ProductionOwnUseProfit = 0;
 
-                            
+
                         }
                         energyExist.ProductionOwnUseSynced = true;
                         energyExist.InverterTypeProductionOwnUse = (int)InverterTypeEnum.HomeAssistent;
@@ -313,10 +313,10 @@ public class HomeAssistentInverterService : IInverterServiceInterface
 
             if (energyList.Count > 0)
             {
-                
+
                 await mscDbContext.BulkUpdateAsync(energyList);
             }
-            
+
             progress.Report(progressStartNr);
             await Task.Delay(200); //So that the GUI has time to update
             return new Result<DataSyncResponse>(new DataSyncResponse

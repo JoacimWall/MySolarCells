@@ -2,9 +2,9 @@
 
 public partial class FirstSyncView : BaseContentPage
 {
-	public FirstSyncView(FirstSyncViewModel vm)
-	{
-		InitializeComponent();
+    public FirstSyncView(FirstSyncViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

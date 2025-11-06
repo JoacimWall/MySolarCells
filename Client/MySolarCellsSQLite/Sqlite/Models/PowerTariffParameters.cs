@@ -10,7 +10,9 @@ public class PowerTariffParameters : ObservableObject
     public DateTime FromDate
     {
         get => fromDate;
-        set{  SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));
+        set
+        {
+            SetProperty(ref fromDate, new DateTime(value.Year, value.Month, 1));
             OnPropertyChanged(nameof(DisplayName));
         }
     }
@@ -23,7 +25,7 @@ public class PowerTariffParameters : ObservableObject
         set => SetProperty(ref amountOfPeaksToUse, value);
     }
 
-    private bool usePeaksFromSameDay ;
+    private bool usePeaksFromSameDay;
     [Required]
     public bool UsePeaksFromSameDay
     {
@@ -57,7 +59,7 @@ public class PowerTariffParameters : ObservableObject
     }
 
     // ----- WEEK DAY ----------
-    private bool weekend =true;
+    private bool weekend = true;
     [Required]
     public bool Weekend
     {
@@ -87,7 +89,7 @@ public class PowerTariffParameters : ObservableObject
         get => dayTimeEnd;
         set => SetProperty(ref dayTimeEnd, value);
     }
-   
+
     [Required]
     public int ElectricitySupplierId { get; set; }
 

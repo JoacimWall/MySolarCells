@@ -2,9 +2,9 @@
 
 public partial class InverterView : BaseContentPage
 {
-	public InverterView(InverterViewModel vm)
-	{
-		InitializeComponent();
+    public InverterView(InverterViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

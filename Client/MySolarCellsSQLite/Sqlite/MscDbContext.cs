@@ -30,7 +30,7 @@ public class MscDbContext : DbContext
             // ignored
         }
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var folderPath = FileSystem.AppDataDirectory;
@@ -78,7 +78,7 @@ public class MscDbContext : DbContext
     public DbSet<Log> Log { get; set; }
     public DbSet<SavingEstimateParameters> SavingEstimateParameters { get; set; }
     public DbSet<PowerTariffParameters> PowerTariffParameters { get; set; }
-    
+
 
 }
 

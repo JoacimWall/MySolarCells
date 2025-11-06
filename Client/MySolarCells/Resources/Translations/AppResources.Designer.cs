@@ -7,1180 +7,1569 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MySolarCells.Resources.Translations {
+namespace MySolarCells.Resources.Translations
+{
     using System;
-    
-    
+
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.1.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class AppResources {
-        
+    public class AppResources
+    {
+
         private static System.Resources.ResourceManager resourceMan;
-        
+
         private static System.Globalization.CultureInfo resourceCulture;
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AppResources() {
+        internal AppResources()
+        {
         }
-        
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.Equals(null, resourceMan)) {
+        public static System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if (object.Equals(null, resourceMan))
+                {
                     System.Resources.ResourceManager temp = new System.Resources.ResourceManager("MySolarCells.Resources.Translations.AppResources", typeof(AppResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-        
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static System.Globalization.CultureInfo Culture {
-            get {
+        public static System.Globalization.CultureInfo Culture
+        {
+            get
+            {
                 return resourceCulture;
             }
-            set {
+            set
+            {
                 resourceCulture = value;
             }
         }
-        
-        public static string Cancel {
-            get {
+
+        public static string Cancel
+        {
+            get
+            {
                 return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
-        
-        public static string Login {
-            get {
+
+        public static string Login
+        {
+            get
+            {
                 return ResourceManager.GetString("Login", resourceCulture);
             }
         }
-        
-        public static string Password {
-            get {
+
+        public static string Password
+        {
+            get
+            {
                 return ResourceManager.GetString("Password", resourceCulture);
             }
         }
-        
-        public static string Move_On {
-            get {
+
+        public static string Move_On
+        {
+            get
+            {
                 return ResourceManager.GetString("Move_On", resourceCulture);
             }
         }
-        
-        public static string In_Order_To_Retrieve_Information_From_Tibber_And_More {
-            get {
+
+        public static string In_Order_To_Retrieve_Information_From_Tibber_And_More
+        {
+            get
+            {
                 return ResourceManager.GetString("In_Order_To_Retrieve_Information_From_Tibber_And_More", resourceCulture);
             }
         }
-        
-        public static string Access_Token {
-            get {
+
+        public static string Access_Token
+        {
+            get
+            {
                 return ResourceManager.GetString("Access_Token", resourceCulture);
             }
         }
-        
-        public static string My_Solar_Cells {
-            get {
+
+        public static string My_Solar_Cells
+        {
+            get
+            {
                 return ResourceManager.GetString("My_Solar_Cells", resourceCulture);
             }
         }
-        
-        public static string Ok {
-            get {
+
+        public static string Ok
+        {
+            get
+            {
                 return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
-        
-        public static string More {
-            get {
+
+        public static string More
+        {
+            get
+            {
                 return ResourceManager.GetString("More", resourceCulture);
             }
         }
-        
-        public static string Production {
-            get {
+
+        public static string Production
+        {
+            get
+            {
                 return ResourceManager.GetString("Production", resourceCulture);
             }
         }
-        
-        public static string Electricity_Supplier {
-            get {
+
+        public static string Electricity_Supplier
+        {
+            get
+            {
                 return ResourceManager.GetString("Electricity_Supplier", resourceCulture);
             }
         }
-        
-        public static string Save {
-            get {
+
+        public static string Save
+        {
+            get
+            {
                 return ResourceManager.GetString("Save", resourceCulture);
             }
         }
-        
-        public static string Tibber {
-            get {
+
+        public static string Tibber
+        {
+            get
+            {
                 return ResourceManager.GetString("Tibber", resourceCulture);
             }
         }
-        
-        public static string Validate {
-            get {
+
+        public static string Validate
+        {
+            get
+            {
                 return ResourceManager.GetString("Validate", resourceCulture);
             }
         }
-        
-        public static string Select_The_Home_You_Want_To_Analyze {
-            get {
+
+        public static string Select_The_Home_You_Want_To_Analyze
+        {
+            get
+            {
                 return ResourceManager.GetString("Select_The_Home_You_Want_To_Analyze", resourceCulture);
             }
         }
-        
-        public static string Year {
-            get {
+
+        public static string Year
+        {
+            get
+            {
                 return ResourceManager.GetString("Year", resourceCulture);
             }
         }
-        
-        public static string Import_Only_Spot_Prices {
-            get {
+
+        public static string Import_Only_Spot_Prices
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Only_Spot_Prices", resourceCulture);
             }
         }
-        
-        public static string Import_Only_Spot_Prices_Desc {
-            get {
+
+        public static string Import_Only_Spot_Prices_Desc
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Only_Spot_Prices_Desc", resourceCulture);
             }
         }
-        
-        public static string Goto_Tibber_Api_Site {
-            get {
+
+        public static string Goto_Tibber_Api_Site
+        {
+            get
+            {
                 return ResourceManager.GetString("Goto_Tibber_Api_Site", resourceCulture);
             }
         }
-        
-        public static string Inverter {
-            get {
+
+        public static string Inverter
+        {
+            get
+            {
                 return ResourceManager.GetString("Inverter", resourceCulture);
             }
         }
-        
-        public static string Pick_The_Invert_Desc {
-            get {
+
+        public static string Pick_The_Invert_Desc
+        {
+            get
+            {
                 return ResourceManager.GetString("Pick_The_Invert_Desc", resourceCulture);
             }
         }
-        
-        public static string Tibber_Guide_Text {
-            get {
+
+        public static string Tibber_Guide_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Tibber_Guide_Text", resourceCulture);
             }
         }
-        
-        public static string Import_Data_From_Electricity_Supplier {
-            get {
+
+        public static string Import_Data_From_Electricity_Supplier
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Data_From_Electricity_Supplier", resourceCulture);
             }
         }
-        
-        public static string Import_Data_From_Electricity_Supplier_Done {
-            get {
+
+        public static string Import_Data_From_Electricity_Supplier_Done
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Data_From_Electricity_Supplier_Done", resourceCulture);
             }
         }
-        
-        public static string Saved_Rows_Amount {
-            get {
+
+        public static string Saved_Rows_Amount
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Rows_Amount", resourceCulture);
             }
         }
-        
-        public static string Import_Data_From_Inverter {
-            get {
+
+        public static string Import_Data_From_Inverter
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Data_From_Inverter", resourceCulture);
             }
         }
-        
-        public static string Error_Import_Data_From_Inverter {
-            get {
+
+        public static string Error_Import_Data_From_Inverter
+        {
+            get
+            {
                 return ResourceManager.GetString("Error_Import_Data_From_Inverter", resourceCulture);
             }
         }
-        
-        public static string My_Description {
-            get {
+
+        public static string My_Description
+        {
+            get
+            {
                 return ResourceManager.GetString("My_Description", resourceCulture);
             }
         }
-        
-        public static string Description {
-            get {
+
+        public static string Description
+        {
+            get
+            {
                 return ResourceManager.GetString("Description", resourceCulture);
             }
         }
-        
-        public static string Investment_And_Loan {
-            get {
+
+        public static string Investment_And_Loan
+        {
+            get
+            {
                 return ResourceManager.GetString("Investment_And_Loan", resourceCulture);
             }
         }
-        
-        public static string There_Is_No_Data_To_Show_On_This_Date {
-            get {
+
+        public static string There_Is_No_Data_To_Show_On_This_Date
+        {
+            get
+            {
                 return ResourceManager.GetString("There_Is_No_Data_To_Show_On_This_Date", resourceCulture);
             }
         }
-        
-        public static string Purchased {
-            get {
+
+        public static string Purchased
+        {
+            get
+            {
                 return ResourceManager.GetString("Purchased", resourceCulture);
             }
         }
-        
-        public static string kWh {
-            get {
+
+        public static string kWh
+        {
+            get
+            {
                 return ResourceManager.GetString("kWh", resourceCulture);
             }
         }
-        
-        public static string Currency {
-            get {
+
+        public static string Currency
+        {
+            get
+            {
                 return ResourceManager.GetString("Currency", resourceCulture);
             }
         }
-        
-        public static string Transfer_Fee {
-            get {
+
+        public static string Transfer_Fee
+        {
+            get
+            {
                 return ResourceManager.GetString("Transfer_Fee", resourceCulture);
             }
         }
-        
-        public static string Battery_Transfer_Fee {
-            get {
+
+        public static string Battery_Transfer_Fee
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_Transfer_Fee", resourceCulture);
             }
         }
-        
-        public static string Energy_Tax {
-            get {
+
+        public static string Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Battery_Energy_Tax {
-            get {
+
+        public static string Battery_Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Amount {
-            get {
+
+        public static string Amount
+        {
+            get
+            {
                 return ResourceManager.GetString("Amount", resourceCulture);
             }
         }
-        
-        public static string Production_To_Grid {
-            get {
+
+        public static string Production_To_Grid
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_To_Grid", resourceCulture);
             }
         }
-        
-        public static string If_Battery_Is_Not_Used {
-            get {
+
+        public static string If_Battery_Is_Not_Used
+        {
+            get
+            {
                 return ResourceManager.GetString("If_Battery_Is_Not_Used", resourceCulture);
             }
         }
-        
-        public static string Production_Own_Use {
-            get {
+
+        public static string Production_Own_Use
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Own_Use", resourceCulture);
             }
         }
-        
-        public static string KWh_From_Battery {
-            get {
+
+        public static string KWh_From_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("KWh_From_Battery", resourceCulture);
             }
         }
-        
-        public static string Battery_Currency {
-            get {
+
+        public static string Battery_Currency
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_Currency", resourceCulture);
             }
         }
-        
-        public static string Total {
-            get {
+
+        public static string Total
+        {
+            get
+            {
                 return ResourceManager.GetString("Total", resourceCulture);
             }
         }
-        
-        public static string Interest {
-            get {
+
+        public static string Interest
+        {
+            get
+            {
                 return ResourceManager.GetString("Interest", resourceCulture);
             }
         }
-        
-        public static string Interest_Saved {
-            get {
+
+        public static string Interest_Saved
+        {
+            get
+            {
                 return ResourceManager.GetString("Interest_Saved", resourceCulture);
             }
         }
-        
-        public static string Result {
-            get {
+
+        public static string Result
+        {
+            get
+            {
                 return ResourceManager.GetString("Result", resourceCulture);
             }
         }
-        
-        public static string ROI {
-            get {
+
+        public static string ROI
+        {
+            get
+            {
                 return ResourceManager.GetString("ROI", resourceCulture);
             }
         }
-        
-        public static string Years_Left_Until_ROI {
-            get {
+
+        public static string Years_Left_Until_ROI
+        {
+            get
+            {
                 return ResourceManager.GetString("Years_Left_Until_ROI", resourceCulture);
             }
         }
-        
-        public static string Total_Investment_And_Loan {
-            get {
+
+        public static string Total_Investment_And_Loan
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Investment_And_Loan", resourceCulture);
             }
         }
-        
-        public static string Total_Produced_And_Saved {
-            get {
+
+        public static string Total_Produced_And_Saved
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Produced_And_Saved", resourceCulture);
             }
         }
-        
-        public static string Left_Of_Investment_Cost {
-            get {
+
+        public static string Left_Of_Investment_Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Left_Of_Investment_Cost", resourceCulture);
             }
         }
-        
-        public static string Calculation_Parameters {
-            get {
+
+        public static string Calculation_Parameters
+        {
+            get
+            {
                 return ResourceManager.GetString("Calculation_Parameters", resourceCulture);
             }
         }
-        
-        public static string From_Date {
-            get {
+
+        public static string From_Date
+        {
+            get
+            {
                 return ResourceManager.GetString("From_Date", resourceCulture);
             }
         }
-        
-        public static string Compensation_Electricity_Load {
-            get {
+
+        public static string Compensation_Electricity_Load
+        {
+            get
+            {
                 return ResourceManager.GetString("Compensation_Electricity_Load", resourceCulture);
             }
         }
-        
-        public static string Tax_Reduction {
-            get {
+
+        public static string Tax_Reduction
+        {
+            get
+            {
                 return ResourceManager.GetString("Tax_Reduction", resourceCulture);
             }
         }
-        
-        public static string Tax_Reduction_Discription {
-            get {
+
+        public static string Tax_Reduction_Discription
+        {
+            get
+            {
                 return ResourceManager.GetString("Tax_Reduction_Discription", resourceCulture);
             }
         }
-        
-        public static string Energy_Tax_Comsumption {
-            get {
+
+        public static string Energy_Tax_Comsumption
+        {
+            get
+            {
                 return ResourceManager.GetString("Energy_Tax_Comsumption", resourceCulture);
             }
         }
-        
-        public static string Total_Installed_Kwh {
-            get {
+
+        public static string Total_Installed_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Installed_Kwh", resourceCulture);
             }
         }
-        
-        public static string Use_Spot_Prices {
-            get {
+
+        public static string Use_Spot_Prices
+        {
+            get
+            {
                 return ResourceManager.GetString("Use_Spot_Prices", resourceCulture);
             }
         }
-        
-        public static string Fixed_Price_Kwh {
-            get {
+
+        public static string Fixed_Price_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Fixed_Price_Kwh", resourceCulture);
             }
         }
-        
-        public static string Refresh {
-            get {
+
+        public static string Refresh
+        {
+            get
+            {
                 return ResourceManager.GetString("Refresh", resourceCulture);
             }
         }
-        
-        public static string Export_To_Excel {
-            get {
+
+        public static string Export_To_Excel
+        {
+            get
+            {
                 return ResourceManager.GetString("Export_To_Excel", resourceCulture);
             }
         }
-        
-        public static string Install_Year {
-            get {
+
+        public static string Install_Year
+        {
+            get
+            {
                 return ResourceManager.GetString("Install_Year", resourceCulture);
             }
         }
-        
-        public static string Pick_The_Brand_Of_Your_Electricity_Supplier {
-            get {
+
+        public static string Pick_The_Brand_Of_Your_Electricity_Supplier
+        {
+            get
+            {
                 return ResourceManager.GetString("Pick_The_Brand_Of_Your_Electricity_Supplier", resourceCulture);
             }
         }
-        
-        public static string Pick_The_Electricity_Supplier_Intro_Text {
-            get {
+
+        public static string Pick_The_Electricity_Supplier_Intro_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Pick_The_Electricity_Supplier_Intro_Text", resourceCulture);
             }
         }
-        
-        public static string Username {
-            get {
+
+        public static string Username
+        {
+            get
+            {
                 return ResourceManager.GetString("Username", resourceCulture);
             }
         }
-        
-        public static string Api_Url {
-            get {
+
+        public static string Api_Url
+        {
+            get
+            {
                 return ResourceManager.GetString("Api_Url", resourceCulture);
             }
         }
-        
-        public static string Api_Key {
-            get {
+
+        public static string Api_Key
+        {
+            get
+            {
                 return ResourceManager.GetString("Api_Key", resourceCulture);
             }
         }
-        
-        public static string Install_Date {
-            get {
+
+        public static string Install_Date
+        {
+            get
+            {
                 return ResourceManager.GetString("Install_Date", resourceCulture);
             }
         }
-        
-        public static string Pick_Your_Site {
-            get {
+
+        public static string Pick_Your_Site
+        {
+            get
+            {
                 return ResourceManager.GetString("Pick_Your_Site", resourceCulture);
             }
         }
-        
-        public static string Loan_Press_Add_For_Adding_Interest_Information {
-            get {
+
+        public static string Loan_Press_Add_For_Adding_Interest_Information
+        {
+            get
+            {
                 return ResourceManager.GetString("Loan_Press_Add_For_Adding_Interest_Information", resourceCulture);
             }
         }
-        
-        public static string Investment {
-            get {
+
+        public static string Investment
+        {
+            get
+            {
                 return ResourceManager.GetString("Investment", resourceCulture);
             }
         }
-        
-        public static string Investment_slash_Loan {
-            get {
+
+        public static string Investment_slash_Loan
+        {
+            get
+            {
                 return ResourceManager.GetString("Investment_slash_Loan", resourceCulture);
             }
         }
-        
-        public static string Investment_Loan_Intro_Text {
-            get {
+
+        public static string Investment_Loan_Intro_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Investment_Loan_Intro_Text", resourceCulture);
             }
         }
-        
-        public static string Import_Data {
-            get {
+
+        public static string Import_Data
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Data", resourceCulture);
             }
         }
-        
-        public static string First_Import_Intro_Text {
-            get {
+
+        public static string First_Import_Intro_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("First_Import_Intro_Text", resourceCulture);
             }
         }
-        
-        public static string Start {
-            get {
+
+        public static string Start
+        {
+            get
+            {
                 return ResourceManager.GetString("Start", resourceCulture);
             }
         }
-        
-        public static string Cost {
-            get {
+
+        public static string Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Cost", resourceCulture);
             }
         }
-        
-        public static string Sum {
-            get {
+
+        public static string Sum
+        {
+            get
+            {
                 return ResourceManager.GetString("Sum", resourceCulture);
             }
         }
-        
-        public static string Production_Sold {
-            get {
+
+        public static string Production_Sold
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Sold", resourceCulture);
             }
         }
-        
-        public static string Battery_Charge {
-            get {
+
+        public static string Battery_Charge
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_Charge", resourceCulture);
             }
         }
-        
-        public static string Profit {
-            get {
+
+        public static string Profit
+        {
+            get
+            {
                 return ResourceManager.GetString("Profit", resourceCulture);
             }
         }
-        
-        public static string Compensation_For_Production_To_Grid {
-            get {
+
+        public static string Compensation_For_Production_To_Grid
+        {
+            get
+            {
                 return ResourceManager.GetString("Compensation_For_Production_To_Grid", resourceCulture);
             }
         }
-        
-        public static string Saved_Energy_Tax {
-            get {
+
+        public static string Saved_Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Battery_used {
-            get {
+
+        public static string Battery_used
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_used", resourceCulture);
             }
         }
-        
-        public static string Saved_Cost {
-            get {
+
+        public static string Saved_Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Cost", resourceCulture);
             }
         }
-        
-        public static string Saved_Cost_Battery {
-            get {
+
+        public static string Saved_Cost_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Cost_Battery", resourceCulture);
             }
         }
-        
-        public static string Saved_Transfer_Fee {
-            get {
+
+        public static string Saved_Transfer_Fee
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Transfer_Fee", resourceCulture);
             }
         }
-        
-        public static string Saved_Transfer_Fee_Battery {
-            get {
+
+        public static string Saved_Transfer_Fee_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Transfer_Fee_Battery", resourceCulture);
             }
         }
-        
-        public static string Saved_Energy_Tax_Battery {
-            get {
+
+        public static string Saved_Energy_Tax_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Saved_Energy_Tax_Battery", resourceCulture);
             }
         }
-        
-        public static string Total_Production_Sold_Own_Use {
-            get {
+
+        public static string Total_Production_Sold_Own_Use
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Production_Sold_Own_Use", resourceCulture);
             }
         }
-        
-        public static string Total_Production {
-            get {
+
+        public static string Total_Production
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Production", resourceCulture);
             }
         }
-        
-        public static string Total_Interest {
-            get {
+
+        public static string Total_Interest
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Interest", resourceCulture);
             }
         }
-        
-        public static string Production_Index_Desc_Prod_Per_Day_KWh {
-            get {
+
+        public static string Production_Index_Desc_Prod_Per_Day_KWh
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Index_Desc_Prod_Per_Day_KWh", resourceCulture);
             }
         }
-        
-        public static string Kostal_Intro_Guide_Text {
-            get {
+
+        public static string Kostal_Intro_Guide_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Kostal_Intro_Guide_Text", resourceCulture);
             }
         }
-        
-        public static string SolarEdge_Intro_Guide_Text {
-            get {
+
+        public static string SolarEdge_Intro_Guide_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("SolarEdge_Intro_Guide_Text", resourceCulture);
             }
         }
-        
-        public static string Shortcuts {
-            get {
+
+        public static string Shortcuts
+        {
+            get
+            {
                 return ResourceManager.GetString("Shortcuts", resourceCulture);
             }
         }
-        
-        public static string Tools_And_Features {
-            get {
+
+        public static string Tools_And_Features
+        {
+            get
+            {
                 return ResourceManager.GetString("Tools_And_Features", resourceCulture);
             }
         }
-        
-        public static string Sold {
-            get {
+
+        public static string Sold
+        {
+            get
+            {
                 return ResourceManager.GetString("Sold", resourceCulture);
             }
         }
-        
-        public static string Own_Use {
-            get {
+
+        public static string Own_Use
+        {
+            get
+            {
                 return ResourceManager.GetString("Own_Use", resourceCulture);
             }
         }
-        
-        public static string Consumption {
-            get {
+
+        public static string Consumption
+        {
+            get
+            {
                 return ResourceManager.GetString("Consumption", resourceCulture);
             }
         }
-        
-        public static string Total_Purchased {
-            get {
+
+        public static string Total_Purchased
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Purchased", resourceCulture);
             }
         }
-        
-        public static string Today {
-            get {
+
+        public static string Today
+        {
+            get
+            {
                 return ResourceManager.GetString("Today", resourceCulture);
             }
         }
-        
-        public static string Day {
-            get {
+
+        public static string Day
+        {
+            get
+            {
                 return ResourceManager.GetString("Day", resourceCulture);
             }
         }
-        
-        public static string Week {
-            get {
+
+        public static string Week
+        {
+            get
+            {
                 return ResourceManager.GetString("Week", resourceCulture);
             }
         }
-        
-        public static string Month {
-            get {
+
+        public static string Month
+        {
+            get
+            {
                 return ResourceManager.GetString("Month", resourceCulture);
             }
         }
-        
-        public static string Simulate_Battery {
-            get {
+
+        public static string Simulate_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Simulate_Battery", resourceCulture);
             }
         }
-        
-        public static string Simulate {
-            get {
+
+        public static string Simulate
+        {
+            get
+            {
                 return ResourceManager.GetString("Simulate", resourceCulture);
             }
         }
-        
-        public static string Battery_Kwh {
-            get {
+
+        public static string Battery_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery_Kwh", resourceCulture);
             }
         }
-        
-        public static string Production_And_Consumption {
-            get {
+
+        public static string Production_And_Consumption
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_And_Consumption", resourceCulture);
             }
         }
-        
-        public static string Costs_And_Revenues {
-            get {
+
+        public static string Costs_And_Revenues
+        {
+            get
+            {
                 return ResourceManager.GetString("Costs_And_Revenues", resourceCulture);
             }
         }
-        
-        public static string Production_Profit_Sold {
-            get {
+
+        public static string Production_Profit_Sold
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Profit_Sold", resourceCulture);
             }
         }
-        
-        public static string Production_Grid_Compensation {
-            get {
+
+        public static string Production_Grid_Compensation
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Grid_Compensation", resourceCulture);
             }
         }
-        
-        public static string Production_Saved_Energy_Tax {
-            get {
+
+        public static string Production_Saved_Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_Saved_Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Own_Use_Saved_Cost {
-            get {
+
+        public static string Own_Use_Saved_Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Own_Use_Saved_Cost", resourceCulture);
             }
         }
-        
-        public static string Own_Use_Saved_Transfer_Fee {
-            get {
+
+        public static string Own_Use_Saved_Transfer_Fee
+        {
+            get
+            {
                 return ResourceManager.GetString("Own_Use_Saved_Transfer_Fee", resourceCulture);
             }
         }
-        
-        public static string Own_Use_Saved_Energy_Tax {
-            get {
+
+        public static string Own_Use_Saved_Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Own_Use_Saved_Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Purchase_Cost {
-            get {
+
+        public static string Purchase_Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Purchase_Cost", resourceCulture);
             }
         }
-        
-        public static string Purchase_Transfer_Fee {
-            get {
+
+        public static string Purchase_Transfer_Fee
+        {
+            get
+            {
                 return ResourceManager.GetString("Purchase_Transfer_Fee", resourceCulture);
             }
         }
-        
-        public static string Purchase_Energy_Tax {
-            get {
+
+        public static string Purchase_Energy_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Purchase_Energy_Tax", resourceCulture);
             }
         }
-        
-        public static string Add_Battery {
-            get {
+
+        public static string Add_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Add_Battery", resourceCulture);
             }
         }
-        
-        public static string Remove_Battery {
-            get {
+
+        public static string Remove_Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Remove_Battery", resourceCulture);
             }
         }
-        
-        public static string Balance_Production_Minus_Consumption {
-            get {
+
+        public static string Balance_Production_Minus_Consumption
+        {
+            get
+            {
                 return ResourceManager.GetString("Balance_Production_Minus_Consumption", resourceCulture);
             }
         }
-        
-        public static string Battery {
-            get {
+
+        public static string Battery
+        {
+            get
+            {
                 return ResourceManager.GetString("Battery", resourceCulture);
             }
         }
-        
-        public static string Generating_Report_Please_Wait {
-            get {
+
+        public static string Generating_Report_Please_Wait
+        {
+            get
+            {
                 return ResourceManager.GetString("Generating_Report_Please_Wait", resourceCulture);
             }
         }
-        
-        public static string The_Login_Failed_Check_That_You_Entered_The_Correct_Information {
-            get {
+
+        public static string The_Login_Failed_Check_That_You_Entered_The_Correct_Information
+        {
+            get
+            {
                 return ResourceManager.GetString("The_Login_Failed_Check_That_You_Entered_The_Correct_Information", resourceCulture);
             }
         }
-        
-        public static string Back {
-            get {
+
+        public static string Back
+        {
+            get
+            {
                 return ResourceManager.GetString("Back", resourceCulture);
             }
         }
-        
-        public static string Calculation_Factors {
-            get {
+
+        public static string Calculation_Factors
+        {
+            get
+            {
                 return ResourceManager.GetString("Calculation_Factors", resourceCulture);
             }
         }
-        
-        public static string Calculation_Factors_Intro_Text {
-            get {
+
+        public static string Calculation_Factors_Intro_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Calculation_Factors_Intro_Text", resourceCulture);
             }
         }
-        
-        public static string Total_Installed_Panels_Kw {
-            get {
+
+        public static string Total_Installed_Panels_Kw
+        {
+            get
+            {
                 return ResourceManager.GetString("Total_Installed_Panels_Kw", resourceCulture);
             }
         }
-        
-        public static string Application_Version {
-            get {
+
+        public static string Application_Version
+        {
+            get
+            {
                 return ResourceManager.GetString("Application_Version", resourceCulture);
             }
         }
-        
-        public static string Support_And_Feedback {
-            get {
+
+        public static string Support_And_Feedback
+        {
+            get
+            {
                 return ResourceManager.GetString("Support_And_Feedback", resourceCulture);
             }
         }
-        
-        public static string Add {
-            get {
+
+        public static string Add
+        {
+            get
+            {
                 return ResourceManager.GetString("Add", resourceCulture);
             }
         }
-        
-        public static string Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More {
-            get {
+
+        public static string Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More
+        {
+            get
+            {
                 return ResourceManager.GetString("Importing_Data_From_Your_Inverter_Ended_As_It_Only_Allows_And_More", resourceCulture);
             }
         }
-        
-        public static string Import_Of_Production_Done {
-            get {
+
+        public static string Import_Of_Production_Done
+        {
+            get
+            {
                 return ResourceManager.GetString("Import_Of_Production_Done", resourceCulture);
             }
         }
-        
-        public static string Step_Nr_of_Nr_InfoText {
-            get {
+
+        public static string Step_Nr_of_Nr_InfoText
+        {
+            get
+            {
                 return ResourceManager.GetString("Step_Nr_of_Nr_InfoText", resourceCulture);
             }
         }
-        
-        public static string Fun_Facts {
-            get {
+
+        public static string Fun_Facts
+        {
+            get
+            {
                 return ResourceManager.GetString("Fun_Facts", resourceCulture);
             }
         }
-        
-        public static string Average_Purchased_Cost_Per_Kwh {
-            get {
+
+        public static string Average_Purchased_Cost_Per_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Average_Purchased_Cost_Per_Kwh", resourceCulture);
             }
         }
-        
-        public static string Average_Production_Sold_Profit_Per_Kwh {
-            get {
+
+        public static string Average_Production_Sold_Profit_Per_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Average_Production_Sold_Profit_Per_Kwh", resourceCulture);
             }
         }
-        
-        public static string Average_Production_Own_Use_Saved_Per_Kwh {
-            get {
+
+        public static string Average_Production_Own_Use_Saved_Per_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Average_Production_Own_Use_Saved_Per_Kwh", resourceCulture);
             }
         }
-        
-        public static string Average_Battery_Used_Saved_Per_Kwh {
-            get {
+
+        public static string Average_Battery_Used_Saved_Per_Kwh
+        {
+            get
+            {
                 return ResourceManager.GetString("Average_Battery_Used_Saved_Per_Kwh", resourceCulture);
             }
         }
-        
-        public static string Synchronization_Not_Started_As_We_Have_All_Data_And_More {
-            get {
+
+        public static string Synchronization_Not_Started_As_We_Have_All_Data_And_More
+        {
+            get
+            {
                 return ResourceManager.GetString("Synchronization_Not_Started_As_We_Have_All_Data_And_More", resourceCulture);
             }
         }
-        
-        public static string Amortization {
-            get {
+
+        public static string Amortization
+        {
+            get
+            {
                 return ResourceManager.GetString("Amortization", resourceCulture);
             }
         }
-        
-        public static string Prices {
-            get {
+
+        public static string Prices
+        {
+            get
+            {
                 return ResourceManager.GetString("Prices", resourceCulture);
             }
         }
-        
-        public static string Buy_Transfer_Fee_Tax {
-            get {
+
+        public static string Buy_Transfer_Fee_Tax
+        {
+            get
+            {
                 return ResourceManager.GetString("Buy_Transfer_Fee_Tax", resourceCulture);
             }
         }
-        
-        public static string Sell_Tax_Red_Net_Ben {
-            get {
+
+        public static string Sell_Tax_Red_Net_Ben
+        {
+            get
+            {
                 return ResourceManager.GetString("Sell_Tax_Red_Net_Ben", resourceCulture);
             }
         }
-        
-        public static string Grid {
-            get {
+
+        public static string Grid
+        {
+            get
+            {
                 return ResourceManager.GetString("Grid", resourceCulture);
             }
         }
-        
-        public static string Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption {
-            get {
+
+        public static string Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption
+        {
+            get
+            {
                 return ResourceManager.GetString("Missed_Value_Tax_Reduction_Production_Higher_Than_Consumption", resourceCulture);
             }
         }
-        
-        public static string Peak_Hour_Purchased {
-            get {
+
+        public static string Peak_Hour_Purchased
+        {
+            get
+            {
                 return ResourceManager.GetString("Peak_Hour_Purchased", resourceCulture);
             }
         }
-        
-        public static string Peak_Hour_Purchased_And_Own_Use {
-            get {
+
+        public static string Peak_Hour_Purchased_And_Own_Use
+        {
+            get
+            {
                 return ResourceManager.GetString("Peak_Hour_Purchased_And_Own_Use", resourceCulture);
             }
         }
-        
-        public static string Energy_Peak_Reduction {
-            get {
+
+        public static string Energy_Peak_Reduction
+        {
+            get
+            {
                 return ResourceManager.GetString("Energy_Peak_Reduction", resourceCulture);
             }
         }
-        
-        public static string Energy_Peak_Reduction_Saved {
-            get {
+
+        public static string Energy_Peak_Reduction_Saved
+        {
+            get
+            {
                 return ResourceManager.GetString("Energy_Peak_Reduction_Saved", resourceCulture);
             }
         }
-        
-        public static string Show_Report {
-            get {
+
+        public static string Show_Report
+        {
+            get
+            {
                 return ResourceManager.GetString("Show_Report", resourceCulture);
             }
         }
-        
-        public static string Price {
-            get {
+
+        public static string Price
+        {
+            get
+            {
                 return ResourceManager.GetString("Price", resourceCulture);
             }
         }
-        
-        public static string Annual_Savings {
-            get {
+
+        public static string Annual_Savings
+        {
+            get
+            {
                 return ResourceManager.GetString("Annual_Savings", resourceCulture);
             }
         }
-        
-        public static string Yield {
-            get {
+
+        public static string Yield
+        {
+            get
+            {
                 return ResourceManager.GetString("Yield", resourceCulture);
             }
         }
-        
-        public static string Report {
-            get {
+
+        public static string Report
+        {
+            get
+            {
                 return ResourceManager.GetString("Report", resourceCulture);
             }
         }
-        
-        public static string Savings_Calculation {
-            get {
+
+        public static string Savings_Calculation
+        {
+            get
+            {
                 return ResourceManager.GetString("Savings_Calculation", resourceCulture);
             }
         }
-        
-        public static string Year_Overview {
-            get {
+
+        public static string Year_Overview
+        {
+            get
+            {
                 return ResourceManager.GetString("Year_Overview", resourceCulture);
             }
         }
-        
-        public static string Details_Year {
-            get {
+
+        public static string Details_Year
+        {
+            get
+            {
                 return ResourceManager.GetString("Details_Year", resourceCulture);
             }
         }
-        
-        public static string Loading {
-            get {
+
+        public static string Loading
+        {
+            get
+            {
                 return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
-        
-        public static string Close {
-            get {
+
+        public static string Close
+        {
+            get
+            {
                 return ResourceManager.GetString("Close", resourceCulture);
             }
         }
-        
-        public static string Production_And_Consumption_Short {
-            get {
+
+        public static string Production_And_Consumption_Short
+        {
+            get
+            {
                 return ResourceManager.GetString("Production_And_Consumption_Short", resourceCulture);
             }
         }
-        
-        public static string Real_Development_Electricity_Price {
-            get {
+
+        public static string Real_Development_Electricity_Price
+        {
+            get
+            {
                 return ResourceManager.GetString("Real_Development_Electricity_Price", resourceCulture);
             }
         }
-        
-        public static string Panel_Degradation_Per_Year {
-            get {
+
+        public static string Panel_Degradation_Per_Year
+        {
+            get
+            {
                 return ResourceManager.GetString("Panel_Degradation_Per_Year", resourceCulture);
             }
         }
-        
-        public static string Power_Tariff {
-            get {
+
+        public static string Power_Tariff
+        {
+            get
+            {
                 return ResourceManager.GetString("Power_Tariff", resourceCulture);
             }
         }
-        
-        public static string Power_Tariff_Intro_Text {
-            get {
+
+        public static string Power_Tariff_Intro_Text
+        {
+            get
+            {
                 return ResourceManager.GetString("Power_Tariff_Intro_Text", resourceCulture);
             }
         }
-        
-        public static string Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month {
-            get {
+
+        public static string Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month
+        {
+            get
+            {
                 return ResourceManager.GetString("Number_Of_Peaks_To_Calculate_The_Fee_On_Per_Month", resourceCulture);
             }
         }
-        
-        public static string Use_Peaks_From_Same_Day_In_Calculation {
-            get {
+
+        public static string Use_Peaks_From_Same_Day_In_Calculation
+        {
+            get
+            {
                 return ResourceManager.GetString("Use_Peaks_From_Same_Day_In_Calculation", resourceCulture);
             }
         }
-        
-        public static string Period {
-            get {
+
+        public static string Period
+        {
+            get
+            {
                 return ResourceManager.GetString("Period", resourceCulture);
             }
         }
-        
-        public static string Weekday {
-            get {
+
+        public static string Weekday
+        {
+            get
+            {
                 return ResourceManager.GetString("Weekday", resourceCulture);
             }
         }
-        
-        public static string Weekend {
-            get {
+
+        public static string Weekend
+        {
+            get
+            {
                 return ResourceManager.GetString("Weekend", resourceCulture);
             }
         }
-        
-        public static string Hour {
-            get {
+
+        public static string Hour
+        {
+            get
+            {
                 return ResourceManager.GetString("Hour", resourceCulture);
             }
         }
-        
-        public static string Peak_Tariff_Purchase_Cost {
-            get {
+
+        public static string Peak_Tariff_Purchase_Cost
+        {
+            get
+            {
                 return ResourceManager.GetString("Peak_Tariff_Purchase_Cost", resourceCulture);
             }
         }
-        
-        public static string Swedish {
-            get {
+
+        public static string Swedish
+        {
+            get
+            {
                 return ResourceManager.GetString("Swedish", resourceCulture);
             }
         }
-        
-        public static string English {
-            get {
+
+        public static string English
+        {
+            get
+            {
                 return ResourceManager.GetString("English", resourceCulture);
             }
         }
-        
-        public static string Language {
-            get {
+
+        public static string Language
+        {
+            get
+            {
                 return ResourceManager.GetString("Language", resourceCulture);
             }
         }
-        
-        public static string Internet_Connection_Missing {
-            get {
+
+        public static string Internet_Connection_Missing
+        {
+            get
+            {
                 return ResourceManager.GetString("Internet_Connection_Missing", resourceCulture);
             }
         }
-        
-        public static string User_Need_To_Log_In_Again {
-            get {
+
+        public static string User_Need_To_Log_In_Again
+        {
+            get
+            {
                 return ResourceManager.GetString("User_Need_To_Log_In_Again", resourceCulture);
             }
         }
-        
-        public static string Server_Error {
-            get {
+
+        public static string Server_Error
+        {
+            get
+            {
                 return ResourceManager.GetString("Server_Error", resourceCulture);
             }
         }
-        
-        public static string No_Internet {
-            get {
+
+        public static string No_Internet
+        {
+            get
+            {
                 return ResourceManager.GetString("No_Internet", resourceCulture);
             }
         }
-        
-        public static string Current_API_Not_Found_On_Server {
-            get {
+
+        public static string Current_API_Not_Found_On_Server
+        {
+            get
+            {
                 return ResourceManager.GetString("Current_API_Not_Found_On_Server", resourceCulture);
             }
         }
-        
-        public static string Monkey {
-            get {
+
+        public static string Monkey
+        {
+            get
+            {
                 return ResourceManager.GetString("Monkey", resourceCulture);
             }
         }
-        
-        public static string Remove_Tax_Reduction {
-            get {
+
+        public static string Remove_Tax_Reduction
+        {
+            get
+            {
                 return ResourceManager.GetString("Remove_Tax_Reduction", resourceCulture);
             }
         }
-        
-        public static string Theme {
-            get {
+
+        public static string Theme
+        {
+            get
+            {
                 return ResourceManager.GetString("Theme", resourceCulture);
             }
         }
-        
-        public static string Light_Theme {
-            get {
+
+        public static string Light_Theme
+        {
+            get
+            {
                 return ResourceManager.GetString("Light_Theme", resourceCulture);
             }
         }
-        
-        public static string Dark_Theme {
-            get {
+
+        public static string Dark_Theme
+        {
+            get
+            {
                 return ResourceManager.GetString("Dark_Theme", resourceCulture);
             }
         }
-        
-        public static string System_Theme {
-            get {
+
+        public static string System_Theme
+        {
+            get
+            {
                 return ResourceManager.GetString("System_Theme", resourceCulture);
             }
         }

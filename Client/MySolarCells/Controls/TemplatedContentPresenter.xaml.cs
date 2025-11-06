@@ -9,7 +9,7 @@ public partial class TemplatedContentPresenter : ContentView
 
     public static readonly BindableProperty DataTemplateSelectorProperty = BindableProperty.Create(nameof(DataTemplateSelector), typeof(DataTemplateSelector), typeof(TemplatedContentPresenter), propertyChanged: DataTemplateSelectorChanged);
     public static readonly BindableProperty DataTemplateProperty = BindableProperty.Create(nameof(DataTemplate), typeof(DataTemplate), typeof(TemplatedContentPresenter), propertyChanged: DataTemplateChanged);
-    public static readonly BindableProperty DataProperty = BindableProperty.Create(nameof(Data), typeof(object), typeof(TemplatedContentPresenter),  propertyChanged: DataChanged);
+    public static readonly BindableProperty DataProperty = BindableProperty.Create(nameof(Data), typeof(object), typeof(TemplatedContentPresenter), propertyChanged: DataChanged);
 
     public DataTemplateSelector DataTemplateSelector
     {

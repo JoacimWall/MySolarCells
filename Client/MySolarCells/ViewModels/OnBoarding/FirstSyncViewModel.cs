@@ -5,9 +5,9 @@ public class FirstSyncViewModel : BaseViewModel
     private readonly IGridSupplierInterface gridSupplierService;
     private readonly IInverterServiceInterface inverterService;
     private readonly MscDbContext mscDbContext;
-    public FirstSyncViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public FirstSyncViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.mscDbContext = mscDbContext;
         gridSupplierService = ServiceHelper.GetGridSupplierService(this.mscDbContext.ElectricitySupplier.First().ElectricitySupplierType);
@@ -35,8 +35,8 @@ public class FirstSyncViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.InvestmentAndLoanDone)
         {
             ShowProgressStatus = true;
-            ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText,"1","2", AppResources.Import_Data_From_Electricity_Supplier);
-            ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount,"0");
+            ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText, "1", "2", AppResources.Import_Data_From_Electricity_Supplier);
+            ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
             var result = await gridSupplierService.Sync(HomeService.FirstElectricitySupplier().FromDate, progress, 0);
             if (!result.WasSuccessful)
@@ -57,7 +57,7 @@ public class FirstSyncViewModel : BaseViewModel
             ProgressStatus = string.Format(AppResources.Step_Nr_of_Nr_InfoText, "2", "2", AppResources.Import_Data_From_Inverter);
             ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, "0");
             await Task.Delay(200);
-            
+
             var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == HomeService.CurrentHome().HomeId);
 
             var differenceInverter = DateTime.Now - inverter.FromDate;
@@ -84,10 +84,10 @@ public class FirstSyncViewModel : BaseViewModel
                     await DialogService.ShowAlertAsync(result.Model.Message, AppResources.My_Solar_Cells, AppResources.Ok);
 
                 SettingsService.OnboardingStatus = OnboardingStatusEnum.OnboardingDone;
-                if (Application.Current != null) 
+                if (Application.Current != null)
                     Application.Current.MainPage = new AppShell();
             }
-            
+
         }
     }
 
@@ -103,7 +103,7 @@ public class FirstSyncViewModel : BaseViewModel
         var percentage = comp / tot;
         //UploadProgress.ProgressTo(percentage, 100, Easing.Linear);
         ProgressPercent = (float)percentage * 100;
-        ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, completed.ToString()); 
+        ProgressSubStatus = string.Format(AppResources.Saved_Rows_Amount, completed.ToString());
     }
     private bool startButtonEnable = true;
     public bool StartButtonEnable
@@ -118,13 +118,13 @@ public class FirstSyncViewModel : BaseViewModel
         get => showProgressStatus;
         set => SetProperty(ref showProgressStatus, value);
     }
-    private string progressStatus ="";
+    private string progressStatus = "";
     public string ProgressStatus
     {
         get => progressStatus;
         set => SetProperty(ref progressStatus, value);
     }
-    private string progressSubStatus="";
+    private string progressSubStatus = "";
     public string ProgressSubStatus
     {
         get => progressSubStatus;

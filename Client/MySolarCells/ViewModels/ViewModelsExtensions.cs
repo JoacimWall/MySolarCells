@@ -3,7 +3,7 @@ public static class ViewModelsExtensions
 {
     public static MauiAppBuilder ConfigureViewModels(this MauiAppBuilder builder)
     {
-        
+
         //Onboarding
         builder.Services.AddTransient<ElectricitySupplierViewModel>();
         builder.Services.AddTransient<InverterViewModel>();

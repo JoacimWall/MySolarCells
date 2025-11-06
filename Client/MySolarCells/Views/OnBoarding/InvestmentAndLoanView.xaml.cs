@@ -2,9 +2,9 @@
 
 public partial class InvestmentAndLoanView : BaseContentPage
 {
-	public InvestmentAndLoanView(InvestmentAndLoanViewModel vm)
-	{
-		InitializeComponent();
+    public InvestmentAndLoanView(InvestmentAndLoanViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

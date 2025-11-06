@@ -1,16 +1,16 @@
 namespace MySolarCellsSQLite.Sqlite.Models;
 
-public  class Home : ObservableObject
+public class Home : ObservableObject
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int HomeId { get; set; }
-    [Required,StringLength(50)]
+    [Required, StringLength(50)]
     public required string Name { get; set; }
 
-    [Required,StringLength(5)]
+    [Required, StringLength(5)]
     public required string EnergyUnit { get; set; } = "kWh";
-   
+
 
     [Required, StringLength(5)] public required string CurrencyUnit { get; set; } = "Sek";
     private ObservableCollection<ElectricitySupplier> electricitySuppliers = new ObservableCollection<ElectricitySupplier>();

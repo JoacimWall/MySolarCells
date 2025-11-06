@@ -9,15 +9,15 @@ namespace MySolarCells.Services;
 
 public interface IRestClient
 {
-    Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecutePostAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
-    Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true);
-    Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecutePostBoolAsync(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,
         bool autoLogInOnUnauthorized = true);
 
-    Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null,Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
+    Task<Result<T>> ExecutePatchAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true);
     public bool RemoveTokens();
     public void ReInit();
     public void ClearCookieContainer();
@@ -138,9 +138,9 @@ public class RestClient : IRestClient
             $"Log Api: {(DateTime.Now - start).TotalMilliseconds.ToString(CultureInfo.InvariantCulture)} milliseconds for Api call:{query}");
 #endif
     }
-public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
-{
-    var logTime = DateTime.Now;
+    public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnResponseHeadersAsync<T>(string query, object? data = null, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
+    {
+        var logTime = DateTime.Now;
         try
         {
             //This so only run this when needed 
@@ -228,17 +228,17 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                 { "Info", "Error in ExecuteDeleteBoolAsync" },
                 { "Query", query },
                 { "QueryTime", (DateTime.Now - logTime).TotalSeconds.ToString(CultureInfo.InvariantCulture) }
-               
+
             };
             logService.ReportErrorToAppCenter(ex, logic);
 
-           
-           return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(ex.Message), null);
-        }
-      
-}
 
-    public async Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
+            return new Tuple<Result<T>, HttpResponseHeaders?>(new Result<T>(ex.Message), null);
+        }
+
+    }
+
+    public async Task<Result<T>> ExecuteGetAsync<T>(string query, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -272,7 +272,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
                         if (typeof(T) == new BoolModel().GetType())
                         {
                             var answer = new BoolModel
-                                { ApiResponse = await JsonSerializer.DeserializeAsync<bool>(stream, jsonOptions) };
+                            { ApiResponse = await JsonSerializer.DeserializeAsync<bool>(stream, jsonOptions) };
                             //"rememberMe": true
                             var modelString = JsonSerializer.Serialize(answer, jsonOptions);
 
@@ -354,7 +354,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         return new Result<T>("Logic error in code");
     }
 
-    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
+    public async Task<Result<bool>> ExecuteDeleteBoolAsync(string query, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -446,7 +446,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         return new Result<bool>("Logic error in code");
     }
 
-    public async Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null,bool autoLogInOnUnauthorized = true)
+    public async Task<Result<T>> ExecuteDeleteAsync<T>(string query, Dictionary<string, string>? parameters = null, bool autoLogInOnUnauthorized = true)
     {
         var logTime = DateTime.Now;
         var retryCount = 0;
@@ -850,7 +850,7 @@ public async Task<Tuple<Result<T>, HttpResponseHeaders?>> ExecutePostReturnRespo
         client.DefaultRequestHeaders.Remove("Authorization");
         return true;
     }
-    
+
     #endregion
 }
 public class MyRestClientGeneric : IMyRestClientGeneric
@@ -859,8 +859,8 @@ public class MyRestClientGeneric : IMyRestClientGeneric
     {
         //IMemberService? memberService = ServiceHelper.GetService<IMemberService>();
         //return await memberService.SilentLogin(navigateToLoginOnError);
-       return await Task.FromResult(false);
-      
+        return await Task.FromResult(false);
+
     }
 }
 public class TokenModel

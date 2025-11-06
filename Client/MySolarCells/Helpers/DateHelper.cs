@@ -10,8 +10,8 @@ public static class DateHelper
         };
         result.Yesterday = result.BaseDate.AddDays(-1);
         result.ThisWeekStart = result.BaseDate.AddDays(-(int)result.BaseDate.DayOfWeek);
-            //fix for sunday
-            if (result.ThisWeekStart.DayOfWeek != DayOfWeek.Monday)
+        //fix for sunday
+        if (result.ThisWeekStart.DayOfWeek != DayOfWeek.Monday)
             result.ThisWeekStart = result.ThisWeekStart.AddDays(1);
 
         result.ThisWeekEnd = result.ThisWeekStart.AddDays(7).AddSeconds(-1);
@@ -33,12 +33,12 @@ public static class DateHelper
     }
     public static DateTime MillisToDateTime(long milliseconds)
     {
-      
+
         TimeSpan time = TimeSpan.FromMilliseconds(milliseconds);
         DateTime startDate = Jan1St1970 + time;
         return startDate.ToLocalTime();
     }
-    
+
 }
 public class RelatedDateResult
 {

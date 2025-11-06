@@ -3,9 +3,9 @@
 public class InvestmentAndLoanViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public InvestmentAndLoanViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public InvestmentAndLoanViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
 
         this.mscDbContext = mscDbContext;
@@ -25,14 +25,14 @@ public class InvestmentAndLoanViewModel : BaseViewModel
 
     }
 
-    public ICommand AddInvestmentLonCommand => new Command( AddInvestLon);
-    public ICommand AddInterestCommand => new Command( AddInterest);
+    public ICommand AddInvestmentLonCommand => new Command(AddInvestLon);
+    public ICommand AddInterestCommand => new Command(AddInterest);
     public ICommand SaveCommand => new Command(async () => await Save());
-    
+
 
     private async Task Save()
     {
-        
+
         if (selectedInvestmentAndLoan.InvestmentAndLoanId == 0)
             mscDbContext.InvestmentAndLon.Add(selectedInvestmentAndLoan);
         else //update
@@ -42,7 +42,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
             dbEntity.Investment = selectedInvestmentAndLoan.Investment;
             dbEntity.Description = selectedInvestmentAndLoan.Description;
             dbEntity.Loan = selectedInvestmentAndLoan.Loan;
-            
+
             //dbEntity.Interest.First().Interest = SelectedInterest.Interest;
 
         }
@@ -50,7 +50,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         if (SettingsService.OnboardingStatus == OnboardingStatusEnum.OnboardingDone)
         {
             await GoBack();
-           
+
         }
         else
         {
@@ -59,7 +59,7 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         }
     }
 
-    private void  AddInterest()
+    private void AddInterest()
     {
         SelectedInvestmentAndLoan.Interest.Add(new InvestmentAndLoanInterest { Description = AppResources.My_Description, FromDate = DateTime.Today });
         SelectedInterest = SelectedInvestmentAndLoan.Interest.Last();
@@ -79,14 +79,14 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         set => SetProperty(ref investmentAndLoans, value);
     }
 
-    private InvestmentAndLoan selectedInvestmentAndLoan = new( ){ Description = "" };
+    private InvestmentAndLoan selectedInvestmentAndLoan = new() { Description = "" };
     public InvestmentAndLoan SelectedInvestmentAndLoan
     {
         get => selectedInvestmentAndLoan;
         set
         {
             SetProperty(ref selectedInvestmentAndLoan, value);
-            if (selectedInvestmentAndLoan.Interest.Count >0)
+            if (selectedInvestmentAndLoan.Interest.Count > 0)
                 SelectedInterest = selectedInvestmentAndLoan.Interest.Last();
         }
     }
@@ -103,6 +103,6 @@ public class InvestmentAndLoanViewModel : BaseViewModel
         set => SetProperty(ref isOnboardingMode, value);
     }
 
-   
+
 }
 

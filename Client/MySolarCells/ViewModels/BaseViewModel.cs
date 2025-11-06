@@ -11,13 +11,13 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     protected IHomeService HomeService { get; set; }
     protected IInternetConnectionService InternetConnectionService { get; set; }
     public BaseViewModel(IDialogService dialogService, IAnalyticsService analyticsService,
-        IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService)
+        IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService)
     {
         DialogService = dialogService;
         AnalyticsService = analyticsService;
         InternetConnectionService = internetConnectionService;
         LogService = logService;
-        SettingsService =  settingsService;
+        SettingsService = settingsService;
         HomeService = homeService;
         FirstTimeAppearing = true;
         FirstTimeNavigatingTo = true;
@@ -104,7 +104,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     }
 
     protected virtual async Task<bool> NavBackIsAllowed() => await Task.FromResult(true);
-    
+
     public virtual void CleanUp() { }
     public virtual void OnAppearing() => OnAppearingLocal();
     public virtual void OnDisappearing() { }
@@ -222,18 +222,18 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
     {
         try
         {
-            
-                if (Application.Current != null && Application.Current.MainPage is Shell mainPage)
+
+            if (Application.Current != null && Application.Current.MainPage is Shell mainPage)
+            {
+                // We cannot remove root page so lets check the count before we remove
+                var indexToRemove = mainPage.Navigation.NavigationStack.Count - 2;
+                if (indexToRemove > 0)
                 {
-                    // We cannot remove root page so lets check the count before we remove
-                    var indexToRemove = mainPage.Navigation.NavigationStack.Count - 2;
-                    if (indexToRemove > 0)
-                    {
-                        RunCleanUp(mainPage.Navigation.NavigationStack[indexToRemove]);
-                        mainPage.Navigation.RemovePage(mainPage.Navigation.NavigationStack[indexToRemove]);
-                    }
+                    RunCleanUp(mainPage.Navigation.NavigationStack[indexToRemove]);
+                    mainPage.Navigation.RemovePage(mainPage.Navigation.NavigationStack[indexToRemove]);
                 }
-           
+            }
+
         }
         catch (Exception ex)
         {
@@ -246,7 +246,7 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         }
     }
     #endregion
-   
+
     #region Public functions
     public void ObservableCollectionCallback(IEnumerable collection, object context, Action? accessMethod, bool writeAccess)
     {
@@ -291,68 +291,68 @@ public partial class BaseViewModel : ObservableObject, IQueryAttributable
         get => stateErrorMessage;
         set => SetProperty(ref stateErrorMessage, value);
     }
-   
-    
+
+
     public ViewState CurrentViewState { get; set; }
     public virtual void SetCurrentState(TsViewState currentState)
     {
-        
-            switch (currentState)
-            {
-                case TsViewState.Refreshing:
-                    IsRefreshing = true;
-                    IsLoading = false;
-                    IsError = false;
-                    IsSuccess = false;
-                    IsEmpty = false;
-                    IsSaving = false;
-                    break;
 
-                case TsViewState.Loading:
-                    IsRefreshing = false;
-                    IsLoading = true;
-                    IsError = false;
-                    IsSuccess = false;
-                    IsEmpty = false;
-                    IsSaving = false;
-                    break;
-                case TsViewState.Success:
-                    IsRefreshing = false;
-                    IsLoading = false;
-                    IsError = false;
-                    IsSuccess = true;
-                    IsEmpty = false;
-                    IsSaving = false;
-                    break;
-                case TsViewState.Empty:
-                    IsRefreshing = false;
-                    IsLoading = false;
-                    IsError = false;
-                    IsSuccess = false;
-                    IsEmpty = true;
-                    IsSaving = false;
-                    break;
-                case TsViewState.Saving:
-                    IsRefreshing = false;
-                    IsLoading = false;
-                    IsError = false;
-                    IsSuccess = false;
-                    IsEmpty = false;
-                    IsSaving = true;
-                    break;
-                default:
-                    IsRefreshing = false;
-                    IsLoading = false;
-                    IsError = false;
-                    IsSuccess = false;
-                    IsError = true;
-                    IsSaving = false;
-                    break;
-            }
-         
-            if ((ViewState)currentState != CurrentViewState)
-                CurrentViewState = (ViewState)currentState;
-        
+        switch (currentState)
+        {
+            case TsViewState.Refreshing:
+                IsRefreshing = true;
+                IsLoading = false;
+                IsError = false;
+                IsSuccess = false;
+                IsEmpty = false;
+                IsSaving = false;
+                break;
+
+            case TsViewState.Loading:
+                IsRefreshing = false;
+                IsLoading = true;
+                IsError = false;
+                IsSuccess = false;
+                IsEmpty = false;
+                IsSaving = false;
+                break;
+            case TsViewState.Success:
+                IsRefreshing = false;
+                IsLoading = false;
+                IsError = false;
+                IsSuccess = true;
+                IsEmpty = false;
+                IsSaving = false;
+                break;
+            case TsViewState.Empty:
+                IsRefreshing = false;
+                IsLoading = false;
+                IsError = false;
+                IsSuccess = false;
+                IsEmpty = true;
+                IsSaving = false;
+                break;
+            case TsViewState.Saving:
+                IsRefreshing = false;
+                IsLoading = false;
+                IsError = false;
+                IsSuccess = false;
+                IsEmpty = false;
+                IsSaving = true;
+                break;
+            default:
+                IsRefreshing = false;
+                IsLoading = false;
+                IsError = false;
+                IsSuccess = false;
+                IsError = true;
+                IsSaving = false;
+                break;
+        }
+
+        if ((ViewState)currentState != CurrentViewState)
+            CurrentViewState = (ViewState)currentState;
+
     }
 
 

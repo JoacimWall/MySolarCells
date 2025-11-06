@@ -5,15 +5,15 @@ public class InverterViewModel : BaseViewModel
     private InverterLoginResponse? inverterLoginResponse;
     private readonly MscDbContext mscDbContext;
     IInverterServiceInterface? inverterService;
-    public InverterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService, homeService)
+    public InverterViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.mscDbContext = mscDbContext;
         InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.HomeAssistent.ToString(), ItemValue = (int)InverterTypeEnum.HomeAssistent });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.Huawei.ToString(), ItemValue = (int)InverterTypeEnum.Huawei });
         InverterModels.Add(new PickerItem { ItemTitle = InverterTypeEnum.SolarEdge.ToString(), ItemValue = (int)InverterTypeEnum.SolarEdge });
-       
+
         var inverter = this.mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstOrDefault();
         if (inverter == null)
         {
@@ -31,8 +31,8 @@ public class InverterViewModel : BaseViewModel
             }
 
             UserName = inverter.UserName ?? "Inverter";
-            Password = string.IsNullOrEmpty(inverter.Password) ? "" : inverter.Password.Decrypt(AppConstants.Secretkey); 
-            ApiKey = string.IsNullOrEmpty(inverter.ApiKey) ? "" : inverter.ApiKey.Decrypt(AppConstants.Secretkey); 
+            Password = string.IsNullOrEmpty(inverter.Password) ? "" : inverter.Password.Decrypt(AppConstants.Secretkey);
+            ApiKey = string.IsNullOrEmpty(inverter.ApiKey) ? "" : inverter.ApiKey.Decrypt(AppConstants.Secretkey);
         }
     }
 
@@ -42,8 +42,8 @@ public class InverterViewModel : BaseViewModel
     {
         if (inverterService == null)
             return;
-        
-        var resultLogin = await inverterService.TestConnection(userName, password,apiUrl,apiKey);
+
+        var resultLogin = await inverterService.TestConnection(userName, password, apiUrl, apiKey);
         if (!resultLogin.WasSuccessful || resultLogin.Model == null)
         {
             await DialogService.ShowAlertAsync(resultLogin.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
@@ -57,7 +57,7 @@ public class InverterViewModel : BaseViewModel
             return;
         }
         SitesNodes = new ObservableCollection<InverterSite>(resultSites.Model);
-        
+
         SelectedSiteNode = SitesNodes.First();
         ShowSiteNodePicker = true;
     }
@@ -76,7 +76,7 @@ public class InverterViewModel : BaseViewModel
             return;
         }
 
-        
+
         //check if Home exist in db
         var inverterExist = await mscDbContext.Inverter.FirstOrDefaultAsync(x => x.SubSystemEntityId == resultInverter.Model.InverterId && x.InverterTyp == SelectedInverterModel.ItemValue);
         if (inverterExist == null)
@@ -115,7 +115,7 @@ public class InverterViewModel : BaseViewModel
             SettingsService.OnboardingStatus = OnboardingStatusEnum.InverterSelected;
             await GoToAsync(nameof(EnergyCalculationParameterView));
         }
-        
+
     }
 
     private ObservableCollection<InverterSite> sitesNodes = new ObservableCollection<InverterSite>();
@@ -159,20 +159,20 @@ public class InverterViewModel : BaseViewModel
             }
         }
     }
-    
-    private string inverterGuideText="";
+
+    private string inverterGuideText = "";
     public string InverterGuideText
     {
         get => inverterGuideText;
         set => SetProperty(ref inverterGuideText, value);
     }
-    private string userName="";
+    private string userName = "";
     public string UserName
     {
         get => userName;
         set => SetProperty(ref userName, value);
     }
-    private string password="";
+    private string password = "";
     public string Password
     {
         get => password;
@@ -184,13 +184,13 @@ public class InverterViewModel : BaseViewModel
         get => installDate;
         set => SetProperty(ref installDate, value);
     }
-    private string apiUrl="";
+    private string apiUrl = "";
     public string ApiUrl
     {
         get => apiUrl;
         set => SetProperty(ref apiUrl, value);
     }
-    private string apiKey= "";
+    private string apiKey = "";
     public string ApiKey
     {
         get => apiKey;

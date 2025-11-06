@@ -156,7 +156,7 @@ public class TibberService : IGridSupplierInterface
                 //used to check så the backend not give the same value twice
                 var existCheckDb = true;
                 var updateEntity = true;
-                
+
                 for (int i = 0; i < consumptionI; i++)
                 {
                     progressStartNr++;
@@ -172,14 +172,14 @@ public class TibberService : IGridSupplierInterface
                         {
                             from = energy.from!.Value.AddHours(1),
                             to = energy.to!.Value,
-                            cost = energy.cost/2,
+                            cost = energy.cost / 2,
                             unitPrice = energy.unitPrice,
                             unitPriceVAT = energy.unitPriceVAT,
-                            consumption = energy.consumption/2,
+                            consumption = energy.consumption / 2,
                             consumptionUnit = energy.consumptionUnit,
                             currency = energy.currency
                         };
-                        
+
                         resultSites.Model.data.viewer.home.consumption.nodes.Add(energy2);
                         consumptionI += 1;
                         //fixar första
@@ -189,7 +189,7 @@ public class TibberService : IGridSupplierInterface
                     }
 
                     //check if exist in db
-                    Energy? energyExist = null; 
+                    Energy? energyExist = null;
                     //if the import row get out of sync this will prevent the app to import rows 
                     //on error we set MySolarCellsGlobals.ImportErrorValidateEvrryRow = true ti validate every the rows
                     if (existCheckDb && energy.from != null)
@@ -199,7 +199,7 @@ public class TibberService : IGridSupplierInterface
                         {
                             if (!MySolarCellsGlobals.ImportErrorValidateEvrryRow)
                                 existCheckDb = false;
-                            
+
                             updateEntity = false;
                         }
                         else
@@ -273,7 +273,7 @@ public class TibberService : IGridSupplierInterface
                                 energyExist.PurchasedSynced = true;
                             }
 
-                            
+
                         }
                         //add rows 
                         if (!updateEntity)
@@ -315,7 +315,7 @@ public class TibberService : IGridSupplierInterface
                         }
                     }
                 }
-                
+
             }
             //Last 100 or less
             if (energyInsertList.Count > 0 || energyUpdateList.Count > 0)
@@ -328,7 +328,7 @@ public class TibberService : IGridSupplierInterface
                 energyInsertList = new List<Energy>();
                 await mscDbContext.BulkUpdateAsync(energyUpdateList);
                 energyUpdateList = new List<Energy>();
-                
+
             }
 
             //Fill all null productions so that we don't have to loop throw then on more time.

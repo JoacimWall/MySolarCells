@@ -5,7 +5,7 @@ public class EnergyCalculationParameter : ObservableObject
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int EnergyCalculationParameterId { get; set; }
-    
+
     private DateTime fromDate = DateTime.Today;
     [Required]
     public DateTime FromDate
@@ -17,7 +17,7 @@ public class EnergyCalculationParameter : ObservableObject
             OnPropertyChanged(nameof(DisplayName));
         }
     }
-    
+
     private double prodCompensationElectricityLowLoad = 0.078;
     [Required]  //Net benefit SEK 0.078/kWh
     public double ProdCompensationElectricityLowLoad
@@ -80,8 +80,8 @@ public class EnergyCalculationParameter : ObservableObject
     [Required]
     public int ElectricitySupplierId { get; set; }
 
-   
-    
+
+
     [NotMapped]
     public string DisplayName => fromDate.ToString("yyyy-MM");
 

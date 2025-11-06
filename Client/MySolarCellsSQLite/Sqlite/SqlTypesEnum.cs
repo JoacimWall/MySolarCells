@@ -16,7 +16,7 @@ public enum InverterTypeEnum
 public enum LogTypeEnum
 {
     Info = 0,
-    Warning =1,
+    Warning = 1,
     Error = 2,
 }
 

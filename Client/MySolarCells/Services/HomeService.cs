@@ -10,7 +10,7 @@ public interface IHomeService
 }
 public class HomeService : IHomeService
 {
-    
+
     private readonly MscDbContext mscDbContext;
     private Home? home;
     private ChartDataRequest chartDataRequest = new();
@@ -28,7 +28,7 @@ public class HomeService : IHomeService
                 .Include(j => j.Inverters)
                 .Include(j => j.ElectricitySuppliers).FirstOrDefault();
             if (home != null) return home;
-            home = new Home { Name = "My home" , CurrencyUnit = "Sek", EnergyUnit = "kWh"};
+            home = new Home { Name = "My home", CurrencyUnit = "Sek", EnergyUnit = "kWh" };
             mscDbContext.Home.Add(home);
             mscDbContext.SaveChanges();
             return home;
@@ -47,7 +47,7 @@ public class HomeService : IHomeService
 
     public ElectricitySupplier FirstElectricitySupplier()
     {
-        return CurrentHome().ElectricitySuppliers.Count == 0 ? new ElectricitySupplier {Name = "Missing" ,SubSystemEntityId = "Missing"} : CurrentHome().ElectricitySuppliers.First();
+        return CurrentHome().ElectricitySuppliers.Count == 0 ? new ElectricitySupplier { Name = "Missing", SubSystemEntityId = "Missing" } : CurrentHome().ElectricitySuppliers.First();
     }
 
     public ChartDataRequest CurrentChartDataRequest()
@@ -60,5 +60,5 @@ public class HomeService : IHomeService
 
         chartDataRequest = value;
     }
-   
+
 }

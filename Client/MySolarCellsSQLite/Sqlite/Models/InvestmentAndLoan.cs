@@ -10,8 +10,8 @@ public class InvestmentAndLoan : ObservableObject
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int InvestmentAndLoanId { get; set; }
-    private string description="";
-    [Required ,StringLength(50)]
+    private string description = "";
+    [Required, StringLength(50)]
     public required string Description
     {
         get => description;
@@ -42,7 +42,7 @@ public class InvestmentAndLoan : ObservableObject
         set => SetProperty(ref loan, value);
     }
 
-    private ObservableCollection<InvestmentAndLoanInterest> interest=new();
+    private ObservableCollection<InvestmentAndLoanInterest> interest = new();
     public ObservableCollection<InvestmentAndLoanInterest> Interest
     {
         get => interest;

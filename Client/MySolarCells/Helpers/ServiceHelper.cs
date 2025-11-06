@@ -19,10 +19,10 @@ public static class ServiceHelper
         switch (electricitySupplier)
         {
             case (int)ElectricitySupplierEnum.Unknown:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(), GetService<IHomeService>(), GetService<ILogService>());
             case (int)ElectricitySupplierEnum.Tibber:
-                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
-           
+                return new TibberService(GetService<IRestClient>(), GetService<MscDbContext>(), GetService<IHomeService>(), GetService<ILogService>());
+
 
             default:
                 return null;
@@ -36,11 +36,11 @@ public static class ServiceHelper
         switch (inverterModel)
         {
             case (int)InverterTypeEnum.Huawei:
-                return new HuaweiService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+                return new HuaweiService(GetService<IRestClient>(), GetService<MscDbContext>(), GetService<IHomeService>(), GetService<ILogService>());
             case (int)InverterTypeEnum.HomeAssistent:
-                return new HomeAssistentInverterService( GetService<MscDbContext>(),GetService<IHomeService>(),GetService<ILogService>());
+                return new HomeAssistentInverterService(GetService<MscDbContext>(), GetService<IHomeService>(), GetService<ILogService>());
             case (int)InverterTypeEnum.SolarEdge:
-                return new SolarEdgeService(GetService<IRestClient>(), GetService<MscDbContext>(),GetService<IHomeService>());
+                return new SolarEdgeService(GetService<IRestClient>(), GetService<MscDbContext>(), GetService<IHomeService>());
 
             default:
                 return null;

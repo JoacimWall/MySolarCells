@@ -7,9 +7,9 @@ public class ElectricitySupplierViewModel : BaseViewModel
 {
     IGridSupplierInterface? gridSupplierService;
     private readonly MscDbContext mscDbContext;
-    public ElectricitySupplierViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public ElectricitySupplierViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplierEnum.Tibber.ToString(), ItemValue = (int)ElectricitySupplierEnum.Tibber });
         GridSupplierModels.Add(new PickerItem { ItemTitle = ElectricitySupplierEnum.Unknown.ToString(), ItemValue = (int)ElectricitySupplierEnum.Unknown });
@@ -18,7 +18,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         if (home == null)
         {
             selectedGridSupplierModel = GridSupplierModels.First();
-        }   
+        }
         else
         {
             foreach (var item in GridSupplierModels)
@@ -38,7 +38,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
             InstallYears.Add(new PickerItem { ItemTitle = i.ToString(), ItemValue = i });
 
 
-       
+
 
 
 
@@ -46,7 +46,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
     public ICommand GoToNavigateUrlCommand => new Command(async () => await GoToNavigateUrl());
     public ICommand TestConnectionCommand => new Command(async () => await TestConnection());
     public ICommand SaveCommand => new Command(async () => await SaveHome());
-    
+
     private async Task TestConnection()
     {
         if (gridSupplierService == null)
@@ -56,7 +56,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         if (!result.WasSuccessful)
         {
             await DialogService.ShowAlertAsync(result.ErrorMessage, AppResources.My_Solar_Cells, AppResources.Ok);
-            
+
         }
         else
         {
@@ -90,7 +90,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
     private async Task SaveHome()
     {
         //check that home exist
-        
+
         var homeExist = await mscDbContext.Home.FirstOrDefaultAsync();
         if (homeExist == null)
         {
@@ -103,7 +103,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         var electricitySupplierExist = await mscDbContext.ElectricitySupplier.FirstOrDefaultAsync(x => x.SubSystemEntityId == selectedHome.SubSystemEntityId);
         if (electricitySupplierExist == null)
         {
-            electricitySupplierExist =  new(){ Name = "", SubSystemEntityId = "", HomeId = homeExist.HomeId};
+            electricitySupplierExist = new() { Name = "", SubSystemEntityId = "", HomeId = homeExist.HomeId };
             await mscDbContext.ElectricitySupplier.AddAsync(electricitySupplierExist);
         }
 
@@ -138,7 +138,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         //}
     }
 
-    
+
 
     private async Task GoToNavigateUrl()
     {
@@ -151,7 +151,7 @@ public class ElectricitySupplierViewModel : BaseViewModel
         get => gridSupplierModels;
         set => SetProperty(ref gridSupplierModels, value);
     }
-    private PickerItem selectedGridSupplierModel= new();
+    private PickerItem selectedGridSupplierModel = new();
     public PickerItem SelectedGridSupplierModel
     {
         get => selectedGridSupplierModel;
@@ -176,39 +176,39 @@ public class ElectricitySupplierViewModel : BaseViewModel
         get => homes;
         set => SetProperty(ref homes, value);
     }
-    private ElectricitySupplier selectedHome = new(){ Name = "", SubSystemEntityId = ""};
+    private ElectricitySupplier selectedHome = new() { Name = "", SubSystemEntityId = "" };
     public ElectricitySupplier SelectedHome
     {
         get => selectedHome;
         set => SetProperty(ref selectedHome, value);
     }
-    
+
     private string guideText = "";
     public string GuideText
     {
         get => guideText;
         set => SetProperty(ref guideText, value);
     }
-    private string userName="";
+    private string userName = "";
     public string UserName
     {
         get => userName;
         set => SetProperty(ref userName, value);
     }
-    private string password="";
+    private string password = "";
     public string Password
     {
         get => password;
         set => SetProperty(ref password, value);
     }
-    
-    private string apiUrl="";
+
+    private string apiUrl = "";
     public string ApiUrl
     {
         get => apiUrl;
         set => SetProperty(ref apiUrl, value);
     }
-    private string navigationUrl="";
+    private string navigationUrl = "";
     public string NavigationUrl
     {
         get => navigationUrl;
@@ -250,20 +250,20 @@ public class ElectricitySupplierViewModel : BaseViewModel
         get => showNavigateUrl;
         set => SetProperty(ref showNavigateUrl, value);
     }
-    
+
     private ObservableCollection<PickerItem> installYears = new ObservableCollection<PickerItem>();
     public ObservableCollection<PickerItem> InstallYears
     {
         get => installYears;
         set => SetProperty(ref installYears, value);
     }
-    private PickerItem installDate=new();
+    private PickerItem installDate = new();
     public PickerItem InstallDate
     {
         get => installDate;
         set => SetProperty(ref installDate, value);
     }
-    private string tibberAccessToken="";
+    private string tibberAccessToken = "";
     public string TibberAccessToken
     {
         get => tibberAccessToken;

@@ -2,9 +2,9 @@
 
 public partial class MoreView : BaseContentPage
 {
-	public MoreView(MoreViewModel vm)
-	{
-		InitializeComponent();
+    public MoreView(MoreViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 }

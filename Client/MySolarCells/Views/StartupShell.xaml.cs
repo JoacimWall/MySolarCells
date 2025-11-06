@@ -2,9 +2,9 @@
 
 public partial class StartupShell : Shell
 {
-	public StartupShell()
-	{
-		InitializeComponent();
+    public StartupShell()
+    {
+        InitializeComponent();
         Routing.RegisterRoute(nameof(ElectricitySupplierView), typeof(ElectricitySupplierView));
         Routing.RegisterRoute(nameof(InverterView), typeof(InverterView));
         Routing.RegisterRoute(nameof(EnergyCalculationParameterView), typeof(EnergyCalculationParameterView));

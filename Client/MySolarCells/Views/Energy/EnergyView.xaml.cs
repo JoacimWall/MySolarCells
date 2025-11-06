@@ -2,9 +2,9 @@
 
 public partial class EnergyView : BaseContentPage
 {
-	public EnergyView(EnergyViewModel vm)
-	{
-		InitializeComponent();
+    public EnergyView(EnergyViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
     }
 

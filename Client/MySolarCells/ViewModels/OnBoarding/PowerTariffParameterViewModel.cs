@@ -3,13 +3,13 @@
 public class PowerTariffParameterViewModel : BaseViewModel
 {
     private readonly MscDbContext mscDbContext;
-    public PowerTariffParameterViewModel(MscDbContext mscDbContext,IDialogService dialogService,
-        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService,ISettingsService settingsService,IHomeService homeService): base(dialogService, analyticsService, internetConnectionService,
-        logService,settingsService,homeService)
+    public PowerTariffParameterViewModel(MscDbContext mscDbContext, IDialogService dialogService,
+        IAnalyticsService analyticsService, IInternetConnectionService internetConnectionService, ILogService logService, ISettingsService settingsService, IHomeService homeService) : base(dialogService, analyticsService, internetConnectionService,
+        logService, settingsService, homeService)
     {
         this.mscDbContext = mscDbContext;
         var list = this.mscDbContext.PowerTariffParameters.Where(x => x.ElectricitySupplierId == HomeService.FirstElectricitySupplier().ElectricitySupplierId).OrderBy(o => o.FromDate).ToList();
-        if ( list.Count > 0)
+        if (list.Count > 0)
         {
             Parameters = new ObservableCollection<PowerTariffParameters>(list);
             selectedParameters = parameters.Last();
@@ -44,7 +44,7 @@ public class PowerTariffParameterViewModel : BaseViewModel
             });
         }
         else
-        { 
+        {
             var paramLast = Parameters.Last();
             Parameters.Add(new PowerTariffParameters
             {

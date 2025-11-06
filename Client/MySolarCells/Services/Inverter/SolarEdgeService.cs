@@ -44,7 +44,7 @@ public class SolarEdgeService : IInverterServiceInterface
     {
         if (inverterLoginResponse == null)
             return new Result<List<InverterSite>>("Inverter login response missing");
-        
+
         string query = $"/sites/list?api_key={inverterLoginResponse.token}";
         var resultSites = await restClient.ExecuteGetAsync<SolarEdgeSiteListResponse>(query);
         if (!resultSites.WasSuccessful || resultSites.Model == null)
@@ -65,22 +65,22 @@ public class SolarEdgeService : IInverterServiceInterface
         return Task.FromResult(new Result<GetInverterResponse>(new GetInverterResponse { InverterId = inverterSite.Id, Name = inverterSite.InverterName }));
     }
 
-    
+
     public async Task<Result<DataSyncResponse>> Sync(DateTime start, IProgress<int> progress, int progressStartNr)
     {
-         var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == homeService.CurrentHome().HomeId);
+        var inverter = await mscDbContext.Inverter.OrderByDescending(s => s.FromDate).FirstAsync(x => x.HomeId == homeService.CurrentHome().HomeId);
 
-         string apiKey="";
+        string apiKey = "";
         if (inverter.ApiKey != null)
         {
-             apiKey = inverter.ApiKey.Decrypt(AppConstants.Secretkey);
+            apiKey = inverter.ApiKey.Decrypt(AppConstants.Secretkey);
         }
 
         var loginResult = await TestConnection("", "", "", apiKey);
 
         if (!loginResult.WasSuccessful || loginResult.Model == null)
             return new Result<DataSyncResponse>("login result null");
-        
+
         try
         {
             int batch100 = 0;
@@ -114,7 +114,7 @@ public class SolarEdgeService : IInverterServiceInterface
                 var resultEnergy = await restClient.ExecuteGetAsync<SolarEdgeEnegyDetialsResponse>(query);
                 if (!resultEnergy.WasSuccessful || resultEnergy.Model == null)
                     return new Result<DataSyncResponse>("ResultEnergy is null");
-                
+
                 foreach (var item in resultEnergy.Model.energyDetails.meters)
                 {
                     foreach (var value in item.values)
@@ -134,7 +134,7 @@ public class SolarEdgeService : IInverterServiceInterface
                         switch (item.type.ToLower())
                         {
                             case "selfconsumption":
-                            //case "production":
+                                //case "production":
                                 exist.SelfConsumption = exist.SelfConsumption + (value.value.HasValue ? value.value.Value : 0);
                                 break;
                             case "feedin":
@@ -143,12 +143,12 @@ public class SolarEdgeService : IInverterServiceInterface
                             case "purchased":
                                 exist.Purchased = exist.Purchased + (value.value.HasValue ? value.value.Value : 0);
                                 break;
-                            //case "production":
-                            //    exist.batteryCharge = exist.batteryCharge + (value.value.HasValue ? value.value.Value : 0);
-                            //    break;
-                            //case "consumption":
-                            //    exist.batteryOutput = exist.batteryOutput + (value.value.HasValue ? value.value.Value : 0);
-                            //break;
+                                //case "production":
+                                //    exist.batteryCharge = exist.batteryCharge + (value.value.HasValue ? value.value.Value : 0);
+                                //    break;
+                                //case "consumption":
+                                //    exist.batteryOutput = exist.batteryOutput + (value.value.HasValue ? value.value.Value : 0);
+                                //break;
                         }
                         //exist.SelfConsumption = exist.SelfConsumption - exist.FeedIn;
                     }
@@ -223,11 +223,11 @@ public class SolarEdgeService : IInverterServiceInterface
                             energyExist.PurchasedSynced = true;
                             energyExist.BatterySynced = true;
                         }
-                        energyExist.Purchased = sumes[i].Purchased > 0 ? Convert.ToDouble(sumes[i].Purchased / 1000)  : 0;
+                        energyExist.Purchased = sumes[i].Purchased > 0 ? Convert.ToDouble(sumes[i].Purchased / 1000) : 0;
                         energyExist.ProductionOwnUse = sumes[i].SelfConsumption > 0 ? Convert.ToDouble(sumes[i].SelfConsumption / 1000) : 0;
                         energyExist.ProductionSold = sumes[i].FeedIn > 0 ? Convert.ToDouble(sumes[i].FeedIn / 1000) : 0;
-                        energyExist.BatteryCharge = sumes[i].batteryCharge > 0 ? Convert.ToDouble((sumes[i].batteryCharge/12)/1000) : 0;
-                        energyExist.BatteryUsed = sumes[i].batteryOutput > 0 ? Convert.ToDouble((sumes[i].batteryOutput/12) / 1000) : 0;
+                        energyExist.BatteryCharge = sumes[i].batteryCharge > 0 ? Convert.ToDouble((sumes[i].batteryCharge / 12) / 1000) : 0;
+                        energyExist.BatteryUsed = sumes[i].batteryOutput > 0 ? Convert.ToDouble((sumes[i].batteryOutput / 12) / 1000) : 0;
                         //Fixar till så att det blir rätt då ProductionOwnUse är både använt och laddat batteriet
                         energyExist.ProductionOwnUse = energyExist.ProductionOwnUse - energyExist.BatteryUsed;
                         if (energyExist.ProductionOwnUse < 0)
@@ -238,7 +238,7 @@ public class SolarEdgeService : IInverterServiceInterface
                         energyExist.ProductionOwnUseProfit = energyExist.ProductionOwnUse * energyExist.UnitPriceBuy;
                         //energyExist.BatteryChargeProfitFake = energyExist.BatteryCharge * energyExist.UnitPriceSold;
                         energyExist.BatteryUsedProfit = energyExist.BatteryUsed * energyExist.UnitPriceBuy;
-                        
+
                         energyList.Add(energyExist);
                     }
 

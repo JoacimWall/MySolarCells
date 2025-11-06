@@ -2,9 +2,9 @@
 
 public partial class RoiView : BaseContentPage
 {
-	public RoiView(RoiViewModel vm)
-	{
-		InitializeComponent();
+    public RoiView(RoiViewModel vm)
+    {
+        InitializeComponent();
         BindingContext = vm;
-	}
+    }
 }

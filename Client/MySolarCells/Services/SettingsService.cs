@@ -16,13 +16,13 @@ public interface ISettingsService
 
 public class SettingsService : ISettingsService
 {
-    
+
     private readonly MscDbContext mscDbContext;
     public SettingsService(MscDbContext mscDbContext)
     {
         this.mscDbContext = mscDbContext;
     }
-    
+
     public OnboardingStatusEnum OnboardingStatus
     {
         get
@@ -67,7 +67,7 @@ public class SettingsService : ISettingsService
                 mscDbContext.SaveChanges();
             }
 
-            
+
         }
     }
     public CountryEnum UserCountry
@@ -186,14 +186,14 @@ public class SettingsService : ISettingsService
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("sv-SE");
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
                 AppResources.Culture = Thread.CurrentThread.CurrentUICulture;
-               
+
                 break;
             case CountryEnum.EnUs:
-           
+
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US"); //en-US
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
                 AppResources.Culture = Thread.CurrentThread.CurrentUICulture;
-             
+
                 break;
         }
 

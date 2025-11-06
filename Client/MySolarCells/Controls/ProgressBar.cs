@@ -113,7 +113,7 @@ public class ProgressBar : SKCanvasView
         get => (bool)GetValue(ShowPercentTextProperty);
         set => SetValue(ShowPercentTextProperty, value);
     }
-   
+
     private static void OnPropertyChangedPercentAnimate(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (ProgressBar)bindable;
@@ -139,13 +139,13 @@ public class ProgressBar : SKCanvasView
                 control.Percentage = (float)(v / 100);
             }, startValue, desiredValue * 100, easing: Easing.SinInOut);
 
-           
+
             control.animation.Commit(control, "Percentage", length: 4000,
                 finished: (_, _) => { control.animation = null; });
 
 
         }
-           
+
     }
     private static void OnPropertyChangedInvalidate(BindableObject bindable, object oldvalue, object newvalue)
     {
@@ -159,11 +159,11 @@ public class ProgressBar : SKCanvasView
     {
         var info = e.Info;
         var canvas = e.Surface.Canvas;
-      
+
         float width = (float)Width;
         var scale = CanvasSize.Width / width;
 
-        var percentage = Percentage/100;
+        var percentage = Percentage / 100;
 
         var cornerRadius = CornerRadius * scale;
 
@@ -204,8 +204,8 @@ public class ProgressBar : SKCanvasView
 
             canvas.DrawRoundRect(progressBar, paint);
         }
-        
-        
+
+
 
         var textPaint = new SKPaint { Color = TextColor.ToSKColor(), TextSize = textSize };
 

@@ -1,4 +1,4 @@
-﻿﻿namespace MySolarCells.ViewModels.Energy;
+﻿namespace MySolarCells.ViewModels.Energy;
 
 public class EnergyViewModel : BaseViewModel
 {
@@ -153,7 +153,7 @@ public class EnergyViewModel : BaseViewModel
 
     public override async Task OnAppearingAsync()
     {
-        ChartDataRequest = HomeService.CurrentChartDataRequest();;
+        ChartDataRequest = HomeService.CurrentChartDataRequest(); ;
         await ReloadGraph(true);
         if (FirstTimeAppearing)
         {

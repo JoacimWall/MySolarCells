@@ -8,19 +8,19 @@ namespace MySolarCells.Services.Inverter.Models;
 class AuthMessage
 {
     public string type { get; set; } = "";
-    public string access_token { get; set; }= "";
+    public string access_token { get; set; } = "";
 }
 class GetPrefsRequest
 {
     public int id { get; set; }
-    public string type { get; set; }= "";
+    public string type { get; set; } = "";
 }
 //used to filter incoming messages
 class GenericFilterResponse
 {
     public int id { get; set; }
-    public string type { get; set; }= "";
-    public string ha_version { get; set; }= "";
+    public string type { get; set; } = "";
+    public string ha_version { get; set; } = "";
 }
 
 
@@ -28,13 +28,13 @@ class GenericFilterResponse
 class EnergyPrefsResult
 {
     public int id { get; set; }
-    public string type { get; set; }= "";
+    public string type { get; set; } = "";
     public bool success { get; set; }
     public EnergyPrefs result { get; set; } = new();
 }
 class EnergyPrefs
 {
-    public List<EnergySource> energy_sources { get; set; }= new();
+    public List<EnergySource> energy_sources { get; set; } = new();
     //public List<DeviceConsumption> device_consumption { get; set; }
 }
 
@@ -45,10 +45,10 @@ class EnergySource
     //public List<FlowTo> flow_to { get; set; }
     public double cost_adjustment_day { get; set; }
     public string stat_energy_from { get; set; } = "";
-    public object config_entry_solar_forecast { get; set; }= new();
+    public object config_entry_solar_forecast { get; set; } = new();
     public string stat_cost { get; set; } = "";
-    public object entity_energy_price { get; set; }= new();
-    public object number_energy_price { get; set; }= new();
+    public object entity_energy_price { get; set; } = new();
+    public object number_energy_price { get; set; } = new();
 }
 //public class DeviceConsumption
 //{
@@ -78,7 +78,7 @@ class EnergyProductionRequest
     public string type { get; set; } = "";
     public string start_time { get; set; } = "";
     public string end_time { get; set; } = "";
-    public List<string> energy_statistic_ids { get; set; }= new();
+    public List<string> energy_statistic_ids { get; set; } = new();
     public string period { get; set; } = "";
     public string co2_statistic_id { get; set; } = "";
 }

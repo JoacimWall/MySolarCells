@@ -288,7 +288,7 @@ public class MoreViewModel : BaseViewModel
                 {
                     existOne = true;
                 }
-                
+
             }
             var indexParameter = 0;
 
@@ -386,8 +386,8 @@ public class MoreViewModel : BaseViewModel
     {
         using var dlg = (ProgressDialog)DialogService.GetProgress(AppResources.Generating_Report_Please_Wait);
         await Task.Delay(200);
-        var result = await historyService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today,new HistorySimulate());
-        
+        var result = await historyService.GenerateTotalPerMonthReport(HomeService.FirstElectricitySupplier().FromDate, DateTime.Today, new HistorySimulate());
+
         var savingEstimate = mscDbContext.SavingEstimateParameters.FirstOrDefault() ?? new SavingEstimateParameters();
         if (result.Model == null) return false;
         var resultRoi = roiService.CalcSavingsEstimate(result.Model, savingEstimate);
@@ -409,7 +409,7 @@ public class MoreViewModel : BaseViewModel
         {
             workbook.Worksheets.Create(itemList.First().FromDate.Year.ToString());
             await GenerateYearWorkSheet(workbook.Worksheets[workbook.Worksheets.Count - 1], itemList, homeId, false);
-        } 
+        }
         MemoryStream ms = new MemoryStream();
         workbook.SaveAs(ms);
         ms.Position = 0;
@@ -434,7 +434,7 @@ public class MoreViewModel : BaseViewModel
 
     public string HomeImageUrl => "MySolarCells.Resources.EmbeddedImages.house_with_solar_cells.png";
 
-    public string LanguageImage => SettingsService.UserCountry == CountryEnum.SvSe ? "se.png":"us.png";
+    public string LanguageImage => SettingsService.UserCountry == CountryEnum.SvSe ? "se.png" : "us.png";
 
     public string ElectricitySupplierText
     {
@@ -466,7 +466,7 @@ public class MoreViewModel : BaseViewModel
     }
     private string inverterModelText = "";
     public string InverterModelText => inverterModelText;
-    private string appInfoVersion="";
+    private string appInfoVersion = "";
     public string AppInfoVersion
     {
         get => appInfoVersion;

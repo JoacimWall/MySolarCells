@@ -12,12 +12,12 @@ public class BaseContentPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false);
         Shell.SetNavBarIsVisible(this, false);
         Shell.SetBackButtonBehavior(this, new BackButtonBehavior { IsVisible = false });
-        
+
         //hides warnings as we require IOS 12.4 so it's easy
         HideSoftInputOnTapped = true;
-      
+
         On<iOS>().SetUseSafeArea(true);
-        
+
     }
     public Color StatusbarBackgroundColor { get; set; } = AppColors.StatusbarBackgroundColor;
 
@@ -87,7 +87,7 @@ public class BaseContentPage : ContentPage
         if (BindingContext != null)
         {
             (BindingContext as BaseViewModel)?.OnNavigatedTo(args);
-           
+
         }
     }
 }
