@@ -1573,5 +1573,137 @@ namespace MySolarCells.Resources.Translations
                 return ResourceManager.GetString("System_Theme", resourceCulture);
             }
         }
+        
+        public static string Cloud_Backup_Sync {
+            get {
+                return ResourceManager.GetString("Cloud_Backup_Sync", resourceCulture);
+            }
+        }
+        
+        public static string Cloud_Sync_Settings {
+            get {
+                return ResourceManager.GetString("Cloud_Sync_Settings", resourceCulture);
+            }
+        }
+        
+        public static string Enable_Cloud_Sync {
+            get {
+                return ResourceManager.GetString("Enable_Cloud_Sync", resourceCulture);
+            }
+        }
+        
+        public static string Azure_Connection_String {
+            get {
+                return ResourceManager.GetString("Azure_Connection_String", resourceCulture);
+            }
+        }
+        
+        public static string Azure_Container_Name {
+            get {
+                return ResourceManager.GetString("Azure_Container_Name", resourceCulture);
+            }
+        }
+        
+        public static string Auto_Cloud_Backup {
+            get {
+                return ResourceManager.GetString("Auto_Cloud_Backup", resourceCulture);
+            }
+        }
+        
+        public static string Cloud_Backup_Interval {
+            get {
+                return ResourceManager.GetString("Cloud_Backup_Interval", resourceCulture);
+            }
+        }
+        
+        public static string Backup_Now {
+            get {
+                return ResourceManager.GetString("Backup_Now", resourceCulture);
+            }
+        }
+        
+        public static string Restore_From_Cloud {
+            get {
+                return ResourceManager.GetString("Restore_From_Cloud", resourceCulture);
+            }
+        }
+        
+        public static string Test_Connection {
+            get {
+                return ResourceManager.GetString("Test_Connection", resourceCulture);
+            }
+        }
+        
+        public static string Last_Backup {
+            get {
+                return ResourceManager.GetString("Last_Backup", resourceCulture);
+            }
+        }
+        
+        public static string Last_Restore {
+            get {
+                return ResourceManager.GetString("Last_Restore", resourceCulture);
+            }
+        }
+        
+        public static string Never {
+            get {
+                return ResourceManager.GetString("Never", resourceCulture);
+            }
+        }
+        
+        public static string Connection_Successful {
+            get {
+                return ResourceManager.GetString("Connection_Successful", resourceCulture);
+            }
+        }
+        
+        public static string Connection_Failed {
+            get {
+                return ResourceManager.GetString("Connection_Failed", resourceCulture);
+            }
+        }
+        
+        public static string Backup_Successful {
+            get {
+                return ResourceManager.GetString("Backup_Successful", resourceCulture);
+            }
+        }
+        
+        public static string Backup_Failed {
+            get {
+                return ResourceManager.GetString("Backup_Failed", resourceCulture);
+            }
+        }
+        
+        public static string Restore_Successful {
+            get {
+                return ResourceManager.GetString("Restore_Successful", resourceCulture);
+            }
+        }
+        
+        public static string Restore_Failed {
+            get {
+                return ResourceManager.GetString("Restore_Failed", resourceCulture);
+            }
+        }
+        
+        public static string Cloud_Sync_Description {
+            get {
+                return ResourceManager.GetString("Cloud_Sync_Description", resourceCulture);
+            }
+        }
+        
+        public static string Device_Id {
+            get {
+                return ResourceManager.GetString("Device_Id", resourceCulture);
+            }
+        }
+        
+        public static string Available_Backups {
+            get {
+                return ResourceManager.GetString("Available_Backups", resourceCulture);
+            }
+        }
     }
 }

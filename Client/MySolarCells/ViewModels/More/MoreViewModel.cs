@@ -46,6 +46,7 @@ public class MoreViewModel : BaseViewModel
     public ICommand ShowPickCountryCommand => new Command(async () => await ShowPickCountry());
     public ICommand FixTimeGampInDbCommand => new Command(async () => await FixTimeGampInDb());
     public ICommand ToggleThemeCommand => new Command(async () => await ToggleTheme());
+    public ICommand ShowCloudSyncCommand => new Command(async () => await ShowCloudSync());
 
     private async Task FixTimeGampInDb()
     {
@@ -67,6 +68,12 @@ public class MoreViewModel : BaseViewModel
         //await GoToAsync(nameof(SelectLanguageCountryView));
         var view = ServiceHelper.GetService<SelectLanguageCountryView>();
         //await ((ReportViewModel)view.BindingContext).RefreshAsync(ViewState.Refreshing);
+        await PushModal(view);
+    }
+
+    private async Task ShowCloudSync()
+    {
+        var view = ServiceHelper.GetService<CloudSyncSettingsView>();
         await PushModal(view);
     }
 
