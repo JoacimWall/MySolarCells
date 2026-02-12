@@ -8,7 +8,6 @@ from pathlib import Path
 import aiohttp
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.frontend import async_register_built_in_panel
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -18,8 +17,9 @@ from .storage import MySolarCellsStorage
 
 _LOGGER = logging.getLogger(__name__)
 
-CARD_URL = f"/{DOMAIN}/my-solar-cells-roi-card.js"
-CARD_DIR = Path(__file__).parent / ".." / ".." / "custom_cards" / "my-solar-cells-roi-card"
+CARD_JS = "my-solar-cells-roi-card.js"
+CARD_URL = f"/{DOMAIN}/{CARD_JS}"
+CARD_DIR = Path(__file__).parent
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -66,12 +66,10 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def _register_card(hass: HomeAssistant) -> None:
     """Register the custom Lovelace card as a static resource."""
-    # Register the JS file as a static path
-    card_path = CARD_DIR.resolve()
-    if card_path.is_dir():
-        hass.http.register_static_path(
-            f"/{DOMAIN}", str(card_path), cache_headers=False
-        )
+    # Serve the JS file from the integration's own directory
+    hass.http.register_static_path(
+        f"/{DOMAIN}", str(CARD_DIR), cache_headers=False
+    )
 
     # Add as a Lovelace resource if not already registered
     await _add_lovelace_resource(hass, CARD_URL)
@@ -80,7 +78,6 @@ async def _register_card(hass: HomeAssistant) -> None:
 async def _add_lovelace_resource(hass: HomeAssistant, url: str) -> None:
     """Add a Lovelace resource if it's not already registered."""
     try:
-        # For storage mode dashboards
         from homeassistant.components.lovelace import DOMAIN as LOVELACE_DOMAIN
         from homeassistant.components.lovelace.resources import (
             ResourceStorageCollection,
