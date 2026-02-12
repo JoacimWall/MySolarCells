@@ -38,11 +38,12 @@ Enter your Tibber API key from [developer.tibber.com](https://developer.tibber.c
 Choose which Tibber home to use. Optionally import only spot prices (if you use HA sensors for consumption/production data).
 
 ### Step 3: HA Sensors
-Select the Home Assistant sensors that track your solar energy:
-- **Grid Export Sensor**: kWh sold to the grid
-- **Grid Import Sensor**: kWh purchased from the grid
-- **Production Sensor**: Total kWh solar production
-- **Battery Charge/Discharge Sensors** (optional)
+The only required sensor is your **Total Production Sensor** (total kWh from your solar panels). Grid export and import data are fetched automatically from the Tibber API, and own use is calculated as `total production - Tibber sold`.
+
+- **Total Production Sensor** (required): Total kWh solar production from your inverter
+- **Grid Export Sensor** (optional): Only needed if you have a separate HA sensor and want to override the Tibber data
+- **Grid Import Sensor** (optional): Only needed if you have a separate HA sensor and want to override the Tibber data
+- **Battery Charge/Discharge Sensors** (optional): Only needed if you have a home battery
 
 ### Step 4: Financial Parameters
 Configure Swedish energy financial parameters:
