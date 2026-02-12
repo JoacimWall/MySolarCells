@@ -137,7 +137,18 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> config_entries.ConfigFlowResult:
         """Step 3: HA sensor entity selection."""
         if user_input is not None:
-            self._data.update(user_input)
+            # Only store non-empty optional sensor values
+            cleaned = {CONF_PRODUCTION_SENSOR: user_input[CONF_PRODUCTION_SENSOR]}
+            for key in (
+                CONF_GRID_EXPORT_SENSOR,
+                CONF_GRID_IMPORT_SENSOR,
+                CONF_BATTERY_CHARGE_SENSOR,
+                CONF_BATTERY_DISCHARGE_SENSOR,
+            ):
+                val = user_input.get(key, "")
+                if val:
+                    cleaned[key] = val
+            self._data.update(cleaned)
             return await self.async_step_financial()
 
         entity_selector = selector.EntitySelector(
@@ -149,10 +160,10 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_PRODUCTION_SENSOR): entity_selector,
-                    vol.Optional(CONF_GRID_EXPORT_SENSOR): entity_selector,
-                    vol.Optional(CONF_GRID_IMPORT_SENSOR): entity_selector,
-                    vol.Optional(CONF_BATTERY_CHARGE_SENSOR): entity_selector,
-                    vol.Optional(CONF_BATTERY_DISCHARGE_SENSOR): entity_selector,
+                    vol.Optional(CONF_GRID_EXPORT_SENSOR, default=""): str,
+                    vol.Optional(CONF_GRID_IMPORT_SENSOR, default=""): str,
+                    vol.Optional(CONF_BATTERY_CHARGE_SENSOR, default=""): str,
+                    vol.Optional(CONF_BATTERY_DISCHARGE_SENSOR, default=""): str,
                 }
             ),
         )
@@ -272,19 +283,19 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
                     vol.Optional(
                         CONF_GRID_EXPORT_SENSOR,
                         default=data.get(CONF_GRID_EXPORT_SENSOR, ""),
-                    ): entity_selector,
+                    ): str,
                     vol.Optional(
                         CONF_GRID_IMPORT_SENSOR,
                         default=data.get(CONF_GRID_IMPORT_SENSOR, ""),
-                    ): entity_selector,
+                    ): str,
                     vol.Optional(
                         CONF_BATTERY_CHARGE_SENSOR,
                         default=data.get(CONF_BATTERY_CHARGE_SENSOR, ""),
-                    ): entity_selector,
+                    ): str,
                     vol.Optional(
                         CONF_BATTERY_DISCHARGE_SENSOR,
                         default=data.get(CONF_BATTERY_DISCHARGE_SENSOR, ""),
-                    ): entity_selector,
+                    ): str,
                 }
             ),
         )
