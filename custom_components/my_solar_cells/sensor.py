@@ -342,10 +342,19 @@ class MySolarCellsPriceLevelSensor(MySolarCellsEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Return spot price arrays as attributes."""
+        """Return spot price summary as attributes."""
         if self.coordinator.data is None:
             return {}
-        return {
-            "spot_prices_today": self.coordinator.data.get("spot_prices_today", []),
-            "spot_prices_tomorrow": self.coordinator.data.get("spot_prices_tomorrow", []),
+        today = self.coordinator.data.get("spot_prices_today", [])
+        tomorrow = self.coordinator.data.get("spot_prices_tomorrow", [])
+        attrs: dict[str, Any] = {
+            "prices_today_count": len(today),
+            "prices_tomorrow_count": len(tomorrow),
+            "avg_spot_price_today": self.coordinator.data.get("avg_spot_price_today", 0),
         }
+        # Min/max for today
+        if today:
+            totals = [p.get("total", 0) for p in today]
+            attrs["min_price_today"] = round(min(totals), 4)
+            attrs["max_price_today"] = round(max(totals), 4)
+        return attrs
