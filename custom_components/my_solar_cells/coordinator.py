@@ -291,7 +291,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _calculate_sensor_data(self) -> dict[str, Any]:
         """Calculate all sensor values from stored data."""
-        now = datetime.now()
+        now = datetime.now(tz=timezone.utc)
         today_str = now.strftime("%Y-%m-%d")
         month_start_str = now.strftime("%Y-%m-01")
         year_start_str = now.strftime("%Y-01-01")

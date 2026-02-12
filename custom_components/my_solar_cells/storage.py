@@ -29,6 +29,7 @@ class MySolarCellsStorage:
         stored = await self._store.async_load()
         if stored and isinstance(stored, dict):
             self._data = stored
+            self._migrate_timezone_keys()
         else:
             self._data = {
                 "hourly_records": {},
@@ -37,6 +38,27 @@ class MySolarCellsStorage:
                 "monthly_cache": {},
                 "roi_projection": [],
             }
+
+    def _migrate_timezone_keys(self) -> None:
+        """Clear records with timezone offsets in keys (v1 bug).
+
+        Old keys looked like '2025-06-15T14:00:00+02:00', new keys are
+        UTC without offset like '2025-06-15T12:00:00'. Since the offset
+        keys can't be reliably string-compared, we clear them and force
+        a fresh import from Tibber.
+        """
+        hourly = self._data.get("hourly_records", {})
+        has_offset_keys = any("+" in k or k.endswith("Z") for k in list(hourly.keys())[:10])
+        if has_offset_keys and hourly:
+            _LOGGER.warning(
+                "Migrating storage: clearing %d records with timezone offsets, "
+                "will re-import from Tibber",
+                len(hourly),
+            )
+            self._data["hourly_records"] = {}
+            self._data["quarter_hourly_prices"] = {}
+            self._data["last_tibber_sync"] = None
+            self._data["monthly_cache"] = {}
 
     async def async_save(self) -> None:
         """Save current data to storage."""

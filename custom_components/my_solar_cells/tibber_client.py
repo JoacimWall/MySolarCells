@@ -52,6 +52,16 @@ def _parse_timestamp(ts_str: str) -> datetime:
     return datetime.fromisoformat(ts_str)
 
 
+def _to_utc_key(dt: datetime) -> str:
+    """Convert a datetime to a UTC ISO string without offset for use as storage key.
+
+    This ensures consistent string comparison in get_records_for_period.
+    Example: "2025-06-15T14:00:00+02:00" -> "2025-06-15T12:00:00"
+    """
+    utc_dt = dt.astimezone(timezone.utc)
+    return utc_dt.strftime("%Y-%m-%dT%H:%M:%S")
+
+
 class TibberApiError(Exception):
     """Raised when a Tibber API call fails."""
 
@@ -239,7 +249,7 @@ class TibberClient:
                     production_sold_profit = 0
 
                 record = {
-                    "timestamp": from_dt.isoformat(),
+                    "timestamp": _to_utc_key(from_dt),
                     "purchased": consumption_val,
                     "purchased_cost": cost_val,
                     "production_sold": production_sold,
@@ -278,13 +288,21 @@ class TibberClient:
                 return []
             result = []
             for p in price_list:
+                starts_at_raw = p.get("startsAt", "")
+                if starts_at_raw:
+                    try:
+                        starts_at = _to_utc_key(_parse_timestamp(starts_at_raw))
+                    except (ValueError, TypeError):
+                        starts_at = starts_at_raw
+                else:
+                    starts_at = ""
                 result.append(
                     {
                         "total": float(p.get("total") or 0),
                         "energy": float(p.get("energy") or 0),
                         "tax": float(p.get("tax") or 0),
                         "level": p.get("level", ""),
-                        "starts_at": p.get("startsAt", ""),
+                        "starts_at": starts_at,
                         "currency": p.get("currency", "SEK"),
                     }
                 )
