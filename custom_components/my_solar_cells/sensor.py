@@ -53,7 +53,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Daily Sold Profit",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-plus",
     },
     {
@@ -61,7 +61,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Daily Own Use Saved",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:piggy-bank",
     },
     {
@@ -69,7 +69,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Daily Purchased Cost",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-minus",
     },
     {
@@ -77,7 +77,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Daily Balance",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:scale-balance",
     },
     # --- Monthly sensors ---
@@ -110,7 +110,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Sold Profit",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-plus",
     },
     {
@@ -118,7 +118,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Own Use Saved",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:piggy-bank",
     },
     {
@@ -126,7 +126,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Purchased Cost",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-minus",
     },
     {
@@ -134,7 +134,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Balance",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:scale-balance",
     },
     {
@@ -142,7 +142,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Tax Reduction",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-refund",
     },
     {
@@ -150,7 +150,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Monthly Grid Compensation",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-refund",
     },
     # --- Yearly sensors ---
@@ -159,7 +159,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Yearly Total Savings",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:finance",
     },
     {
@@ -176,7 +176,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Total Savings to Date",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:cash-multiple",
     },
     {
@@ -184,7 +184,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Remaining on Investment",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:chart-timeline-variant-shimmer",
     },
     {
@@ -192,7 +192,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "name": "Investment Amount",
         "unit": CURRENCY_SEK,
         "device_class": SensorDeviceClass.MONETARY,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": SensorStateClass.TOTAL,
         "icon": "mdi:bank",
     },
     # --- Spot price sensors ---
@@ -200,7 +200,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "key": "current_spot_price",
         "name": "Current Spot Price",
         "unit": CURRENCY_SEK_PER_KWH,
-        "device_class": SensorDeviceClass.MONETARY,
+        "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:currency-usd",
     },
@@ -208,7 +208,7 @@ SENSOR_DESCRIPTIONS: list[dict[str, Any]] = [
         "key": "avg_spot_price_today",
         "name": "Average Spot Price Today",
         "unit": CURRENCY_SEK_PER_KWH,
-        "device_class": SensorDeviceClass.MONETARY,
+        "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
         "icon": "mdi:chart-line",
     },
