@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 import aiohttp
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.components.frontend import async_register_built_in_panel
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -15,6 +17,9 @@ from .coordinator import MySolarCellsCoordinator
 from .storage import MySolarCellsStorage
 
 _LOGGER = logging.getLogger(__name__)
+
+CARD_URL = f"/{DOMAIN}/my-solar-cells-roi-card.js"
+CARD_DIR = Path(__file__).parent / ".." / ".." / "custom_cards" / "my-solar-cells-roi-card"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -44,7 +49,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Register Lovelace card resource
-    _register_card(hass)
+    await _register_card(hass)
 
     return True
 
@@ -59,8 +64,50 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 
-def _register_card(hass: HomeAssistant) -> None:
-    """Register the custom Lovelace card resource."""
-    # The card JS file is served from custom_cards/my-solar-cells-roi-card/
-    # HACS handles the resource registration automatically
-    pass
+async def _register_card(hass: HomeAssistant) -> None:
+    """Register the custom Lovelace card as a static resource."""
+    # Register the JS file as a static path
+    card_path = CARD_DIR.resolve()
+    if card_path.is_dir():
+        hass.http.register_static_path(
+            f"/{DOMAIN}", str(card_path), cache_headers=False
+        )
+
+    # Add as a Lovelace resource if not already registered
+    await _add_lovelace_resource(hass, CARD_URL)
+
+
+async def _add_lovelace_resource(hass: HomeAssistant, url: str) -> None:
+    """Add a Lovelace resource if it's not already registered."""
+    try:
+        # For storage mode dashboards
+        from homeassistant.components.lovelace import DOMAIN as LOVELACE_DOMAIN
+        from homeassistant.components.lovelace.resources import (
+            ResourceStorageCollection,
+        )
+
+        lovelace_data = hass.data.get(LOVELACE_DOMAIN)
+        if lovelace_data and hasattr(lovelace_data, "resources"):
+            resources = lovelace_data.resources
+            if isinstance(resources, ResourceStorageCollection):
+                # Check if already registered
+                for item in resources.async_items():
+                    if item.get("url") == url:
+                        return
+                await resources.async_create_item(
+                    {"res_type": "module", "url": url}
+                )
+                _LOGGER.info("Registered Lovelace resource: %s", url)
+                return
+
+        _LOGGER.warning(
+            "Could not auto-register card resource. Add manually: "
+            "Settings -> Dashboards -> Resources -> Add %s as JavaScript Module",
+            url,
+        )
+    except Exception:  # noqa: BLE001
+        _LOGGER.warning(
+            "Could not auto-register card resource. Add manually: "
+            "Settings -> Dashboards -> Resources -> Add %s as JavaScript Module",
+            url,
+        )
