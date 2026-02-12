@@ -5,7 +5,8 @@
   "codeowners": ["@joacimwall"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/joacimwall/ha-my-solar-cells",
+  "documentation": "https://github.com/JoacimWall/MySolarCells",
   "iot_class": "cloud_polling",
-  "requirements": []
+  "requirements": [],
+  "integration_type": "hub"
 }
