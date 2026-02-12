@@ -1,0 +1,6 @@
+{
+  "name": "My Solar Cells",
+  "render_readme": true,
+  "domains": ["sensor"],
+  "homeassistant": "2024.1.0"
+}

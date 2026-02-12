@@ -1,0 +1,11 @@
+{
+  "domain": "my_solar_cells",
+  "name": "My Solar Cells",
+  "version": "1.0.0",
+  "codeowners": ["@joacimwall"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/joacimwall/ha-my-solar-cells",
+  "iot_class": "cloud_polling",
+  "requirements": []
+}

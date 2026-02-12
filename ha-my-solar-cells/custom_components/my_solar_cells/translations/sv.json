@@ -1,0 +1,103 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tibber API-nyckel",
+        "description": "Ange din Tibber API-nyckel. Du hittar den p\u00e5 https://developer.tibber.com/settings/access-token",
+        "data": {
+          "api_key": "API-nyckel"
+        }
+      },
+      "home": {
+        "title": "V\u00e4lj bostad",
+        "description": "V\u00e4lj vilken Tibber-bostad som ska anv\u00e4ndas f\u00f6r energidata.",
+        "data": {
+          "home_id": "Bostad",
+          "import_only_spot_price": "Importera bara spotpriser (anv\u00e4nd HA-sensorer f\u00f6r f\u00f6rbrukning/produktion)"
+        }
+      },
+      "sensors": {
+        "title": "Home Assistant-sensorer",
+        "description": "V\u00e4lj de HA-sensorer som sp\u00e5rar din solenergidata.",
+        "data": {
+          "grid_export_sensor": "N\u00e4texport-sensor (kWh s\u00e5ld till n\u00e4tet)",
+          "grid_import_sensor": "N\u00e4timport-sensor (kWh k\u00f6pt)",
+          "production_sensor": "Total produktionssensor (kWh total solproduktion)",
+          "battery_charge_sensor": "Batteriladdningssensor (valfri)",
+          "battery_discharge_sensor": "Batteriurl\u00e4ddningssensor (valfri)"
+        }
+      },
+      "financial": {
+        "title": "Ekonomiska parametrar",
+        "description": "Konfigurera de ekonomiska parametrarna f\u00f6r dina solenergiber\u00e4kningar.",
+        "data": {
+          "tax_reduction": "Skattereduktion (SEK/kWh s\u00e5ld)",
+          "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
+          "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
+          "energy_tax": "Energiskatt (SEK/kWh)",
+          "installed_kw": "Installerad kapacitet (kW)",
+          "use_spot_price": "Anv\u00e4nd spotpris",
+          "fixed_price": "Fast pris (SEK/kWh)"
+        }
+      },
+      "investment": {
+        "title": "Investering & ROI",
+        "description": "Ange dina investeringsdetaljer f\u00f6r ROI-sp\u00e5rning.",
+        "data": {
+          "investment_amount": "Investeringsbelopp (SEK)",
+          "loan_amount": "L\u00e5nebelopp (SEK)",
+          "interest_rate": "R\u00e4nta (%)",
+          "amortization_monthly": "M\u00e5natlig amortering (SEK)",
+          "panel_degradation": "Paneldegradation (%/\u00e5r)",
+          "price_development": "Prisutveckling (%/\u00e5r)",
+          "installation_date": "Installationsdatum (YYYY-MM-DD)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ogiltig API-nyckel. Kontrollera din Tibber-\u00e5tkomsttoken.",
+      "cannot_connect": "Kunde inte ansluta till Tibber API. F\u00f6rs\u00f6k igen."
+    },
+    "abort": {
+      "already_configured": "Denna bostad \u00e4r redan konfigurerad."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Sensorkonfiguration",
+        "data": {
+          "grid_export_sensor": "N\u00e4texport-sensor",
+          "grid_import_sensor": "N\u00e4timport-sensor",
+          "production_sensor": "Total produktionssensor",
+          "battery_charge_sensor": "Batteriladdningssensor",
+          "battery_discharge_sensor": "Batteriurl\u00e4ddningssensor"
+        }
+      },
+      "financial": {
+        "title": "Ekonomiska parametrar",
+        "data": {
+          "tax_reduction": "Skattereduktion (SEK/kWh)",
+          "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
+          "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
+          "energy_tax": "Energiskatt (SEK/kWh)",
+          "installed_kw": "Installerad kapacitet (kW)",
+          "use_spot_price": "Anv\u00e4nd spotpris",
+          "fixed_price": "Fast pris (SEK/kWh)"
+        }
+      },
+      "investment": {
+        "title": "Investering & ROI",
+        "data": {
+          "investment_amount": "Investeringsbelopp (SEK)",
+          "loan_amount": "L\u00e5nebelopp (SEK)",
+          "interest_rate": "R\u00e4nta (%)",
+          "amortization_monthly": "M\u00e5natlig amortering (SEK)",
+          "panel_degradation": "Paneldegradation (%/\u00e5r)",
+          "price_development": "Prisutveckling (%/\u00e5r)",
+          "installation_date": "Installationsdatum"
+        }
+      }
+    }
+  }
+}
