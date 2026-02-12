@@ -206,23 +206,36 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def _enrich_record_from_ha_sensors(self, record: dict) -> None:
         """Enrich a Tibber record with HA sensor data for own_use calculation.
 
-        own_use = total_production - grid_export
+        Tibber provides grid_export (production_sold) and grid_import (purchased).
+        If only a production sensor is configured (no separate grid export sensor),
+        own_use is calculated as: total_production - tibber_production_sold.
+
+        If a grid export sensor IS configured, it overrides Tibber's production_sold
+        and own_use = total_production - grid_export_sensor.
         """
         production_sensor = self._config.get(CONF_PRODUCTION_SENSOR)
         export_sensor = self._config.get(CONF_GRID_EXPORT_SENSOR)
+        import_sensor = self._config.get(CONF_GRID_IMPORT_SENSOR)
         battery_charge_sensor = self._config.get(CONF_BATTERY_CHARGE_SENSOR)
         battery_discharge_sensor = self._config.get(CONF_BATTERY_DISCHARGE_SENSOR)
 
-        # For now, use Tibber production_sold as grid_export
-        # and calculate own_use from HA sensors when available
-        if production_sensor and export_sensor:
+        if production_sensor:
             prod_state = self.hass.states.get(production_sensor)
-            export_state = self.hass.states.get(export_sensor)
-
-            if prod_state and export_state:
+            if prod_state and prod_state.state not in ("unknown", "unavailable"):
                 try:
                     total_prod = float(prod_state.state)
-                    grid_export = float(export_state.state)
+
+                    # Determine grid export: prefer HA sensor, fall back to Tibber data
+                    if export_sensor:
+                        export_state = self.hass.states.get(export_sensor)
+                        if export_state and export_state.state not in ("unknown", "unavailable"):
+                            grid_export = float(export_state.state)
+                        else:
+                            grid_export = record.get("production_sold", 0)
+                    else:
+                        # Use Tibber's production_sold as grid export
+                        grid_export = record.get("production_sold", 0)
+
                     own_use = max(0, total_prod - grid_export)
                     record["production_own_use"] = own_use
 
@@ -231,6 +244,20 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         record["production_own_use_profit"] = own_use * record.get("unit_price_buy", 0)
                     else:
                         record["production_own_use_profit"] = own_use * self._calc_params.fixed_price
+                except (ValueError, TypeError):
+                    pass
+
+        # Override grid import from HA sensor if configured
+        if import_sensor:
+            import_state = self.hass.states.get(import_sensor)
+            if import_state and import_state.state not in ("unknown", "unavailable"):
+                try:
+                    purchased = float(import_state.state)
+                    record["purchased"] = purchased
+                    if self._calc_params.use_spot_price:
+                        record["purchased_cost"] = purchased * record.get("unit_price_buy", 0)
+                    else:
+                        record["purchased_cost"] = purchased * self._calc_params.fixed_price
                 except (ValueError, TypeError):
                     pass
 

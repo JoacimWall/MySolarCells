@@ -18,11 +18,11 @@
       },
       "sensors": {
         "title": "Home Assistant Sensors",
-        "description": "Select the HA sensors that track your solar energy data.",
+        "description": "Select the sensor for total solar production. Grid export/import are fetched from Tibber by default. Only set grid sensors if you have separate HA sensors you want to use instead.",
         "data": {
-          "grid_export_sensor": "Grid Export Sensor (kWh sold to grid)",
-          "grid_import_sensor": "Grid Import Sensor (kWh purchased)",
           "production_sensor": "Total Production Sensor (kWh total solar production)",
+          "grid_export_sensor": "Grid Export Sensor (optional, overrides Tibber)",
+          "grid_import_sensor": "Grid Import Sensor (optional, overrides Tibber)",
           "battery_charge_sensor": "Battery Charge Sensor (optional)",
           "battery_discharge_sensor": "Battery Discharge Sensor (optional)"
         }

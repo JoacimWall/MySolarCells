@@ -18,11 +18,11 @@
       },
       "sensors": {
         "title": "Home Assistant-sensorer",
-        "description": "V\u00e4lj de HA-sensorer som sp\u00e5rar din solenergidata.",
+        "description": "V\u00e4lj sensor f\u00f6r total solproduktion. N\u00e4texport/import h\u00e4mtas fr\u00e5n Tibber som standard. Ange bara n\u00e4tsensorer om du har separata HA-sensorer du vill anv\u00e4nda ist\u00e4llet.",
         "data": {
-          "grid_export_sensor": "N\u00e4texport-sensor (kWh s\u00e5ld till n\u00e4tet)",
-          "grid_import_sensor": "N\u00e4timport-sensor (kWh k\u00f6pt)",
           "production_sensor": "Total produktionssensor (kWh total solproduktion)",
+          "grid_export_sensor": "N\u00e4texport-sensor (valfri, \u00e5sidos\u00e4tter Tibber)",
+          "grid_import_sensor": "N\u00e4timport-sensor (valfri, \u00e5sidos\u00e4tter Tibber)",
           "battery_charge_sensor": "Batteriladdningssensor (valfri)",
           "battery_discharge_sensor": "Batteriurl\u00e4ddningssensor (valfri)"
         }

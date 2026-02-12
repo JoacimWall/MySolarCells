@@ -148,9 +148,9 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="sensors",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_GRID_EXPORT_SENSOR): entity_selector,
-                    vol.Required(CONF_GRID_IMPORT_SENSOR): entity_selector,
                     vol.Required(CONF_PRODUCTION_SENSOR): entity_selector,
+                    vol.Optional(CONF_GRID_EXPORT_SENSOR): entity_selector,
+                    vol.Optional(CONF_GRID_IMPORT_SENSOR): entity_selector,
                     vol.Optional(CONF_BATTERY_CHARGE_SENSOR): entity_selector,
                     vol.Optional(CONF_BATTERY_DISCHARGE_SENSOR): entity_selector,
                 }
@@ -266,16 +266,16 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(
+                        CONF_PRODUCTION_SENSOR,
+                        default=data.get(CONF_PRODUCTION_SENSOR, ""),
+                    ): entity_selector,
+                    vol.Optional(
                         CONF_GRID_EXPORT_SENSOR,
                         default=data.get(CONF_GRID_EXPORT_SENSOR, ""),
                     ): entity_selector,
-                    vol.Required(
+                    vol.Optional(
                         CONF_GRID_IMPORT_SENSOR,
                         default=data.get(CONF_GRID_IMPORT_SENSOR, ""),
-                    ): entity_selector,
-                    vol.Required(
-                        CONF_PRODUCTION_SENSOR,
-                        default=data.get(CONF_PRODUCTION_SENSOR, ""),
                     ): entity_selector,
                     vol.Optional(
                         CONF_BATTERY_CHARGE_SENSOR,
