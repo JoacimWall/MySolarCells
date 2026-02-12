@@ -66,9 +66,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def _register_card(hass: HomeAssistant) -> None:
     """Register the custom Lovelace card as a static resource."""
+    from homeassistant.components.http import StaticPathConfig
+
     # Serve the JS file from the integration's own directory
-    hass.http.register_static_path(
-        f"/{DOMAIN}", str(CARD_DIR), cache_headers=False
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(f"/{DOMAIN}", str(CARD_DIR), False)]
     )
 
     # Add as a Lovelace resource if not already registered
