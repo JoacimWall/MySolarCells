@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -334,7 +334,7 @@ def generate_monthly_report(
         stats = calculate_period(records, calc_params)
         stats.investment = investment
         year, month = month_key.split("-")
-        from_date = datetime(int(year), int(month), 1)
+        from_date = datetime(int(year), int(month), 1, tzinfo=timezone.utc)
         stats.title = from_date.strftime("%B")
         monthly_reports.append(
             ReportHistoryStats(

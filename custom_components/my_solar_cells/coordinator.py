@@ -47,6 +47,13 @@ from .tibber_client import TibberApiError, TibberClient
 _LOGGER = logging.getLogger(__name__)
 
 
+def _ensure_utc(dt: datetime) -> datetime:
+    """Ensure a datetime is timezone-aware (UTC)."""
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Coordinator to manage data updates for My Solar Cells."""
 
@@ -124,12 +131,12 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Run initial historical import from Tibber."""
         last_sync = self._storage.last_tibber_sync
         if last_sync:
-            start = datetime.fromisoformat(last_sync)
+            start = _ensure_utc(datetime.fromisoformat(last_sync))
         else:
             install_date_str = self._config.get(CONF_INSTALLATION_DATE, "")
             if install_date_str:
                 try:
-                    start = datetime.fromisoformat(install_date_str)
+                    start = _ensure_utc(datetime.fromisoformat(install_date_str))
                 except (ValueError, TypeError):
                     start = datetime.now(tz=timezone.utc) - timedelta(days=365)
             else:
@@ -176,7 +183,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Fetch recent consumption/production from Tibber."""
         last_sync = self._storage.last_tibber_sync
         if last_sync:
-            start = datetime.fromisoformat(last_sync)
+            start = _ensure_utc(datetime.fromisoformat(last_sync))
         else:
             start = datetime.now(tz=timezone.utc) - timedelta(days=1)
 
@@ -328,7 +335,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         first_prod_day = None
         if install_date_str:
             try:
-                first_prod_day = datetime.fromisoformat(install_date_str)
+                first_prod_day = _ensure_utc(datetime.fromisoformat(install_date_str))
             except (ValueError, TypeError):
                 pass
 

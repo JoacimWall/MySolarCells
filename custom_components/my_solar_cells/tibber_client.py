@@ -129,8 +129,11 @@ class TibberClient:
         Returns list of hourly energy record dicts.
         """
         records: list[dict[str, Any]] = []
-        now = datetime.now(tz=start.tzinfo or timezone.utc)
-        end = datetime(now.year, now.month, now.day, tzinfo=start.tzinfo or timezone.utc) + timedelta(days=1)
+        # Ensure start is timezone-aware
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=timezone.utc)
+        now = datetime.now(tz=timezone.utc)
+        end = datetime(now.year, now.month, now.day, tzinfo=timezone.utc) + timedelta(days=1)
         current = start
 
         while current < end:
