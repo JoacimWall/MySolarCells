@@ -30,6 +30,7 @@ class MySolarCellsStorage:
         if stored and isinstance(stored, dict):
             self._data = stored
             self._migrate_timezone_keys()
+            self._migrate_cumulative_sensor_fix()
         else:
             self._data = {
                 "hourly_records": {},
@@ -60,6 +61,31 @@ class MySolarCellsStorage:
             self._data["quarter_hourly_prices"] = {}
             self._data["last_tibber_sync"] = None
             self._data["monthly_cache"] = {}
+
+    def _migrate_cumulative_sensor_fix(self) -> None:
+        """Clear records corrupted by cumulative sensor bug (v2 fix).
+
+        Prior to the delta-based enrichment fix, HA sensor readings used
+        raw cumulative totals instead of hourly deltas, producing wildly
+        inflated values for production_own_use, purchased, battery_used, etc.
+        Clear all records and force a fresh Tibber import to restore correct data.
+        """
+        if self._data.get("migrated_v2_delta_fix"):
+            return
+
+        hourly = self._data.get("hourly_records", {})
+        if hourly:
+            _LOGGER.warning(
+                "Migrating storage: clearing %d records affected by cumulative "
+                "sensor bug, will re-import from Tibber",
+                len(hourly),
+            )
+            self._data["hourly_records"] = {}
+            self._data["last_tibber_sync"] = None
+            self._data["monthly_cache"] = {}
+            self._data["last_sensor_readings"] = {}
+
+        self._data["migrated_v2_delta_fix"] = True
 
     async def async_save(self) -> None:
         """Save current data to storage."""
