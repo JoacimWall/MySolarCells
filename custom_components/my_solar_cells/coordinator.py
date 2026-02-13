@@ -32,6 +32,7 @@ from .const import (
     CONF_TAX_REDUCTION,
     CONF_TRANSFER_FEE,
     CONF_USE_SPOT_PRICE,
+    CONF_YEARLY_PARAMS,
     DOMAIN,
     UPDATE_INTERVAL_MINUTES,
 )
@@ -80,6 +81,9 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._last_hourly_update: datetime | None = None
         self._initial_import_done = False
         self._last_sensor_readings: dict[str, float] = {}
+
+        # Per-year financial parameter overrides (optional)
+        self._yearly_params = config_data.get(CONF_YEARLY_PARAMS)
 
         # Build calc params from config
         self._calc_params = CalcParams(
@@ -382,15 +386,15 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         all_records = self._storage.get_all_records_as_list()
 
         # Calculate stats for each period
-        daily_stats = calculate_period(daily_records, self._calc_params)
-        monthly_stats = calculate_period(monthly_records, self._calc_params)
-        yearly_stats = calculate_period(yearly_records, self._calc_params)
-        lifetime_stats = calculate_period(all_records, self._calc_params)
+        daily_stats = calculate_period(daily_records, self._calc_params, self._yearly_params)
+        monthly_stats = calculate_period(monthly_records, self._calc_params, self._yearly_params)
+        yearly_stats = calculate_period(yearly_records, self._calc_params, self._yearly_params)
+        lifetime_stats = calculate_period(all_records, self._calc_params, self._yearly_params)
 
         # Generate yearly overview for ROI
         investment = self._config.get(CONF_INVESTMENT_AMOUNT, 0) + self._config.get(CONF_LOAN_AMOUNT, 0)
         yearly_overview, monthly_by_year = generate_monthly_report(
-            all_records, self._calc_params, investment
+            all_records, self._calc_params, investment, self._yearly_params
         )
 
         # Calculate ROI projection

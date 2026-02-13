@@ -37,6 +37,7 @@ from .const import (
     CONF_TAX_REDUCTION,
     CONF_TRANSFER_FEE,
     CONF_USE_SPOT_PRICE,
+    CONF_YEARLY_PARAMS,
     DEFAULT_AMORTIZATION_MONTHLY,
     DEFAULT_ENERGY_TAX,
     DEFAULT_FIXED_PRICE,
@@ -254,17 +255,20 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
-    """Handle options flow for My Solar Cells (edit steps 3-5)."""
+    """Handle options flow for My Solar Cells (edit steps 3-5 + yearly params)."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
         self._config_entry = config_entry
+        self._collected_data: dict[str, Any] = {}
+        self._selected_year: str | None = None
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Start options flow - sensor configuration."""
         if user_input is not None:
+            self._collected_data.update(user_input)
             return await self.async_step_financial(user_input=None)
 
         data = self._config_entry.data
@@ -305,7 +309,8 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
     ) -> config_entries.ConfigFlowResult:
         """Options step: Financial parameters."""
         if user_input is not None:
-            return await self.async_step_investment(user_input=None)
+            self._collected_data.update(user_input)
+            return await self.async_step_yearly_params(user_input=None)
 
         data = self._config_entry.data
 
@@ -345,13 +350,128 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
             ),
         )
 
+    async def async_step_yearly_params(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Options step: Select year to configure or proceed to investment."""
+        if user_input is not None:
+            selected = user_input.get("selected_year", "done")
+            if selected == "done":
+                return await self.async_step_investment(user_input=None)
+            self._selected_year = selected
+            return await self.async_step_yearly_params_edit(user_input=None)
+
+        # Build year options from installation date to current year
+        data = self._config_entry.data
+        install_date_str = data.get(CONF_INSTALLATION_DATE, "")
+        current_year = datetime.now().year
+        try:
+            install_year = int(install_date_str[:4]) if install_date_str else current_year
+        except (ValueError, TypeError):
+            install_year = current_year
+
+        year_options = {
+            str(y): str(y)
+            for y in range(install_year, current_year + 1)
+        }
+        year_options["done"] = "Done - continue to investment"
+
+        # Show which years already have overrides
+        existing = self._collected_data.get(
+            CONF_YEARLY_PARAMS,
+            data.get(CONF_YEARLY_PARAMS, {}),
+        ) or {}
+        description_text = ""
+        if existing:
+            configured_years = ", ".join(sorted(existing.keys()))
+            description_text = f"Years with overrides: {configured_years}"
+
+        return self.async_show_form(
+            step_id="yearly_params",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("selected_year", default="done"): vol.In(year_options),
+                }
+            ),
+            description_placeholders={"configured_years": description_text},
+        )
+
+    async def async_step_yearly_params_edit(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.ConfigFlowResult:
+        """Options step: Edit financial parameters for a specific year."""
+        if user_input is not None:
+            # Store the year overrides
+            yearly = self._collected_data.setdefault(CONF_YEARLY_PARAMS, {})
+            if not isinstance(yearly, dict):
+                yearly = {}
+                self._collected_data[CONF_YEARLY_PARAMS] = yearly
+
+            # Merge from existing config if not yet in collected data
+            existing = self._config_entry.data.get(CONF_YEARLY_PARAMS, {})
+            if existing and not yearly:
+                yearly.update(existing)
+
+            yearly[self._selected_year] = {
+                CONF_TAX_REDUCTION: user_input[CONF_TAX_REDUCTION],
+                CONF_GRID_COMPENSATION: user_input[CONF_GRID_COMPENSATION],
+                CONF_TRANSFER_FEE: user_input[CONF_TRANSFER_FEE],
+                CONF_ENERGY_TAX: user_input[CONF_ENERGY_TAX],
+            }
+            return await self.async_step_yearly_params(user_input=None)
+
+        # Pre-fill with existing override or defaults
+        data = self._config_entry.data
+        existing_yearly = self._collected_data.get(
+            CONF_YEARLY_PARAMS,
+            data.get(CONF_YEARLY_PARAMS, {}),
+        ) or {}
+        year_data = existing_yearly.get(self._selected_year, {})
+
+        return self.async_show_form(
+            step_id="yearly_params_edit",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_TAX_REDUCTION,
+                        default=year_data.get(
+                            CONF_TAX_REDUCTION,
+                            data.get(CONF_TAX_REDUCTION, DEFAULT_TAX_REDUCTION),
+                        ),
+                    ): vol.Coerce(float),
+                    vol.Required(
+                        CONF_GRID_COMPENSATION,
+                        default=year_data.get(
+                            CONF_GRID_COMPENSATION,
+                            data.get(CONF_GRID_COMPENSATION, DEFAULT_GRID_COMPENSATION),
+                        ),
+                    ): vol.Coerce(float),
+                    vol.Required(
+                        CONF_TRANSFER_FEE,
+                        default=year_data.get(
+                            CONF_TRANSFER_FEE,
+                            data.get(CONF_TRANSFER_FEE, DEFAULT_TRANSFER_FEE),
+                        ),
+                    ): vol.Coerce(float),
+                    vol.Required(
+                        CONF_ENERGY_TAX,
+                        default=year_data.get(
+                            CONF_ENERGY_TAX,
+                            data.get(CONF_ENERGY_TAX, DEFAULT_ENERGY_TAX),
+                        ),
+                    ): vol.Coerce(float),
+                }
+            ),
+            description_placeholders={"year": self._selected_year},
+        )
+
     async def async_step_investment(
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
         """Options step: Investment parameters."""
         if user_input is not None:
-            # Merge all options data
-            new_data = {**self._config_entry.data, **user_input}
+            # Merge all collected data with investment input
+            new_data = {**self._config_entry.data, **self._collected_data, **user_input}
             self.hass.config_entries.async_update_entry(
                 self._config_entry, data=new_data
             )

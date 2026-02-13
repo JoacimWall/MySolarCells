@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
@@ -125,6 +126,27 @@ class ReportHistoryStats:
     from_date: datetime = field(default_factory=datetime.now)
     history_stats: HistoryStats = field(default_factory=HistoryStats)
     first_production_day: datetime | None = None
+
+
+def get_calc_params_for_year(
+    year: str,
+    base_params: CalcParams,
+    yearly_params: dict[str, dict[str, float]] | None,
+) -> CalcParams:
+    """Return CalcParams with year-specific overrides merged onto base_params.
+
+    If yearly_params is None or has no entry for the given year,
+    returns base_params unchanged.
+    """
+    if not yearly_params or year not in yearly_params:
+        return base_params
+
+    overrides = yearly_params[year]
+    params = copy(base_params)
+    for key in ("tax_reduction", "grid_compensation", "transfer_fee", "energy_tax"):
+        if key in overrides:
+            setattr(params, key, overrides[key])
+    return params
 
 
 def calculate_daily_stats(
@@ -267,10 +289,12 @@ def summarize_stats(stats_list: list[HistoryStats], total_days: float) -> Histor
 def calculate_period(
     hourly_records: list[dict],
     calc_params: CalcParams,
+    yearly_params: dict[str, dict[str, float]] | None = None,
 ) -> HistoryStats:
     """Calculate stats for a period by computing daily stats and summarizing.
 
     Groups records by date, computes daily stats, then summarizes.
+    If yearly_params is provided, per-year overrides are applied to calc_params.
     """
     if not hourly_records:
         return HistoryStats(calc_params=calc_params)
@@ -291,8 +315,10 @@ def calculate_period(
 
     # Calculate daily stats
     daily_stats = []
-    for _date_key, records in sorted(daily_groups.items()):
-        daily_stats.append(calculate_daily_stats(records, calc_params))
+    for date_key, records in sorted(daily_groups.items()):
+        year = date_key[:4]
+        params = get_calc_params_for_year(year, calc_params, yearly_params)
+        daily_stats.append(calculate_daily_stats(records, params))
 
     total_days = len(daily_stats) if daily_stats else 1
     return summarize_stats(daily_stats, total_days)
@@ -302,6 +328,7 @@ def generate_monthly_report(
     hourly_records: list[dict],
     calc_params: CalcParams,
     investment: float = 0,
+    yearly_params: dict[str, dict[str, float]] | None = None,
 ) -> tuple[list[ReportHistoryStats], list[list[ReportHistoryStats]]]:
     """Generate monthly and yearly aggregated reports.
 
@@ -331,7 +358,7 @@ def generate_monthly_report(
     monthly_reports: list[ReportHistoryStats] = []
     for month_key in sorted(monthly_groups.keys()):
         records = monthly_groups[month_key]
-        stats = calculate_period(records, calc_params)
+        stats = calculate_period(records, calc_params, yearly_params)
         stats.investment = investment
         year, month = month_key.split("-")
         from_date = datetime(int(year), int(month), 1, tzinfo=timezone.utc)
@@ -370,9 +397,10 @@ def generate_monthly_report(
         # Tax reduction cap (lines 87-97): if production_sold > purchased,
         # cap tax reduction to purchased * tax_reduction
         if year_stats.production_sold > year_stats.purchased:
+            year_params = get_calc_params_for_year(str(year), calc_params, yearly_params)
             old_value = year_stats.production_sold_tax_reduction_profit
             year_stats.production_sold_tax_reduction_profit = round(
-                year_stats.purchased * calc_params.tax_reduction, 2
+                year_stats.purchased * year_params.tax_reduction, 2
             )
             missed = round(old_value - year_stats.production_sold_tax_reduction_profit, 2)
             year_stats.production_sold_tax_reduction_comment = (

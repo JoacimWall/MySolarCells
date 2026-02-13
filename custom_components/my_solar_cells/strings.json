@@ -86,6 +86,23 @@
           "fixed_price": "Fixed Price (SEK/kWh)"
         }
       },
+      "yearly_params": {
+        "title": "Per-Year Financial Parameters",
+        "description": "Select a year to configure year-specific financial rates, or choose Done to continue. {configured_years}",
+        "data": {
+          "selected_year": "Select Year"
+        }
+      },
+      "yearly_params_edit": {
+        "title": "Financial Parameters for {year}",
+        "description": "Set the financial rates that apply for this specific year.",
+        "data": {
+          "tax_reduction": "Tax Reduction (SEK/kWh)",
+          "grid_compensation": "Grid Compensation (SEK/kWh)",
+          "transfer_fee": "Transfer Fee (SEK/kWh)",
+          "energy_tax": "Energy Tax (SEK/kWh)"
+        }
+      },
       "investment": {
         "title": "Investment & ROI",
         "data": {

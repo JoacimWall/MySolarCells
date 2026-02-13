@@ -8,6 +8,7 @@ from custom_components.my_solar_cells.financial_engine import (
     calculate_daily_stats,
     calculate_period,
     generate_monthly_report,
+    get_calc_params_for_year,
     summarize_stats,
 )
 
@@ -183,3 +184,156 @@ class TestGenerateMonthlyReport:
         # Tax reduction should be capped: purchased * tax_reduction = 10.0 * 0.60 = 6.0
         assert yearly[0].history_stats.production_sold_tax_reduction_profit == 6.0
         assert "capped" in yearly[0].history_stats.production_sold_tax_reduction_comment
+
+
+class TestYearAwareCalculations:
+    """Tests for per-year financial parameter overrides."""
+
+    def test_get_calc_params_no_overrides(self, sample_calc_params):
+        """Without yearly_params, returns base_params unchanged."""
+        result = get_calc_params_for_year("2024", sample_calc_params, None)
+        assert result is sample_calc_params
+
+    def test_get_calc_params_empty_dict(self, sample_calc_params):
+        """Empty yearly_params dict returns base_params unchanged."""
+        result = get_calc_params_for_year("2024", sample_calc_params, {})
+        assert result is sample_calc_params
+
+    def test_get_calc_params_missing_year(self, sample_calc_params):
+        """Year not in yearly_params returns base_params unchanged."""
+        yearly = {"2023": {"energy_tax": 0.45}}
+        result = get_calc_params_for_year("2024", sample_calc_params, yearly)
+        assert result is sample_calc_params
+
+    def test_get_calc_params_with_override(self, sample_calc_params):
+        """Year in yearly_params returns new CalcParams with overrides."""
+        yearly = {"2023": {"energy_tax": 0.45, "transfer_fee": 0.28}}
+        result = get_calc_params_for_year("2023", sample_calc_params, yearly)
+        # Should be a different object
+        assert result is not sample_calc_params
+        # Overridden values
+        assert result.energy_tax == 0.45
+        assert result.transfer_fee == 0.28
+        # Non-overridden values preserved
+        assert result.tax_reduction == sample_calc_params.tax_reduction
+        assert result.grid_compensation == sample_calc_params.grid_compensation
+        assert result.installed_kw == sample_calc_params.installed_kw
+
+    def test_get_calc_params_does_not_mutate_base(self, sample_calc_params):
+        """Overrides must not mutate the original base_params."""
+        yearly = {"2023": {"energy_tax": 0.45}}
+        get_calc_params_for_year("2023", sample_calc_params, yearly)
+        assert sample_calc_params.energy_tax == 0.49
+
+    def test_calculate_period_with_yearly_params(self, sample_calc_params):
+        """calculate_period uses per-year params for daily calculations."""
+        # Records in 2023 and 2024 with different years
+        records = [
+            {
+                "timestamp": "2023-06-15T12:00:00+02:00",
+                "purchased": 10.0,
+                "purchased_cost": 5.0,
+                "production_sold": 5.0,
+                "production_sold_profit": 3.0,
+                "production_own_use": 5.0,
+                "production_own_use_profit": 2.5,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            },
+            {
+                "timestamp": "2024-06-15T12:00:00+02:00",
+                "purchased": 10.0,
+                "purchased_cost": 5.0,
+                "production_sold": 5.0,
+                "production_sold_profit": 3.0,
+                "production_own_use": 5.0,
+                "production_own_use_profit": 2.5,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            },
+        ]
+        yearly = {
+            "2023": {"energy_tax": 0.45, "transfer_fee": 0.28},
+            "2024": {"energy_tax": 0.49, "transfer_fee": 0.30},
+        }
+        result = calculate_period(records, sample_calc_params, yearly)
+        # 2023 day: purchased_tax = 10.0 * 0.45 = 4.50
+        # 2024 day: purchased_tax = 10.0 * 0.49 = 4.90
+        # Total: 9.40
+        assert result.purchased_tax_cost == 9.4
+        # 2023 day: purchased_transfer = 10.0 * 0.28 = 2.80
+        # 2024 day: purchased_transfer = 10.0 * 0.30 = 3.00
+        # Total: 5.80
+        assert result.purchased_transfer_fee_cost == 5.8
+
+    def test_calculate_period_none_yearly_params(self, sample_hourly_records, sample_calc_params):
+        """calculate_period with yearly_params=None works like before."""
+        result_without = calculate_period(sample_hourly_records, sample_calc_params)
+        result_with_none = calculate_period(sample_hourly_records, sample_calc_params, None)
+        assert result_without.purchased_tax_cost == result_with_none.purchased_tax_cost
+        assert result_without.purchased_transfer_fee_cost == result_with_none.purchased_transfer_fee_cost
+
+    def test_generate_monthly_report_with_yearly_params(self, sample_calc_params):
+        """generate_monthly_report uses year-specific params for tax cap."""
+        # Create records where production_sold > purchased for 2023
+        records = [
+            {
+                "timestamp": "2023-06-15T12:00:00+01:00",
+                "purchased": 10.0,
+                "purchased_cost": 5.0,
+                "production_sold": 100.0,
+                "production_sold_profit": 60.0,
+                "production_own_use": 50.0,
+                "production_own_use_profit": 25.0,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            }
+        ]
+        yearly = {"2023": {"tax_reduction": 0.50}}
+        yearly_overview, _ = generate_monthly_report(
+            records, sample_calc_params, 200000, yearly
+        )
+        assert len(yearly_overview) == 1
+        # Tax cap should use 2023 override: 10.0 * 0.50 = 5.0
+        assert yearly_overview[0].history_stats.production_sold_tax_reduction_profit == 5.0
+
+    def test_multi_year_records_use_respective_params(self, sample_calc_params):
+        """Records spanning multiple years each use their year's params."""
+        records = [
+            {
+                "timestamp": "2023-03-15T12:00:00+01:00",
+                "purchased": 5.0,
+                "purchased_cost": 2.5,
+                "production_sold": 3.0,
+                "production_sold_profit": 1.8,
+                "production_own_use": 2.0,
+                "production_own_use_profit": 1.0,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            },
+            {
+                "timestamp": "2024-03-15T12:00:00+01:00",
+                "purchased": 5.0,
+                "purchased_cost": 2.5,
+                "production_sold": 3.0,
+                "production_sold_profit": 1.8,
+                "production_own_use": 2.0,
+                "production_own_use_profit": 1.0,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            },
+        ]
+        yearly = {
+            "2023": {"grid_compensation": 0.07},
+            "2024": {"grid_compensation": 0.09},
+        }
+        result = calculate_period(records, sample_calc_params, yearly)
+        # 2023: 3.0 * 0.07 = 0.21
+        # 2024: 3.0 * 0.09 = 0.27
+        # Total: 0.48
+        assert result.production_sold_grid_compensation_profit == 0.48

@@ -86,6 +86,23 @@
           "fixed_price": "Fast pris (SEK/kWh)"
         }
       },
+      "yearly_params": {
+        "title": "\u00c5rsvisa ekonomiska parametrar",
+        "description": "V\u00e4lj ett \u00e5r f\u00f6r att konfigurera \u00e5rsspecifika ekonomiska parametrar, eller v\u00e4lj Klar f\u00f6r att forts\u00e4tta. {configured_years}",
+        "data": {
+          "selected_year": "V\u00e4lj \u00e5r"
+        }
+      },
+      "yearly_params_edit": {
+        "title": "Ekonomiska parametrar f\u00f6r {year}",
+        "description": "Ange de ekonomiska parametrar som g\u00e4ller f\u00f6r detta specifika \u00e5r.",
+        "data": {
+          "tax_reduction": "Skattereduktion (SEK/kWh)",
+          "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
+          "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
+          "energy_tax": "Energiskatt (SEK/kWh)"
+        }
+      },
       "investment": {
         "title": "Investering & ROI",
         "data": {

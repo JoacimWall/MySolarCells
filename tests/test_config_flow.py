@@ -41,3 +41,21 @@ class TestConfigFlow:
         assert "async_step_sensors" in source
         assert "async_step_financial" in source
         assert "async_step_investment" in source
+
+    def test_options_flow_has_yearly_params_steps(self):
+        """Test that options flow defines yearly_params step methods."""
+        import inspect
+        from custom_components.my_solar_cells import config_flow
+
+        source = inspect.getsource(config_flow)
+        assert "async_step_yearly_params" in source
+        assert "async_step_yearly_params_edit" in source
+
+    def test_options_flow_collects_data_across_steps(self):
+        """Test that options flow __init__ sets up _collected_data."""
+        import inspect
+        from custom_components.my_solar_cells import config_flow
+
+        source = inspect.getsource(config_flow)
+        assert "_collected_data" in source
+        assert "self._collected_data: dict" in source

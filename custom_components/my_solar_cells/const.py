@@ -53,6 +53,7 @@ CONF_AMORTIZATION_MONTHLY = "amortization_monthly"
 CONF_PANEL_DEGRADATION = "panel_degradation"
 CONF_PRICE_DEVELOPMENT = "price_development"
 CONF_INSTALLATION_DATE = "installation_date"
+CONF_YEARLY_PARAMS = "yearly_params"
 
 # Year when tax reduction is removed in Sweden
 TAX_REDUCTION_END_YEAR = 2026
