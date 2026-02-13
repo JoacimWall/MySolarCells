@@ -37,6 +37,7 @@ class MySolarCellsStorage:
                 "last_tibber_sync": None,
                 "monthly_cache": {},
                 "roi_projection": [],
+                "last_sensor_readings": {},
             }
 
     def _migrate_timezone_keys(self) -> None:
@@ -96,6 +97,15 @@ class MySolarCellsStorage:
     @roi_projection.setter
     def roi_projection(self, value: list[dict]) -> None:
         self._data["roi_projection"] = value
+
+    @property
+    def last_sensor_readings(self) -> dict[str, float]:
+        """Get last known cumulative sensor readings for delta computation."""
+        return self._data.get("last_sensor_readings", {})
+
+    @last_sensor_readings.setter
+    def last_sensor_readings(self, value: dict[str, float]) -> None:
+        self._data["last_sensor_readings"] = value
 
     def upsert_hourly_record(self, timestamp: str, record: dict) -> None:
         """Insert or update an hourly energy record."""

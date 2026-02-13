@@ -79,6 +79,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._client = TibberClient(session, config_data[CONF_API_KEY])
         self._last_hourly_update: datetime | None = None
         self._initial_import_done = False
+        self._last_sensor_readings: dict[str, float] = {}
 
         # Build calc params from config
         self._calc_params = CalcParams(
@@ -195,99 +196,161 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 home_id, start, import_only_spot
             )
 
-            # Enrich with HA sensor data for own use calculation
+            # Store base Tibber records
             for record in records:
-                self._enrich_record_from_ha_sensors(record)
                 ts = record.get("timestamp", "")
                 if ts:
-                    # Only update if not already set with richer data
                     existing = self._storage.hourly_records.get(ts)
                     if not existing or not existing.get("synced"):
                         self._storage.upsert_hourly_record(ts, record)
+
+            # Compute sensor deltas and enrich the most recent record
+            sensor_deltas = self._compute_sensor_deltas()
+            if sensor_deltas and records:
+                most_recent = max(records, key=lambda r: r.get("timestamp", ""))
+                ts = most_recent.get("timestamp", "")
+                if ts:
+                    stored = self._storage.hourly_records.get(ts, most_recent)
+                    self._enrich_record_with_deltas(stored, sensor_deltas)
+                    self._storage.upsert_hourly_record(ts, stored)
 
             self._storage.last_tibber_sync = datetime.now(tz=timezone.utc).isoformat()
             await self._storage.async_save()
         except TibberApiError as err:
             _LOGGER.warning("Failed to update consumption/production: %s", err)
 
-    def _enrich_record_from_ha_sensors(self, record: dict) -> None:
-        """Enrich a Tibber record with HA sensor data for own_use calculation.
+    def _compute_sensor_deltas(self) -> dict[str, float]:
+        """Compute hourly deltas from cumulative HA sensor readings.
 
-        Tibber provides grid_export (production_sold) and grid_import (purchased).
-        If only a production sensor is configured (no separate grid export sensor),
-        own_use is calculated as: total_production - tibber_production_sold.
-
-        If a grid export sensor IS configured, it overrides Tibber's production_sold
-        and own_use = total_production - grid_export_sensor.
+        On first call after restart, loads last known readings from storage.
+        Returns a dict of deltas keyed by sensor role (e.g. "production", "grid_export").
         """
-        production_sensor = self._config.get(CONF_PRODUCTION_SENSOR)
-        export_sensor = self._config.get(CONF_GRID_EXPORT_SENSOR)
-        import_sensor = self._config.get(CONF_GRID_IMPORT_SENSOR)
-        battery_charge_sensor = self._config.get(CONF_BATTERY_CHARGE_SENSOR)
-        battery_discharge_sensor = self._config.get(CONF_BATTERY_DISCHARGE_SENSOR)
+        # Load from persistent storage on first call
+        if not self._last_sensor_readings:
+            stored = self._storage.last_sensor_readings
+            if stored:
+                self._last_sensor_readings = dict(stored)
 
-        if production_sensor:
-            prod_state = self.hass.states.get(production_sensor)
-            if prod_state and prod_state.state not in ("unknown", "unavailable"):
-                try:
-                    total_prod = float(prod_state.state)
+        sensor_map = {
+            "production": self._config.get(CONF_PRODUCTION_SENSOR),
+            "grid_export": self._config.get(CONF_GRID_EXPORT_SENSOR),
+            "grid_import": self._config.get(CONF_GRID_IMPORT_SENSOR),
+            "battery_charge": self._config.get(CONF_BATTERY_CHARGE_SENSOR),
+            "battery_discharge": self._config.get(CONF_BATTERY_DISCHARGE_SENSOR),
+        }
 
-                    # Determine grid export: prefer HA sensor, fall back to Tibber data
-                    if export_sensor:
-                        export_state = self.hass.states.get(export_sensor)
-                        if export_state and export_state.state not in ("unknown", "unavailable"):
-                            grid_export = float(export_state.state)
-                        else:
-                            grid_export = record.get("production_sold", 0)
-                    else:
-                        # Use Tibber's production_sold as grid export
-                        grid_export = record.get("production_sold", 0)
+        deltas: dict[str, float] = {}
 
-                    own_use = max(0, total_prod - grid_export)
-                    record["production_own_use"] = own_use
+        for role, entity_id in sensor_map.items():
+            if not entity_id:
+                continue
 
-                    # Calculate own use profit based on buy price
-                    if self._calc_params.use_spot_price:
-                        record["production_own_use_profit"] = own_use * record.get("unit_price_buy", 0)
-                    else:
-                        record["production_own_use_profit"] = own_use * self._calc_params.fixed_price
-                except (ValueError, TypeError):
-                    pass
+            state_obj = self.hass.states.get(entity_id)
+            if not state_obj or state_obj.state in ("unknown", "unavailable"):
+                continue
 
-        # Override grid import from HA sensor if configured
-        if import_sensor:
-            import_state = self.hass.states.get(import_sensor)
-            if import_state and import_state.state not in ("unknown", "unavailable"):
-                try:
-                    purchased = float(import_state.state)
-                    record["purchased"] = purchased
-                    if self._calc_params.use_spot_price:
-                        record["purchased_cost"] = purchased * record.get("unit_price_buy", 0)
-                    else:
-                        record["purchased_cost"] = purchased * self._calc_params.fixed_price
-                except (ValueError, TypeError):
-                    pass
+            try:
+                current = float(state_obj.state)
+            except (ValueError, TypeError):
+                continue
 
-        if battery_charge_sensor:
-            state = self.hass.states.get(battery_charge_sensor)
-            if state:
-                try:
-                    record["battery_charge"] = float(state.state)
-                except (ValueError, TypeError):
-                    pass
+            previous = self._last_sensor_readings.get(role)
+            self._last_sensor_readings[role] = current
 
-        if battery_discharge_sensor:
-            state = self.hass.states.get(battery_discharge_sensor)
-            if state:
-                try:
-                    battery_used = float(state.state)
-                    record["battery_used"] = battery_used
-                    if self._calc_params.use_spot_price:
-                        record["battery_used_profit"] = battery_used * record.get("unit_price_buy", 0)
-                    else:
-                        record["battery_used_profit"] = battery_used * self._calc_params.fixed_price
-                except (ValueError, TypeError):
-                    pass
+            if previous is None:
+                # First reading — store baseline, no delta
+                _LOGGER.debug(
+                    "Sensor %s (%s): first reading %.3f, storing baseline",
+                    role, entity_id, current,
+                )
+                continue
+
+            delta = current - previous
+            if delta < 0:
+                # Sensor reset (e.g. counter wrapped or was cleared)
+                _LOGGER.debug(
+                    "Sensor %s (%s): negative delta %.3f (reset?), skipping",
+                    role, entity_id, delta,
+                )
+                continue
+
+            deltas[role] = delta
+
+        # Persist for restart recovery
+        self._storage.last_sensor_readings = dict(self._last_sensor_readings)
+
+        return deltas
+
+    def _enrich_record_with_deltas(
+        self, record: dict, deltas: dict[str, float]
+    ) -> None:
+        """Enrich a Tibber record with pre-computed sensor deltas.
+
+        Uses delta values (hourly changes) instead of raw cumulative sensor states.
+        """
+        production_delta = deltas.get("production")
+        grid_export_delta = deltas.get("grid_export")
+        grid_import_delta = deltas.get("grid_import")
+        battery_charge_delta = deltas.get("battery_charge")
+        battery_discharge_delta = deltas.get("battery_discharge")
+
+        # Override grid export if HA sensor delta is available
+        if grid_export_delta is not None:
+            record["production_sold"] = grid_export_delta
+            if self._calc_params.use_spot_price:
+                record["production_sold_profit"] = (
+                    grid_export_delta * record.get("unit_price_sold", 0)
+                )
+            else:
+                record["production_sold_profit"] = (
+                    grid_export_delta * self._calc_params.fixed_price
+                )
+
+        # Calculate own use from production delta
+        if production_delta is not None:
+            grid_export = (
+                grid_export_delta
+                if grid_export_delta is not None
+                else record.get("production_sold", 0)
+            )
+            own_use = max(0, production_delta - grid_export)
+            record["production_own_use"] = own_use
+
+            if self._calc_params.use_spot_price:
+                record["production_own_use_profit"] = (
+                    own_use * record.get("unit_price_buy", 0)
+                )
+            else:
+                record["production_own_use_profit"] = (
+                    own_use * self._calc_params.fixed_price
+                )
+
+        # Override grid import if HA sensor delta is available
+        if grid_import_delta is not None:
+            record["purchased"] = grid_import_delta
+            if self._calc_params.use_spot_price:
+                record["purchased_cost"] = (
+                    grid_import_delta * record.get("unit_price_buy", 0)
+                )
+            else:
+                record["purchased_cost"] = (
+                    grid_import_delta * self._calc_params.fixed_price
+                )
+
+        # Battery sensors
+        if battery_charge_delta is not None:
+            record["battery_charge"] = battery_charge_delta
+
+        if battery_discharge_delta is not None:
+            record["battery_used"] = battery_discharge_delta
+            if self._calc_params.use_spot_price:
+                record["battery_used_profit"] = (
+                    battery_discharge_delta * record.get("unit_price_buy", 0)
+                )
+            else:
+                record["battery_used_profit"] = (
+                    battery_discharge_delta * self._calc_params.fixed_price
+                )
 
     async def _calculate_sensor_data(self) -> dict[str, Any]:
         """Calculate all sensor values from stored data."""
