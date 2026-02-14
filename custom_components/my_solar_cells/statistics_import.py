@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 # Bump this to force a re-import when import logic changes.
-STATISTICS_IMPORT_VERSION = 4
+STATISTICS_IMPORT_VERSION = 5
 
 # (sensor_key, unit, HistoryStats attribute name)
 SENSORS_TO_IMPORT: list[tuple[str, str, str]] = [
@@ -291,20 +291,33 @@ async def async_import_historical_statistics(
         async_import_statistics,
     )
 
+    sensor_details: list[str] = []
+
     for sensor_key, unit, attr_name in SENSORS_TO_IMPORT:
         entity_id = entity_map[sensor_key]
         stats_list = build_statistics_list(hourly_stats, attr_name)
 
         if not stats_list:
+            detail = f"- **{sensor_key}** → {entity_id}: no entries"
+            sensor_details.append(detail)
             _LOGGER.warning(
                 "Sensor %s (%s): no statistics entries to import", sensor_key, entity_id
             )
             continue
 
-        # Log details about the data being imported
+        # Collect details about the data being imported
         first_dt, first_state, first_sum = stats_list[0]
         last_dt, last_state, last_sum = stats_list[-1]
         non_zero = sum(1 for _, s, _ in stats_list if s != 0.0)
+
+        detail = (
+            f"- **{sensor_key}** → `{entity_id}`: "
+            f"{len(stats_list)} entries ({non_zero} non-zero), "
+            f"sum={last_sum:.2f} {unit}, "
+            f"range {first_dt.strftime('%Y-%m-%d')} to {last_dt.strftime('%Y-%m-%d')}"
+        )
+        sensor_details.append(detail)
+
         _LOGGER.info(
             "Sensor %s → %s: %d entries (%d non-zero), "
             "range %s to %s, final sum=%.4f, unit=%s",
@@ -339,25 +352,25 @@ async def async_import_historical_statistics(
             for start, state, cumsum in stats_list
         ]
 
-        _LOGGER.info(
-            "Calling async_import_statistics for %s (statistic_id=%s, source=recorder)",
-            sensor_key,
-            entity_id,
-        )
         async_import_statistics(hass, metadata, statistics)
 
-    msg = (
-        f"Historical statistics import complete: "
-        f"{len(hourly_stats)} hours across {len(SENSORS_TO_IMPORT)} sensors"
+    _LOGGER.info(
+        "Historical statistics import complete: %d hours across %d sensors",
+        len(hourly_stats),
+        len(SENSORS_TO_IMPORT),
     )
-    _LOGGER.info(msg)
 
     from homeassistant.components.persistent_notification import async_create
 
+    details_text = "\n".join(sensor_details)
+    notification_msg = (
+        f"Imported {len(hourly_stats)} hours across {len(SENSORS_TO_IMPORT)} sensors\n\n"
+        f"{details_text}"
+    )
     async_create(
         hass,
-        msg,
-        title="My Solar Cells",
+        notification_msg,
+        title="My Solar Cells — Statistics Import",
         notification_id="my_solar_cells_statistics_import",
     )
     return True
