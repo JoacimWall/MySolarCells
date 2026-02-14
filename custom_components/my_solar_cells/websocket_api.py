@@ -359,12 +359,23 @@ async def ws_get_roi_projection(
             try:
                 first_prod_day = datetime.fromisoformat(install_date_str)
             except (ValueError, TypeError):
-                pass
+                _LOGGER.warning("Invalid installation_date: %s", install_date_str)
+
+        _LOGGER.debug(
+            "ROI recalculate requested: price_dev=%s, panel_deg=%s, "
+            "investment=%s, installed_kw=%s, first_prod_day=%s",
+            price_dev, panel_deg, investment, installed_kw, first_prod_day,
+        )
 
         def _recalculate():
             all_records = coordinator.storage.get_all_records_as_list()
+            _LOGGER.debug("ROI recalculate: %d hourly records loaded", len(all_records))
             yearly_overview, monthly_by_year = generate_monthly_report(
                 all_records, coordinator._calc_params, investment, coordinator._yearly_params
+            )
+            _LOGGER.debug(
+                "ROI recalculate: generate_monthly_report returned %d yearly, %d monthly groups",
+                len(yearly_overview), len(monthly_by_year),
             )
             projection = calculate_30_year_projection(
                 yearly_overview,
@@ -375,9 +386,15 @@ async def ws_get_roi_projection(
                 installed_kw=installed_kw,
                 first_production_day=first_prod_day,
             )
+            _LOGGER.debug("ROI recalculate: projection has %d entries", len(projection))
             return [r.to_dict() for r in projection]
 
-        projection = await hass.async_add_executor_job(_recalculate)
+        try:
+            projection = await hass.async_add_executor_job(_recalculate)
+        except Exception:
+            _LOGGER.exception("ROI recalculation failed")
+            connection.send_error(msg["id"], "recalculation_failed", "ROI recalculation failed, check logs")
+            return
     else:
         investment = config.get(CONF_INVESTMENT_AMOUNT, DEFAULT_INVESTMENT_AMOUNT)
         projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
