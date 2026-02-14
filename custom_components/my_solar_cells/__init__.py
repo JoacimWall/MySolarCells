@@ -137,9 +137,10 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
             embed_iframe=False,
             require_admin=False,
             config={"entry_id": entry.entry_id},
+            update=True,
         )
-    except Exception as err:  # noqa: BLE001
-        _LOGGER.warning("Could not register Solar Data panel: %s", err)
+    except Exception:  # noqa: BLE001
+        _LOGGER.exception("Could not register Solar Data panel")
 
 
 async def _register_card(hass: HomeAssistant) -> None:
