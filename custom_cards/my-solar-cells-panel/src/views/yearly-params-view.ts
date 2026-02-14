@@ -18,13 +18,14 @@ export class YearlyParamsView extends LitElement {
 
   @state() private _params: Record<string, YearlyParams> = {};
   @state() private _loading = false;
+  @state() private _fetched = false;
   @state() private _error = "";
   @state() private _editingYear: string | null = null;
   @state() private _editValues: YearlyParams = { ...DEFAULT_PARAMS };
   @state() private _newYear = "";
   @state() private _saving = false;
-  @state() private _minYear = 2000;
-  @state() private _maxYear = 2099;
+  @state() private _minYear = 0;
+  @state() private _maxYear = 0;
 
   static styles = [
     cardStyles,
@@ -90,11 +91,11 @@ export class YearlyParamsView extends LitElement {
 
   updated(changed: Map<string, unknown>) {
     if (
-      changed.has("hass") &&
+      (changed.has("hass") || changed.has("entryId")) &&
       this.hass &&
       this.entryId &&
       !this._loading &&
-      Object.keys(this._params).length === 0
+      !this._fetched
     ) {
       this._fetchData();
     }
@@ -120,6 +121,7 @@ export class YearlyParamsView extends LitElement {
       this._error = e.message || "Failed to fetch yearly params";
     }
     this._loading = false;
+    this._fetched = true;
   }
 
   render(): TemplateResult {
