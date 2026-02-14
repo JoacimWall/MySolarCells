@@ -83,8 +83,8 @@ export class RoiView extends LitElement {
       this._investment = result.investment;
       if (!this._initialLoaded) {
         // Pre-fill inputs from configured values on first load
-        this._priceDev = (result.price_development - 1) * 100;
-        this._panelDeg = result.panel_degradation;
+        this._priceDev = Math.round((result.price_development - 1) * 10000) / 100;
+        this._panelDeg = Math.round(result.panel_degradation * 100) / 100;
         this._initialLoaded = true;
       }
     } catch (e: any) {
