@@ -241,7 +241,10 @@ async def async_import_historical_statistics(
 
     # Step D: Build cumulative sums and import
     from homeassistant.components.recorder.models import StatisticData, StatisticMetaData
-    from homeassistant.components.recorder.statistics import async_import_statistics
+    from homeassistant.components.recorder.statistics import (
+        StatisticMeanType,
+        async_import_statistics,
+    )
 
     for sensor_key, unit, attr_name in SENSORS_TO_IMPORT:
         entity_id = entity_map[sensor_key]
@@ -253,6 +256,7 @@ async def async_import_historical_statistics(
         metadata = StatisticMetaData(
             has_mean=False,
             has_sum=True,
+            mean_type=StatisticMeanType.NONE,
             name=sensor_key,
             source="recorder",
             statistic_id=entity_id,
