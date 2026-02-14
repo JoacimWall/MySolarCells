@@ -125,7 +125,10 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
 async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Register the sidebar panel for browsing database data."""
     try:
-        hass.components.panel_custom.async_register_panel(
+        from homeassistant.components.panel_custom import async_register_panel
+
+        await async_register_panel(
+            hass,
             frontend_url_path="my-solar-cells",
             webcomponent_name="my-solar-cells-panel",
             sidebar_title="Solar Data",
@@ -135,8 +138,8 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
             require_admin=False,
             config={"entry_id": entry.entry_id},
         )
-    except Exception:  # noqa: BLE001
-        _LOGGER.warning("Could not register Solar Data panel")
+    except Exception as err:  # noqa: BLE001
+        _LOGGER.warning("Could not register Solar Data panel: %s", err)
 
 
 async def _register_card(hass: HomeAssistant) -> None:
