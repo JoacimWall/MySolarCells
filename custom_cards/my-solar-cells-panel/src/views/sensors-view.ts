@@ -36,6 +36,36 @@ export class SensorsView extends LitElement {
       .status-dot.missing {
         background: var(--error-color, #f44336);
       }
+      .status-dot.optional {
+        background: var(--warning-color, #ff9800);
+      }
+      .fallback-label {
+        color: var(--secondary-text-color);
+        font-size: 0.85em;
+        font-style: italic;
+      }
+      .required-badge {
+        display: inline-block;
+        font-size: 0.7em;
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: var(--error-color, #f44336);
+        color: white;
+        font-weight: 500;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .optional-badge {
+        display: inline-block;
+        font-size: 0.7em;
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: var(--secondary-text-color);
+        color: white;
+        font-weight: 500;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
       .entity-id {
         font-family: monospace;
         font-size: 0.85em;
@@ -98,12 +128,13 @@ export class SensorsView extends LitElement {
 
     return html`
       <div class="info-box">
-        These HA sensors are used to enrich Tibber data with production and
-        battery information. <strong>production_own_use</strong> is calculated
-        as: total production (from HA sensor) minus grid export (from Tibber
-        API). Only the <strong>production</strong> sensor needs to be configured
-        for this calculation. Sensors are configured in the integration setup
-        flow.
+        Only the <strong>production</strong> sensor is required — it is used to
+        calculate <strong>production_own_use</strong> (total production minus
+        grid export). All other data (grid export, grid import) comes from the
+        <strong>Tibber API</strong> by default. You can optionally override
+        grid export/import with HA sensors for higher accuracy, and add battery
+        sensors if you have a battery. Sensors are configured in the
+        integration setup flow.
       </div>
 
       <div class="card">
@@ -127,22 +158,15 @@ export class SensorsView extends LitElement {
         </div>
       </div>
 
-      ${missing.length > 0
+      ${missing.some((s) => s.role === "production")
         ? html`
             <div class="card">
-              <h3>Missing Sensors</h3>
-              <p style="color: var(--secondary-text-color); font-size: 0.9em;">
-                The following sensors are not configured. To calculate
-                <strong>production_own_use</strong>, you need the
-                <strong>production</strong> sensor configured. Grid export
-                data is fetched from the Tibber API automatically.
+              <h3>Required Sensor Missing</h3>
+              <p style="color: var(--error-color, #f44336); font-size: 0.9em;">
+                The <strong>production</strong> sensor is not configured.
+                Without it, <strong>production_own_use</strong> cannot be
+                calculated. Please configure it in the integration setup flow.
               </p>
-              <ul style="color: var(--secondary-text-color); font-size: 0.9em;">
-                ${missing.map(
-                  (s) =>
-                    html`<li>${s.description} (<code>${s.role}</code>)</li>`
-                )}
-              </ul>
             </div>
           `
         : nothing}
@@ -155,21 +179,40 @@ export class SensorsView extends LitElement {
     `;
   }
 
+  private _isRequired(role: string): boolean {
+    return role === "production";
+  }
+
+  private _getFallbackLabel(role: string): string {
+    if (role === "grid_export") return "Using Tibber API";
+    if (role === "grid_import") return "Using Tibber API";
+    return "Not configured";
+  }
+
   private _renderRow(s: SensorInfo): TemplateResult {
     const isConfigured = !!s.entity_id;
+    const required = this._isRequired(s.role);
+    const dotClass = isConfigured
+      ? "configured"
+      : required
+        ? "missing"
+        : "optional";
     return html`
       <tr>
         <td>
-          <span
-            class="status-dot ${isConfigured ? "configured" : "missing"}"
-          ></span>
+          <span class="status-dot ${dotClass}"></span>
         </td>
-        <td><strong>${s.role}</strong></td>
+        <td>
+          <strong>${s.role}</strong>
+          ${required
+            ? html`<span class="required-badge">Required</span>`
+            : html`<span class="optional-badge">Optional</span>`}
+        </td>
         <td>${s.description}</td>
         <td>
           ${isConfigured
             ? html`<span class="entity-id">${s.entity_id}</span>`
-            : html`<span class="not-configured">Not configured</span>`}
+            : html`<span class="fallback-label">${this._getFallbackLabel(s.role)}</span>`}
         </td>
         <td>
           ${s.current_state != null
