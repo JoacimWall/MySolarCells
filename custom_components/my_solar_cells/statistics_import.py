@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 # Bump this to force a re-import when import logic changes.
-STATISTICS_IMPORT_VERSION = 2
+STATISTICS_IMPORT_VERSION = 3
 
 # (sensor_key, unit, HistoryStats attribute name)
 SENSORS_TO_IMPORT: list[tuple[str, str, str]] = [
@@ -256,11 +256,32 @@ async def async_import_historical_statistics(
 
     # Step C: Calculate financial stats per hour
     all_records = coordinator._storage.get_all_records_as_list()
+    _LOGGER.info(
+        "Calculating financial stats for %d records, time range: %s to %s",
+        len(all_records),
+        all_records[0].get("timestamp", "?") if all_records else "N/A",
+        all_records[-1].get("timestamp", "?") if all_records else "N/A",
+    )
+
+    # Log a sample record so we can verify data content
+    if all_records:
+        sample = all_records[len(all_records) // 2]
+        _LOGGER.info(
+            "Sample record (mid-point): ts=%s production_sold=%.3f "
+            "production_own_use=%.3f purchased=%.3f unit_price_buy=%.4f",
+            sample.get("timestamp", "?"),
+            sample.get("production_sold", 0),
+            sample.get("production_own_use", 0),
+            sample.get("purchased", 0),
+            sample.get("unit_price_buy", 0),
+        )
+
     hourly_stats = calculate_hourly_financial_stats(
         all_records, coordinator._calc_params, coordinator._yearly_params
     )
 
     if not hourly_stats:
+        _LOGGER.warning("No hourly financial stats calculated, nothing to import")
         return True
 
     # Step D: Build cumulative sums and import
@@ -275,7 +296,33 @@ async def async_import_historical_statistics(
         stats_list = build_statistics_list(hourly_stats, attr_name)
 
         if not stats_list:
+            _LOGGER.warning(
+                "Sensor %s (%s): no statistics entries to import", sensor_key, entity_id
+            )
             continue
+
+        # Log details about the data being imported
+        first_dt, first_state, first_sum = stats_list[0]
+        last_dt, last_state, last_sum = stats_list[-1]
+        non_zero = sum(1 for _, s, _ in stats_list if s != 0.0)
+        _LOGGER.info(
+            "Sensor %s → %s: %d entries (%d non-zero), "
+            "range %s to %s, final sum=%.4f, unit=%s",
+            sensor_key,
+            entity_id,
+            len(stats_list),
+            non_zero,
+            first_dt.isoformat(),
+            last_dt.isoformat(),
+            last_sum,
+            unit,
+        )
+
+        if non_zero == 0:
+            _LOGGER.warning(
+                "Sensor %s: ALL values are 0 — history will appear empty",
+                sensor_key,
+            )
 
         metadata = StatisticMetaData(
             has_mean=False,
@@ -292,10 +339,12 @@ async def async_import_historical_statistics(
             for start, state, cumsum in stats_list
         ]
 
-        async_import_statistics(hass, metadata, statistics)
-        _LOGGER.debug(
-            "Imported %d statistics entries for %s", len(statistics), entity_id
+        _LOGGER.info(
+            "Calling async_import_statistics for %s (statistic_id=%s, source=recorder)",
+            sensor_key,
+            entity_id,
         )
+        async_import_statistics(hass, metadata, statistics)
 
     msg = (
         f"Historical statistics import complete: "
