@@ -13,6 +13,10 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import DOMAIN, PLATFORMS
 from .coordinator import MySolarCellsCoordinator
+from .statistics_import import (
+    STATISTICS_IMPORT_VERSION,
+    async_import_historical_statistics,
+)
 from .storage import MySolarCellsStorage
 
 _LOGGER = logging.getLogger(__name__)
@@ -47,6 +51,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Import historical statistics now that entities are registered
+    if storage.statistics_import_version < STATISTICS_IMPORT_VERSION:
+        async def _do_statistics_import() -> None:
+            try:
+                success = await async_import_historical_statistics(hass, coordinator)
+                if success:
+                    storage.statistics_import_version = STATISTICS_IMPORT_VERSION
+                    await storage.async_save()
+                    coordinator._statistics_import_done = True
+            except Exception:
+                _LOGGER.warning(
+                    "Historical statistics import failed", exc_info=True
+                )
+
+        hass.async_create_task(_do_statistics_import())
 
     # Register Lovelace card resource
     await _register_card(hass)

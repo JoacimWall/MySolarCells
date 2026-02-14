@@ -70,7 +70,6 @@ def _make_coordinator(
     session = MagicMock()
     storage = MagicMock()
     storage.last_sensor_readings = stored_readings or {}
-    storage.statistics_import_version = 0
 
     config = {
         "api_key": "test",

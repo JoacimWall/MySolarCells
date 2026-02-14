@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 # Bump this to force a re-import when import logic changes.
-STATISTICS_IMPORT_VERSION = 3
+STATISTICS_IMPORT_VERSION = 4
 
 # (sensor_key, unit, HistoryStats attribute name)
 SENSORS_TO_IMPORT: list[tuple[str, str, str]] = [
