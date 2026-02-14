@@ -107,6 +107,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # Initial historical import from Tibber
             if not self._initial_import_done:
                 await self._do_initial_import()
+                await self._backfill_production_own_use()
                 self._initial_import_done = True
 
             # Always fetch spot prices (every 15 min)
@@ -224,6 +225,104 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except TibberApiError as err:
             _LOGGER.error("Historical import failed: %s", err)
 
+    async def _backfill_production_own_use(self) -> None:
+        """Backfill production_own_use for unenriched records using HA recorder statistics.
+
+        Queries the recorder for hourly 'change' statistics of the production
+        sensor, then calculates own_use = production_delta - production_sold
+        for each unenriched hourly_energy record.
+        """
+        production_entity = self._config.get(CONF_PRODUCTION_SENSOR)
+        if not production_entity:
+            _LOGGER.debug("No production sensor configured, skipping backfill")
+            return
+
+        unenriched = await self.hass.async_add_executor_job(
+            self._storage.get_unenriched_records
+        )
+        if not unenriched:
+            _LOGGER.debug("No unenriched records to backfill")
+            return
+
+        _LOGGER.info(
+            "Backfilling production_own_use for %d unenriched records using recorder",
+            len(unenriched),
+        )
+
+        try:
+            from homeassistant.components.recorder.statistics import (
+                statistics_during_period,
+            )
+        except ImportError:
+            _LOGGER.warning("Recorder statistics not available, skipping backfill")
+            return
+
+        # Determine time range from unenriched records
+        first_ts = unenriched[0]["timestamp"]
+        last_ts = unenriched[-1]["timestamp"]
+        try:
+            start_dt = _ensure_utc(datetime.fromisoformat(first_ts))
+            end_dt = _ensure_utc(datetime.fromisoformat(last_ts)) + timedelta(hours=1)
+        except (ValueError, TypeError):
+            _LOGGER.warning("Could not parse unenriched timestamps, skipping backfill")
+            return
+
+        try:
+            stats = await self.hass.async_add_executor_job(
+                statistics_during_period,
+                self.hass,
+                start_dt,
+                end_dt,
+                {production_entity},
+                "hour",
+                None,
+                {"change"},
+            )
+        except Exception:
+            _LOGGER.exception("Failed to query recorder statistics for backfill")
+            return
+
+        stat_rows = stats.get(production_entity, [])
+        if not stat_rows:
+            _LOGGER.info("No recorder statistics found for %s", production_entity)
+            return
+
+        # Build lookup: truncated ISO hour → change value
+        hour_deltas: dict[str, float] = {}
+        for row in stat_rows:
+            change = row.get("change")
+            if change is None:
+                continue
+            # row["start"] is epoch seconds (float)
+            row_dt = datetime.fromtimestamp(row["start"], tz=timezone.utc)
+            hour_key = row_dt.strftime("%Y-%m-%dT%H")
+            hour_deltas[hour_key] = change
+
+        enriched_count = 0
+        for record in unenriched:
+            ts = record["timestamp"]
+            hour_key = ts[:13]  # "2025-06-15T14"
+            production_delta = hour_deltas.get(hour_key)
+            if production_delta is None:
+                continue
+
+            grid_export = record.get("production_sold", 0)
+            own_use = max(0, production_delta - grid_export)
+            record["production_own_use"] = own_use
+            record["production_own_use_profit"] = (
+                own_use * record.get("unit_price_buy", 0)
+            )
+            record["sensor_enriched"] = 1
+            self._storage.upsert_hourly_record(ts, record)
+            enriched_count += 1
+
+        if enriched_count:
+            await self._storage.async_save()
+            _LOGGER.info(
+                "Backfill complete: enriched %d of %d records with production_own_use",
+                enriched_count, len(unenriched),
+            )
+
     async def _update_spot_prices(self) -> None:
         """Fetch today + tomorrow spot prices at quarter-hourly resolution."""
         home_id = self._config[CONF_HOME_ID]
@@ -278,6 +377,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 if ts:
                     stored = self._storage.get_hourly_record(ts) or most_recent
                     self._enrich_record_with_deltas(stored, sensor_deltas)
+                    stored["sensor_enriched"] = 1
                     self._storage.upsert_hourly_record(ts, stored)
 
             # Only advance sync marker to latest record, not to now

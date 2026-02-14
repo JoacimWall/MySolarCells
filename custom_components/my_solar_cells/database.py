@@ -399,6 +399,15 @@ class MySolarCellsDatabase:
         records = [dict(row) for row in cur.fetchall()]
         return records, total
 
+    def get_unenriched_records(self) -> list[dict]:
+        """Get all hourly records that have not been sensor-enriched."""
+        assert self._conn is not None
+        cur = self._conn.execute(
+            "SELECT * FROM hourly_energy WHERE sensor_enriched = 0 "
+            "ORDER BY timestamp"
+        )
+        return [dict(row) for row in cur.fetchall()]
+
     def get_price_level_for_hour(self, hour_iso: str) -> str:
         """Get the price level from the first spot price matching an hour."""
         assert self._conn is not None

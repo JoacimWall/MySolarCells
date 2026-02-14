@@ -88,6 +88,8 @@ export class HourlyEnergyView extends LitElement {
               <th>Own Use kWh</th>
               <th>Saved SEK</th>
               <th>Price Level</th>
+              <th>Synced</th>
+              <th>Enriched</th>
             </tr>
           </thead>
           <tbody>
@@ -102,6 +104,8 @@ export class HourlyEnergyView extends LitElement {
                   <td>${r.production_own_use.toFixed(3)}</td>
                   <td>${r.production_own_use_profit.toFixed(2)}</td>
                   <td>${r.price_level || "-"}</td>
+                  <td>${r.synced ? "Yes" : "No"}</td>
+                  <td>${r.sensor_enriched ? "Yes" : "No"}</td>
                 </tr>
               `
             )}
