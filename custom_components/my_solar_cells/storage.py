@@ -125,6 +125,15 @@ class MySolarCellsStorage:
         self._data["roi_projection"] = value
 
     @property
+    def statistics_imported(self) -> bool:
+        """Whether historical statistics have been imported to HA recorder."""
+        return self._data.get("statistics_imported", False)
+
+    @statistics_imported.setter
+    def statistics_imported(self, value: bool) -> None:
+        self._data["statistics_imported"] = value
+
+    @property
     def last_sensor_readings(self) -> dict[str, float]:
         """Get last known cumulative sensor readings for delta computation."""
         return self._data.get("last_sensor_readings", {})

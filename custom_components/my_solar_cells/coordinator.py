@@ -42,6 +42,7 @@ from .financial_engine import (
     generate_monthly_report,
 )
 from .roi_engine import calculate_30_year_projection
+from .statistics_import import async_import_historical_statistics
 from .storage import MySolarCellsStorage
 from .tibber_client import TibberApiError, TibberClient
 
@@ -80,6 +81,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._client = TibberClient(session, config_data[CONF_API_KEY])
         self._last_hourly_update: datetime | None = None
         self._initial_import_done = False
+        self._statistics_import_done = storage.statistics_imported
         self._last_sensor_readings: dict[str, float] = {}
 
         # Per-year financial parameter overrides (optional)
@@ -110,6 +112,22 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not self._initial_import_done:
                 await self._do_initial_import()
                 self._initial_import_done = True
+
+            # Import historical statistics into HA recorder (once)
+            if self._initial_import_done and not self._statistics_import_done:
+                try:
+                    success = await async_import_historical_statistics(
+                        self.hass, self
+                    )
+                    if success:
+                        self._statistics_import_done = True
+                        self._storage.statistics_imported = True
+                        await self._storage.async_save()
+                except Exception:
+                    _LOGGER.warning(
+                        "Historical statistics import failed, will retry",
+                        exc_info=True,
+                    )
 
             # Always fetch spot prices (every 15 min)
             await self._update_spot_prices()
