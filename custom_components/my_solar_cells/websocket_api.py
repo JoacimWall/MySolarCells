@@ -35,6 +35,8 @@ def async_register_websocket_commands(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, ws_get_overview)
     websocket_api.async_register_command(hass, ws_get_hourly_energy)
     websocket_api.async_register_command(hass, ws_get_yearly_params)
+    websocket_api.async_register_command(hass, ws_set_yearly_params)
+    websocket_api.async_register_command(hass, ws_delete_yearly_params)
     websocket_api.async_register_command(hass, ws_get_sensor_config)
     websocket_api.async_register_command(hass, ws_get_period_summaries)
 
@@ -138,6 +140,76 @@ async def ws_get_yearly_params(
 
     params = await hass.async_add_executor_job(_fetch)
     connection.send_result(msg["id"], {"yearly_params": params})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/set_yearly_params",
+        vol.Required("entry_id"): str,
+        vol.Required("year"): int,
+        vol.Required("tax_reduction"): float,
+        vol.Required("grid_compensation"): float,
+        vol.Required("transfer_fee"): float,
+        vol.Required("energy_tax"): float,
+        vol.Required("installed_kw"): float,
+    }
+)
+@websocket_api.async_response
+async def ws_set_yearly_params(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Save financial parameters for a specific year."""
+    entry_id = msg["entry_id"]
+    coordinator = _get_coordinator(hass, entry_id)
+    if coordinator is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    db = coordinator.storage
+    params = {
+        "tax_reduction": msg["tax_reduction"],
+        "grid_compensation": msg["grid_compensation"],
+        "transfer_fee": msg["transfer_fee"],
+        "energy_tax": msg["energy_tax"],
+        "installed_kw": msg["installed_kw"],
+    }
+
+    def _save():
+        db.set_yearly_params(msg["year"], params)
+
+    await hass.async_add_executor_job(_save)
+    await db.async_save()
+    coordinator._yearly_params = await hass.async_add_executor_job(db.get_all_yearly_params)
+    connection.send_result(msg["id"], {"success": True})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/delete_yearly_params",
+        vol.Required("entry_id"): str,
+        vol.Required("year"): int,
+    }
+)
+@websocket_api.async_response
+async def ws_delete_yearly_params(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Delete financial parameters for a specific year."""
+    entry_id = msg["entry_id"]
+    coordinator = _get_coordinator(hass, entry_id)
+    if coordinator is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    db = coordinator.storage
+
+    def _delete():
+        db.delete_yearly_params(msg["year"])
+
+    await hass.async_add_executor_job(_delete)
+    await db.async_save()
+    coordinator._yearly_params = await hass.async_add_executor_job(db.get_all_yearly_params)
+    connection.send_result(msg["id"], {"success": True})
 
 
 _SENSOR_ROLES = [

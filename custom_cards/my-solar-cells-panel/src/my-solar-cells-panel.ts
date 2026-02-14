@@ -4,8 +4,9 @@ import { panelStyles } from "./styles";
 import "./views/overview-view";
 import "./views/hourly-energy-view";
 import "./views/sensors-view";
+import "./views/yearly-params-view";
 
-type TabName = "overview" | "hourly" | "sensors";
+type TabName = "overview" | "hourly" | "sensors" | "params";
 
 @customElement("my-solar-cells-panel")
 export class MySolarCellsPanel extends LitElement {
@@ -55,6 +56,12 @@ export class MySolarCellsPanel extends LitElement {
           >
             Sensors
           </button>
+          <button
+            class="tab ${this._activeTab === "params" ? "active" : ""}"
+            @click=${() => (this._activeTab = "params")}
+          >
+            Yearly Params
+          </button>
         </div>
         ${this._renderActiveTab()}
       </div>
@@ -83,6 +90,13 @@ export class MySolarCellsPanel extends LitElement {
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></sensors-view>
+        `;
+      case "params":
+        return html`
+          <yearly-params-view
+            .hass=${this.hass}
+            .entryId=${this._entryId}
+          ></yearly-params-view>
         `;
     }
   }
