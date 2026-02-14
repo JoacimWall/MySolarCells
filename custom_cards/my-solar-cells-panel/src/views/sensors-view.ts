@@ -100,8 +100,10 @@ export class SensorsView extends LitElement {
       <div class="info-box">
         These HA sensors are used to enrich Tibber data with production and
         battery information. <strong>production_own_use</strong> is calculated
-        as: total production minus grid export. Both sensors must be configured
-        for this to work. Sensors are configured in the integration setup flow.
+        as: total production (from HA sensor) minus grid export (from Tibber
+        API). Only the <strong>production</strong> sensor needs to be configured
+        for this calculation. Sensors are configured in the integration setup
+        flow.
       </div>
 
       <div class="card">
@@ -131,10 +133,9 @@ export class SensorsView extends LitElement {
               <h3>Missing Sensors</h3>
               <p style="color: var(--secondary-text-color); font-size: 0.9em;">
                 The following sensors are not configured. To calculate
-                <strong>production_own_use</strong>, you need at least
-                <strong>production</strong> configured. For best results,
-                configure both <strong>production</strong> and
-                <strong>grid_export</strong>.
+                <strong>production_own_use</strong>, you need the
+                <strong>production</strong> sensor configured. Grid export
+                data is fetched from the Tibber API automatically.
               </p>
               <ul style="color: var(--secondary-text-color); font-size: 0.9em;">
                 ${missing.map(
