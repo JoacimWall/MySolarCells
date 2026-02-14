@@ -138,7 +138,7 @@ export class YearlyParamsView extends LitElement {
     const years = Object.keys(this._params).sort();
 
     return html`
-      <div class="card" style="background: #e8f5e9;">
+      <div class="card">
         <h3>Yearly Financial Parameters</h3>
 
         <div class="add-year-row">
