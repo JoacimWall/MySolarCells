@@ -147,23 +147,15 @@ class TibberClient:
         current = start
 
         while current < end:
-            # 3-month batch windows
-            if current + timedelta(days=90) < end:
-                batch_start = current
-                batch_end = current + timedelta(days=90)
-                current = batch_end
-            else:
-                batch_start = current
-                batch_end = end
-                current = end
-
-            diff = batch_end - batch_start
+            # Request up to 90 days at a time
+            batch_end = min(current + timedelta(days=90), end)
+            diff = batch_end - current
             hours_total = int(diff.total_seconds() / 3600)
 
             if hours_total <= 0:
-                continue
+                break
 
-            from_encoded = _encode_to_base64(batch_start.strftime("%Y-%m-%dT%H:%M:%S"))
+            from_encoded = _encode_to_base64(current.strftime("%Y-%m-%dT%H:%M:%S"))
 
             variables = {
                 "homeid": home_id,
@@ -175,17 +167,26 @@ class TibberClient:
                 data = await self._post(QUERY_CONSUMPTION_PRODUCTION, variables)
             except TibberApiError as err:
                 _LOGGER.error("Failed to fetch consumption/production: %s", err)
+                current = batch_end  # Skip this batch on error
                 continue
 
             viewer = data["data"]["viewer"]["home"]
             consumption_nodes = viewer.get("consumption", {}).get("nodes", []) or []
             production_nodes = viewer.get("production", {}).get("nodes", []) or []
 
+            # If no data returned, advance to batch_end to avoid infinite loop
+            if not consumption_nodes and not production_nodes:
+                current = batch_end
+                continue
+
             # Build production lookup by timestamp
             prod_by_time: dict[str, dict] = {}
             for pnode in production_nodes:
                 if pnode.get("from"):
                     prod_by_time[pnode["from"]] = pnode
+
+            # Track the latest timestamp actually returned by the API
+            last_returned_ts: str = ""
 
             # Process consumption nodes with DST handling
             i = 0
@@ -223,6 +224,10 @@ class TibberClient:
 
                     from_dt = _parse_timestamp(node["from"])
                     to_dt = _parse_timestamp(node["to"])
+
+                # Track latest timestamp from original nodes (not DST splits)
+                if node["from"] > last_returned_ts:
+                    last_returned_ts = node["from"]
 
                 # Build energy record
                 consumption_val = float(node.get("consumption") or 0)
@@ -267,6 +272,21 @@ class TibberClient:
                     "synced": is_synced,
                 }
                 records.append(record)
+
+            # Advance cursor based on the last record actually returned,
+            # not the batch window. The Tibber API may return fewer records
+            # than requested (observed ~744 per call), so advancing by the
+            # full batch window would skip data.
+            if last_returned_ts:
+                last_dt = _parse_timestamp(last_returned_ts)
+                new_current = last_dt.astimezone(timezone.utc) + timedelta(hours=1)
+                if new_current <= current:
+                    # Safety: avoid infinite loop if timestamps don't advance
+                    current = batch_end
+                else:
+                    current = new_current
+            else:
+                current = batch_end
 
         return records
 
