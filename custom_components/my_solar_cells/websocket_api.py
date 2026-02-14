@@ -136,10 +136,14 @@ async def ws_get_yearly_params(
         return
 
     def _fetch():
-        return db.get_all_yearly_params()
+        return {
+            "yearly_params": db.get_all_yearly_params(),
+            "first_timestamp": db.get_first_hourly_timestamp(),
+            "last_timestamp": db.get_last_hourly_timestamp(),
+        }
 
-    params = await hass.async_add_executor_job(_fetch)
-    connection.send_result(msg["id"], {"yearly_params": params})
+    result = await hass.async_add_executor_job(_fetch)
+    connection.send_result(msg["id"], result)
 
 
 @websocket_api.websocket_command(
@@ -180,6 +184,7 @@ async def ws_set_yearly_params(
     await hass.async_add_executor_job(_save)
     await db.async_save()
     coordinator._yearly_params = await hass.async_add_executor_job(db.get_all_yearly_params)
+    await coordinator.async_request_refresh()
     connection.send_result(msg["id"], {"success": True})
 
 
@@ -209,6 +214,7 @@ async def ws_delete_yearly_params(
     await hass.async_add_executor_job(_delete)
     await db.async_save()
     coordinator._yearly_params = await hass.async_add_executor_job(db.get_all_yearly_params)
+    await coordinator.async_request_refresh()
     connection.send_result(msg["id"], {"success": True})
 
 

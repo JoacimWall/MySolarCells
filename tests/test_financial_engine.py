@@ -181,9 +181,29 @@ class TestYearAwareCalculations:
         result = get_calc_params_for_year("2024", sample_calc_params, {})
         assert result is sample_calc_params
 
-    def test_get_calc_params_missing_year(self, sample_calc_params):
-        """Year not in yearly_params returns base_params unchanged."""
+    def test_get_calc_params_carry_forward(self, sample_calc_params):
+        """Year not in yearly_params carries forward from most recent prior year."""
         yearly = {"2023": {"energy_tax": 0.45}}
+        result = get_calc_params_for_year("2024", sample_calc_params, yearly)
+        assert result is not sample_calc_params
+        assert result.energy_tax == 0.45
+        # Non-overridden values preserved from base
+        assert result.tax_reduction == sample_calc_params.tax_reduction
+
+    def test_get_calc_params_carry_forward_skips_gap(self, sample_calc_params):
+        """Carry-forward picks the most recent prior year, skipping gaps."""
+        yearly = {
+            "2022": {"energy_tax": 0.40},
+            "2023": {"energy_tax": 0.45},
+            "2025": {"energy_tax": 0.55},
+        }
+        # 2024 should carry forward from 2023, not 2022 or 2025
+        result = get_calc_params_for_year("2024", sample_calc_params, yearly)
+        assert result.energy_tax == 0.45
+
+    def test_get_calc_params_no_prior_year(self, sample_calc_params):
+        """Year before all entries falls back to base_params."""
+        yearly = {"2025": {"energy_tax": 0.55}}
         result = get_calc_params_for_year("2024", sample_calc_params, yearly)
         assert result is sample_calc_params
 

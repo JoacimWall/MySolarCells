@@ -41,6 +41,8 @@ export interface HourlyEnergyResponse {
 
 export interface YearlyParamsResponse {
   yearly_params: Record<string, YearlyParams>;
+  first_timestamp: string | null;
+  last_timestamp: string | null;
 }
 
 export interface PeriodSummary {

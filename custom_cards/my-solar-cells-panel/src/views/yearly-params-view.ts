@@ -23,6 +23,8 @@ export class YearlyParamsView extends LitElement {
   @state() private _editValues: YearlyParams = { ...DEFAULT_PARAMS };
   @state() private _newYear = "";
   @state() private _saving = false;
+  @state() private _minYear = 2000;
+  @state() private _maxYear = 2099;
 
   static styles = [
     cardStyles,
@@ -102,6 +104,12 @@ export class YearlyParamsView extends LitElement {
         entry_id: this.entryId,
       });
       this._params = resp.yearly_params;
+      if (resp.first_timestamp) {
+        this._minYear = new Date(resp.first_timestamp).getFullYear();
+      }
+      if (resp.last_timestamp) {
+        this._maxYear = new Date(resp.last_timestamp).getFullYear();
+      }
     } catch (e: any) {
       this._error = e.message || "Failed to fetch yearly params";
     }
@@ -127,12 +135,12 @@ export class YearlyParamsView extends LitElement {
             <label>Add Year</label>
             <input
               type="number"
-              min="2000"
-              max="2099"
+              min=${this._minYear}
+              max=${this._maxYear}
               .value=${this._newYear}
               @input=${(e: Event) =>
                 (this._newYear = (e.target as HTMLInputElement).value)}
-              placeholder="e.g. 2025"
+              placeholder="${this._minYear}–${this._maxYear}"
             />
           </div>
           <button class="btn" @click=${this._addYear}>Add</button>
@@ -301,7 +309,7 @@ export class YearlyParamsView extends LitElement {
 
   private _addYear() {
     const year = parseInt(this._newYear, 10);
-    if (isNaN(year) || year < 2000 || year > 2099) return;
+    if (isNaN(year) || year < this._minYear || year > this._maxYear) return;
     const yearStr = String(year);
     if (this._params[yearStr]) {
       this._startEdit(yearStr);

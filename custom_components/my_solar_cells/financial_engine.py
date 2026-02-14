@@ -126,20 +126,8 @@ class ReportHistoryStats:
     first_production_day: datetime | None = None
 
 
-def get_calc_params_for_year(
-    year: str,
-    base_params: CalcParams,
-    yearly_params: dict[str, dict[str, float]] | None,
-) -> CalcParams:
-    """Return CalcParams with year-specific overrides merged onto base_params.
-
-    If yearly_params is None or has no entry for the given year,
-    returns base_params unchanged.
-    """
-    if not yearly_params or year not in yearly_params:
-        return base_params
-
-    overrides = yearly_params[year]
+def _apply_overrides(base_params: CalcParams, overrides: dict[str, float]) -> CalcParams:
+    """Return a copy of base_params with the given overrides applied."""
     params = copy(base_params)
     for key in (
         "tax_reduction", "grid_compensation", "transfer_fee", "energy_tax",
@@ -148,6 +136,31 @@ def get_calc_params_for_year(
         if key in overrides:
             setattr(params, key, overrides[key])
     return params
+
+
+def get_calc_params_for_year(
+    year: str,
+    base_params: CalcParams,
+    yearly_params: dict[str, dict[str, float]] | None,
+) -> CalcParams:
+    """Return CalcParams with year-specific overrides merged onto base_params.
+
+    Looks up the exact year first. If not found, carries forward the most
+    recent prior year's overrides. Falls back to base_params only when no
+    prior year entry exists.
+    """
+    if not yearly_params:
+        return base_params
+
+    if year in yearly_params:
+        return _apply_overrides(base_params, yearly_params[year])
+
+    # Find the most recent prior year with an entry
+    prior = [y for y in yearly_params if y < year]
+    if prior:
+        return _apply_overrides(base_params, yearly_params[max(prior)])
+
+    return base_params
 
 
 def calculate_daily_stats(
