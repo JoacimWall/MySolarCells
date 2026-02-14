@@ -317,7 +317,9 @@ export class YearlyParamsView extends LitElement {
   private _getAvailableYears(): number[] {
     const years: number[] = [];
     for (let y = this._minYear; y <= this._maxYear; y++) {
-      years.push(y);
+      if (!this._params[String(y)]) {
+        years.push(y);
+      }
     }
     return years;
   }
