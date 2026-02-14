@@ -14,11 +14,14 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from .const import CONF_YEARLY_PARAMS, DOMAIN, PLATFORMS, STORAGE_KEY_PREFIX
 from .coordinator import MySolarCellsCoordinator
 from .database import MySolarCellsDatabase
+from .websocket_api import async_register_websocket_commands
 
 _LOGGER = logging.getLogger(__name__)
 
 CARD_JS = "my-solar-cells-roi-card.js"
+PANEL_JS = "my-solar-cells-panel.js"
 CARD_URL = f"/{DOMAIN}/{CARD_JS}"
+PANEL_URL = f"/{DOMAIN}/{PANEL_JS}"
 CARD_DIR = Path(__file__).parent
 
 
@@ -65,6 +68,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register Lovelace card resource
     await _register_card(hass)
 
+    # Register WebSocket commands and sidebar panel
+    async_register_websocket_commands(hass)
+    await _register_panel(hass, entry)
+
     return True
 
 
@@ -89,6 +96,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if coordinator:
             await coordinator.storage.async_close()
 
+        # Remove sidebar panel when last entry unloads
+        if not hass.data.get(DOMAIN):
+            try:
+                hass.components.frontend.async_remove_panel("my-solar-cells")
+            except Exception:  # noqa: BLE001
+                pass
+
     return unload_ok
 
 
@@ -106,6 +120,23 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     _delete_old_json_storage(old_json_path)
 
     _LOGGER.warning("My Solar Cells cleanup complete")
+
+
+async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Register the sidebar panel for browsing database data."""
+    try:
+        hass.components.panel_custom.async_register_panel(
+            frontend_url_path="my-solar-cells",
+            webcomponent_name="my-solar-cells-panel",
+            sidebar_title="Solar Data",
+            sidebar_icon="mdi:solar-power-variant",
+            module_url=PANEL_URL,
+            embed_iframe=False,
+            require_admin=False,
+            config={"entry_id": entry.entry_id},
+        )
+    except Exception:  # noqa: BLE001
+        _LOGGER.warning("Could not register Solar Data panel")
 
 
 async def _register_card(hass: HomeAssistant) -> None:
