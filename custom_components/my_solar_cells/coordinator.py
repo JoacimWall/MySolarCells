@@ -42,7 +42,10 @@ from .financial_engine import (
     generate_monthly_report,
 )
 from .roi_engine import calculate_30_year_projection
-from .statistics_import import async_import_historical_statistics
+from .statistics_import import (
+    STATISTICS_IMPORT_VERSION,
+    async_import_historical_statistics,
+)
 from .storage import MySolarCellsStorage
 from .tibber_client import TibberApiError, TibberClient
 
@@ -81,7 +84,9 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._client = TibberClient(session, config_data[CONF_API_KEY])
         self._last_hourly_update: datetime | None = None
         self._initial_import_done = False
-        self._statistics_import_done = storage.statistics_imported
+        self._statistics_import_done = (
+            storage.statistics_import_version >= STATISTICS_IMPORT_VERSION
+        )
         self._last_sensor_readings: dict[str, float] = {}
 
         # Per-year financial parameter overrides (optional)
@@ -121,7 +126,9 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     )
                     if success:
                         self._statistics_import_done = True
-                        self._storage.statistics_imported = True
+                        self._storage.statistics_import_version = (
+                            STATISTICS_IMPORT_VERSION
+                        )
                         await self._storage.async_save()
                 except Exception:
                     _LOGGER.warning(

@@ -24,6 +24,9 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
+# Bump this to force a re-import when import logic changes.
+STATISTICS_IMPORT_VERSION = 2
+
 # (sensor_key, unit, HistoryStats attribute name)
 SENSORS_TO_IMPORT: list[tuple[str, str, str]] = [
     ("daily_production_sold", "kWh", "production_sold"),
@@ -207,9 +210,19 @@ async def async_import_historical_statistics(
         _LOGGER.info("No hourly records to import statistics for")
         return True
 
+    _LOGGER.info(
+        "Starting historical statistics import: %d records, entities: %s",
+        len(records),
+        entity_map,
+    )
+
     # Step B: Enrich with production_own_use from HA production sensor
     production_sensor = coordinator._config.get(CONF_PRODUCTION_SENSOR)
     if production_sensor:
+        _LOGGER.info(
+            "Querying production sensor %s for own-use enrichment",
+            production_sensor,
+        )
         timestamps = sorted(records.keys())
         start_dt = _parse_to_utc_datetime(timestamps[0])
         end_dt = _parse_to_utc_datetime(timestamps[-1]) + timedelta(hours=1)
@@ -218,17 +231,28 @@ async def async_import_historical_statistics(
             prod_deltas = await _fetch_production_deltas(
                 hass, production_sensor, start_dt, end_dt
             )
+            _LOGGER.info(
+                "Production sensor returned %d hourly deltas", len(prod_deltas)
+            )
             if prod_deltas:
                 count = enrich_records_with_production_own_use(records, prod_deltas)
+                _LOGGER.info("Enriched %d records with production_own_use", count)
                 if count > 0:
-                    _LOGGER.info("Enriched %d records with production_own_use", count)
                     await coordinator._storage.async_save()
+            else:
+                _LOGGER.warning(
+                    "No historical statistics found for production sensor %s, "
+                    "production_own_use will be 0 for historical data",
+                    production_sensor,
+                )
         except Exception:
             _LOGGER.warning(
                 "Failed to query production sensor statistics, "
                 "production_own_use will be 0 for historical data",
                 exc_info=True,
             )
+    else:
+        _LOGGER.info("No production sensor configured, skipping own-use enrichment")
 
     # Step C: Calculate financial stats per hour
     all_records = coordinator._storage.get_all_records_as_list()
