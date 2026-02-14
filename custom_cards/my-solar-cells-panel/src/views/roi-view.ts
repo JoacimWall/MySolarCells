@@ -12,7 +12,9 @@ export class RoiView extends LitElement {
   @state() private _investment = 0;
   @state() private _loading = false;
   @state() private _error = "";
-  @state() private _fetched = false;
+  @state() private _initialLoaded = false;
+  @state() private _priceDev = 5.0;
+  @state() private _panelDeg = 0.25;
 
   static styles = [
     cardStyles,
@@ -41,6 +43,10 @@ export class RoiView extends LitElement {
       .investment-info strong {
         color: var(--primary-text-color);
       }
+
+      .input-group input[type="number"] {
+        width: 80px;
+      }
     `,
   ];
 
@@ -49,29 +55,48 @@ export class RoiView extends LitElement {
       changed.has("hass") &&
       this.hass &&
       this.entryId &&
-      !this._fetched &&
+      !this._initialLoaded &&
       !this._loading
     ) {
       this._fetchData();
     }
   }
 
-  private async _fetchData() {
+  private async _fetchData(customParams?: {
+    price_development: number;
+    panel_degradation: number;
+  }) {
     if (!this.hass || !this.entryId) return;
     this._loading = true;
     this._error = "";
     try {
-      const result = await this.hass.callWS({
+      const req: any = {
         type: "my_solar_cells/get_roi_projection",
         entry_id: this.entryId,
-      });
+      };
+      if (customParams) {
+        req.price_development = customParams.price_development;
+        req.panel_degradation = customParams.panel_degradation;
+      }
+      const result = await this.hass.callWS(req);
       this._projection = result.projection;
       this._investment = result.investment;
-      this._fetched = true;
+      if (!this._initialLoaded) {
+        // Pre-fill inputs from configured values on first load
+        this._priceDev = (result.price_development - 1) * 100;
+        this._panelDeg = result.panel_degradation;
+        this._initialLoaded = true;
+      }
     } catch (e: any) {
       this._error = e.message || "Failed to fetch ROI projection";
     }
     this._loading = false;
+  }
+
+  private _onCalculate() {
+    const priceDev = 1 + this._priceDev / 100;
+    const panelDeg = this._panelDeg;
+    this._fetchData({ price_development: priceDev, panel_degradation: panelDeg });
   }
 
   private _fmtInt(v: number): string {
@@ -93,7 +118,7 @@ export class RoiView extends LitElement {
   }
 
   render(): TemplateResult {
-    if (this._loading) {
+    if (this._loading && !this._initialLoaded) {
       return html`<div class="loading">Loading ROI projection...</div>`;
     }
     if (this._error) {
@@ -108,6 +133,33 @@ export class RoiView extends LitElement {
         <h3>ROI Projection</h3>
         <div class="investment-info">
           Investment: <strong>${this._fmtSek(this._investment)} SEK</strong>
+        </div>
+        <div class="table-controls">
+          <div class="input-group">
+            <label>Price development (%)</label>
+            <input
+              type="number"
+              step="0.1"
+              .value=${String(this._priceDev)}
+              @input=${(e: Event) => {
+                this._priceDev = parseFloat((e.target as HTMLInputElement).value) || 0;
+              }}
+            />
+          </div>
+          <div class="input-group">
+            <label>Panel degradation (%)</label>
+            <input
+              type="number"
+              step="0.05"
+              .value=${String(this._panelDeg)}
+              @input=${(e: Event) => {
+                this._panelDeg = parseFloat((e.target as HTMLInputElement).value) || 0;
+              }}
+            />
+          </div>
+          <button class="btn" @click=${this._onCalculate} ?disabled=${this._loading}>
+            ${this._loading ? "Calculating..." : "Calculate"}
+          </button>
         </div>
         <div class="table-wrapper">
           <table>

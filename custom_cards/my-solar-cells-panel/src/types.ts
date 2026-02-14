@@ -76,4 +76,6 @@ export interface EstimateRoi {
 export interface RoiProjectionResponse {
   projection: EstimateRoi[];
   investment: number;
+  price_development: number;
+  panel_degradation: number;
 }

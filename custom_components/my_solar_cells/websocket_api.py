@@ -16,11 +16,21 @@ from .const import (
     CONF_BATTERY_DISCHARGE_SENSOR,
     CONF_GRID_EXPORT_SENSOR,
     CONF_GRID_IMPORT_SENSOR,
+    CONF_INSTALLED_KW,
+    CONF_INSTALLATION_DATE,
     CONF_INVESTMENT_AMOUNT,
+    CONF_LOAN_AMOUNT,
+    CONF_PANEL_DEGRADATION,
+    CONF_PRICE_DEVELOPMENT,
     CONF_PRODUCTION_SENSOR,
+    DEFAULT_INSTALLED_KW,
     DEFAULT_INVESTMENT_AMOUNT,
+    DEFAULT_PANEL_DEGRADATION,
+    DEFAULT_PRICE_DEVELOPMENT,
     DOMAIN,
 )
+from .financial_engine import generate_monthly_report
+from .roi_engine import calculate_30_year_projection
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -315,6 +325,8 @@ async def ws_get_period_summaries(
     {
         vol.Required("type"): f"{DOMAIN}/get_roi_projection",
         vol.Required("entry_id"): str,
+        vol.Optional("price_development"): vol.Coerce(float),
+        vol.Optional("panel_degradation"): vol.Coerce(float),
     }
 )
 @websocket_api.async_response
@@ -328,14 +340,51 @@ async def ws_get_roi_projection(
         connection.send_error(msg["id"], "not_found", "Entry not found")
         return
 
-    db = coordinator.storage
-    investment = coordinator._config.get(CONF_INVESTMENT_AMOUNT, DEFAULT_INVESTMENT_AMOUNT)
+    config = coordinator._config
+    configured_price_dev = config.get(CONF_PRICE_DEVELOPMENT, DEFAULT_PRICE_DEVELOPMENT)
+    configured_panel_deg = config.get(CONF_PANEL_DEGRADATION, DEFAULT_PANEL_DEGRADATION)
 
-    def _fetch():
-        return {
-            "projection": db.roi_projection,
-            "investment": investment,
-        }
+    custom_price_dev = msg.get("price_development")
+    custom_panel_deg = msg.get("panel_degradation")
+    has_custom = custom_price_dev is not None or custom_panel_deg is not None
 
-    result = await hass.async_add_executor_job(_fetch)
-    connection.send_result(msg["id"], result)
+    if has_custom:
+        price_dev = custom_price_dev if custom_price_dev is not None else configured_price_dev
+        panel_deg = custom_panel_deg if custom_panel_deg is not None else configured_panel_deg
+        investment = config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0)
+        installed_kw = config.get(CONF_INSTALLED_KW, DEFAULT_INSTALLED_KW)
+        install_date_str = config.get(CONF_INSTALLATION_DATE, "")
+        first_prod_day = None
+        if install_date_str:
+            try:
+                first_prod_day = datetime.fromisoformat(install_date_str)
+            except (ValueError, TypeError):
+                pass
+
+        def _recalculate():
+            all_records = coordinator.storage.get_all_records_as_list()
+            yearly_overview, monthly_by_year = generate_monthly_report(
+                all_records, coordinator._calc_params, investment, coordinator._yearly_params
+            )
+            projection = calculate_30_year_projection(
+                yearly_overview,
+                monthly_by_year,
+                price_development=price_dev,
+                panel_degradation=panel_deg,
+                investment=investment,
+                installed_kw=installed_kw,
+                first_production_day=first_prod_day,
+            )
+            return [r.to_dict() for r in projection]
+
+        projection = await hass.async_add_executor_job(_recalculate)
+    else:
+        investment = config.get(CONF_INVESTMENT_AMOUNT, DEFAULT_INVESTMENT_AMOUNT)
+        projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
+
+    connection.send_result(msg["id"], {
+        "projection": projection,
+        "investment": config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0),
+        "price_development": configured_price_dev,
+        "panel_degradation": configured_panel_deg,
+    })
