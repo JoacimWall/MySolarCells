@@ -8,7 +8,7 @@ const DEFAULT_PARAMS: YearlyParams = {
   grid_compensation: 0.078,
   transfer_fee: 0.3,
   energy_tax: 0.49,
-  installed_kw: 0,
+  installed_kw: 10,
 };
 
 @customElement("yearly-params-view")
@@ -64,8 +64,14 @@ export class YearlyParamsView extends LitElement {
         margin-bottom: 16px;
       }
 
-      .add-year-row .input-group input {
-        width: 80px;
+      .add-year-row .input-group select {
+        width: 100px;
+        padding: 6px 8px;
+        border: 1px solid var(--divider-color, #e0e0e0);
+        border-radius: 4px;
+        background: var(--card-background-color, #fff);
+        color: var(--primary-text-color);
+        font-size: 14px;
       }
 
       tr.clickable {
@@ -133,15 +139,16 @@ export class YearlyParamsView extends LitElement {
         <div class="add-year-row">
           <div class="input-group">
             <label>Add Year</label>
-            <input
-              type="number"
-              min=${this._minYear}
-              max=${this._maxYear}
+            <select
               .value=${this._newYear}
-              @input=${(e: Event) =>
-                (this._newYear = (e.target as HTMLInputElement).value)}
-              placeholder="${this._minYear}–${this._maxYear}"
-            />
+              @change=${(e: Event) =>
+                (this._newYear = (e.target as HTMLSelectElement).value)}
+            >
+              <option value="">Select year...</option>
+              ${this._getAvailableYears().map(
+                (y) => html`<option value=${y}>${y}</option>`
+              )}
+            </select>
           </div>
           <button class="btn" @click=${this._addYear}>Add</button>
         </div>
@@ -307,9 +314,17 @@ export class YearlyParamsView extends LitElement {
     this._editingYear = null;
   }
 
+  private _getAvailableYears(): number[] {
+    const years: number[] = [];
+    for (let y = this._minYear; y <= this._maxYear; y++) {
+      years.push(y);
+    }
+    return years;
+  }
+
   private _addYear() {
     const year = parseInt(this._newYear, 10);
-    if (isNaN(year) || year < this._minYear || year > this._maxYear) return;
+    if (isNaN(year)) return;
     const yearStr = String(year);
     if (this._params[yearStr]) {
       this._startEdit(yearStr);
