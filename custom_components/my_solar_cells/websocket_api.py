@@ -164,11 +164,11 @@ async def ws_get_yearly_params(
         vol.Required("type"): f"{DOMAIN}/set_yearly_params",
         vol.Required("entry_id"): str,
         vol.Required("year"): int,
-        vol.Required("tax_reduction"): float,
-        vol.Required("grid_compensation"): float,
-        vol.Required("transfer_fee"): float,
-        vol.Required("energy_tax"): float,
-        vol.Required("installed_kw"): float,
+        vol.Required("tax_reduction"): vol.Coerce(float),
+        vol.Required("grid_compensation"): vol.Coerce(float),
+        vol.Required("transfer_fee"): vol.Coerce(float),
+        vol.Required("energy_tax"): vol.Coerce(float),
+        vol.Required("installed_kw"): vol.Coerce(float),
     }
 )
 @websocket_api.async_response
