@@ -53,10 +53,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Import historical statistics now that entities are registered
-    if storage.statistics_import_version < STATISTICS_IMPORT_VERSION:
+    stored_ver = storage.statistics_import_version
+    if stored_ver < STATISTICS_IMPORT_VERSION:
+        _LOGGER.warning(
+            "Statistics import needed: stored version %d < current %d, scheduling import",
+            stored_ver,
+            STATISTICS_IMPORT_VERSION,
+        )
+
         async def _do_statistics_import() -> None:
             try:
+                _LOGGER.warning("Statistics import task starting")
                 success = await async_import_historical_statistics(hass, coordinator)
+                _LOGGER.warning("Statistics import returned success=%s", success)
                 if success:
                     storage.statistics_import_version = STATISTICS_IMPORT_VERSION
                     await storage.async_save()
@@ -67,6 +76,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
 
         hass.async_create_task(_do_statistics_import())
+    else:
+        _LOGGER.warning(
+            "Statistics import skipped: stored version %d >= current %d",
+            stored_ver,
+            STATISTICS_IMPORT_VERSION,
+        )
 
     # Register Lovelace card resource
     await _register_card(hass)

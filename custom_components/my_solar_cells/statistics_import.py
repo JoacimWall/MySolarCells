@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 # Bump this to force a re-import when import logic changes.
-STATISTICS_IMPORT_VERSION = 5
+STATISTICS_IMPORT_VERSION = 6
 
 # (sensor_key, unit, unit_class, HistoryStats attribute name)
 SENSORS_TO_IMPORT: list[tuple[str, str, str, str]] = [
@@ -198,9 +198,10 @@ async def async_import_historical_statistics(
         unique_id = f"{coordinator._entry_id}_{sensor_key}"
         entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
         if entity_id is None:
-            _LOGGER.debug(
-                "Entity not yet registered for %s, deferring statistics import",
+            _LOGGER.warning(
+                "Entity not yet registered for %s (unique_id=%s), deferring",
                 sensor_key,
+                unique_id,
             )
             return False
         entity_map[sensor_key] = entity_id
@@ -210,7 +211,7 @@ async def async_import_historical_statistics(
         _LOGGER.info("No hourly records to import statistics for")
         return True
 
-    _LOGGER.info(
+    _LOGGER.warning(
         "Starting historical statistics import: %d records, entities: %s",
         len(records),
         entity_map,
