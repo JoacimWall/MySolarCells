@@ -113,7 +113,6 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     # 2. Clear imported statistics from the recorder
     try:
         from homeassistant.components.recorder import get_instance
-        from homeassistant.components.recorder.statistics import clear_statistics
         from homeassistant.helpers import entity_registry as er
 
         registry = er.async_get(hass)
@@ -126,9 +125,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
 
         if statistic_ids:
             instance = get_instance(hass)
-            await instance.async_add_executor_job(
-                clear_statistics, instance, statistic_ids
-            )
+            await instance.async_clear_statistics(statistic_ids)
             _LOGGER.warning(
                 "Cleared recorder statistics for %d sensors: %s",
                 len(statistic_ids),
