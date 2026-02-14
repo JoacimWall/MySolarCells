@@ -4,8 +4,9 @@ import { panelStyles } from "./styles";
 import "./views/overview-view";
 import "./views/hourly-energy-view";
 import "./views/spot-prices-view";
+import "./views/sensors-view";
 
-type TabName = "overview" | "hourly" | "spot";
+type TabName = "overview" | "hourly" | "spot" | "sensors";
 
 @customElement("my-solar-cells-panel")
 export class MySolarCellsPanel extends LitElement {
@@ -55,6 +56,12 @@ export class MySolarCellsPanel extends LitElement {
           >
             Spot Prices
           </button>
+          <button
+            class="tab ${this._activeTab === "sensors" ? "active" : ""}"
+            @click=${() => (this._activeTab = "sensors")}
+          >
+            Sensors
+          </button>
         </div>
         ${this._renderActiveTab()}
       </div>
@@ -83,6 +90,13 @@ export class MySolarCellsPanel extends LitElement {
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></spot-prices-view>
+        `;
+      case "sensors":
+        return html`
+          <sensors-view
+            .hass=${this.hass}
+            .entryId=${this._entryId}
+          ></sensors-view>
         `;
     }
   }
