@@ -1,7 +1,8 @@
 import { LitElement, html, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { cardStyles, tableStyles } from "../styles";
-import { OverviewData } from "../types";
+import { OverviewData, PeriodSummariesResponse } from "../types";
+import "../components/period-summary-chart";
 
 @customElement("overview-view")
 export class OverviewView extends LitElement {
@@ -9,6 +10,7 @@ export class OverviewView extends LitElement {
   @property() entryId = "";
 
   @state() private _data: OverviewData | null = null;
+  @state() private _periodData: PeriodSummariesResponse | null = null;
   @state() private _loading = false;
   @state() private _error = "";
 
@@ -25,10 +27,18 @@ export class OverviewView extends LitElement {
     this._loading = true;
     this._error = "";
     try {
-      this._data = await this.hass.callWS({
-        type: "my_solar_cells/get_overview",
-        entry_id: this.entryId,
-      });
+      const [overview, periods] = await Promise.all([
+        this.hass.callWS({
+          type: "my_solar_cells/get_overview",
+          entry_id: this.entryId,
+        }),
+        this.hass.callWS({
+          type: "my_solar_cells/get_period_summaries",
+          entry_id: this.entryId,
+        }),
+      ]);
+      this._data = overview;
+      this._periodData = periods;
     } catch (e: any) {
       this._error = e.message || "Failed to fetch data";
     }
@@ -69,6 +79,15 @@ export class OverviewView extends LitElement {
           </div>
         </div>
       </div>
+
+      ${this._periodData
+        ? html`
+            <div class="card">
+              <h3>Energy Summary</h3>
+              <period-summary-chart .data=${this._periodData}></period-summary-chart>
+            </div>
+          `
+        : nothing}
 
       ${this._renderYearlyParams(d.yearly_params)}
     `;

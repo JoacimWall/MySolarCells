@@ -42,3 +42,17 @@ export interface HourlyEnergyResponse {
 export interface YearlyParamsResponse {
   yearly_params: Record<string, YearlyParams>;
 }
+
+export interface PeriodSummary {
+  own_use_kwh: number;
+  own_use_sek: number;
+  sold_kwh: number;
+  sold_sek: number;
+}
+
+export interface PeriodSummariesResponse {
+  today: PeriodSummary;
+  this_week: PeriodSummary;
+  this_month: PeriodSummary;
+  this_year: PeriodSummary;
+}

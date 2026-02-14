@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timedelta
 from typing import Any
 
 import voluptuous as vol
@@ -35,6 +36,7 @@ def async_register_websocket_commands(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, ws_get_hourly_energy)
     websocket_api.async_register_command(hass, ws_get_yearly_params)
     websocket_api.async_register_command(hass, ws_get_sensor_config)
+    websocket_api.async_register_command(hass, ws_get_period_summaries)
 
 
 def _get_coordinator(hass: HomeAssistant, entry_id: str):
@@ -187,3 +189,42 @@ async def ws_get_sensor_config(
         })
 
     connection.send_result(msg["id"], {"sensors": sensors})
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/get_period_summaries",
+        vol.Required("entry_id"): str,
+    }
+)
+@websocket_api.async_response
+async def ws_get_period_summaries(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Return energy summaries for today, this week, this month, this year."""
+    entry_id = msg["entry_id"]
+    db = _get_database(hass, entry_id)
+    if db is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    def _fetch():
+        now = datetime.now()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        # Monday of current week
+        week_start = today_start - timedelta(days=today_start.weekday())
+        month_start = today_start.replace(day=1)
+        year_start = today_start.replace(month=1, day=1)
+        # End is tomorrow start to include all of today
+        end = today_start + timedelta(days=1)
+
+        end_iso = end.isoformat()
+        return {
+            "today": db.get_period_summary(today_start.isoformat(), end_iso),
+            "this_week": db.get_period_summary(week_start.isoformat(), end_iso),
+            "this_month": db.get_period_summary(month_start.isoformat(), end_iso),
+            "this_year": db.get_period_summary(year_start.isoformat(), end_iso),
+        }
+
+    result = await hass.async_add_executor_job(_fetch)
+    connection.send_result(msg["id"], result)

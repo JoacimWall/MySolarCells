@@ -408,6 +408,26 @@ class MySolarCellsDatabase:
         )
         return [dict(row) for row in cur.fetchall()]
 
+    def get_period_summary(self, start_iso: str, end_iso: str) -> dict:
+        """Get aggregated energy summary for a period [start_iso, end_iso)."""
+        assert self._conn is not None
+        cur = self._conn.execute(
+            "SELECT "
+            "COALESCE(SUM(production_own_use), 0) AS own_use_kwh, "
+            "COALESCE(SUM(production_own_use_profit), 0) AS own_use_sek, "
+            "COALESCE(SUM(production_sold), 0) AS sold_kwh, "
+            "COALESCE(SUM(production_sold_profit), 0) AS sold_sek "
+            "FROM hourly_energy WHERE timestamp >= ? AND timestamp < ?",
+            (start_iso, end_iso),
+        )
+        row = cur.fetchone()
+        return {
+            "own_use_kwh": row["own_use_kwh"],
+            "own_use_sek": row["own_use_sek"],
+            "sold_kwh": row["sold_kwh"],
+            "sold_sek": row["sold_sek"],
+        }
+
     def get_price_level_for_hour(self, hour_iso: str) -> str:
         """Get the price level from the first spot price matching an hour."""
         assert self._conn is not None
