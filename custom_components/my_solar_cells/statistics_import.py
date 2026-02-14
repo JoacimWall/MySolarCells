@@ -25,17 +25,18 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 # Bump this to force a re-import when import logic changes.
-STATISTICS_IMPORT_VERSION = 6
+STATISTICS_IMPORT_VERSION = 7
 
 # (sensor_key, unit, unit_class, HistoryStats attribute name)
-SENSORS_TO_IMPORT: list[tuple[str, str, str, str]] = [
+# unit_class: "energy" for kWh sensors, None for monetary (no HA unit_class for currency)
+SENSORS_TO_IMPORT: list[tuple[str, str, str | None, str]] = [
     ("daily_production_sold", "kWh", "energy", "production_sold"),
     ("daily_production_own_use", "kWh", "energy", "production_own_use"),
     ("daily_purchased", "kWh", "energy", "purchased"),
-    ("daily_sold_profit", "SEK", "monetary", "sum_production_sold_profit"),
-    ("daily_own_use_saved", "SEK", "monetary", "sum_production_own_use_saved"),
-    ("daily_purchased_cost", "SEK", "monetary", "sum_purchased_cost"),
-    ("daily_balance", "SEK", "monetary", "balance"),
+    ("daily_sold_profit", "SEK", None, "sum_production_sold_profit"),
+    ("daily_own_use_saved", "SEK", None, "sum_production_own_use_saved"),
+    ("daily_purchased_cost", "SEK", None, "sum_purchased_cost"),
+    ("daily_balance", "SEK", None, "balance"),
 ]
 
 
