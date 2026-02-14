@@ -3,10 +3,9 @@ import { customElement, property, state } from "lit/decorators.js";
 import { panelStyles } from "./styles";
 import "./views/overview-view";
 import "./views/hourly-energy-view";
-import "./views/spot-prices-view";
 import "./views/sensors-view";
 
-type TabName = "overview" | "hourly" | "spot" | "sensors";
+type TabName = "overview" | "hourly" | "sensors";
 
 @customElement("my-solar-cells-panel")
 export class MySolarCellsPanel extends LitElement {
@@ -51,12 +50,6 @@ export class MySolarCellsPanel extends LitElement {
             Hourly Energy
           </button>
           <button
-            class="tab ${this._activeTab === "spot" ? "active" : ""}"
-            @click=${() => (this._activeTab = "spot")}
-          >
-            Spot Prices
-          </button>
-          <button
             class="tab ${this._activeTab === "sensors" ? "active" : ""}"
             @click=${() => (this._activeTab = "sensors")}
           >
@@ -83,13 +76,6 @@ export class MySolarCellsPanel extends LitElement {
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></hourly-energy-view>
-        `;
-      case "spot":
-        return html`
-          <spot-prices-view
-            .hass=${this.hass}
-            .entryId=${this._entryId}
-          ></spot-prices-view>
         `;
       case "sensors":
         return html`

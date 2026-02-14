@@ -33,7 +33,6 @@ def async_register_websocket_commands(hass: HomeAssistant) -> None:
 
     websocket_api.async_register_command(hass, ws_get_overview)
     websocket_api.async_register_command(hass, ws_get_hourly_energy)
-    websocket_api.async_register_command(hass, ws_get_spot_prices)
     websocket_api.async_register_command(hass, ws_get_yearly_params)
     websocket_api.async_register_command(hass, ws_get_sensor_config)
 
@@ -72,7 +71,6 @@ async def ws_get_overview(
         return {
             "last_tibber_sync": db.last_tibber_sync,
             "hourly_record_count": db.get_hourly_record_count(),
-            "spot_price_count": db.get_spot_price_count(),
             "first_timestamp": db.get_first_hourly_timestamp(),
             "last_timestamp": db.get_last_hourly_timestamp(),
             "yearly_params": db.get_all_yearly_params(),
@@ -114,33 +112,6 @@ async def ws_get_hourly_energy(
 
     result = await hass.async_add_executor_job(_fetch)
     connection.send_result(msg["id"], result)
-
-
-@websocket_api.websocket_command(
-    {
-        vol.Required("type"): f"{DOMAIN}/get_spot_prices",
-        vol.Required("entry_id"): str,
-        vol.Required("date"): str,
-    }
-)
-@websocket_api.async_response
-async def ws_get_spot_prices(
-    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
-) -> None:
-    """Return spot prices for a specific date."""
-    entry_id = msg["entry_id"]
-    db = _get_database(hass, entry_id)
-    if db is None:
-        connection.send_error(msg["id"], "not_found", "Entry not found")
-        return
-
-    date_iso = msg["date"]
-
-    def _fetch():
-        return db.get_prices_for_date_raw(date_iso)
-
-    prices = await hass.async_add_executor_job(_fetch)
-    connection.send_result(msg["id"], {"prices": prices})
 
 
 @websocket_api.websocket_command(

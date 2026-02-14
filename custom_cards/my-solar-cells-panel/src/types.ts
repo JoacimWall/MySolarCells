@@ -18,19 +18,9 @@ export interface HourlyRecord {
   price_level: string;
 }
 
-export interface SpotPrice {
-  timestamp: string;
-  total: number;
-  energy: number;
-  tax: number;
-  level: string;
-  currency: string;
-}
-
 export interface OverviewData {
   last_tibber_sync: string | null;
   hourly_record_count: number;
-  spot_price_count: number;
   first_timestamp: string | null;
   last_timestamp: string | null;
   yearly_params: Record<string, YearlyParams>;
@@ -47,10 +37,6 @@ export interface YearlyParams {
 export interface HourlyEnergyResponse {
   records: HourlyRecord[];
   total_count: number;
-}
-
-export interface SpotPricesResponse {
-  prices: SpotPrice[];
 }
 
 export interface YearlyParamsResponse {

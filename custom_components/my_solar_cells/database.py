@@ -366,12 +366,6 @@ class MySolarCellsDatabase:
         cur = self._conn.execute("SELECT COUNT(*) as cnt FROM hourly_energy")
         return cur.fetchone()["cnt"]
 
-    def get_spot_price_count(self) -> int:
-        """Get total number of spot price records."""
-        assert self._conn is not None
-        cur = self._conn.execute("SELECT COUNT(*) as cnt FROM spot_prices")
-        return cur.fetchone()["cnt"]
-
     def get_first_hourly_timestamp(self) -> str | None:
         """Get the earliest hourly energy timestamp."""
         assert self._conn is not None
@@ -404,16 +398,6 @@ class MySolarCellsDatabase:
         )
         records = [dict(row) for row in cur.fetchall()]
         return records, total
-
-    def get_prices_for_date_raw(self, date_iso: str) -> list[dict]:
-        """Get all quarter-hourly prices for a date without column rename."""
-        assert self._conn is not None
-        prefix = f"{date_iso}%"
-        cur = self._conn.execute(
-            "SELECT * FROM spot_prices WHERE timestamp LIKE ? ORDER BY timestamp",
-            (prefix,),
-        )
-        return [dict(row) for row in cur.fetchall()]
 
     def get_price_level_for_hour(self, hour_iso: str) -> str:
         """Get the price level from the first spot price matching an hour."""

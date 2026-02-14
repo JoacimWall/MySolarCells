@@ -60,10 +60,6 @@ export class OverviewView extends LitElement {
             <div class="stat-value">${d.hourly_record_count.toLocaleString()}</div>
           </div>
           <div class="stat-item">
-            <div class="stat-label">Spot Prices</div>
-            <div class="stat-value">${d.spot_price_count.toLocaleString()}</div>
-          </div>
-          <div class="stat-item">
             <div class="stat-label">First Record</div>
             <div class="stat-value">${d.first_timestamp ? this._formatDate(d.first_timestamp) : "N/A"}</div>
           </div>
