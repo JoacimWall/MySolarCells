@@ -5,8 +5,9 @@ import "./views/overview-view";
 import "./views/hourly-energy-view";
 import "./views/sensors-view";
 import "./views/yearly-params-view";
+import "./views/roi-view";
 
-type TabName = "overview" | "hourly" | "sensors" | "params";
+type TabName = "overview" | "hourly" | "sensors" | "params" | "roi";
 
 @customElement("my-solar-cells-panel")
 export class MySolarCellsPanel extends LitElement {
@@ -70,6 +71,12 @@ export class MySolarCellsPanel extends LitElement {
           >
             Yearly Params
           </button>
+          <button
+            class="tab ${this._activeTab === "roi" ? "active" : ""}"
+            @click=${() => (this._activeTab = "roi")}
+          >
+            ROI
+          </button>
         </div>
         <div class="tab-content" ?active=${this._activeTab === "overview"}>
           <overview-view
@@ -94,6 +101,12 @@ export class MySolarCellsPanel extends LitElement {
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></yearly-params-view>
+        </div>
+        <div class="tab-content" ?active=${this._activeTab === "roi"}>
+          <roi-view
+            .hass=${this.hass}
+            .entryId=${this._entryId}
+          ></roi-view>
         </div>
       </div>
     `;

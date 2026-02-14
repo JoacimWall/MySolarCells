@@ -16,7 +16,9 @@ from .const import (
     CONF_BATTERY_DISCHARGE_SENSOR,
     CONF_GRID_EXPORT_SENSOR,
     CONF_GRID_IMPORT_SENSOR,
+    CONF_INVESTMENT_AMOUNT,
     CONF_PRODUCTION_SENSOR,
+    DEFAULT_INVESTMENT_AMOUNT,
     DOMAIN,
 )
 
@@ -39,6 +41,7 @@ def async_register_websocket_commands(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, ws_delete_yearly_params)
     websocket_api.async_register_command(hass, ws_get_sensor_config)
     websocket_api.async_register_command(hass, ws_get_period_summaries)
+    websocket_api.async_register_command(hass, ws_get_roi_projection)
 
 
 def _get_coordinator(hass: HomeAssistant, entry_id: str):
@@ -302,6 +305,36 @@ async def ws_get_period_summaries(
             "this_week": db.get_period_summary(week_start.isoformat(), end_iso),
             "this_month": db.get_period_summary(month_start.isoformat(), end_iso),
             "this_year": db.get_period_summary(year_start.isoformat(), end_iso),
+        }
+
+    result = await hass.async_add_executor_job(_fetch)
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/get_roi_projection",
+        vol.Required("entry_id"): str,
+    }
+)
+@websocket_api.async_response
+async def ws_get_roi_projection(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Return the 30-year ROI projection data."""
+    entry_id = msg["entry_id"]
+    coordinator = _get_coordinator(hass, entry_id)
+    if coordinator is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    db = coordinator.storage
+    investment = coordinator._config.get(CONF_INVESTMENT_AMOUNT, DEFAULT_INVESTMENT_AMOUNT)
+
+    def _fetch():
+        return {
+            "projection": db.roi_projection,
+            "investment": investment,
         }
 
     result = await hass.async_add_executor_job(_fetch)
