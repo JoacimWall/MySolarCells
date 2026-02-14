@@ -125,11 +125,14 @@ export class YearlyParamsView extends LitElement {
   }
 
   render(): TemplateResult {
-    if (this._loading) {
+    if (this._loading && !this._fetched) {
       return html`<div class="loading">Loading yearly parameters...</div>`;
     }
     if (this._error) {
       return html`<div class="no-data">Error: ${this._error}</div>`;
+    }
+    if (!this._fetched) {
+      return html`<div class="no-data">Waiting for data...</div>`;
     }
 
     const years = Object.keys(this._params).sort();

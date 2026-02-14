@@ -24,6 +24,14 @@ export class MySolarCellsPanel extends LitElement {
         max-width: 1200px;
         margin: 0 auto;
       }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content[active] {
+        display: block;
+      }
     `,
   ];
 
@@ -63,41 +71,31 @@ export class MySolarCellsPanel extends LitElement {
             Yearly Params
           </button>
         </div>
-        ${this._renderActiveTab()}
-      </div>
-    `;
-  }
-
-  private _renderActiveTab(): TemplateResult {
-    switch (this._activeTab) {
-      case "overview":
-        return html`
+        <div class="tab-content" ?active=${this._activeTab === "overview"}>
           <overview-view
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></overview-view>
-        `;
-      case "hourly":
-        return html`
+        </div>
+        <div class="tab-content" ?active=${this._activeTab === "hourly"}>
           <hourly-energy-view
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></hourly-energy-view>
-        `;
-      case "sensors":
-        return html`
+        </div>
+        <div class="tab-content" ?active=${this._activeTab === "sensors"}>
           <sensors-view
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></sensors-view>
-        `;
-      case "params":
-        return html`
+        </div>
+        <div class="tab-content" ?active=${this._activeTab === "params"}>
           <yearly-params-view
             .hass=${this.hass}
             .entryId=${this._entryId}
           ></yearly-params-view>
-        `;
-    }
+        </div>
+      </div>
+    `;
   }
 }
