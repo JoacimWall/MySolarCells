@@ -14,6 +14,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from .const import DOMAIN, PLATFORMS
 from .coordinator import MySolarCellsCoordinator
 from .statistics_import import (
+    SENSORS_TO_IMPORT,
     STATISTICS_IMPORT_VERSION,
     async_import_historical_statistics,
 )
@@ -97,6 +98,54 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id, None)
 
     return unload_ok
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Clean up all data when the integration is removed."""
+    _LOGGER.warning("Removing My Solar Cells: cleaning up all data")
+
+    # 1. Remove JSON storage file
+    storage = MySolarCellsStorage(hass, entry.entry_id)
+    await storage.async_load()
+    await storage.async_remove()
+    _LOGGER.warning("Removed storage file")
+
+    # 2. Clear imported statistics from the recorder
+    try:
+        from homeassistant.components.recorder import get_instance
+        from homeassistant.components.recorder.statistics import clear_statistics
+        from homeassistant.helpers import entity_registry as er
+
+        registry = er.async_get(hass)
+        statistic_ids = []
+        for sensor_key, _, _, _ in SENSORS_TO_IMPORT:
+            unique_id = f"{entry.entry_id}_{sensor_key}"
+            entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
+            if entity_id:
+                statistic_ids.append(entity_id)
+
+        if statistic_ids:
+            instance = get_instance(hass)
+            await instance.async_add_executor_job(
+                clear_statistics, instance, statistic_ids
+            )
+            _LOGGER.warning(
+                "Cleared recorder statistics for %d sensors: %s",
+                len(statistic_ids),
+                statistic_ids,
+            )
+    except Exception:
+        _LOGGER.warning("Failed to clear recorder statistics", exc_info=True)
+
+    # 3. Dismiss persistent notification
+    try:
+        from homeassistant.components.persistent_notification import async_dismiss
+
+        async_dismiss(hass, "my_solar_cells_statistics_import")
+    except Exception:
+        pass
+
+    _LOGGER.warning("My Solar Cells cleanup complete")
 
 
 async def _register_card(hass: HomeAssistant) -> None:
