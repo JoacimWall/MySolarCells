@@ -20,6 +20,7 @@ _HA_MODULES = [
     "homeassistant.helpers.selector",
     "homeassistant.components",
     "homeassistant.components.sensor",
+    "homeassistant.components.persistent_notification",
     "homeassistant.components.recorder",
     "homeassistant.components.recorder.models",
     "homeassistant.components.recorder.statistics",

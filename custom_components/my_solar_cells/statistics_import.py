@@ -273,9 +273,18 @@ async def async_import_historical_statistics(
             "Imported %d statistics entries for %s", len(statistics), entity_id
         )
 
-    _LOGGER.info(
-        "Historical statistics import complete: %d hours across %d sensors",
-        len(hourly_stats),
-        len(SENSORS_TO_IMPORT),
+    msg = (
+        f"Historical statistics import complete: "
+        f"{len(hourly_stats)} hours across {len(SENSORS_TO_IMPORT)} sensors"
+    )
+    _LOGGER.info(msg)
+
+    from homeassistant.components.persistent_notification import async_create
+
+    async_create(
+        hass,
+        msg,
+        title="My Solar Cells",
+        notification_id="my_solar_cells_statistics_import",
     )
     return True
