@@ -127,6 +127,10 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     try:
         from homeassistant.components.panel_custom import async_register_panel
 
+        # Remove existing panel first to allow re-registration on restart
+        if "my-solar-cells" in hass.data.get("frontend_panels", {}):
+            hass.components.frontend.async_remove_panel("my-solar-cells")
+
         await async_register_panel(
             hass,
             frontend_url_path="my-solar-cells",
@@ -137,7 +141,6 @@ async def _register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
             embed_iframe=False,
             require_admin=False,
             config={"entry_id": entry.entry_id},
-            update=True,
         )
     except Exception:  # noqa: BLE001
         _LOGGER.exception("Could not register Solar Data panel")
