@@ -415,6 +415,17 @@ class MySolarCellsDatabase:
         )
         return [dict(row) for row in cur.fetchall()]
 
+    def get_price_level_for_hour(self, hour_iso: str) -> str:
+        """Get the price level from the first spot price matching an hour."""
+        assert self._conn is not None
+        prefix = f"{hour_iso[:13]}%"
+        cur = self._conn.execute(
+            "SELECT level FROM spot_prices WHERE timestamp LIKE ? LIMIT 1",
+            (prefix,),
+        )
+        row = cur.fetchone()
+        return row["level"] if row and row["level"] else ""
+
     # ------------------------------------------------------------------
     # Save / Remove
     # ------------------------------------------------------------------

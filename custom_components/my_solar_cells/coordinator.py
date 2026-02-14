@@ -130,32 +130,57 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER.exception("Unexpected error updating My Solar Cells data")
             raise UpdateFailed(f"Update failed: {err}") from err
 
+    def _get_configured_start_date(self) -> datetime:
+        """Get the configured start date for Tibber imports."""
+        tibber_start_year = self._config.get(CONF_TIBBER_START_YEAR)
+        if tibber_start_year:
+            try:
+                return datetime(int(tibber_start_year), 1, 1, tzinfo=timezone.utc)
+            except (ValueError, TypeError):
+                pass
+
+        install_date_str = self._config.get(CONF_INSTALLATION_DATE, "")
+        if install_date_str:
+            try:
+                return _ensure_utc(datetime.fromisoformat(install_date_str))
+            except (ValueError, TypeError):
+                pass
+
+        return datetime.now(tz=timezone.utc) - timedelta(days=365)
+
     async def _do_initial_import(self) -> None:
-        """Run initial historical import from Tibber."""
+        """Run initial historical import from Tibber.
+
+        Uses gap detection: if the database has far fewer records than
+        expected for the time span, re-imports from the configured start
+        date to fill gaps.  Otherwise continues from last_tibber_sync.
+        """
+        configured_start = self._get_configured_start_date()
         last_sync = self._storage.last_tibber_sync
+
         if last_sync:
-            start = _ensure_utc(datetime.fromisoformat(last_sync))
-        else:
-            tibber_start_year = self._config.get(CONF_TIBBER_START_YEAR)
-            if tibber_start_year:
-                try:
-                    start = datetime(int(tibber_start_year), 1, 1, tzinfo=timezone.utc)
-                except (ValueError, TypeError):
-                    start = None
+            sync_dt = _ensure_utc(datetime.fromisoformat(last_sync))
+            record_count = self._storage.get_hourly_record_count()
+            expected_hours = max(1, (sync_dt - configured_start).total_seconds() / 3600)
+            coverage = record_count / expected_hours
+
+            if coverage >= 0.5:
+                start = sync_dt
+                _LOGGER.info(
+                    "Continuing import from last sync %s (coverage %.0f%%)",
+                    start.isoformat(), coverage * 100,
+                )
             else:
-                start = None
-
-            if start is None:
-                install_date_str = self._config.get(CONF_INSTALLATION_DATE, "")
-                if install_date_str:
-                    try:
-                        start = _ensure_utc(datetime.fromisoformat(install_date_str))
-                    except (ValueError, TypeError):
-                        start = datetime.now(tz=timezone.utc) - timedelta(days=365)
-                else:
-                    start = datetime.now(tz=timezone.utc) - timedelta(days=365)
-
-        _LOGGER.info("Starting historical import from %s", start.isoformat())
+                start = configured_start
+                _LOGGER.warning(
+                    "Low data coverage (%.0f%%, %d records for ~%.0f expected hours). "
+                    "Re-importing from %s",
+                    coverage * 100, record_count, expected_hours,
+                    start.isoformat(),
+                )
+        else:
+            start = configured_start
+            _LOGGER.info("First import from %s", start.isoformat())
 
         home_id = self._config[CONF_HOME_ID]
         import_only_spot = self._config.get(CONF_IMPORT_ONLY_SPOT_PRICE, False)
@@ -164,14 +189,38 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             records = await self._client.get_consumption_production(
                 home_id, start, import_only_spot
             )
+
+            stored_count = 0
             for record in records:
                 ts = record.get("timestamp", "")
-                if ts:
-                    self._storage.upsert_hourly_record(ts, record)
+                if not ts:
+                    continue
+                # Don't overwrite existing synced records
+                existing = self._storage.get_hourly_record(ts)
+                if existing and existing.get("synced"):
+                    continue
+                # Enrich price_level from spot data
+                if not record.get("price_level"):
+                    level = self._storage.get_price_level_for_hour(ts)
+                    if level:
+                        record["price_level"] = level
+                self._storage.upsert_hourly_record(ts, record)
+                stored_count += 1
 
-            self._storage.last_tibber_sync = datetime.now(tz=timezone.utc).isoformat()
+            # Only advance sync marker to the latest record timestamp
+            if records:
+                latest_ts = max(
+                    (r.get("timestamp", "") for r in records if r.get("timestamp")),
+                    default="",
+                )
+                if latest_ts:
+                    self._storage.last_tibber_sync = latest_ts
+
             await self._storage.async_save()
-            _LOGGER.info("Historical import complete: %d records", len(records))
+            _LOGGER.info(
+                "Historical import complete: %d from Tibber, %d new stored",
+                len(records), stored_count,
+            )
         except TibberApiError as err:
             _LOGGER.error("Historical import failed: %s", err)
 
@@ -214,6 +263,11 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 if ts:
                     existing = self._storage.get_hourly_record(ts)
                     if not existing or not existing.get("synced"):
+                        # Enrich price_level from spot data
+                        if not record.get("price_level"):
+                            level = self._storage.get_price_level_for_hour(ts)
+                            if level:
+                                record["price_level"] = level
                         self._storage.upsert_hourly_record(ts, record)
 
             # Compute sensor deltas and enrich the most recent record
@@ -226,7 +280,14 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     self._enrich_record_with_deltas(stored, sensor_deltas)
                     self._storage.upsert_hourly_record(ts, stored)
 
-            self._storage.last_tibber_sync = datetime.now(tz=timezone.utc).isoformat()
+            # Only advance sync marker to latest record, not to now
+            if records:
+                latest_ts = max(
+                    (r.get("timestamp", "") for r in records if r.get("timestamp")),
+                    default="",
+                )
+                if latest_ts:
+                    self._storage.last_tibber_sync = latest_ts
             await self._storage.async_save()
         except TibberApiError as err:
             _LOGGER.warning("Failed to update consumption/production: %s", err)
