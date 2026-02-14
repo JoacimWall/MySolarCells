@@ -27,15 +27,15 @@ _LOGGER = logging.getLogger(__name__)
 # Bump this to force a re-import when import logic changes.
 STATISTICS_IMPORT_VERSION = 5
 
-# (sensor_key, unit, HistoryStats attribute name)
-SENSORS_TO_IMPORT: list[tuple[str, str, str]] = [
-    ("daily_production_sold", "kWh", "production_sold"),
-    ("daily_production_own_use", "kWh", "production_own_use"),
-    ("daily_purchased", "kWh", "purchased"),
-    ("daily_sold_profit", "SEK", "sum_production_sold_profit"),
-    ("daily_own_use_saved", "SEK", "sum_production_own_use_saved"),
-    ("daily_purchased_cost", "SEK", "sum_purchased_cost"),
-    ("daily_balance", "SEK", "balance"),
+# (sensor_key, unit, unit_class, HistoryStats attribute name)
+SENSORS_TO_IMPORT: list[tuple[str, str, str, str]] = [
+    ("daily_production_sold", "kWh", "energy", "production_sold"),
+    ("daily_production_own_use", "kWh", "energy", "production_own_use"),
+    ("daily_purchased", "kWh", "energy", "purchased"),
+    ("daily_sold_profit", "SEK", "monetary", "sum_production_sold_profit"),
+    ("daily_own_use_saved", "SEK", "monetary", "sum_production_own_use_saved"),
+    ("daily_purchased_cost", "SEK", "monetary", "sum_purchased_cost"),
+    ("daily_balance", "SEK", "monetary", "balance"),
 ]
 
 
@@ -194,7 +194,7 @@ async def async_import_historical_statistics(
     # Step A: Look up entity_ids from entity registry
     registry = er.async_get(hass)
     entity_map: dict[str, str] = {}
-    for sensor_key, _, _ in SENSORS_TO_IMPORT:
+    for sensor_key, _, _, _ in SENSORS_TO_IMPORT:
         unique_id = f"{coordinator._entry_id}_{sensor_key}"
         entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
         if entity_id is None:
@@ -293,7 +293,7 @@ async def async_import_historical_statistics(
 
     sensor_details: list[str] = []
 
-    for sensor_key, unit, attr_name in SENSORS_TO_IMPORT:
+    for sensor_key, unit, unit_class, attr_name in SENSORS_TO_IMPORT:
         entity_id = entity_map[sensor_key]
         stats_list = build_statistics_list(hourly_stats, attr_name)
 
@@ -344,6 +344,7 @@ async def async_import_historical_statistics(
             name=sensor_key,
             source="recorder",
             statistic_id=entity_id,
+            unit_class=unit_class,
             unit_of_measurement=unit,
         )
 
