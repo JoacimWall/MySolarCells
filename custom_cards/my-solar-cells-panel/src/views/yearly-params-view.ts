@@ -317,12 +317,15 @@ export class YearlyParamsView extends LitElement {
       return;
     }
 
-    // Pre-fill from the latest existing year or defaults
-    const years = Object.keys(this._params).sort();
-    const lastYear = years.length > 0 ? this._params[years[years.length - 1]] : null;
-    this._editValues = lastYear
-      ? { ...lastYear }
-      : { ...DEFAULT_PARAMS };
+    // Pre-fill from the most recent prior year (carry-forward) or defaults
+    const priorYears = Object.keys(this._params)
+      .filter((y) => y < yearStr)
+      .sort();
+    const source =
+      priorYears.length > 0
+        ? this._params[priorYears[priorYears.length - 1]]
+        : null;
+    this._editValues = source ? { ...source } : { ...DEFAULT_PARAMS };
     this._editingYear = yearStr;
     this._newYear = "";
   }
