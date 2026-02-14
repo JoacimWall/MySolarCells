@@ -13,7 +13,8 @@
         "description": "V\u00e4lj vilken Tibber-bostad som ska anv\u00e4ndas f\u00f6r energidata.",
         "data": {
           "home_id": "Bostad",
-          "import_only_spot_price": "Importera bara spotpriser (anv\u00e4nd HA-sensorer f\u00f6r f\u00f6rbrukning/produktion)"
+          "import_only_spot_price": "Importera bara spotpriser (anv\u00e4nd HA-sensorer f\u00f6r f\u00f6rbrukning/produktion)",
+          "tibber_start_year": "Tibber import start\u00e5r"
         }
       },
       "sensors": {
@@ -35,9 +36,7 @@
           "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
           "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
           "energy_tax": "Energiskatt (SEK/kWh)",
-          "installed_kw": "Installerad kapacitet (kW)",
-          "use_spot_price": "Anv\u00e4nd spotpris",
-          "fixed_price": "Fast pris (SEK/kWh)"
+          "installed_kw": "Installerad kapacitet (kW)"
         }
       },
       "investment": {
@@ -71,7 +70,8 @@
           "grid_import_sensor": "N\u00e4timport-sensor",
           "production_sensor": "Total produktionssensor",
           "battery_charge_sensor": "Batteriladdningssensor",
-          "battery_discharge_sensor": "Batteriurl\u00e4ddningssensor"
+          "battery_discharge_sensor": "Batteriurl\u00e4ddningssensor",
+          "tibber_start_year": "Tibber import start\u00e5r"
         }
       },
       "financial": {
@@ -81,9 +81,7 @@
           "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
           "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
           "energy_tax": "Energiskatt (SEK/kWh)",
-          "installed_kw": "Installerad kapacitet (kW)",
-          "use_spot_price": "Anv\u00e4nd spotpris",
-          "fixed_price": "Fast pris (SEK/kWh)"
+          "installed_kw": "Installerad kapacitet (kW)"
         }
       },
       "yearly_params": {
@@ -100,7 +98,8 @@
           "tax_reduction": "Skattereduktion (SEK/kWh)",
           "grid_compensation": "N\u00e4tnytta (SEK/kWh)",
           "transfer_fee": "\u00d6verf\u00f6ringsavgift (SEK/kWh)",
-          "energy_tax": "Energiskatt (SEK/kWh)"
+          "energy_tax": "Energiskatt (SEK/kWh)",
+          "installed_kw": "Installerad kapacitet (kW)"
         }
       },
       "investment": {

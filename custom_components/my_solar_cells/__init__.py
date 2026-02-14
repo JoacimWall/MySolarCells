@@ -11,14 +11,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN, PLATFORMS
+from .const import CONF_YEARLY_PARAMS, DOMAIN, PLATFORMS, STORAGE_KEY_PREFIX
 from .coordinator import MySolarCellsCoordinator
-from .statistics_import import (
-    SENSORS_TO_IMPORT,
-    STATISTICS_IMPORT_VERSION,
-    async_import_historical_statistics,
-)
-from .storage import MySolarCellsStorage
+from .database import MySolarCellsDatabase
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,15 +28,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     session = async_get_clientsession(hass)
 
-    # Initialize storage
-    storage = MySolarCellsStorage(hass, entry.entry_id)
-    await storage.async_load()
+    # Delete old JSON storage file if it exists (replaced by SQLite)
+    old_json_path = hass.config.path(f".storage/{STORAGE_KEY_PREFIX}.{entry.entry_id}")
+    _delete_old_json_storage(old_json_path)
+
+    # Initialize SQLite database
+    database = MySolarCellsDatabase(hass, entry.entry_id)
+    await database.async_setup()
+
+    # Sync per-year financial params from config entry to database
+    yearly_params = entry.data.get(CONF_YEARLY_PARAMS)
+    if yearly_params and isinstance(yearly_params, dict):
+        for year_str, params in yearly_params.items():
+            try:
+                database.set_yearly_params(int(year_str), params)
+            except (ValueError, TypeError):
+                pass
+        await database.async_save()
 
     # Create coordinator
     coordinator = MySolarCellsCoordinator(
         hass=hass,
         session=session,
-        storage=storage,
+        storage=database,
         config_data=dict(entry.data),
         entry_id=entry.entry_id,
     )
@@ -53,41 +62,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    # Import historical statistics now that entities are registered
-    stored_ver = storage.statistics_import_version
-    if stored_ver < STATISTICS_IMPORT_VERSION:
-        _LOGGER.warning(
-            "Statistics import needed: stored version %d < current %d, scheduling import",
-            stored_ver,
-            STATISTICS_IMPORT_VERSION,
-        )
-
-        async def _do_statistics_import() -> None:
-            try:
-                _LOGGER.warning("Statistics import task starting")
-                success = await async_import_historical_statistics(hass, coordinator)
-                _LOGGER.warning("Statistics import returned success=%s", success)
-                if success:
-                    storage.statistics_import_version = STATISTICS_IMPORT_VERSION
-                    await storage.async_save()
-                    coordinator._statistics_import_done = True
-            except Exception:
-                _LOGGER.warning(
-                    "Historical statistics import failed", exc_info=True
-                )
-
-        hass.async_create_task(_do_statistics_import())
-    else:
-        _LOGGER.warning(
-            "Statistics import skipped: stored version %d >= current %d",
-            stored_ver,
-            STATISTICS_IMPORT_VERSION,
-        )
-
     # Register Lovelace card resource
     await _register_card(hass)
 
     return True
+
+
+def _delete_old_json_storage(path: str) -> None:
+    """Delete the old JSON storage file if it exists."""
+    import os
+
+    if os.path.exists(path):
+        try:
+            os.remove(path)
+            _LOGGER.info("Deleted old JSON storage file: %s", path)
+        except OSError:
+            _LOGGER.warning("Failed to delete old JSON storage file: %s", path)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -95,7 +85,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
     if unload_ok:
-        hass.data[DOMAIN].pop(entry.entry_id, None)
+        coordinator = hass.data[DOMAIN].pop(entry.entry_id, None)
+        if coordinator:
+            await coordinator.storage.async_close()
 
     return unload_ok
 
@@ -104,43 +96,14 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Clean up all data when the integration is removed."""
     _LOGGER.warning("Removing My Solar Cells: cleaning up all data")
 
-    # 1. Remove JSON storage file
-    storage = MySolarCellsStorage(hass, entry.entry_id)
-    await storage.async_load()
-    await storage.async_remove()
-    _LOGGER.warning("Removed storage file")
+    # Remove SQLite database file
+    database = MySolarCellsDatabase(hass, entry.entry_id)
+    await database.async_remove()
+    _LOGGER.warning("Removed database file")
 
-    # 2. Clear imported statistics from the recorder
-    try:
-        from homeassistant.components.recorder import get_instance
-        from homeassistant.helpers import entity_registry as er
-
-        registry = er.async_get(hass)
-        statistic_ids = []
-        for sensor_key, _, _, _ in SENSORS_TO_IMPORT:
-            unique_id = f"{entry.entry_id}_{sensor_key}"
-            entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
-            if entity_id:
-                statistic_ids.append(entity_id)
-
-        if statistic_ids:
-            instance = get_instance(hass)
-            await instance.async_clear_statistics(statistic_ids)
-            _LOGGER.warning(
-                "Cleared recorder statistics for %d sensors: %s",
-                len(statistic_ids),
-                statistic_ids,
-            )
-    except Exception:
-        _LOGGER.warning("Failed to clear recorder statistics", exc_info=True)
-
-    # 3. Dismiss persistent notification
-    try:
-        from homeassistant.components.persistent_notification import async_dismiss
-
-        async_dismiss(hass, "my_solar_cells_statistics_import")
-    except Exception:
-        pass
+    # Delete old JSON storage file too if still present
+    old_json_path = hass.config.path(f".storage/{STORAGE_KEY_PREFIX}.{entry.entry_id}")
+    _delete_old_json_storage(old_json_path)
 
     _LOGGER.warning("My Solar Cells cleanup complete")
 

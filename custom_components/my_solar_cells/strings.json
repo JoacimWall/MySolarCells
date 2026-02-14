@@ -13,7 +13,8 @@
         "description": "Select which Tibber home to use for energy data.",
         "data": {
           "home_id": "Home",
-          "import_only_spot_price": "Import only spot prices (use HA sensors for consumption/production)"
+          "import_only_spot_price": "Import only spot prices (use HA sensors for consumption/production)",
+          "tibber_start_year": "Tibber Import Start Year"
         }
       },
       "sensors": {
@@ -35,9 +36,7 @@
           "grid_compensation": "Grid Compensation (SEK/kWh)",
           "transfer_fee": "Transfer Fee (SEK/kWh)",
           "energy_tax": "Energy Tax (SEK/kWh)",
-          "installed_kw": "Installed Capacity (kW)",
-          "use_spot_price": "Use Spot Price",
-          "fixed_price": "Fixed Price (SEK/kWh)"
+          "installed_kw": "Installed Capacity (kW)"
         }
       },
       "investment": {
@@ -71,7 +70,8 @@
           "grid_import_sensor": "Grid Import Sensor",
           "production_sensor": "Total Production Sensor",
           "battery_charge_sensor": "Battery Charge Sensor",
-          "battery_discharge_sensor": "Battery Discharge Sensor"
+          "battery_discharge_sensor": "Battery Discharge Sensor",
+          "tibber_start_year": "Tibber Import Start Year"
         }
       },
       "financial": {
@@ -81,9 +81,7 @@
           "grid_compensation": "Grid Compensation (SEK/kWh)",
           "transfer_fee": "Transfer Fee (SEK/kWh)",
           "energy_tax": "Energy Tax (SEK/kWh)",
-          "installed_kw": "Installed Capacity (kW)",
-          "use_spot_price": "Use Spot Price",
-          "fixed_price": "Fixed Price (SEK/kWh)"
+          "installed_kw": "Installed Capacity (kW)"
         }
       },
       "yearly_params": {
@@ -100,7 +98,8 @@
           "tax_reduction": "Tax Reduction (SEK/kWh)",
           "grid_compensation": "Grid Compensation (SEK/kWh)",
           "transfer_fee": "Transfer Fee (SEK/kWh)",
-          "energy_tax": "Energy Tax (SEK/kWh)"
+          "energy_tax": "Energy Tax (SEK/kWh)",
+          "installed_kw": "Installed Capacity (kW)"
         }
       },
       "investment": {

@@ -16,8 +16,6 @@ DEFAULT_GRID_COMPENSATION = 0.078  # SEK/kWh (nätnytta)
 DEFAULT_TRANSFER_FEE = 0.30  # SEK/kWh (överföringsavgift)
 DEFAULT_ENERGY_TAX = 0.49  # SEK/kWh (energiskatt)
 DEFAULT_INSTALLED_KW = 10.5  # kW installed panel capacity
-DEFAULT_USE_SPOT_PRICE = True
-DEFAULT_FIXED_PRICE = 0.0  # SEK/kWh
 
 # --- Defaults from SavingEstimateParameters.cs ---
 DEFAULT_PRICE_DEVELOPMENT = 1.05  # % annual electricity price increase
@@ -44,8 +42,6 @@ CONF_GRID_COMPENSATION = "grid_compensation"
 CONF_TRANSFER_FEE = "transfer_fee"
 CONF_ENERGY_TAX = "energy_tax"
 CONF_INSTALLED_KW = "installed_kw"
-CONF_USE_SPOT_PRICE = "use_spot_price"
-CONF_FIXED_PRICE = "fixed_price"
 CONF_INVESTMENT_AMOUNT = "investment_amount"
 CONF_LOAN_AMOUNT = "loan_amount"
 CONF_INTEREST_RATE = "interest_rate"
@@ -54,6 +50,7 @@ CONF_PANEL_DEGRADATION = "panel_degradation"
 CONF_PRICE_DEVELOPMENT = "price_development"
 CONF_INSTALLATION_DATE = "installation_date"
 CONF_YEARLY_PARAMS = "yearly_params"
+CONF_TIBBER_START_YEAR = "tibber_start_year"
 
 # Year when tax reduction is removed in Sweden
 TAX_REDUCTION_END_YEAR = 2026

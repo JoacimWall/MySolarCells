@@ -19,7 +19,6 @@ from .const import (
     CONF_BATTERY_CHARGE_SENSOR,
     CONF_BATTERY_DISCHARGE_SENSOR,
     CONF_ENERGY_TAX,
-    CONF_FIXED_PRICE,
     CONF_GRID_COMPENSATION,
     CONF_GRID_EXPORT_SENSOR,
     CONF_GRID_IMPORT_SENSOR,
@@ -35,12 +34,11 @@ from .const import (
     CONF_PRICE_DEVELOPMENT,
     CONF_PRODUCTION_SENSOR,
     CONF_TAX_REDUCTION,
+    CONF_TIBBER_START_YEAR,
     CONF_TRANSFER_FEE,
-    CONF_USE_SPOT_PRICE,
     CONF_YEARLY_PARAMS,
     DEFAULT_AMORTIZATION_MONTHLY,
     DEFAULT_ENERGY_TAX,
-    DEFAULT_FIXED_PRICE,
     DEFAULT_GRID_COMPENSATION,
     DEFAULT_INSTALLED_KW,
     DEFAULT_INTEREST_RATE,
@@ -50,7 +48,6 @@ from .const import (
     DEFAULT_PRICE_DEVELOPMENT,
     DEFAULT_TAX_REDUCTION,
     DEFAULT_TRANSFER_FEE,
-    DEFAULT_USE_SPOT_PRICE,
     DOMAIN,
 )
 from .tibber_client import TibberApiError, TibberClient
@@ -116,6 +113,9 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._data[CONF_IMPORT_ONLY_SPOT_PRICE] = user_input.get(
                 CONF_IMPORT_ONLY_SPOT_PRICE, False
             )
+            self._data[CONF_TIBBER_START_YEAR] = user_input.get(
+                CONF_TIBBER_START_YEAR, datetime.now().year
+            )
             return await self.async_step_sensors()
 
         home_options = {
@@ -129,6 +129,9 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_HOME_ID): vol.In(home_options),
                     vol.Optional(CONF_IMPORT_ONLY_SPOT_PRICE, default=False): bool,
+                    vol.Optional(
+                        CONF_TIBBER_START_YEAR, default=datetime.now().year
+                    ): vol.Coerce(int),
                 }
             ),
         )
@@ -195,12 +198,6 @@ class MySolarCellsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     ): vol.Coerce(float),
                     vol.Required(
                         CONF_INSTALLED_KW, default=DEFAULT_INSTALLED_KW
-                    ): vol.Coerce(float),
-                    vol.Required(
-                        CONF_USE_SPOT_PRICE, default=DEFAULT_USE_SPOT_PRICE
-                    ): bool,
-                    vol.Optional(
-                        CONF_FIXED_PRICE, default=DEFAULT_FIXED_PRICE
                     ): vol.Coerce(float),
                 }
             ),
@@ -300,6 +297,10 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
                         CONF_BATTERY_DISCHARGE_SENSOR,
                         default=data.get(CONF_BATTERY_DISCHARGE_SENSOR, ""),
                     ): str,
+                    vol.Optional(
+                        CONF_TIBBER_START_YEAR,
+                        default=data.get(CONF_TIBBER_START_YEAR, datetime.now().year),
+                    ): vol.Coerce(int),
                 }
             ),
         )
@@ -337,14 +338,6 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
                     vol.Required(
                         CONF_INSTALLED_KW,
                         default=data.get(CONF_INSTALLED_KW, DEFAULT_INSTALLED_KW),
-                    ): vol.Coerce(float),
-                    vol.Required(
-                        CONF_USE_SPOT_PRICE,
-                        default=data.get(CONF_USE_SPOT_PRICE, DEFAULT_USE_SPOT_PRICE),
-                    ): bool,
-                    vol.Optional(
-                        CONF_FIXED_PRICE,
-                        default=data.get(CONF_FIXED_PRICE, DEFAULT_FIXED_PRICE),
                     ): vol.Coerce(float),
                 }
             ),
@@ -417,6 +410,7 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
                 CONF_GRID_COMPENSATION: user_input[CONF_GRID_COMPENSATION],
                 CONF_TRANSFER_FEE: user_input[CONF_TRANSFER_FEE],
                 CONF_ENERGY_TAX: user_input[CONF_ENERGY_TAX],
+                CONF_INSTALLED_KW: user_input[CONF_INSTALLED_KW],
             }
             return await self.async_step_yearly_params(user_input=None)
 
@@ -458,6 +452,13 @@ class MySolarCellsOptionsFlow(config_entries.OptionsFlow):
                         default=year_data.get(
                             CONF_ENERGY_TAX,
                             data.get(CONF_ENERGY_TAX, DEFAULT_ENERGY_TAX),
+                        ),
+                    ): vol.Coerce(float),
+                    vol.Required(
+                        CONF_INSTALLED_KW,
+                        default=year_data.get(
+                            CONF_INSTALLED_KW,
+                            data.get(CONF_INSTALLED_KW, DEFAULT_INSTALLED_KW),
                         ),
                     ): vol.Coerce(float),
                 }

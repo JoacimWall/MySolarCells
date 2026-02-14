@@ -19,8 +19,6 @@ class CalcParams:
     transfer_fee: float = 0.30
     energy_tax: float = 0.49
     installed_kw: float = 10.5
-    use_spot_price: bool = True
-    fixed_price: float = 0.0
 
 
 @dataclass
@@ -143,7 +141,10 @@ def get_calc_params_for_year(
 
     overrides = yearly_params[year]
     params = copy(base_params)
-    for key in ("tax_reduction", "grid_compensation", "transfer_fee", "energy_tax"):
+    for key in (
+        "tax_reduction", "grid_compensation", "transfer_fee", "energy_tax",
+        "installed_kw",
+    ):
         if key in overrides:
             setattr(params, key, overrides[key])
     return params
@@ -164,21 +165,15 @@ def calculate_daily_stats(
 
     # --- Purchased (lines 270-273) ---
     stats.purchased = round(sum(r.get("purchased", 0) for r in hourly_records), 2)
-    if calc_params.use_spot_price:
-        stats.purchased_cost = round(sum(r.get("purchased_cost", 0) for r in hourly_records), 2)
-    else:
-        stats.purchased_cost = round(stats.purchased * calc_params.fixed_price, 2)
+    stats.purchased_cost = round(sum(r.get("purchased_cost", 0) for r in hourly_records), 2)
     stats.purchased_transfer_fee_cost = round(stats.purchased * calc_params.transfer_fee, 2)
     stats.purchased_tax_cost = round(stats.purchased * calc_params.energy_tax, 2)
 
     # --- Production Sold (lines 275-281) ---
     stats.production_sold = round(sum(r.get("production_sold", 0) for r in hourly_records), 2)
-    if calc_params.use_spot_price:
-        stats.production_sold_profit = round(
-            sum(r.get("production_sold_profit", 0) for r in hourly_records), 2
-        )
-    else:
-        stats.production_sold_profit = round(stats.production_sold * calc_params.fixed_price, 2)
+    stats.production_sold_profit = round(
+        sum(r.get("production_sold_profit", 0) for r in hourly_records), 2
+    )
     stats.production_sold_grid_compensation_profit = round(
         stats.production_sold * calc_params.grid_compensation, 2
     )
@@ -188,12 +183,9 @@ def calculate_daily_stats(
 
     # --- Production Own Use (lines 284-287) ---
     stats.production_own_use = round(sum(r.get("production_own_use", 0) for r in hourly_records), 2)
-    if calc_params.use_spot_price:
-        stats.production_own_use_saved = round(
-            sum(r.get("production_own_use_profit", 0) for r in hourly_records), 2
-        )
-    else:
-        stats.production_own_use_saved = round(stats.production_own_use * calc_params.fixed_price, 2)
+    stats.production_own_use_saved = round(
+        sum(r.get("production_own_use_profit", 0) for r in hourly_records), 2
+    )
     stats.production_own_use_transfer_fee_saved = round(
         stats.production_own_use * calc_params.transfer_fee, 2
     )
@@ -203,12 +195,9 @@ def calculate_daily_stats(
 
     # --- Battery Used (lines 290-296) ---
     stats.battery_used = round(sum(r.get("battery_used", 0) for r in hourly_records), 2)
-    if calc_params.use_spot_price:
-        stats.battery_used_saved = round(
-            sum(r.get("battery_used_profit", 0) for r in hourly_records), 2
-        )
-    else:
-        stats.battery_used_saved = round(stats.battery_used * calc_params.fixed_price, 2)
+    stats.battery_used_saved = round(
+        sum(r.get("battery_used_profit", 0) for r in hourly_records), 2
+    )
     stats.battery_use_transfer_fee_saved = round(stats.battery_used * calc_params.transfer_fee, 2)
     stats.battery_use_energy_tax_saved = round(stats.battery_used * calc_params.energy_tax, 2)
 

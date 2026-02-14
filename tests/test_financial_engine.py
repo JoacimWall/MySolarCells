@@ -69,24 +69,6 @@ class TestCalculateDailyStats:
         # Battery saved (spot): 0 + 0.25 + 0 = 0.25
         assert stats.battery_used_saved == 0.25
 
-    def test_fixed_price_mode(self, sample_hourly_records):
-        """Test calculations with fixed price instead of spot."""
-        params = CalcParams(
-            use_spot_price=False,
-            fixed_price=0.55,
-            tax_reduction=0.60,
-            grid_compensation=0.078,
-            transfer_fee=0.30,
-            energy_tax=0.49,
-        )
-        stats = calculate_daily_stats(sample_hourly_records, params)
-        # Purchased cost with fixed: 2.8 * 0.55 = 1.54
-        assert stats.purchased_cost == 1.54
-        # Production sold profit with fixed: 10.5 * 0.55 = 5.775 -> 5.78
-        assert stats.production_sold_profit == 5.78
-        # Own use saved with fixed: 12.5 * 0.55 = 6.875 -> 6.88
-        assert stats.production_own_use_saved == 6.88
-
     def test_sum_properties(self, sample_hourly_records, sample_calc_params):
         """Test computed sum properties."""
         stats = calculate_daily_stats(sample_hourly_records, sample_calc_params)

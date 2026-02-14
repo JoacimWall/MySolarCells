@@ -38,9 +38,9 @@ def _setup_coordinator_module():
     # This populates sys.modules with .const, .storage, etc. so relative
     # imports in coordinator.py don't re-trigger __init__.py.
     import custom_components.my_solar_cells.const  # noqa: F401
+    import custom_components.my_solar_cells.database  # noqa: F401
     import custom_components.my_solar_cells.financial_engine  # noqa: F401
     import custom_components.my_solar_cells.roi_engine  # noqa: F401
-    import custom_components.my_solar_cells.storage  # noqa: F401
     import custom_components.my_solar_cells.tibber_client  # noqa: F401
 
     # Remove the cached coordinator (which was a MagicMock) and the
@@ -282,27 +282,6 @@ class TestEnrichRecordWithDeltas:
         assert record["battery_charge"] == 1.5
         assert record["battery_used"] == 0.8
         assert record["battery_used_profit"] == pytest.approx(0.4)
-
-    def test_fixed_price_mode(self):
-        """Should use fixed price when use_spot_price is False."""
-        coord = _make_coordinator()
-        coord._calc_params = CalcParams(
-            tax_reduction=0.60,
-            grid_compensation=0.078,
-            transfer_fee=0.30,
-            energy_tax=0.49,
-            installed_kw=10.5,
-            use_spot_price=False,
-            fixed_price=0.45,
-        )
-        record = {"unit_price_buy": 0.50, "unit_price_sold": 0.60}
-        deltas = {"production": 5.0, "grid_export": 2.0, "grid_import": 1.0}
-
-        coord._enrich_record_with_deltas(record, deltas)
-
-        assert record["production_sold_profit"] == pytest.approx(0.90)
-        assert record["production_own_use_profit"] == pytest.approx(1.35)
-        assert record["purchased_cost"] == pytest.approx(0.45)
 
     def test_empty_deltas_no_changes(self):
         """Empty deltas should not modify the record."""

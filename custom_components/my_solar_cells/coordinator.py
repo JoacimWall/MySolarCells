@@ -16,7 +16,6 @@ from .const import (
     CONF_BATTERY_CHARGE_SENSOR,
     CONF_BATTERY_DISCHARGE_SENSOR,
     CONF_ENERGY_TAX,
-    CONF_FIXED_PRICE,
     CONF_GRID_COMPENSATION,
     CONF_GRID_EXPORT_SENSOR,
     CONF_GRID_IMPORT_SENSOR,
@@ -30,8 +29,8 @@ from .const import (
     CONF_PRICE_DEVELOPMENT,
     CONF_PRODUCTION_SENSOR,
     CONF_TAX_REDUCTION,
+    CONF_TIBBER_START_YEAR,
     CONF_TRANSFER_FEE,
-    CONF_USE_SPOT_PRICE,
     CONF_YEARLY_PARAMS,
     DOMAIN,
     UPDATE_INTERVAL_MINUTES,
@@ -42,7 +41,7 @@ from .financial_engine import (
     generate_monthly_report,
 )
 from .roi_engine import calculate_30_year_projection
-from .storage import MySolarCellsStorage
+from .database import MySolarCellsDatabase
 from .tibber_client import TibberApiError, TibberClient
 
 _LOGGER = logging.getLogger(__name__)
@@ -62,7 +61,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self,
         hass: HomeAssistant,
         session: aiohttp.ClientSession,
-        storage: MySolarCellsStorage,
+        storage: MySolarCellsDatabase,
         config_data: dict[str, Any],
         entry_id: str,
     ) -> None:
@@ -83,8 +82,8 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._statistics_import_done = False
         self._last_sensor_readings: dict[str, float] = {}
 
-        # Per-year financial parameter overrides (optional)
-        self._yearly_params = config_data.get(CONF_YEARLY_PARAMS)
+        # Per-year financial parameter overrides — loaded from database
+        self._yearly_params = storage.get_all_yearly_params() or None
 
         # Build calc params from config
         self._calc_params = CalcParams(
@@ -93,12 +92,10 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             transfer_fee=config_data.get(CONF_TRANSFER_FEE, 0.30),
             energy_tax=config_data.get(CONF_ENERGY_TAX, 0.49),
             installed_kw=config_data.get(CONF_INSTALLED_KW, 10.5),
-            use_spot_price=config_data.get(CONF_USE_SPOT_PRICE, True),
-            fixed_price=config_data.get(CONF_FIXED_PRICE, 0.0),
         )
 
     @property
-    def storage(self) -> MySolarCellsStorage:
+    def storage(self) -> MySolarCellsDatabase:
         """Return the storage instance."""
         return self._storage
 
@@ -139,14 +136,24 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if last_sync:
             start = _ensure_utc(datetime.fromisoformat(last_sync))
         else:
-            install_date_str = self._config.get(CONF_INSTALLATION_DATE, "")
-            if install_date_str:
+            tibber_start_year = self._config.get(CONF_TIBBER_START_YEAR)
+            if tibber_start_year:
                 try:
-                    start = _ensure_utc(datetime.fromisoformat(install_date_str))
+                    start = datetime(int(tibber_start_year), 1, 1, tzinfo=timezone.utc)
                 except (ValueError, TypeError):
-                    start = datetime.now(tz=timezone.utc) - timedelta(days=365)
+                    start = None
             else:
-                start = datetime.now(tz=timezone.utc) - timedelta(days=365)
+                start = None
+
+            if start is None:
+                install_date_str = self._config.get(CONF_INSTALLATION_DATE, "")
+                if install_date_str:
+                    try:
+                        start = _ensure_utc(datetime.fromisoformat(install_date_str))
+                    except (ValueError, TypeError):
+                        start = datetime.now(tz=timezone.utc) - timedelta(days=365)
+                else:
+                    start = datetime.now(tz=timezone.utc) - timedelta(days=365)
 
         _LOGGER.info("Starting historical import from %s", start.isoformat())
 
@@ -205,7 +212,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             for record in records:
                 ts = record.get("timestamp", "")
                 if ts:
-                    existing = self._storage.hourly_records.get(ts)
+                    existing = self._storage.get_hourly_record(ts)
                     if not existing or not existing.get("synced"):
                         self._storage.upsert_hourly_record(ts, record)
 
@@ -215,7 +222,7 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 most_recent = max(records, key=lambda r: r.get("timestamp", ""))
                 ts = most_recent.get("timestamp", "")
                 if ts:
-                    stored = self._storage.hourly_records.get(ts, most_recent)
+                    stored = self._storage.get_hourly_record(ts) or most_recent
                     self._enrich_record_with_deltas(stored, sensor_deltas)
                     self._storage.upsert_hourly_record(ts, stored)
 
@@ -302,14 +309,9 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         # Override grid export if HA sensor delta is available
         if grid_export_delta is not None:
             record["production_sold"] = grid_export_delta
-            if self._calc_params.use_spot_price:
-                record["production_sold_profit"] = (
-                    grid_export_delta * record.get("unit_price_sold", 0)
-                )
-            else:
-                record["production_sold_profit"] = (
-                    grid_export_delta * self._calc_params.fixed_price
-                )
+            record["production_sold_profit"] = (
+                grid_export_delta * record.get("unit_price_sold", 0)
+            )
 
         # Calculate own use from production delta
         if production_delta is not None:
@@ -320,27 +322,16 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             )
             own_use = max(0, production_delta - grid_export)
             record["production_own_use"] = own_use
-
-            if self._calc_params.use_spot_price:
-                record["production_own_use_profit"] = (
-                    own_use * record.get("unit_price_buy", 0)
-                )
-            else:
-                record["production_own_use_profit"] = (
-                    own_use * self._calc_params.fixed_price
-                )
+            record["production_own_use_profit"] = (
+                own_use * record.get("unit_price_buy", 0)
+            )
 
         # Override grid import if HA sensor delta is available
         if grid_import_delta is not None:
             record["purchased"] = grid_import_delta
-            if self._calc_params.use_spot_price:
-                record["purchased_cost"] = (
-                    grid_import_delta * record.get("unit_price_buy", 0)
-                )
-            else:
-                record["purchased_cost"] = (
-                    grid_import_delta * self._calc_params.fixed_price
-                )
+            record["purchased_cost"] = (
+                grid_import_delta * record.get("unit_price_buy", 0)
+            )
 
         # Battery sensors
         if battery_charge_delta is not None:
@@ -348,14 +339,9 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         if battery_discharge_delta is not None:
             record["battery_used"] = battery_discharge_delta
-            if self._calc_params.use_spot_price:
-                record["battery_used_profit"] = (
-                    battery_discharge_delta * record.get("unit_price_buy", 0)
-                )
-            else:
-                record["battery_used_profit"] = (
-                    battery_discharge_delta * self._calc_params.fixed_price
-                )
+            record["battery_used_profit"] = (
+                battery_discharge_delta * record.get("unit_price_buy", 0)
+            )
 
     async def _calculate_sensor_data(self) -> dict[str, Any]:
         """Calculate all sensor values from stored data."""

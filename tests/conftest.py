@@ -21,9 +21,6 @@ _HA_MODULES = [
     "homeassistant.components",
     "homeassistant.components.sensor",
     "homeassistant.components.persistent_notification",
-    "homeassistant.components.recorder",
-    "homeassistant.components.recorder.models",
-    "homeassistant.components.recorder.statistics",
     "homeassistant.helpers.entity_registry",
     "homeassistant.const",
     "voluptuous",
@@ -117,8 +114,6 @@ def sample_calc_params():
         transfer_fee=0.30,
         energy_tax=0.49,
         installed_kw=10.5,
-        use_spot_price=True,
-        fixed_price=0.0,
     )
 
 
