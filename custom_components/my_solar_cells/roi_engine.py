@@ -11,7 +11,7 @@ from .const import (
     ROI_PROJECTION_YEARS,
     TAX_REDUCTION_END_YEAR,
 )
-from .financial_engine import ReportHistoryStats
+from .financial_engine import HistoryStats, ReportHistoryStats
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -55,6 +55,47 @@ def get_average_monthly_production(month: int, installed_kw: float) -> float:
     Ports AverageProductionMonth.GetSnitMonth() from RoiService.cs (lines 155-187).
     """
     return AVERAGE_PRODUCTION_PER_KW.get(month, 0) * installed_kw
+
+
+def _average_monthly_data(
+    years_months: list[list[ReportHistoryStats]],
+) -> list[ReportHistoryStats]:
+    """Average monthly production and price data across multiple years.
+
+    For each calendar month (1-12), averages production and prices across
+    all years that have data for that month. Returns up to 12 entries.
+    """
+    month_groups: dict[int, list[HistoryStats]] = {}
+    for year_months in years_months:
+        for report in year_months:
+            month_num = report.from_date.month
+            month_groups.setdefault(month_num, []).append(report.history_stats)
+
+    result: list[ReportHistoryStats] = []
+    for month_num in sorted(month_groups.keys()):
+        stats_list = month_groups[month_num]
+        n = len(stats_list)
+        avg_stats = HistoryStats(
+            production_sold=sum(s.production_sold for s in stats_list) / n,
+            production_own_use=sum(s.production_own_use for s in stats_list) / n,
+            battery_used=sum(s.battery_used for s in stats_list) / n,
+            facts_production_sold_avg_per_kwh_profit=sum(
+                s.facts_production_sold_avg_per_kwh_profit for s in stats_list
+            ) / n,
+            facts_production_own_use_avg_per_kwh_saved=sum(
+                s.facts_production_own_use_avg_per_kwh_saved for s in stats_list
+            ) / n,
+            facts_battery_used_avg_per_kwh_saved=sum(
+                s.facts_battery_used_avg_per_kwh_saved for s in stats_list
+            ) / n,
+            calc_params=stats_list[0].calc_params,
+        )
+        result.append(ReportHistoryStats(
+            from_date=datetime(2000, month_num, 1),
+            history_stats=avg_stats,
+        ))
+
+    return result
 
 
 def calculate_30_year_projection(
@@ -188,14 +229,23 @@ def calculate_30_year_projection(
     end_year = yearly_overview[0].from_date.year + ROI_PROJECTION_YEARS
     calc_params_tax_reduction = yearly_overview[-1].history_stats.calc_params.tax_reduction
     last_historical_year = yearly_overview[-1].from_date.year
-    tax_reduction_in_base = last_historical_year < TAX_REDUCTION_END_YEAR
 
     roi_year_set = False
 
-    # Use monthly data from the last historical year for seasonal price projection
+    # Average up to 3 most recent years of monthly data for seasonal projection.
+    # Each month is averaged across however many years have data for that month.
     last_year_months: list[ReportHistoryStats] = []
+    tax_reduction_in_base = last_historical_year < TAX_REDUCTION_END_YEAR
     if monthly_by_year:
-        last_year_months = monthly_by_year[-1]
+        years_to_use = monthly_by_year[-3:]
+        last_year_months = _average_monthly_data(years_to_use)
+        # If all source months are from years before 2026, their sold prices
+        # include tax reduction and we need to subtract it for future years.
+        tax_reduction_in_base = all(
+            report.from_date.year < TAX_REDUCTION_END_YEAR
+            for year_months in years_to_use
+            for report in year_months
+        )
 
     for year in range(start_year, end_year):
         years_ahead = year - last_historical_year
