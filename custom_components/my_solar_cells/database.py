@@ -275,6 +275,20 @@ class MySolarCellsDatabase:
         self._set_meta("roi_projection", json.dumps(value))
 
     @property
+    def last_roi_params(self) -> dict:
+        raw = self._get_meta("last_roi_params")
+        if raw:
+            try:
+                return json.loads(raw)
+            except (json.JSONDecodeError, TypeError):
+                pass
+        return {}
+
+    @last_roi_params.setter
+    def last_roi_params(self, value: dict) -> None:
+        self._set_meta("last_roi_params", json.dumps(value))
+
+    @property
     def monthly_cache(self) -> dict:
         raw = self._get_meta("monthly_cache")
         if raw:

@@ -396,13 +396,64 @@ async def ws_get_roi_projection(
             _LOGGER.exception("ROI recalculation failed")
             connection.send_error(msg["id"], "recalculation_failed", "ROI recalculation failed, check logs")
             return
+
+        def _save_roi_params():
+            coordinator.storage.last_roi_params = {"price_development": price_dev, "panel_degradation": panel_deg}
+
+        await hass.async_add_executor_job(_save_roi_params)
+        await coordinator.storage.async_save()
     else:
-        investment = config.get(CONF_INVESTMENT_AMOUNT, DEFAULT_INVESTMENT_AMOUNT)
-        projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
+        saved_params = await hass.async_add_executor_job(lambda: coordinator.storage.last_roi_params)
+        if saved_params:
+            price_dev = saved_params.get("price_development", configured_price_dev)
+            panel_deg = saved_params.get("panel_degradation", configured_panel_deg)
+            if price_dev != configured_price_dev or panel_deg != configured_panel_deg:
+                investment = config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0)
+                installed_kw = config.get(CONF_INSTALLED_KW, DEFAULT_INSTALLED_KW)
+                install_date_str = config.get(CONF_INSTALLATION_DATE, "")
+                first_prod_day = None
+                if install_date_str:
+                    try:
+                        dt = datetime.fromisoformat(install_date_str)
+                        first_prod_day = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+                    except (ValueError, TypeError):
+                        pass
+
+                def _recalculate_saved():
+                    all_records = coordinator.storage.get_all_records_as_list()
+                    yearly_overview, monthly_by_year = generate_monthly_report(
+                        all_records, coordinator._calc_params, investment, coordinator._yearly_params
+                    )
+                    proj = calculate_30_year_projection(
+                        yearly_overview,
+                        monthly_by_year,
+                        price_development=price_dev,
+                        panel_degradation=panel_deg,
+                        investment=investment,
+                        installed_kw=installed_kw,
+                        first_production_day=first_prod_day,
+                    )
+                    return [r.to_dict() for r in proj]
+
+                try:
+                    projection = await hass.async_add_executor_job(_recalculate_saved)
+                except Exception:
+                    _LOGGER.exception("ROI recalculation with saved params failed")
+                    projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
+                    price_dev = configured_price_dev
+                    panel_deg = configured_panel_deg
+            else:
+                projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
+        else:
+            price_dev = configured_price_dev
+            panel_deg = configured_panel_deg
+            projection = await hass.async_add_executor_job(lambda: coordinator.storage.roi_projection)
+
+        investment = config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0)
 
     connection.send_result(msg["id"], {
         "projection": projection,
         "investment": config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0),
-        "price_development": price_dev if has_custom else configured_price_dev,
-        "panel_degradation": panel_deg if has_custom else configured_panel_deg,
+        "price_development": price_dev,
+        "panel_degradation": panel_deg,
     })

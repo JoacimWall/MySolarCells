@@ -44,7 +44,7 @@ export class MySolarCellsPanel extends LitElement {
     return html`
       <div class="content">
         <div class="header">
-          <h1>Solar Data Browser</h1>
+          <h1>Solar Data</h1>
         </div>
         <div class="tabs">
           <button
@@ -54,10 +54,10 @@ export class MySolarCellsPanel extends LitElement {
             Overview
           </button>
           <button
-            class="tab ${this._activeTab === "hourly" ? "active" : ""}"
-            @click=${() => (this._activeTab = "hourly")}
+            class="tab ${this._activeTab === "roi" ? "active" : ""}"
+            @click=${() => (this._activeTab = "roi")}
           >
-            Hourly Energy
+            ROI
           </button>
           <button
             class="tab ${this._activeTab === "sensors" ? "active" : ""}"
@@ -72,10 +72,10 @@ export class MySolarCellsPanel extends LitElement {
             Yearly Params
           </button>
           <button
-            class="tab ${this._activeTab === "roi" ? "active" : ""}"
-            @click=${() => (this._activeTab = "roi")}
+            class="tab ${this._activeTab === "hourly" ? "active" : ""}"
+            @click=${() => (this._activeTab = "hourly")}
           >
-            ROI
+            Hourly Energy
           </button>
         </div>
         <div class="tab-content" ?active=${this._activeTab === "overview"}>
@@ -84,11 +84,11 @@ export class MySolarCellsPanel extends LitElement {
             .entryId=${this._entryId}
           ></overview-view>
         </div>
-        <div class="tab-content" ?active=${this._activeTab === "hourly"}>
-          <hourly-energy-view
+        <div class="tab-content" ?active=${this._activeTab === "roi"}>
+          <roi-view
             .hass=${this.hass}
             .entryId=${this._entryId}
-          ></hourly-energy-view>
+          ></roi-view>
         </div>
         <div class="tab-content" ?active=${this._activeTab === "sensors"}>
           <sensors-view
@@ -102,11 +102,11 @@ export class MySolarCellsPanel extends LitElement {
             .entryId=${this._entryId}
           ></yearly-params-view>
         </div>
-        <div class="tab-content" ?active=${this._activeTab === "roi"}>
-          <roi-view
+        <div class="tab-content" ?active=${this._activeTab === "hourly"}>
+          <hourly-energy-view
             .hass=${this.hass}
             .entryId=${this._entryId}
-          ></roi-view>
+          ></hourly-energy-view>
         </div>
       </div>
     `;
