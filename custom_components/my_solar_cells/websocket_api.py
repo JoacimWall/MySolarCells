@@ -403,6 +403,6 @@ async def ws_get_roi_projection(
     connection.send_result(msg["id"], {
         "projection": projection,
         "investment": config.get(CONF_INVESTMENT_AMOUNT, 0) + config.get(CONF_LOAN_AMOUNT, 0),
-        "price_development": configured_price_dev,
-        "panel_degradation": configured_panel_deg,
+        "price_development": price_dev if has_custom else configured_price_dev,
+        "panel_degradation": panel_deg if has_custom else configured_panel_deg,
     })

@@ -81,12 +81,10 @@ export class RoiView extends LitElement {
       const result = await this.hass.callWS(req);
       this._projection = result.projection;
       this._investment = result.investment;
-      if (!this._initialLoaded) {
-        // Pre-fill inputs from configured values on first load
-        this._priceDev = Math.round((result.price_development - 1) * 10000) / 100;
-        this._panelDeg = Math.round(result.panel_degradation * 100) / 100;
-        this._initialLoaded = true;
-      }
+      // Always update inputs to reflect the values used in the calculation
+      this._priceDev = Math.round((result.price_development - 1) * 10000) / 100;
+      this._panelDeg = Math.round(result.panel_degradation * 100) / 100;
+      this._initialLoaded = true;
     } catch (e: any) {
       this._error = e.message || "Failed to fetch ROI projection";
     }
@@ -97,6 +95,14 @@ export class RoiView extends LitElement {
     const priceDev = 1 + this._priceDev / 100;
     const panelDeg = this._panelDeg;
     this._fetchData({ price_development: priceDev, panel_degradation: panelDeg });
+  }
+
+  private _onPriceDevChange(e: Event) {
+    this._priceDev = parseFloat((e.target as HTMLInputElement).value) || 0;
+  }
+
+  private _onPanelDegChange(e: Event) {
+    this._panelDeg = parseFloat((e.target as HTMLInputElement).value) || 0;
   }
 
   private _fmtInt(v: number): string {
@@ -141,9 +147,7 @@ export class RoiView extends LitElement {
               type="number"
               step="0.1"
               .value=${String(this._priceDev)}
-              @input=${(e: Event) => {
-                this._priceDev = parseFloat((e.target as HTMLInputElement).value) || 0;
-              }}
+              @change=${this._onPriceDevChange}
             />
           </div>
           <div class="input-group">
@@ -152,9 +156,7 @@ export class RoiView extends LitElement {
               type="number"
               step="0.05"
               .value=${String(this._panelDeg)}
-              @input=${(e: Event) => {
-                this._panelDeg = parseFloat((e.target as HTMLInputElement).value) || 0;
-              }}
+              @change=${this._onPanelDegChange}
             />
           </div>
           <button class="btn" @click=${this._onCalculate} ?disabled=${this._loading}>
