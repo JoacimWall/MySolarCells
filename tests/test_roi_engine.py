@@ -183,3 +183,96 @@ class TestCalculate30YearProjection:
             # 2026 should have lower average_price_sold due to tax reduction removal
             # (price_sold in 2026 = prev - tax_reduction, then * price_dev)
             pass  # Structure test - actual values depend on data
+
+    def test_current_year_uses_month_specific_prices(self, sample_calc_params):
+        """Current year missing months use avg prices from prior years, not yearly avg.
+
+        Winter months (Jan-Feb) have high prices. If used for summer months the ROI
+        would be inflated. The fix averages up to 3 prior years per month.
+
+        Note: this test relies on running in year 2026. The 2026 records only
+        cover Jan-Feb so the engine must fill Mar-Dec from prior years.
+        """
+        # Create 2 prior years with distinct summer/winter prices
+        records = []
+        for year in [2024, 2025]:
+            for month in range(1, 13):
+                for day in [1, 15]:
+                    # Winter: high prices (months 1-2, 11-12); Summer: low prices (5-8)
+                    if month in (1, 2, 11, 12):
+                        price_sold = 1.50
+                        price_own = 1.80
+                    elif month in (5, 6, 7, 8):
+                        price_sold = 0.30
+                        price_own = 0.50
+                    else:
+                        price_sold = 0.80
+                        price_own = 1.00
+
+                    prod_sold = 5.0 if month in (5, 6, 7, 8) else 0.5
+                    own_use = 3.0 if month in (5, 6, 7, 8) else 0.3
+
+                    records.append({
+                        "timestamp": f"{year}-{month:02d}-{day:02d}T12:00:00+01:00",
+                        "purchased": 2.0,
+                        "purchased_cost": 2.0 * price_own,
+                        "production_sold": prod_sold,
+                        "production_sold_profit": prod_sold * price_sold,
+                        "production_own_use": own_use,
+                        "production_own_use_profit": own_use * price_own,
+                        "battery_charge": 0.0,
+                        "battery_used": 0.0,
+                        "battery_used_profit": 0.0,
+                        "unit_price_buy": price_own,
+                        "unit_price_sold": price_sold,
+                    })
+
+        # Add current year (2026) with only Jan-Feb (winter, high prices)
+        for day in [1, 15]:
+            records.append({
+                "timestamp": f"2026-01-{day:02d}T12:00:00+01:00",
+                "purchased": 2.0,
+                "purchased_cost": 2.0 * 1.80,
+                "production_sold": 0.5,
+                "production_sold_profit": 0.5 * 1.50,
+                "production_own_use": 0.3,
+                "production_own_use_profit": 0.3 * 1.80,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            })
+            records.append({
+                "timestamp": f"2026-02-{day:02d}T12:00:00+01:00",
+                "purchased": 2.0,
+                "purchased_cost": 2.0 * 1.80,
+                "production_sold": 0.5,
+                "production_sold_profit": 0.5 * 1.50,
+                "production_own_use": 0.3,
+                "production_own_use_profit": 0.3 * 1.80,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            })
+
+        yearly, monthly = generate_monthly_report(records, sample_calc_params, 200000)
+
+        result = calculate_30_year_projection(
+            yearly, monthly,
+            price_development=0.0,
+            panel_degradation=0.0,
+            investment=200000,
+            installed_kw=10.5,
+        )
+
+        # Find the 2026 entry
+        entry_2026 = [r for r in result if r.year == 2026]
+        assert len(entry_2026) == 1
+        e = entry_2026[0]
+
+        # The average sold price for 2026 should be LOWER than the Jan-Feb price (1.50)
+        # because summer months from prior years have ~0.30 prices, pulling the
+        # weighted average down significantly.
+        assert e.average_price_sold < 1.40, (
+            f"Expected avg_price_sold < 1.40 (summer months should lower it), "
+            f"got {e.average_price_sold}"
+        )

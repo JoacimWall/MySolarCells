@@ -135,20 +135,36 @@ def calculate_30_year_projection(
     # --- Historical years (lines 24-97) ---
     for idx, year_report in enumerate(yearly_overview):
         stats = year_report.history_stats
+        current_year_savings = None  # Set when current year needs special handling
 
-        # If current year, fill missing months with prior year data or average production
-        # (lines 27-73)
+        # If current year, fill missing months using avg of up to 3 prior years
+        # with month-specific prices (lines 27-73)
         if year_report.from_date.year == now.year:
-            # Get months for current year
             current_year_months: list[ReportHistoryStats] = []
             if idx < len(monthly_by_year):
                 current_year_months = monthly_by_year[idx]
 
-            fake_production = 0.0
-            fake_own_use = 0.0
+            # Average monthly data from up to 3 prior years
+            prior_years = monthly_by_year[:idx] if idx > 0 else []
+            years_to_avg = prior_years[-3:]
+            avg_months = _average_monthly_data(years_to_avg) if years_to_avg else []
+            avg_months_by_num = {m.from_date.month: m for m in avg_months}
+
+            # Fallback prices from the actual months
+            last_price_sold = stats.facts_production_sold_avg_per_kwh_profit
+            last_price_own_use = stats.facts_production_own_use_avg_per_kwh_saved
+
+            # Save original production for actual-months savings calc
+            original_prod_sold = stats.production_sold
+            original_prod_own_use = stats.production_own_use
+            original_battery_used = stats.battery_used
+
+            fake_prod_sold = 0.0
+            fake_prod_own_use = 0.0
+            fake_savings_sold = 0.0
+            fake_savings_own_use = 0.0
 
             for month_num in range(1, 13):
-                # Check if this month is after the current data or before first production
                 after_current = month_num > len(current_year_months)
                 before_first = (
                     first_production_day is not None
@@ -158,29 +174,73 @@ def calculate_30_year_projection(
                 )
 
                 if before_first or after_current:
-                    # Try to get data from previous year
-                    prev_year_month = None
-                    if len(monthly_by_year) > 1:
-                        prev_year_months = monthly_by_year[-2] if idx == len(monthly_by_year) - 1 else (
-                            monthly_by_year[idx - 1] if idx > 0 else None
-                        )
-                        if prev_year_months:
-                            for m in prev_year_months:
-                                if m.from_date.month == month_num:
-                                    prev_year_month = m
-                                    break
+                    avg_month = avg_months_by_num.get(month_num)
 
-                    if prev_year_month is not None:
-                        fake_production += prev_year_month.history_stats.production_sold
-                        fake_own_use += prev_year_month.history_stats.production_own_use
+                    if avg_month is not None:
+                        ms = avg_month.history_stats
+                        m_prod_sold = ms.production_sold
+                        m_prod_own_use = ms.production_own_use + ms.battery_used
+                        m_price_sold = ms.facts_production_sold_avg_per_kwh_profit
+                        if ms.facts_battery_used_avg_per_kwh_saved == 0:
+                            m_price_own_use = ms.facts_production_own_use_avg_per_kwh_saved
+                        else:
+                            m_price_own_use = (
+                                ms.facts_battery_used_avg_per_kwh_saved
+                                + ms.facts_production_own_use_avg_per_kwh_saved
+                            ) / 2
+                        last_price_sold = m_price_sold
+                        last_price_own_use = m_price_own_use
                     else:
-                        # Use average production table
-                        fake_prod = get_average_monthly_production(month_num, installed_kw)
-                        fake_production += fake_prod * 0.5
-                        fake_own_use += fake_prod * 0.5
+                        # No prior data — use avg production table + previous month's price
+                        m_prod = get_average_monthly_production(month_num, installed_kw)
+                        m_prod_sold = m_prod * 0.5
+                        m_prod_own_use = m_prod * 0.5
+                        m_price_sold = last_price_sold
+                        m_price_own_use = last_price_own_use
 
-            stats.production_sold += fake_production
-            stats.production_own_use += fake_own_use
+                    fake_prod_sold += m_prod_sold
+                    fake_prod_own_use += m_prod_own_use
+                    fake_savings_sold += m_prod_sold * m_price_sold
+                    fake_savings_own_use += m_prod_own_use * m_price_own_use
+
+            # Update production totals for display
+            stats.production_sold += fake_prod_sold
+            stats.production_own_use += fake_prod_own_use
+
+            # Actual-months savings using actual avg prices
+            if stats.facts_battery_used_avg_per_kwh_saved == 0:
+                actual_own_use_price = stats.facts_production_own_use_avg_per_kwh_saved
+            else:
+                actual_own_use_price = (
+                    stats.facts_battery_used_avg_per_kwh_saved
+                    + stats.facts_production_own_use_avg_per_kwh_saved
+                ) / 2
+            actual_savings_sold = (
+                stats.facts_production_sold_avg_per_kwh_profit * original_prod_sold
+            )
+            actual_savings_own_use = (
+                (original_prod_own_use + original_battery_used) * actual_own_use_price
+            )
+
+            total_year_sold = round(actual_savings_sold + fake_savings_sold, 2)
+            total_year_own_use = round(actual_savings_own_use + fake_savings_own_use, 2)
+
+            # Weighted average prices for display
+            total_ps = stats.production_sold
+            total_po = stats.production_own_use + stats.battery_used
+            display_price_sold = (
+                round(total_year_sold / total_ps, 2) if total_ps > 0 else 0.0
+            )
+            display_price_own_use = (
+                round(total_year_own_use / total_po, 2) if total_po > 0 else 0.0
+            )
+
+            current_year_savings = (
+                total_year_sold,
+                total_year_own_use,
+                display_price_sold,
+                display_price_own_use,
+            )
 
         # Calculate average own use price (line 74-76)
         if stats.facts_battery_used_avg_per_kwh_saved == 0:
@@ -192,13 +252,22 @@ def calculate_30_year_projection(
                 2,
             )
 
-        # Calculate year savings (lines 78-80)
-        year_savings_sold = round(
-            stats.facts_production_sold_avg_per_kwh_profit * stats.production_sold, 2
-        )
-        year_savings_own_use = round(
-            (stats.production_own_use + stats.battery_used) * avg_price_own_use, 2
-        )
+        if current_year_savings is not None:
+            year_savings_sold = current_year_savings[0]
+            year_savings_own_use = current_year_savings[1]
+            avg_price_sold_display = current_year_savings[2]
+            avg_price_own_use_display = current_year_savings[3]
+        else:
+            # Calculate year savings (lines 78-80)
+            year_savings_sold = round(
+                stats.facts_production_sold_avg_per_kwh_profit * stats.production_sold, 2
+            )
+            year_savings_own_use = round(
+                (stats.production_own_use + stats.battery_used) * avg_price_own_use, 2
+            )
+            avg_price_sold_display = stats.facts_production_sold_avg_per_kwh_profit
+            avg_price_own_use_display = avg_price_own_use
+
         saving_this_year = year_savings_sold + year_savings_own_use
         total_saving += saving_this_year
 
@@ -208,8 +277,8 @@ def calculate_30_year_projection(
             EstimateRoi(
                 year=year_report.from_date.year,
                 year_from_start=year_count_from_start,
-                average_price_sold=stats.facts_production_sold_avg_per_kwh_profit,
-                average_price_own_use=avg_price_own_use,
+                average_price_sold=avg_price_sold_display,
+                average_price_own_use=avg_price_own_use_display,
                 production_sold=stats.production_sold,
                 production_own_use=stats.production_own_use + stats.battery_used,
                 year_savings_sold=year_savings_sold,
