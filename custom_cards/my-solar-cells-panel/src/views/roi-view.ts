@@ -13,8 +13,10 @@ export class RoiView extends LitElement {
   @state() private _loading = false;
   @state() private _error = "";
   @state() private _initialLoaded = false;
-  @state() private _priceDev = 5.0;
-  @state() private _panelDeg = 0.25;
+
+  // Only used for initial pre-fill, not updated on every keystroke
+  private _defaultPriceDev = 5.0;
+  private _defaultPanelDeg = 0.25;
 
   static styles = [
     cardStyles,
@@ -58,32 +60,23 @@ export class RoiView extends LitElement {
       !this._initialLoaded &&
       !this._loading
     ) {
-      this._fetchData();
+      this._fetchInitial();
     }
   }
 
-  private async _fetchData(customParams?: {
-    price_development: number;
-    panel_degradation: number;
-  }) {
+  private async _fetchInitial() {
     if (!this.hass || !this.entryId) return;
     this._loading = true;
     this._error = "";
     try {
-      const req: any = {
+      const result = await this.hass.callWS({
         type: "my_solar_cells/get_roi_projection",
         entry_id: this.entryId,
-      };
-      if (customParams) {
-        req.price_development = customParams.price_development;
-        req.panel_degradation = customParams.panel_degradation;
-      }
-      const result = await this.hass.callWS(req);
+      });
       this._projection = result.projection;
       this._investment = result.investment;
-      // Always update inputs to reflect the values used in the calculation
-      this._priceDev = Math.round((result.price_development - 1) * 10000) / 100;
-      this._panelDeg = Math.round(result.panel_degradation * 100) / 100;
+      this._defaultPriceDev = Math.round((result.price_development - 1) * 10000) / 100;
+      this._defaultPanelDeg = Math.round(result.panel_degradation * 100) / 100;
       this._initialLoaded = true;
     } catch (e: any) {
       this._error = e.message || "Failed to fetch ROI projection";
@@ -91,18 +84,31 @@ export class RoiView extends LitElement {
     this._loading = false;
   }
 
-  private _onCalculate() {
-    const priceDev = 1 + this._priceDev / 100;
-    const panelDeg = this._panelDeg;
-    this._fetchData({ price_development: priceDev, panel_degradation: panelDeg });
-  }
+  private async _onCalculate() {
+    if (!this.hass || !this.entryId) return;
 
-  private _onPriceDevChange(e: Event) {
-    this._priceDev = parseFloat((e.target as HTMLInputElement).value) || 0;
-  }
+    // Read values directly from DOM inputs
+    const priceInput = this.shadowRoot!.getElementById("price-dev-input") as HTMLInputElement;
+    const panelInput = this.shadowRoot!.getElementById("panel-deg-input") as HTMLInputElement;
+    const pricePct = parseFloat(priceInput.value) || 0;
+    const panelDeg = parseFloat(panelInput.value) || 0;
+    const priceDev = 1 + pricePct / 100;
 
-  private _onPanelDegChange(e: Event) {
-    this._panelDeg = parseFloat((e.target as HTMLInputElement).value) || 0;
+    this._loading = true;
+    this._error = "";
+    try {
+      const result = await this.hass.callWS({
+        type: "my_solar_cells/get_roi_projection",
+        entry_id: this.entryId,
+        price_development: priceDev,
+        panel_degradation: panelDeg,
+      });
+      this._projection = result.projection;
+      this._investment = result.investment;
+    } catch (e: any) {
+      this._error = e.message || "Failed to recalculate ROI projection";
+    }
+    this._loading = false;
   }
 
   private _fmtInt(v: number): string {
@@ -144,19 +150,19 @@ export class RoiView extends LitElement {
           <div class="input-group">
             <label>Price development (%)</label>
             <input
+              id="price-dev-input"
               type="number"
               step="0.1"
-              .value=${String(this._priceDev)}
-              @change=${this._onPriceDevChange}
+              value=${this._defaultPriceDev}
             />
           </div>
           <div class="input-group">
             <label>Panel degradation (%)</label>
             <input
+              id="panel-deg-input"
               type="number"
               step="0.05"
-              .value=${String(this._panelDeg)}
-              @change=${this._onPanelDegChange}
+              value=${this._defaultPanelDeg}
             />
           </div>
           <button class="btn" @click=${this._onCalculate} ?disabled=${this._loading}>
