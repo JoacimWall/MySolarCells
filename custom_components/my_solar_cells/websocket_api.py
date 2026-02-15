@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import voluptuous as vol
@@ -357,7 +357,8 @@ async def ws_get_roi_projection(
         first_prod_day = None
         if install_date_str:
             try:
-                first_prod_day = datetime.fromisoformat(install_date_str)
+                dt = datetime.fromisoformat(install_date_str)
+                first_prod_day = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
             except (ValueError, TypeError):
                 _LOGGER.warning("Invalid installation_date: %s", install_date_str)
 
