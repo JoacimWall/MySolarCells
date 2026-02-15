@@ -49,6 +49,32 @@ export class RoiView extends LitElement {
       .input-group input[type="number"] {
         width: 80px;
       }
+
+      .info-box {
+        background: var(--primary-background-color);
+        border-left: 3px solid var(--primary-color);
+        border-radius: 4px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        font-size: 0.85em;
+        line-height: 1.5;
+        color: var(--secondary-text-color);
+      }
+
+      .info-box summary {
+        cursor: pointer;
+        color: var(--primary-text-color);
+        font-weight: 500;
+      }
+
+      .info-box ul {
+        margin: 8px 0 0 0;
+        padding-left: 20px;
+      }
+
+      .info-box li {
+        margin-bottom: 4px;
+      }
     `,
   ];
 
@@ -75,8 +101,10 @@ export class RoiView extends LitElement {
       });
       this._projection = result.projection;
       this._investment = result.investment;
-      this._defaultPriceDev = Math.round((result.price_development - 1) * 10000) / 100;
-      this._defaultPanelDeg = Math.round(result.panel_degradation * 100) / 100;
+      // Values from backend are raw percentages used in formula:
+      // price * (1 + value / 100), so 5 means 5%
+      this._defaultPriceDev = result.price_development;
+      this._defaultPanelDeg = result.panel_degradation;
       this._initialLoaded = true;
     } catch (e: any) {
       this._error = e.message || "Failed to fetch ROI projection";
@@ -87,12 +115,11 @@ export class RoiView extends LitElement {
   private async _onCalculate() {
     if (!this.hass || !this.entryId) return;
 
-    // Read values directly from DOM inputs
+    // Read values directly from DOM inputs — these are raw percentages
     const priceInput = this.shadowRoot!.getElementById("price-dev-input") as HTMLInputElement;
     const panelInput = this.shadowRoot!.getElementById("panel-deg-input") as HTMLInputElement;
-    const pricePct = parseFloat(priceInput.value) || 0;
+    const priceDev = parseFloat(priceInput.value) || 0;
     const panelDeg = parseFloat(panelInput.value) || 0;
-    const priceDev = 1 + pricePct / 100;
 
     this._loading = true;
     this._error = "";
@@ -146,18 +173,38 @@ export class RoiView extends LitElement {
         <div class="investment-info">
           Investment: <strong>${this._fmtSek(this._investment)} SEK</strong>
         </div>
+        <details class="info-box">
+          <summary>How is the ROI calculated?</summary>
+          <ul>
+            <li><strong>Historical years</strong> use actual production and price data from Tibber.
+              If the current year is incomplete, missing months are filled with data from the
+              previous year or average production estimates.</li>
+            <li><strong>Future years</strong> are projected from the last historical year:</li>
+            <ul>
+              <li>Prices increase each year by the <em>price development</em> percentage.
+                E.g. 5% means next year's price = this year's price &times; 1.05.</li>
+              <li>Production decreases each year by the <em>panel degradation</em> percentage.
+                E.g. 0.25% means next year's production = this year's &times; 0.9975.</li>
+            </ul>
+            <li><strong>Savings sold</strong> = production sold &times; average sold price</li>
+            <li><strong>Savings own use</strong> = own use production &times; average own use price</li>
+            <li><strong>Remaining</strong> = investment &minus; cumulative total savings</li>
+            <li>The <strong>ROI year</strong> (green row) is when cumulative savings exceed the investment.</li>
+            <li>Tax reduction (skattereduktion) is removed from sold price starting 2026.</li>
+          </ul>
+        </details>
         <div class="table-controls">
           <div class="input-group">
-            <label>Price development (%)</label>
+            <label>Price development (%/year)</label>
             <input
               id="price-dev-input"
               type="number"
-              step="0.1"
+              step="0.5"
               value=${this._defaultPriceDev}
             />
           </div>
           <div class="input-group">
-            <label>Panel degradation (%)</label>
+            <label>Panel degradation (%/year)</label>
             <input
               id="panel-deg-input"
               type="number"
