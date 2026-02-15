@@ -57,6 +57,13 @@ class HistoryStats:
     interest_cost: float = 0.0
     investment: float = 0.0
 
+    # Peak power (effektavgift)
+    peak_purchased: float = 0.0
+    peak_purchased_and_own_usage: float = 0.0
+    peak_energy_reduction: float = 0.0
+    peak_purchased_cost: float = 0.0
+    peak_energy_reduction_saved: float = 0.0
+
     # Averages (computed in summarize)
     facts_production_index: float = 0.0
     facts_purchased_cost_avg_per_kwh: float = 0.0
@@ -112,9 +119,73 @@ class HistoryStats:
         return round(self.production_sold + self.production_own_use + self.battery_charge, 2)
 
     @property
+    def sum_all_consumption(self) -> float:
+        """Total consumption: purchased + own use + battery used."""
+        return round(self.purchased + self.production_own_use + self.battery_used, 2)
+
+    @property
     def balance(self) -> float:
         """Balance: production profit - consumption cost."""
         return round(self.sum_all_production_sold_and_saved - self.sum_purchased_cost, 2)
+
+    def to_dict(self) -> dict:
+        """Serialize all stored fields and computed properties."""
+        return {
+            "title": self.title,
+            # Purchased
+            "purchased": self.purchased,
+            "purchased_cost": self.purchased_cost,
+            "purchased_transfer_fee_cost": self.purchased_transfer_fee_cost,
+            "purchased_tax_cost": self.purchased_tax_cost,
+            # Production Sold
+            "production_sold": self.production_sold,
+            "production_sold_profit": self.production_sold_profit,
+            "production_sold_grid_compensation_profit": self.production_sold_grid_compensation_profit,
+            "production_sold_tax_reduction_profit": self.production_sold_tax_reduction_profit,
+            "production_sold_tax_reduction_comment": self.production_sold_tax_reduction_comment,
+            # Production Own Use
+            "production_own_use": self.production_own_use,
+            "production_own_use_saved": self.production_own_use_saved,
+            "production_own_use_transfer_fee_saved": self.production_own_use_transfer_fee_saved,
+            "production_own_use_energy_tax_saved": self.production_own_use_energy_tax_saved,
+            # Battery
+            "battery_used": self.battery_used,
+            "battery_used_saved": self.battery_used_saved,
+            "battery_use_transfer_fee_saved": self.battery_use_transfer_fee_saved,
+            "battery_use_energy_tax_saved": self.battery_use_energy_tax_saved,
+            "battery_charge": self.battery_charge,
+            # Investment / Interest
+            "interest_cost": self.interest_cost,
+            "investment": self.investment,
+            # Peak power
+            "peak_purchased": self.peak_purchased,
+            "peak_purchased_and_own_usage": self.peak_purchased_and_own_usage,
+            "peak_energy_reduction": self.peak_energy_reduction,
+            "peak_purchased_cost": self.peak_purchased_cost,
+            "peak_energy_reduction_saved": self.peak_energy_reduction_saved,
+            # Averages
+            "facts_production_index": self.facts_production_index,
+            "facts_purchased_cost_avg_per_kwh": self.facts_purchased_cost_avg_per_kwh,
+            "facts_production_sold_avg_per_kwh_profit": self.facts_production_sold_avg_per_kwh_profit,
+            "facts_production_own_use_avg_per_kwh_saved": self.facts_production_own_use_avg_per_kwh_saved,
+            "facts_battery_used_avg_per_kwh_saved": self.facts_battery_used_avg_per_kwh_saved,
+            # Computed properties
+            "sum_purchased_cost": self.sum_purchased_cost,
+            "sum_production_sold_profit": self.sum_production_sold_profit,
+            "sum_production_own_use_saved": self.sum_production_own_use_saved,
+            "sum_battery_use_saved": self.sum_battery_use_saved,
+            "sum_all_production_sold_and_saved": self.sum_all_production_sold_and_saved,
+            "sum_all_production": self.sum_all_production,
+            "sum_all_consumption": self.sum_all_consumption,
+            "balance": self.balance,
+            # Calc params
+            "calc_params": {
+                "tax_reduction": self.calc_params.tax_reduction,
+                "grid_compensation": self.calc_params.grid_compensation,
+                "transfer_fee": self.calc_params.transfer_fee,
+                "energy_tax": self.calc_params.energy_tax,
+            },
+        }
 
 
 @dataclass
@@ -217,6 +288,18 @@ def calculate_daily_stats(
     # --- Battery Charge ---
     stats.battery_charge = round(sum(r.get("battery_charge", 0) for r in hourly_records), 2)
 
+    # --- Peak power (lines 300-305) ---
+    stats.peak_purchased = round(
+        max(r.get("purchased", 0) for r in hourly_records), 2
+    )
+    stats.peak_purchased_and_own_usage = round(
+        max(
+            r.get("purchased", 0) + r.get("production_own_use", 0) + r.get("battery_used", 0)
+            for r in hourly_records
+        ),
+        2,
+    )
+
     return stats
 
 
@@ -259,6 +342,14 @@ def summarize_stats(stats_list: list[HistoryStats], total_days: float) -> Histor
         battery_charge=round(sum(s.battery_charge for s in stats_list), 2),
         interest_cost=round(sum(s.interest_cost for s in stats_list), 2),
         investment=stats_list[-1].investment,
+        peak_purchased=round(max(s.peak_purchased for s in stats_list), 2),
+        peak_purchased_and_own_usage=round(
+            max(s.peak_purchased_and_own_usage for s in stats_list), 2
+        ),
+    )
+
+    result.peak_energy_reduction = round(
+        result.peak_purchased_and_own_usage - result.peak_purchased, 2
     )
 
     # Averages (per kWh prices)

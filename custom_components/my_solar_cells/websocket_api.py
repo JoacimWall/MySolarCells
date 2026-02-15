@@ -29,8 +29,9 @@ from .const import (
     DEFAULT_PRICE_DEVELOPMENT,
     DOMAIN,
 )
-from .financial_engine import generate_monthly_report
+from .financial_engine import CalcParams, calculate_period, generate_monthly_report
 from .roi_engine import calculate_30_year_projection
+from .simulation_engine import simulate_battery_add, simulate_battery_remove
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,6 +53,8 @@ def async_register_websocket_commands(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, ws_get_sensor_config)
     websocket_api.async_register_command(hass, ws_get_period_summaries)
     websocket_api.async_register_command(hass, ws_get_roi_projection)
+    websocket_api.async_register_command(hass, ws_get_fakta_breakdown)
+    websocket_api.async_register_command(hass, ws_simulate_fakta)
 
 
 def _get_coordinator(hass: HomeAssistant, entry_id: str):
@@ -457,3 +460,100 @@ async def ws_get_roi_projection(
         "price_development": price_dev,
         "panel_degradation": panel_deg,
     })
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/get_fakta_breakdown",
+        vol.Required("entry_id"): str,
+        vol.Required("start_date"): str,
+        vol.Required("end_date"): str,
+    }
+)
+@websocket_api.async_response
+async def ws_get_fakta_breakdown(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Return financial breakdown for a date range."""
+    entry_id = msg["entry_id"]
+    coordinator = _get_coordinator(hass, entry_id)
+    if coordinator is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    db = coordinator.storage
+    start = msg["start_date"]
+    end = msg["end_date"]
+
+    def _calc():
+        records = db.get_records_for_period(start, end)
+        stats = calculate_period(records, coordinator._calc_params, coordinator._yearly_params)
+        return stats.to_dict()
+
+    try:
+        result = await hass.async_add_executor_job(_calc)
+    except Exception:
+        _LOGGER.exception("Fakta breakdown failed")
+        connection.send_error(msg["id"], "calculation_failed", "Fakta breakdown failed")
+        return
+
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): f"{DOMAIN}/simulate_fakta",
+        vol.Required("entry_id"): str,
+        vol.Required("start_date"): str,
+        vol.Required("end_date"): str,
+        vol.Required("add_battery"): bool,
+        vol.Optional("battery_kwh", default=10.0): vol.Coerce(float),
+        vol.Optional("remove_tax_reduction", default=False): bool,
+    }
+)
+@websocket_api.async_response
+async def ws_simulate_fakta(
+    hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]
+) -> None:
+    """Return simulated financial breakdown with battery add/remove."""
+    entry_id = msg["entry_id"]
+    coordinator = _get_coordinator(hass, entry_id)
+    if coordinator is None:
+        connection.send_error(msg["id"], "not_found", "Entry not found")
+        return
+
+    db = coordinator.storage
+    start = msg["start_date"]
+    end = msg["end_date"]
+    add_battery = msg["add_battery"]
+    battery_kwh = msg["battery_kwh"]
+    remove_tax = msg["remove_tax_reduction"]
+
+    def _calc():
+        records = db.get_records_for_period(start, end)
+        if add_battery:
+            records = simulate_battery_add(records, battery_kwh)
+        else:
+            records = simulate_battery_remove(records)
+
+        calc_params = coordinator._calc_params
+        if remove_tax:
+            calc_params = CalcParams(
+                tax_reduction=0.0,
+                grid_compensation=calc_params.grid_compensation,
+                transfer_fee=calc_params.transfer_fee,
+                energy_tax=calc_params.energy_tax,
+                installed_kw=calc_params.installed_kw,
+            )
+
+        stats = calculate_period(records, calc_params, coordinator._yearly_params)
+        return stats.to_dict()
+
+    try:
+        result = await hass.async_add_executor_job(_calc)
+    except Exception:
+        _LOGGER.exception("Fakta simulation failed")
+        connection.send_error(msg["id"], "simulation_failed", "Fakta simulation failed")
+        return
+
+    connection.send_result(msg["id"], result)

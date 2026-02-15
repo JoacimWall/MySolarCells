@@ -80,6 +80,87 @@ class TestCalculateDailyStats:
         assert stats.sum_production_own_use_saved == 17.37
 
 
+class TestHistoryStatsExtensions:
+    """Tests for to_dict, sum_all_consumption, and peak fields."""
+
+    def test_to_dict_includes_all_keys(self, sample_hourly_records, sample_calc_params):
+        """to_dict() must contain all expected keys."""
+        stats = calculate_daily_stats(sample_hourly_records, sample_calc_params)
+        d = stats.to_dict()
+        expected_keys = {
+            "title", "purchased", "purchased_cost", "purchased_transfer_fee_cost",
+            "purchased_tax_cost", "production_sold", "production_sold_profit",
+            "production_sold_grid_compensation_profit", "production_sold_tax_reduction_profit",
+            "production_sold_tax_reduction_comment", "production_own_use",
+            "production_own_use_saved", "production_own_use_transfer_fee_saved",
+            "production_own_use_energy_tax_saved", "battery_used", "battery_used_saved",
+            "battery_use_transfer_fee_saved", "battery_use_energy_tax_saved",
+            "battery_charge", "interest_cost", "investment",
+            "peak_purchased", "peak_purchased_and_own_usage", "peak_energy_reduction",
+            "peak_purchased_cost", "peak_energy_reduction_saved",
+            "facts_production_index", "facts_purchased_cost_avg_per_kwh",
+            "facts_production_sold_avg_per_kwh_profit",
+            "facts_production_own_use_avg_per_kwh_saved",
+            "facts_battery_used_avg_per_kwh_saved",
+            "sum_purchased_cost", "sum_production_sold_profit",
+            "sum_production_own_use_saved", "sum_battery_use_saved",
+            "sum_all_production_sold_and_saved", "sum_all_production",
+            "sum_all_consumption", "balance", "calc_params",
+        }
+        assert set(d.keys()) == expected_keys
+
+    def test_sum_all_consumption(self, sample_hourly_records, sample_calc_params):
+        """sum_all_consumption = purchased + own_use + battery_used."""
+        stats = calculate_daily_stats(sample_hourly_records, sample_calc_params)
+        expected = round(stats.purchased + stats.production_own_use + stats.battery_used, 2)
+        assert stats.sum_all_consumption == expected
+
+    def test_peak_purchased_calculation(self, sample_hourly_records, sample_calc_params):
+        """peak_purchased is the max hourly purchased value."""
+        stats = calculate_daily_stats(sample_hourly_records, sample_calc_params)
+        # Max of 1.5, 0.8, 0.5
+        assert stats.peak_purchased == 1.5
+
+    def test_peak_purchased_and_own_usage(self, sample_hourly_records, sample_calc_params):
+        """peak_purchased_and_own_usage is max(purchased + own_use + battery_used)."""
+        stats = calculate_daily_stats(sample_hourly_records, sample_calc_params)
+        # Hour 1: 1.5 + 3.0 + 0.0 = 4.5
+        # Hour 2: 0.8 + 4.0 + 0.5 = 5.3
+        # Hour 3: 0.5 + 5.5 + 0.0 = 6.0
+        assert stats.peak_purchased_and_own_usage == 6.0
+
+    def test_peak_fields_empty_records(self, sample_calc_params):
+        """Peak fields are 0 with no records."""
+        stats = calculate_daily_stats([], sample_calc_params)
+        assert stats.peak_purchased == 0.0
+        assert stats.peak_purchased_and_own_usage == 0.0
+
+    def test_summarize_peak_uses_max(self, sample_hourly_records, sample_calc_params):
+        """summarize_stats picks max peak across days."""
+        day1 = calculate_daily_stats(sample_hourly_records, sample_calc_params)
+        # Create a second day with higher peak
+        records2 = [
+            {
+                "timestamp": "2025-06-16T12:00:00+02:00",
+                "purchased": 5.0,
+                "purchased_cost": 2.5,
+                "production_sold": 0.0,
+                "production_sold_profit": 0.0,
+                "production_own_use": 0.0,
+                "production_own_use_profit": 0.0,
+                "battery_charge": 0.0,
+                "battery_used": 0.0,
+                "battery_used_profit": 0.0,
+            }
+        ]
+        day2 = calculate_daily_stats(records2, sample_calc_params)
+        result = summarize_stats([day1, day2], 2.0)
+        assert result.peak_purchased == 5.0
+        assert result.peak_energy_reduction == round(
+            result.peak_purchased_and_own_usage - result.peak_purchased, 2
+        )
+
+
 class TestSummarizeStats:
     """Tests for summarize_stats matching SummarizeToOneRoiStats logic."""
 

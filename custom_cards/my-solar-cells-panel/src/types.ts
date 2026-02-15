@@ -79,3 +79,60 @@ export interface RoiProjectionResponse {
   price_development: number;
   panel_degradation: number;
 }
+
+export interface HistoryStatsResponse {
+  title: string;
+  // Purchased
+  purchased: number;
+  purchased_cost: number;
+  purchased_transfer_fee_cost: number;
+  purchased_tax_cost: number;
+  // Production Sold
+  production_sold: number;
+  production_sold_profit: number;
+  production_sold_grid_compensation_profit: number;
+  production_sold_tax_reduction_profit: number;
+  production_sold_tax_reduction_comment: string;
+  // Production Own Use
+  production_own_use: number;
+  production_own_use_saved: number;
+  production_own_use_transfer_fee_saved: number;
+  production_own_use_energy_tax_saved: number;
+  // Battery
+  battery_used: number;
+  battery_used_saved: number;
+  battery_use_transfer_fee_saved: number;
+  battery_use_energy_tax_saved: number;
+  battery_charge: number;
+  // Investment / Interest
+  interest_cost: number;
+  investment: number;
+  // Peak power
+  peak_purchased: number;
+  peak_purchased_and_own_usage: number;
+  peak_energy_reduction: number;
+  peak_purchased_cost: number;
+  peak_energy_reduction_saved: number;
+  // Averages
+  facts_production_index: number;
+  facts_purchased_cost_avg_per_kwh: number;
+  facts_production_sold_avg_per_kwh_profit: number;
+  facts_production_own_use_avg_per_kwh_saved: number;
+  facts_battery_used_avg_per_kwh_saved: number;
+  // Computed sums
+  sum_purchased_cost: number;
+  sum_production_sold_profit: number;
+  sum_production_own_use_saved: number;
+  sum_battery_use_saved: number;
+  sum_all_production_sold_and_saved: number;
+  sum_all_production: number;
+  sum_all_consumption: number;
+  balance: number;
+  // Calc params
+  calc_params: {
+    tax_reduction: number;
+    grid_compensation: number;
+    transfer_fee: number;
+    energy_tax: number;
+  };
+}
