@@ -187,43 +187,113 @@ def calculate_30_year_projection(
     start_year = yearly_overview[-1].from_date.year + 1
     end_year = yearly_overview[0].from_date.year + ROI_PROJECTION_YEARS
     calc_params_tax_reduction = yearly_overview[-1].history_stats.calc_params.tax_reduction
+    last_historical_year = yearly_overview[-1].from_date.year
+    tax_reduction_in_base = last_historical_year < TAX_REDUCTION_END_YEAR
 
     roi_year_set = False
 
+    # Use monthly data from the last historical year for seasonal price projection
+    last_year_months: list[ReportHistoryStats] = []
+    if monthly_by_year:
+        last_year_months = monthly_by_year[-1]
+
     for year in range(start_year, end_year):
-        # Tax reduction removed in 2026 in Sweden (lines 109-111)
-        if year == TAX_REDUCTION_END_YEAR:
-            average_price_sold = round(
-                result[-1].average_price_sold - calc_params_tax_reduction, 2
+        years_ahead = year - last_historical_year
+
+        if last_year_months:
+            # Monthly-based projection: apply price development and degradation
+            # per month to capture seasonal price/production variation
+            yearly_savings_sold = 0.0
+            yearly_savings_own_use = 0.0
+            yearly_prod_sold = 0.0
+            yearly_prod_own_use = 0.0
+
+            price_factor = (1 + price_development / 100) ** years_ahead
+            degradation_factor = (1 - panel_degradation / 100) ** years_ahead
+
+            for month_report in last_year_months:
+                ms = month_report.history_stats
+
+                # Base prices from the last historical year's month
+                base_price_sold = ms.facts_production_sold_avg_per_kwh_profit
+                if ms.facts_battery_used_avg_per_kwh_saved == 0:
+                    base_price_own_use = ms.facts_production_own_use_avg_per_kwh_saved
+                else:
+                    base_price_own_use = (
+                        ms.facts_battery_used_avg_per_kwh_saved
+                        + ms.facts_production_own_use_avg_per_kwh_saved
+                    ) / 2
+
+                # Remove tax reduction for years >= 2026 if base includes it
+                if tax_reduction_in_base and year >= TAX_REDUCTION_END_YEAR:
+                    base_price_sold = base_price_sold - calc_params_tax_reduction
+
+                month_price_sold = base_price_sold * price_factor
+                month_price_own_use = base_price_own_use * price_factor
+
+                # Production with panel degradation
+                month_prod_sold = ms.production_sold * degradation_factor
+                month_prod_own_use = (
+                    ms.production_own_use + ms.battery_used
+                ) * degradation_factor
+
+                yearly_savings_sold += month_prod_sold * month_price_sold
+                yearly_savings_own_use += month_prod_own_use * month_price_own_use
+                yearly_prod_sold += month_prod_sold
+                yearly_prod_own_use += month_prod_own_use
+
+            # Weighted average prices for display
+            avg_price_sold = (
+                round(yearly_savings_sold / yearly_prod_sold, 2)
+                if yearly_prod_sold > 0 else 0.0
+            )
+            avg_price_own_use = (
+                round(yearly_savings_own_use / yearly_prod_own_use, 2)
+                if yearly_prod_own_use > 0 else 0.0
+            )
+
+            new_entry = EstimateRoi(
+                year=year,
+                year_from_start=year_count_from_start,
+                average_price_sold=avg_price_sold,
+                average_price_own_use=avg_price_own_use,
+                production_sold=round(yearly_prod_sold, 2),
+                production_own_use=round(yearly_prod_own_use, 2),
+                year_savings_sold=round(yearly_savings_sold, 2),
+                year_savings_own_use=round(yearly_savings_own_use, 2),
             )
         else:
-            average_price_sold = result[-1].average_price_sold
+            # Fallback: yearly-average approach when no monthly data available
+            if year == TAX_REDUCTION_END_YEAR:
+                average_price_sold = round(
+                    result[-1].average_price_sold - calc_params_tax_reduction, 2
+                )
+            else:
+                average_price_sold = result[-1].average_price_sold
 
-        # Apply price development and panel degradation (lines 121-124)
-        new_entry = EstimateRoi(
-            year=year,
-            year_from_start=year_count_from_start,
-            average_price_sold=round(
-                average_price_sold * (1 + price_development / 100), 2
-            ),
-            average_price_own_use=round(
-                result[-1].average_price_own_use * (1 + price_development / 100), 2
-            ),
-            production_sold=round(
-                result[-1].production_sold * (1 - panel_degradation / 100), 2
-            ),
-            production_own_use=round(
-                result[-1].production_own_use * (1 - panel_degradation / 100), 2
-            ),
-        )
+            new_entry = EstimateRoi(
+                year=year,
+                year_from_start=year_count_from_start,
+                average_price_sold=round(
+                    average_price_sold * (1 + price_development / 100), 2
+                ),
+                average_price_own_use=round(
+                    result[-1].average_price_own_use * (1 + price_development / 100), 2
+                ),
+                production_sold=round(
+                    result[-1].production_sold * (1 - panel_degradation / 100), 2
+                ),
+                production_own_use=round(
+                    result[-1].production_own_use * (1 - panel_degradation / 100), 2
+                ),
+            )
+            new_entry.year_savings_sold = round(
+                new_entry.production_sold * new_entry.average_price_sold, 2
+            )
+            new_entry.year_savings_own_use = round(
+                new_entry.production_own_use * new_entry.average_price_own_use, 2
+            )
 
-        # Calculate savings (lines 128-131)
-        new_entry.year_savings_sold = round(
-            new_entry.production_sold * new_entry.average_price_sold, 2
-        )
-        new_entry.year_savings_own_use = round(
-            new_entry.production_own_use * new_entry.average_price_own_use, 2
-        )
         saving_this_year = round(
             new_entry.year_savings_sold + new_entry.year_savings_own_use, 2
         )

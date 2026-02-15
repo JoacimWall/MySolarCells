@@ -179,7 +179,16 @@ export class RoiView extends LitElement {
             <li><strong>Historical years</strong> use actual production and price data from Tibber.
               If the current year is incomplete, missing months are filled with data from the
               previous year or average production estimates.</li>
-            <li><strong>Future years</strong> are projected from the last historical year:</li>
+            <li><strong>Sold price</strong> = spot price + grid compensation (n&auml;tnytta)
+              + tax reduction (skattereduktion, until 2026).</li>
+            <li><strong>Own use price</strong> = avoided purchase cost (spot price + transfer fee
+              + energy tax). If a battery is present, it is the average of own-use and battery
+              savings per kWh.</li>
+            <li><strong>Future years</strong> are projected using monthly average prices and
+              production from the last historical year. Price development and panel degradation
+              are applied per month, then summed to yearly totals. This captures seasonal
+              variation &mdash; summer has high production but typically lower prices, winter
+              the opposite.</li>
             <ul>
               <li>Prices increase each year by the <em>price development</em> percentage.
                 E.g. 5% means next year's price = this year's price &times; 1.05.</li>
@@ -191,6 +200,8 @@ export class RoiView extends LitElement {
             <li><strong>Remaining</strong> = investment &minus; cumulative total savings</li>
             <li>The <strong>ROI year</strong> (green row) is when cumulative savings exceed the investment.</li>
             <li>Tax reduction (skattereduktion) is removed from sold price starting 2026.</li>
+            <li><em>Note:</em> The table shows yearly weighted averages, but all savings
+              calculations use monthly granularity for accuracy.</li>
           </ul>
         </details>
         <div class="table-controls">
