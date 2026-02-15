@@ -554,11 +554,22 @@ class MySolarCellsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             except (ValueError, TypeError):
                 pass
 
+        # Check for user-customized ROI params (persisted from panel UI)
+        saved_roi_params = self._storage.last_roi_params
+        roi_price_dev = saved_roi_params.get(
+            "price_development",
+            self._config.get(CONF_PRICE_DEVELOPMENT, 1.05),
+        )
+        roi_panel_deg = saved_roi_params.get(
+            "panel_degradation",
+            self._config.get(CONF_PANEL_DEGRADATION, 0.25),
+        )
+
         roi_projection = calculate_30_year_projection(
             yearly_overview,
             monthly_by_year,
-            price_development=self._config.get(CONF_PRICE_DEVELOPMENT, 1.05),
-            panel_degradation=self._config.get(CONF_PANEL_DEGRADATION, 0.25),
+            price_development=roi_price_dev,
+            panel_degradation=roi_panel_deg,
             investment=investment,
             installed_kw=self._config.get(CONF_INSTALLED_KW, 10.5),
             first_production_day=first_prod_day,
