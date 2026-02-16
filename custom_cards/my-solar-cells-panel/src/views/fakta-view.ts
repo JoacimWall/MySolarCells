@@ -275,7 +275,7 @@ export class FaktaView extends LitElement {
         <hr class="fakta-separator" />
         <div class="fakta-row fakta-summary"><span class="label">Produktion</span><span class="value">${this._fmtKwh(d.sum_all_production)}</span></div>
         <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtKwh(d.sum_all_consumption)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Balans (prod. - f\u00f6rb.)</span><span class="value">${this._fmtKwh(d.sum_all_production - d.sum_all_consumption)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">Balans (prod. - Ink\u00f6p.)</span><span class="value">${this._fmtKwh(d.sum_all_production - d.sum_all_consumption)}</span></div>
       </div>
     `;
   }
@@ -308,15 +308,19 @@ export class FaktaView extends LitElement {
   private _renderSimAndFactsColumn(d: HistoryStatsResponse): TemplateResult {
     return html`
       <div class="fakta-card">
-        <h3>Simulering</h3>
+        <h3>${this._simEnabled && this._simData
+            ? this._simAddBattery
+              ? `Simulering (med ${this._simBatteryKwh} kWh batteri i ber\u00e4kning)`
+              : `Simulering (utan batteri i ber\u00e4kning)`
+            : `Simulering`}</h3>
         <div class="sim-section">
           <div class="sim-toggle-group">
             <button
-              class="sim-toggle ${this._simAddBattery ? "active" : ""}"
+              class="sim-toggle ${!this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = true; }}
             >L\u00e4gg till batteri</button>
             <button
-              class="sim-toggle ${!this._simAddBattery ? "active" : ""}"
+              class="sim-toggle ${this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = false; }}
             >Ta bort batteri</button>
           </div>

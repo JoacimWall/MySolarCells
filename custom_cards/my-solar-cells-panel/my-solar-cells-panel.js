@@ -15,12 +15,12 @@ const e=globalThis,s=e.ShadowRoot&&(void 0===e.ShadyCSS||e.ShadyCSS.nativeShadow
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const w=globalThis,k=t=>t,S=w.trustedTypes,A=S?S.createPolicy("lit-html",{createHTML:t=>t}):void 0,E="$lit$",D=`lit$${Math.random().toFixed(9).slice(2)}$`,P="?"+D,I=`<${P}>`,T=document,C=()=>T.createComment(""),R=t=>null===t||"object"!=typeof t&&"function"!=typeof t,F=Array.isArray,O="[ \t\n\f\r]",M=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,Y=/-->/g,L=/>/g,U=RegExp(`>|${O}(?:([^\\s"'>=/]+)(${O}*=${O}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),N=/'/g,z=/"/g,j=/^(?:script|style|textarea|title)$/i,K=(t=>(e,...s)=>({_$litType$:t,strings:e,values:s}))(1),B=Symbol.for("lit-noChange"),H=Symbol.for("lit-nothing"),W=new WeakMap,V=T.createTreeWalker(T,129);function q(t,e){if(!F(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==A?A.createHTML(e):e}const J=(t,e)=>{const s=t.length-1,a=[];let i,r=2===e?"<svg>":3===e?"<math>":"",o=M;for(let e=0;e<s;e++){const s=t[e];let n,d,l=-1,c=0;for(;c<s.length&&(o.lastIndex=c,d=o.exec(s),null!==d);)c=o.lastIndex,o===M?"!--"===d[1]?o=Y:void 0!==d[1]?o=L:void 0!==d[2]?(j.test(d[2])&&(i=RegExp("</"+d[2],"g")),o=U):void 0!==d[3]&&(o=U):o===U?">"===d[0]?(o=i??M,l=-1):void 0===d[1]?l=-2:(l=o.lastIndex-d[2].length,n=d[1],o=void 0===d[3]?U:'"'===d[3]?z:N):o===z||o===N?o=U:o===Y||o===L?o=M:(o=U,i=void 0);const h=o===U&&t[e+1].startsWith("/>")?" ":"";r+=o===M?s+I:l>=0?(a.push(n),s.slice(0,l)+E+s.slice(l)+D+h):s+D+(-2===l?e:h)}return[q(t,r+(t[s]||"<?>")+(2===e?"</svg>":3===e?"</math>":"")),a]};class G{constructor({strings:t,_$litType$:e},s){let a;this.parts=[];let i=0,r=0;const o=t.length-1,n=this.parts,[d,l]=J(t,e);if(this.el=G.createElement(d,s),V.currentNode=this.el.content,2===e||3===e){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes)}for(;null!==(a=V.nextNode())&&n.length<o;){if(1===a.nodeType){if(a.hasAttributes())for(const t of a.getAttributeNames())if(t.endsWith(E)){const e=l[r++],s=a.getAttribute(t).split(D),o=/([.?@])?(.*)/.exec(e);n.push({type:1,index:i,name:o[2],strings:s,ctor:"."===o[1]?et:"?"===o[1]?st:"@"===o[1]?at:tt}),a.removeAttribute(t)}else t.startsWith(D)&&(n.push({type:6,index:i}),a.removeAttribute(t));if(j.test(a.tagName)){const t=a.textContent.split(D),e=t.length-1;if(e>0){a.textContent=S?S.emptyScript:"";for(let s=0;s<e;s++)a.append(t[s],C()),V.nextNode(),n.push({type:2,index:++i});a.append(t[e],C())}}}else if(8===a.nodeType)if(a.data===P)n.push({type:2,index:i});else{let t=-1;for(;-1!==(t=a.data.indexOf(D,t+1));)n.push({type:7,index:i}),t+=D.length-1}i++}}static createElement(t,e){const s=T.createElement("template");return s.innerHTML=t,s}}function Z(t,e,s=t,a){if(e===B)return e;let i=void 0!==a?s._$Co?.[a]:s._$Cl;const r=R(e)?void 0:e._$litDirective$;return i?.constructor!==r&&(i?._$AO?.(!1),void 0===r?i=void 0:(i=new r(t),i._$AT(t,s,a)),void 0!==a?(s._$Co??=[])[a]=i:s._$Cl=i),void 0!==i&&(e=Z(t,i._$AS(t,e.values),i,a)),e}class Q{constructor(t,e){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:e},parts:s}=this._$AD,a=(t?.creationScope??T).importNode(e,!0);V.currentNode=a;let i=V.nextNode(),r=0,o=0,n=s[0];for(;void 0!==n;){if(r===n.index){let e;2===n.type?e=new X(i,i.nextSibling,this,t):1===n.type?e=new n.ctor(i,n.name,n.strings,this,t):6===n.type&&(e=new it(i,this,t)),this._$AV.push(e),n=s[++o]}r!==n?.index&&(i=V.nextNode(),r++)}return V.currentNode=T,a}p(t){let e=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,e),e+=s.strings.length-2):s._$AI(t[e])),e++}}class X{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(t,e,s,a){this.type=2,this._$AH=H,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=s,this.options=a,this._$Cv=a?.isConnected??!0}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t?.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=Z(this,t,e),R(t)?t===H||null==t||""===t?(this._$AH!==H&&this._$AR(),this._$AH=H):t!==this._$AH&&t!==B&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):(t=>F(t)||"function"==typeof t?.[Symbol.iterator])(t)?this.k(t):this._(t)}O(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.O(t))}_(t){this._$AH!==H&&R(this._$AH)?this._$AA.nextSibling.data=t:this.T(T.createTextNode(t)),this._$AH=t}$(t){const{values:e,_$litType$:s}=t,a="number"==typeof s?this._$AC(t):(void 0===s.el&&(s.el=G.createElement(q(s.h,s.h[0]),this.options)),s);if(this._$AH?._$AD===a)this._$AH.p(e);else{const t=new Q(a,this),s=t.u(this.options);t.p(e),this.T(s),this._$AH=t}}_$AC(t){let e=W.get(t.strings);return void 0===e&&W.set(t.strings,e=new G(t)),e}k(t){F(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let s,a=0;for(const i of t)a===e.length?e.push(s=new X(this.O(C()),this.O(C()),this,this.options)):s=e[a],s._$AI(i),a++;a<e.length&&(this._$AR(s&&s._$AB.nextSibling,a),e.length=a)}_$AR(t=this._$AA.nextSibling,e){for(this._$AP?.(!1,!0,e);t!==this._$AB;){const e=k(t).nextSibling;k(t).remove(),t=e}}setConnected(t){void 0===this._$AM&&(this._$Cv=t,this._$AP?.(t))}}class tt{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,e,s,a,i){this.type=1,this._$AH=H,this._$AN=void 0,this.element=t,this.name=e,this._$AM=a,this.options=i,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=H}_$AI(t,e=this,s,a){const i=this.strings;let r=!1;if(void 0===i)t=Z(this,t,e,0),r=!R(t)||t!==this._$AH&&t!==B,r&&(this._$AH=t);else{const a=t;let o,n;for(t=i[0],o=0;o<i.length-1;o++)n=Z(this,a[s+o],e,o),n===B&&(n=this._$AH[o]),r||=!R(n)||n!==this._$AH[o],n===H?t=H:t!==H&&(t+=(n??"")+i[o+1]),this._$AH[o]=n}r&&!a&&this.j(t)}j(t){t===H?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"")}}class et extends tt{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===H?void 0:t}}class st extends tt{constructor(){super(...arguments),this.type=4}j(t){this.element.toggleAttribute(this.name,!!t&&t!==H)}}class at extends tt{constructor(t,e,s,a,i){super(t,e,s,a,i),this.type=5}_$AI(t,e=this){if((t=Z(this,t,e,0)??H)===B)return;const s=this._$AH,a=t===H&&s!==H||t.capture!==s.capture||t.once!==s.once||t.passive!==s.passive,i=t!==H&&(s===H||a);a&&this.element.removeEventListener(this.name,this,s),i&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t)}}class it{constructor(t,e,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=s}get _$AU(){return this._$AM._$AU}_$AI(t){Z(this,t)}}const rt=w.litHtmlPolyfillSupport;rt?.(G,X),(w.litHtmlVersions??=[]).push("3.3.2");const ot=globalThis;
+const w=globalThis,k=t=>t,S=w.trustedTypes,A=S?S.createPolicy("lit-html",{createHTML:t=>t}):void 0,E="$lit$",D=`lit$${Math.random().toFixed(9).slice(2)}$`,P="?"+D,I=`<${P}>`,T=document,C=()=>T.createComment(""),R=t=>null===t||"object"!=typeof t&&"function"!=typeof t,F=Array.isArray,O="[ \t\n\f\r]",M=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,Y=/-->/g,L=/>/g,U=RegExp(`>|${O}(?:([^\\s"'>=/]+)(${O}*=${O}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),N=/'/g,z=/"/g,j=/^(?:script|style|textarea|title)$/i,B=(t=>(e,...s)=>({_$litType$:t,strings:e,values:s}))(1),K=Symbol.for("lit-noChange"),H=Symbol.for("lit-nothing"),W=new WeakMap,V=T.createTreeWalker(T,129);function q(t,e){if(!F(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==A?A.createHTML(e):e}const J=(t,e)=>{const s=t.length-1,a=[];let i,r=2===e?"<svg>":3===e?"<math>":"",o=M;for(let e=0;e<s;e++){const s=t[e];let n,d,l=-1,c=0;for(;c<s.length&&(o.lastIndex=c,d=o.exec(s),null!==d);)c=o.lastIndex,o===M?"!--"===d[1]?o=Y:void 0!==d[1]?o=L:void 0!==d[2]?(j.test(d[2])&&(i=RegExp("</"+d[2],"g")),o=U):void 0!==d[3]&&(o=U):o===U?">"===d[0]?(o=i??M,l=-1):void 0===d[1]?l=-2:(l=o.lastIndex-d[2].length,n=d[1],o=void 0===d[3]?U:'"'===d[3]?z:N):o===z||o===N?o=U:o===Y||o===L?o=M:(o=U,i=void 0);const h=o===U&&t[e+1].startsWith("/>")?" ":"";r+=o===M?s+I:l>=0?(a.push(n),s.slice(0,l)+E+s.slice(l)+D+h):s+D+(-2===l?e:h)}return[q(t,r+(t[s]||"<?>")+(2===e?"</svg>":3===e?"</math>":"")),a]};class G{constructor({strings:t,_$litType$:e},s){let a;this.parts=[];let i=0,r=0;const o=t.length-1,n=this.parts,[d,l]=J(t,e);if(this.el=G.createElement(d,s),V.currentNode=this.el.content,2===e||3===e){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes)}for(;null!==(a=V.nextNode())&&n.length<o;){if(1===a.nodeType){if(a.hasAttributes())for(const t of a.getAttributeNames())if(t.endsWith(E)){const e=l[r++],s=a.getAttribute(t).split(D),o=/([.?@])?(.*)/.exec(e);n.push({type:1,index:i,name:o[2],strings:s,ctor:"."===o[1]?et:"?"===o[1]?st:"@"===o[1]?at:tt}),a.removeAttribute(t)}else t.startsWith(D)&&(n.push({type:6,index:i}),a.removeAttribute(t));if(j.test(a.tagName)){const t=a.textContent.split(D),e=t.length-1;if(e>0){a.textContent=S?S.emptyScript:"";for(let s=0;s<e;s++)a.append(t[s],C()),V.nextNode(),n.push({type:2,index:++i});a.append(t[e],C())}}}else if(8===a.nodeType)if(a.data===P)n.push({type:2,index:i});else{let t=-1;for(;-1!==(t=a.data.indexOf(D,t+1));)n.push({type:7,index:i}),t+=D.length-1}i++}}static createElement(t,e){const s=T.createElement("template");return s.innerHTML=t,s}}function Z(t,e,s=t,a){if(e===K)return e;let i=void 0!==a?s._$Co?.[a]:s._$Cl;const r=R(e)?void 0:e._$litDirective$;return i?.constructor!==r&&(i?._$AO?.(!1),void 0===r?i=void 0:(i=new r(t),i._$AT(t,s,a)),void 0!==a?(s._$Co??=[])[a]=i:s._$Cl=i),void 0!==i&&(e=Z(t,i._$AS(t,e.values),i,a)),e}class Q{constructor(t,e){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=e}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:e},parts:s}=this._$AD,a=(t?.creationScope??T).importNode(e,!0);V.currentNode=a;let i=V.nextNode(),r=0,o=0,n=s[0];for(;void 0!==n;){if(r===n.index){let e;2===n.type?e=new X(i,i.nextSibling,this,t):1===n.type?e=new n.ctor(i,n.name,n.strings,this,t):6===n.type&&(e=new it(i,this,t)),this._$AV.push(e),n=s[++o]}r!==n?.index&&(i=V.nextNode(),r++)}return V.currentNode=T,a}p(t){let e=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,e),e+=s.strings.length-2):s._$AI(t[e])),e++}}class X{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(t,e,s,a){this.type=2,this._$AH=H,this._$AN=void 0,this._$AA=t,this._$AB=e,this._$AM=s,this.options=a,this._$Cv=a?.isConnected??!0}get parentNode(){let t=this._$AA.parentNode;const e=this._$AM;return void 0!==e&&11===t?.nodeType&&(t=e.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,e=this){t=Z(this,t,e),R(t)?t===H||null==t||""===t?(this._$AH!==H&&this._$AR(),this._$AH=H):t!==this._$AH&&t!==K&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):(t=>F(t)||"function"==typeof t?.[Symbol.iterator])(t)?this.k(t):this._(t)}O(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.O(t))}_(t){this._$AH!==H&&R(this._$AH)?this._$AA.nextSibling.data=t:this.T(T.createTextNode(t)),this._$AH=t}$(t){const{values:e,_$litType$:s}=t,a="number"==typeof s?this._$AC(t):(void 0===s.el&&(s.el=G.createElement(q(s.h,s.h[0]),this.options)),s);if(this._$AH?._$AD===a)this._$AH.p(e);else{const t=new Q(a,this),s=t.u(this.options);t.p(e),this.T(s),this._$AH=t}}_$AC(t){let e=W.get(t.strings);return void 0===e&&W.set(t.strings,e=new G(t)),e}k(t){F(this._$AH)||(this._$AH=[],this._$AR());const e=this._$AH;let s,a=0;for(const i of t)a===e.length?e.push(s=new X(this.O(C()),this.O(C()),this,this.options)):s=e[a],s._$AI(i),a++;a<e.length&&(this._$AR(s&&s._$AB.nextSibling,a),e.length=a)}_$AR(t=this._$AA.nextSibling,e){for(this._$AP?.(!1,!0,e);t!==this._$AB;){const e=k(t).nextSibling;k(t).remove(),t=e}}setConnected(t){void 0===this._$AM&&(this._$Cv=t,this._$AP?.(t))}}class tt{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,e,s,a,i){this.type=1,this._$AH=H,this._$AN=void 0,this.element=t,this.name=e,this._$AM=a,this.options=i,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=H}_$AI(t,e=this,s,a){const i=this.strings;let r=!1;if(void 0===i)t=Z(this,t,e,0),r=!R(t)||t!==this._$AH&&t!==K,r&&(this._$AH=t);else{const a=t;let o,n;for(t=i[0],o=0;o<i.length-1;o++)n=Z(this,a[s+o],e,o),n===K&&(n=this._$AH[o]),r||=!R(n)||n!==this._$AH[o],n===H?t=H:t!==H&&(t+=(n??"")+i[o+1]),this._$AH[o]=n}r&&!a&&this.j(t)}j(t){t===H?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"")}}class et extends tt{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===H?void 0:t}}class st extends tt{constructor(){super(...arguments),this.type=4}j(t){this.element.toggleAttribute(this.name,!!t&&t!==H)}}class at extends tt{constructor(t,e,s,a,i){super(t,e,s,a,i),this.type=5}_$AI(t,e=this){if((t=Z(this,t,e,0)??H)===K)return;const s=this._$AH,a=t===H&&s!==H||t.capture!==s.capture||t.once!==s.once||t.passive!==s.passive,i=t!==H&&(s===H||a);a&&this.element.removeEventListener(this.name,this,s),i&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t)}}class it{constructor(t,e,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=e,this.options=s}get _$AU(){return this._$AM._$AU}_$AI(t){Z(this,t)}}const rt=w.litHtmlPolyfillSupport;rt?.(G,X),(w.litHtmlVersions??=[]).push("3.3.2");const ot=globalThis;
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */class nt extends x{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=((t,e,s)=>{const a=s?.renderBefore??e;let i=a._$litPart$;if(void 0===i){const t=s?.renderBefore??null;a._$litPart$=i=new X(e.insertBefore(C(),t),t,void 0,s??{})}return i._$AI(t),i})(e,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return B}}nt._$litElement$=!0,nt.finalized=!0,ot.litElementHydrateSupport?.({LitElement:nt});const dt=ot.litElementPolyfillSupport;dt?.({LitElement:nt}),(ot.litElementVersions??=[]).push("4.2.2");
+ */class nt extends x{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const e=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=((t,e,s)=>{const a=s?.renderBefore??e;let i=a._$litPart$;if(void 0===i){const t=s?.renderBefore??null;a._$litPart$=i=new X(e.insertBefore(C(),t),t,void 0,s??{})}return i._$AI(t),i})(e,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return K}}nt._$litElement$=!0,nt.finalized=!0,ot.litElementHydrateSupport?.({LitElement:nt});const dt=ot.litElementPolyfillSupport;dt?.({LitElement:nt}),(ot.litElementVersions??=[]).push("4.2.2");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -443,23 +443,23 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
     padding: 40px 16px;
     font-style: italic;
   }
-`,yt=[{key:"own_use_kwh",label:"Own Use",color:"#4285f4",unit:"kWh"},{key:"sold_kwh",label:"Sold",color:"#34a853",unit:"kWh"},{key:"own_use_sek",label:"Own Use",color:"#8ab4f8",unit:"SEK"},{key:"sold_sek",label:"Sold",color:"#f4a742",unit:"SEK"}],ft=[{key:"today",label:"Today"},{key:"this_week",label:"This Week"},{key:"this_month",label:"This Month"},{key:"this_year",label:"This Year"}];let bt=class extends nt{render(){if(!this.data)return H;const t=this._getMax("kwh"),e=this._getMax("sek");return K`
+`,yt=[{key:"own_use_kwh",label:"Own Use",color:"#4285f4",unit:"kWh"},{key:"sold_kwh",label:"Sold",color:"#34a853",unit:"kWh"},{key:"own_use_sek",label:"Own Use",color:"#8ab4f8",unit:"SEK"},{key:"sold_sek",label:"Sold",color:"#f4a742",unit:"SEK"}],ft=[{key:"today",label:"Today"},{key:"this_week",label:"This Week"},{key:"this_month",label:"This Month"},{key:"this_year",label:"This Year"}];let bt=class extends nt{render(){if(!this.data)return H;const t=this._getMax("kwh"),e=this._getMax("sek");return B`
       <div class="chart-container">
         ${ft.map(s=>this._renderPeriod(s,this.data[s.key],t,e))}
       </div>
       <div class="legend">
-        ${yt.map(t=>K`
+        ${yt.map(t=>B`
             <div class="legend-item">
               <div class="legend-swatch" style="background:${t.color}"></div>
               ${t.label} (${t.unit})
             </div>
           `)}
       </div>
-    `}_renderPeriod(t,e,s,a){return K`
+    `}_renderPeriod(t,e,s,a){return B`
       <div class="period-column">
         <div class="period-label">${t.label}</div>
         <div class="bars">
-          ${yt.map(t=>{const i=e[t.key],r="kWh"===t.unit?s:a;return K`
+          ${yt.map(t=>{const i=e[t.key],r="kWh"===t.unit?s:a;return B`
               <div class="bar-wrapper">
                 <div
                   class="bar"
@@ -555,7 +555,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
       height: 10px;
       border-radius: 2px;
     }
-  `,t([pt({attribute:!1})],bt.prototype,"data",void 0),bt=t([lt("period-summary-chart")],bt);let $t=class extends nt{constructor(){super(...arguments),this.entryId="",this._data=null,this._periodData=null,this._loading=!1,this._error=""}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._data&&!this._loading&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const[t,e]=await Promise.all([this.hass.callWS({type:"my_solar_cells/get_overview",entry_id:this.entryId}),this.hass.callWS({type:"my_solar_cells/get_period_summaries",entry_id:this.entryId})]);this._data=t,this._periodData=e}catch(t){this._error=t.message||"Failed to fetch data"}this._loading=!1}}render(){if(this._loading)return K`<div class="loading">Loading overview...</div>`;if(this._error)return K`<div class="no-data">Error: ${this._error}</div>`;if(!this._data)return K`<div class="no-data">No data available</div>`;const t=this._data;return K`
+  `,t([pt({attribute:!1})],bt.prototype,"data",void 0),bt=t([lt("period-summary-chart")],bt);let $t=class extends nt{constructor(){super(...arguments),this.entryId="",this._data=null,this._periodData=null,this._loading=!1,this._error=""}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._data&&!this._loading&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const[t,e]=await Promise.all([this.hass.callWS({type:"my_solar_cells/get_overview",entry_id:this.entryId}),this.hass.callWS({type:"my_solar_cells/get_period_summaries",entry_id:this.entryId})]);this._data=t,this._periodData=e}catch(t){this._error=t.message||"Failed to fetch data"}this._loading=!1}}render(){if(this._loading)return B`<div class="loading">Loading overview...</div>`;if(this._error)return B`<div class="no-data">Error: ${this._error}</div>`;if(!this._data)return B`<div class="no-data">No data available</div>`;const t=this._data;return B`
       <div class="card">
         <h3>Database Summary</h3>
         <div class="stats-grid">
@@ -578,7 +578,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         </div>
       </div>
 
-      ${this._periodData?K`
+      ${this._periodData?B`
             <div class="card">
               <h3>Energy Summary</h3>
               <period-summary-chart .data=${this._periodData}></period-summary-chart>
@@ -586,7 +586,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           `:H}
 
       ${this._renderYearlyParams(t.yearly_params)}
-    `}_renderYearlyParams(t){const e=Object.keys(t).sort();return 0===e.length?H:K`
+    `}_renderYearlyParams(t){const e=Object.keys(t).sort();return 0===e.length?H:B`
       <div class="card">
         <h3>Yearly Financial Parameters</h3>
         <div class="table-wrapper">
@@ -602,7 +602,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
               </tr>
             </thead>
             <tbody>
-              ${e.map(e=>{const s=t[e];return K`
+              ${e.map(e=>{const s=t[e];return B`
                   <tr>
                     <td>${e}</td>
                     <td>${this._fmt(s.tax_reduction)}</td>
@@ -616,7 +616,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           </table>
         </div>
       </div>
-    `}_fmt(t){return null!=t?t.toFixed(3):"-"}_formatTimestamp(t){try{return new Date(t).toLocaleString("sv-SE")}catch{return t}}_formatDate(t){try{return t.substring(0,10)}catch{return t}}};$t.styles=[gt,vt],t([pt({attribute:!1})],$t.prototype,"hass",void 0),t([pt()],$t.prototype,"entryId",void 0),t([ut()],$t.prototype,"_data",void 0),t([ut()],$t.prototype,"_periodData",void 0),t([ut()],$t.prototype,"_loading",void 0),t([ut()],$t.prototype,"_error",void 0),$t=t([lt("overview-view")],$t);const xt=50;let wt=class extends nt{constructor(){super(...arguments),this.entryId="",this._startDate="",this._endDate="",this._records=[],this._totalCount=0,this._offset=0,this._loading=!1,this._error=""}connectedCallback(){super.connectedCallback();const t=(new Date).toISOString().substring(0,10);this._startDate=t,this._endDate=t}render(){return K`
+    `}_fmt(t){return null!=t?t.toFixed(3):"-"}_formatTimestamp(t){try{return new Date(t).toLocaleString("sv-SE")}catch{return t}}_formatDate(t){try{return t.substring(0,10)}catch{return t}}};$t.styles=[gt,vt],t([pt({attribute:!1})],$t.prototype,"hass",void 0),t([pt()],$t.prototype,"entryId",void 0),t([ut()],$t.prototype,"_data",void 0),t([ut()],$t.prototype,"_periodData",void 0),t([ut()],$t.prototype,"_loading",void 0),t([ut()],$t.prototype,"_error",void 0),$t=t([lt("overview-view")],$t);const xt=50;let wt=class extends nt{constructor(){super(...arguments),this.entryId="",this._startDate="",this._endDate="",this._records=[],this._totalCount=0,this._offset=0,this._loading=!1,this._error=""}connectedCallback(){super.connectedCallback();const t=(new Date).toISOString().substring(0,10);this._startDate=t,this._endDate=t}render(){return B`
       <div class="card">
         <h3>Hourly Energy Records</h3>
         <div class="table-controls">
@@ -641,13 +641,13 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           </button>
         </div>
 
-        ${this._error?K`<div class="no-data">Error: ${this._error}</div>`:""}
+        ${this._error?B`<div class="no-data">Error: ${this._error}</div>`:""}
         ${this._records.length>0?this._renderTable():""}
-        ${this._loading||0!==this._records.length||this._error?"":K`<div class="no-data">
+        ${this._loading||0!==this._records.length||this._error?"":B`<div class="no-data">
               Select a date range and click Load
             </div>`}
       </div>
-    `}_renderTable(){const t=Math.ceil(this._totalCount/xt),e=Math.floor(this._offset/xt)+1;return K`
+    `}_renderTable(){const t=Math.ceil(this._totalCount/xt),e=Math.floor(this._offset/xt)+1;return B`
       <div class="table-wrapper">
         <table>
           <thead>
@@ -665,7 +665,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
             </tr>
           </thead>
           <tbody>
-            ${this._records.map(t=>K`
+            ${this._records.map(t=>B`
                 <tr>
                   <td>${this._formatTs(t.timestamp)}</td>
                   <td>${t.purchased.toFixed(3)}</td>
@@ -699,7 +699,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           Next
         </button>
       </div>
-    `}async _fetch(){if(this.hass&&this.entryId&&this._startDate&&this._endDate){this._loading=!0,this._error="";try{const t=`${this._startDate}T00:00:00`,e=new Date(this._endDate);e.setDate(e.getDate()+1);const s=`${e.toISOString().substring(0,10)}T00:00:00`,a=await this.hass.callWS({type:"my_solar_cells/get_hourly_energy",entry_id:this.entryId,start_date:t,end_date:s,offset:this._offset,limit:xt});this._records=a.records,this._totalCount=a.total_count}catch(t){this._error=t.message||"Failed to fetch data",this._records=[],this._totalCount=0}this._loading=!1}}_prevPage(){this._offset=Math.max(0,this._offset-xt),this._fetch()}_nextPage(){this._offset+=xt,this._fetch()}_formatTs(t){try{return t.replace("T"," ").substring(0,19)}catch{return t}}};wt.styles=[gt,vt],t([pt({attribute:!1})],wt.prototype,"hass",void 0),t([pt()],wt.prototype,"entryId",void 0),t([ut()],wt.prototype,"_startDate",void 0),t([ut()],wt.prototype,"_endDate",void 0),t([ut()],wt.prototype,"_records",void 0),t([ut()],wt.prototype,"_totalCount",void 0),t([ut()],wt.prototype,"_offset",void 0),t([ut()],wt.prototype,"_loading",void 0),t([ut()],wt.prototype,"_error",void 0),wt=t([lt("hourly-energy-view")],wt);let kt=class extends nt{constructor(){super(...arguments),this.entryId="",this._sensors=[],this._loading=!1,this._error=""}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._sensors.length&&!this._loading&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_sensor_config",entry_id:this.entryId});this._sensors=t.sensors}catch(t){this._error=t.message||"Failed to fetch sensor config"}this._loading=!1}}render(){if(this._loading)return K`<div class="loading">Loading sensor configuration...</div>`;if(this._error)return K`<div class="no-data">Error: ${this._error}</div>`;this._sensors.filter(t=>t.entity_id);const t=this._sensors.filter(t=>!t.entity_id);return K`
+    `}async _fetch(){if(this.hass&&this.entryId&&this._startDate&&this._endDate){this._loading=!0,this._error="";try{const t=`${this._startDate}T00:00:00`,e=new Date(this._endDate);e.setDate(e.getDate()+1);const s=`${e.toISOString().substring(0,10)}T00:00:00`,a=await this.hass.callWS({type:"my_solar_cells/get_hourly_energy",entry_id:this.entryId,start_date:t,end_date:s,offset:this._offset,limit:xt});this._records=a.records,this._totalCount=a.total_count}catch(t){this._error=t.message||"Failed to fetch data",this._records=[],this._totalCount=0}this._loading=!1}}_prevPage(){this._offset=Math.max(0,this._offset-xt),this._fetch()}_nextPage(){this._offset+=xt,this._fetch()}_formatTs(t){try{return t.replace("T"," ").substring(0,19)}catch{return t}}};wt.styles=[gt,vt],t([pt({attribute:!1})],wt.prototype,"hass",void 0),t([pt()],wt.prototype,"entryId",void 0),t([ut()],wt.prototype,"_startDate",void 0),t([ut()],wt.prototype,"_endDate",void 0),t([ut()],wt.prototype,"_records",void 0),t([ut()],wt.prototype,"_totalCount",void 0),t([ut()],wt.prototype,"_offset",void 0),t([ut()],wt.prototype,"_loading",void 0),t([ut()],wt.prototype,"_error",void 0),wt=t([lt("hourly-energy-view")],wt);let kt=class extends nt{constructor(){super(...arguments),this.entryId="",this._sensors=[],this._loading=!1,this._error=""}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._sensors.length&&!this._loading&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_sensor_config",entry_id:this.entryId});this._sensors=t.sensors}catch(t){this._error=t.message||"Failed to fetch sensor config"}this._loading=!1}}render(){if(this._loading)return B`<div class="loading">Loading sensor configuration...</div>`;if(this._error)return B`<div class="no-data">Error: ${this._error}</div>`;this._sensors.filter(t=>t.entity_id);const t=this._sensors.filter(t=>!t.entity_id);return B`
       <div class="info-box">
         Only the <strong>production</strong> sensor is required — it is used to
         calculate <strong>production_own_use</strong> (total production minus
@@ -731,7 +731,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         </div>
       </div>
 
-      ${t.some(t=>"production"===t.role)?K`
+      ${t.some(t=>"production"===t.role)?B`
             <div class="card">
               <h3>Required Sensor Missing</h3>
               <p style="color: var(--error-color, #f44336); font-size: 0.9em;">
@@ -747,24 +747,24 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           Refresh
         </button>
       </div>
-    `}_isRequired(t){return"production"===t}_getFallbackLabel(t){return"grid_export"===t||"grid_import"===t?"Using Tibber API":"Not configured"}_renderRow(t){const e=!!t.entity_id,s=this._isRequired(t.role);return K`
+    `}_isRequired(t){return"production"===t}_getFallbackLabel(t){return"grid_export"===t||"grid_import"===t?"Using Tibber API":"Not configured"}_renderRow(t){const e=!!t.entity_id,s=this._isRequired(t.role);return B`
       <tr>
         <td>
           <span class="status-dot ${e?"configured":s?"missing":"optional"}"></span>
         </td>
         <td>
           <strong>${t.role}</strong>
-          ${s?K`<span class="required-badge">Required</span>`:K`<span class="optional-badge">Optional</span>`}
+          ${s?B`<span class="required-badge">Required</span>`:B`<span class="optional-badge">Optional</span>`}
         </td>
         <td>${t.description}</td>
         <td>
-          ${e?K`<span class="entity-id">${t.entity_id}</span>`:K`<span class="fallback-label">${this._getFallbackLabel(t.role)}</span>`}
+          ${e?B`<span class="entity-id">${t.entity_id}</span>`:B`<span class="fallback-label">${this._getFallbackLabel(t.role)}</span>`}
         </td>
         <td>
-          ${null!=t.current_state?t.current_state:K`<span class="not-configured">-</span>`}
+          ${null!=t.current_state?t.current_state:B`<span class="not-configured">-</span>`}
         </td>
         <td>
-          ${null!=t.last_stored_reading?t.last_stored_reading.toFixed(3):K`<span class="not-configured">-</span>`}
+          ${null!=t.last_stored_reading?t.last_stored_reading.toFixed(3):B`<span class="not-configured">-</span>`}
         </td>
       </tr>
     `}};kt.styles=[gt,vt,o`
@@ -829,7 +829,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         color: var(--secondary-text-color);
         line-height: 1.5;
       }
-    `],t([pt({attribute:!1})],kt.prototype,"hass",void 0),t([pt()],kt.prototype,"entryId",void 0),t([ut()],kt.prototype,"_sensors",void 0),t([ut()],kt.prototype,"_loading",void 0),t([ut()],kt.prototype,"_error",void 0),kt=t([lt("sensors-view")],kt);const St={tax_reduction:.6,grid_compensation:.078,transfer_fee:.3,energy_tax:.49,installed_kw:10};let At=class extends nt{constructor(){super(...arguments),this.entryId="",this._params={},this._loading=!1,this._fetched=!1,this._error="",this._editingYear=null,this._editValues={...St},this._newYear="",this._saving=!1,this._minYear=0,this._maxYear=0}updated(t){(t.has("hass")||t.has("entryId"))&&this.hass&&this.entryId&&!this._loading&&!this._fetched&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_yearly_params",entry_id:this.entryId});this._params=t.yearly_params,t.first_timestamp&&(this._minYear=new Date(t.first_timestamp).getFullYear()),t.last_timestamp&&(this._maxYear=new Date(t.last_timestamp).getFullYear())}catch(t){this._error=t.message||"Failed to fetch yearly params"}this._loading=!1,this._fetched=!0}}render(){if(this._loading&&!this._fetched)return K`<div class="loading">Loading yearly parameters...</div>`;if(this._error)return K`<div class="no-data">Error: ${this._error}</div>`;if(!this._fetched)return K`<div class="no-data">Waiting for data...</div>`;const t=Object.keys(this._params).sort();return K`
+    `],t([pt({attribute:!1})],kt.prototype,"hass",void 0),t([pt()],kt.prototype,"entryId",void 0),t([ut()],kt.prototype,"_sensors",void 0),t([ut()],kt.prototype,"_loading",void 0),t([ut()],kt.prototype,"_error",void 0),kt=t([lt("sensors-view")],kt);const St={tax_reduction:.6,grid_compensation:.078,transfer_fee:.3,energy_tax:.49,installed_kw:10};let At=class extends nt{constructor(){super(...arguments),this.entryId="",this._params={},this._loading=!1,this._fetched=!1,this._error="",this._editingYear=null,this._editValues={...St},this._newYear="",this._saving=!1,this._minYear=0,this._maxYear=0}updated(t){(t.has("hass")||t.has("entryId"))&&this.hass&&this.entryId&&!this._loading&&!this._fetched&&this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_yearly_params",entry_id:this.entryId});this._params=t.yearly_params,t.first_timestamp&&(this._minYear=new Date(t.first_timestamp).getFullYear()),t.last_timestamp&&(this._maxYear=new Date(t.last_timestamp).getFullYear())}catch(t){this._error=t.message||"Failed to fetch yearly params"}this._loading=!1,this._fetched=!0}}render(){if(this._loading&&!this._fetched)return B`<div class="loading">Loading yearly parameters...</div>`;if(this._error)return B`<div class="no-data">Error: ${this._error}</div>`;if(!this._fetched)return B`<div class="no-data">Waiting for data...</div>`;const t=Object.keys(this._params).sort();return B`
       <div class="card">
         <h3>Yearly Financial Parameters</h3>
 
@@ -841,15 +841,15 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
               @change=${t=>this._newYear=t.target.value}
             >
               <option value="">Select year...</option>
-              ${this._getAvailableYears().map(t=>K`<option value=${t}>${t}</option>`)}
+              ${this._getAvailableYears().map(t=>B`<option value=${t}>${t}</option>`)}
             </select>
           </div>
           <button class="btn" @click=${this._addYear}>Add</button>
         </div>
 
-        ${0===t.length?K`<div class="no-data">
+        ${0===t.length?B`<div class="no-data">
               No yearly parameters configured yet. Add a year above.
-            </div>`:K`
+            </div>`:B`
               <div class="table-wrapper">
                 <table>
                   <thead>
@@ -863,7 +863,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
                     </tr>
                   </thead>
                   <tbody>
-                    ${t.map(t=>{const e=this._params[t],s=this._editingYear===t;return K`
+                    ${t.map(t=>{const e=this._params[t],s=this._editingYear===t;return B`
                         <tr
                           class="clickable ${s?"selected":""}"
                           @click=${()=>this._startEdit(t)}
@@ -883,7 +883,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
       </div>
 
       ${null!=this._editingYear?this._renderEditForm():H}
-    `}_renderEditForm(){const t=this._editValues;return K`
+    `}_renderEditForm(){const t=this._editValues;return B`
       <div class="card">
         <h3>Edit ${this._editingYear}</h3>
         <div class="edit-form">
@@ -999,7 +999,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
       tr.selected td {
         background: color-mix(in srgb, var(--primary-color) 12%, transparent);
       }
-    `],t([pt({attribute:!1})],At.prototype,"hass",void 0),t([pt()],At.prototype,"entryId",void 0),t([ut()],At.prototype,"_params",void 0),t([ut()],At.prototype,"_loading",void 0),t([ut()],At.prototype,"_fetched",void 0),t([ut()],At.prototype,"_error",void 0),t([ut()],At.prototype,"_editingYear",void 0),t([ut()],At.prototype,"_editValues",void 0),t([ut()],At.prototype,"_newYear",void 0),t([ut()],At.prototype,"_saving",void 0),t([ut()],At.prototype,"_minYear",void 0),t([ut()],At.prototype,"_maxYear",void 0),At=t([lt("yearly-params-view")],At);let Et=class extends nt{constructor(){super(...arguments),this.entryId="",this._projection=[],this._investment=0,this._loading=!1,this._error="",this._initialLoaded=!1,this._defaultPriceDev=5,this._defaultPanelDeg=.25}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._initialLoaded&&!this._loading&&this._fetchInitial()}async _fetchInitial(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_roi_projection",entry_id:this.entryId});this._projection=t.projection,this._investment=t.investment,this._defaultPriceDev=t.price_development,this._defaultPanelDeg=t.panel_degradation,this._initialLoaded=!0}catch(t){this._error=t.message||"Failed to fetch ROI projection"}this._loading=!1}}async _onCalculate(){if(!this.hass||!this.entryId)return;const t=this.shadowRoot.getElementById("price-dev-input"),e=this.shadowRoot.getElementById("panel-deg-input"),s=parseFloat(t.value)||0,a=parseFloat(e.value)||0;this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_roi_projection",entry_id:this.entryId,price_development:s,panel_degradation:a});this._projection=t.projection,this._investment=t.investment}catch(t){this._error=t.message||"Failed to recalculate ROI projection"}this._loading=!1}_fmtInt(t){return Math.round(t).toLocaleString("sv-SE")}_fmtSek(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})}_fmtPct(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:1,maximumFractionDigits:1})}render(){return this._loading&&!this._initialLoaded?K`<div class="loading">Loading ROI projection...</div>`:this._error?K`<div class="no-data">Error: ${this._error}</div>`:this._projection.length?K`
+    `],t([pt({attribute:!1})],At.prototype,"hass",void 0),t([pt()],At.prototype,"entryId",void 0),t([ut()],At.prototype,"_params",void 0),t([ut()],At.prototype,"_loading",void 0),t([ut()],At.prototype,"_fetched",void 0),t([ut()],At.prototype,"_error",void 0),t([ut()],At.prototype,"_editingYear",void 0),t([ut()],At.prototype,"_editValues",void 0),t([ut()],At.prototype,"_newYear",void 0),t([ut()],At.prototype,"_saving",void 0),t([ut()],At.prototype,"_minYear",void 0),t([ut()],At.prototype,"_maxYear",void 0),At=t([lt("yearly-params-view")],At);let Et=class extends nt{constructor(){super(...arguments),this.entryId="",this._projection=[],this._investment=0,this._loading=!1,this._error="",this._initialLoaded=!1,this._defaultPriceDev=5,this._defaultPanelDeg=.25}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._initialLoaded&&!this._loading&&this._fetchInitial()}async _fetchInitial(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_roi_projection",entry_id:this.entryId});this._projection=t.projection,this._investment=t.investment,this._defaultPriceDev=t.price_development,this._defaultPanelDeg=t.panel_degradation,this._initialLoaded=!0}catch(t){this._error=t.message||"Failed to fetch ROI projection"}this._loading=!1}}async _onCalculate(){if(!this.hass||!this.entryId)return;const t=this.shadowRoot.getElementById("price-dev-input"),e=this.shadowRoot.getElementById("panel-deg-input"),s=parseFloat(t.value)||0,a=parseFloat(e.value)||0;this._loading=!0,this._error="";try{const t=await this.hass.callWS({type:"my_solar_cells/get_roi_projection",entry_id:this.entryId,price_development:s,panel_degradation:a});this._projection=t.projection,this._investment=t.investment}catch(t){this._error=t.message||"Failed to recalculate ROI projection"}this._loading=!1}_fmtInt(t){return Math.round(t).toLocaleString("sv-SE")}_fmtSek(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})}_fmtPct(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:1,maximumFractionDigits:1})}render(){return this._loading&&!this._initialLoaded?B`<div class="loading">Loading ROI projection...</div>`:this._error?B`<div class="no-data">Error: ${this._error}</div>`:this._projection.length?B`
       <div class="card">
         <h3>ROI Projection</h3>
         <div class="investment-info">
@@ -1085,7 +1085,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
           </table>
         </div>
       </div>
-    `:K`<div class="no-data">No ROI projection data available.</div>`}_renderRow(t){return K`
+    `:B`<div class="no-data">No ROI projection data available.</div>`}_renderRow(t){return B`
       <tr class=${t.is_roi_year?"roi-row":""}>
         <td class="number">${t.year_from_start}</td>
         <td class="number">${t.year}</td>
@@ -1152,13 +1152,13 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
       .info-box li {
         margin-bottom: 4px;
       }
-    `],t([pt({attribute:!1})],Et.prototype,"hass",void 0),t([pt()],Et.prototype,"entryId",void 0),t([ut()],Et.prototype,"_projection",void 0),t([ut()],Et.prototype,"_investment",void 0),t([ut()],Et.prototype,"_loading",void 0),t([ut()],Et.prototype,"_error",void 0),t([ut()],Et.prototype,"_initialLoaded",void 0),Et=t([lt("roi-view")],Et);const Dt={today:"Idag",day:"Dag",week:"Vecka",month:"Månad",year:"År"},Pt=["JANUARI","FEBRUARI","MARS","APRIL","MAJ","JUNI","JULI","AUGUSTI","SEPTEMBER","OKTOBER","NOVEMBER","DECEMBER"],It=["JAN.","FEB.","MAR.","APR.","MAJ","JUN.","JUL.","AUG.","SEP.","OKT.","NOV.","DEC."];let Tt=class extends nt{constructor(){super(...arguments),this.entryId="",this._period="week",this._currentDate=new Date,this._data=null,this._simData=null,this._loading=!1,this._simLoading=!1,this._error="",this._simEnabled=!1,this._simAddBattery=!0,this._simBatteryKwh=10,this._simRemoveTax=!1,this._initialLoaded=!1}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._initialLoaded&&!this._loading&&this._fetchData()}_getDateRange(){const t=new Date(this._currentDate);let e,s;switch(this._period){case"today":{const t=new Date;e=new Date(t.getFullYear(),t.getMonth(),t.getDate()),s=new Date(e),s.setDate(s.getDate()+1);break}case"day":e=new Date(t.getFullYear(),t.getMonth(),t.getDate()),s=new Date(e),s.setDate(s.getDate()+1);break;case"week":{const a=t.getDay(),i=0===a?6:a-1;e=new Date(t.getFullYear(),t.getMonth(),t.getDate()-i),s=new Date(e),s.setDate(s.getDate()+7);break}case"month":e=new Date(t.getFullYear(),t.getMonth(),1),s=new Date(t.getFullYear(),t.getMonth()+1,1);break;case"year":e=new Date(t.getFullYear(),0,1),s=new Date(t.getFullYear()+1,0,1)}return{start:this._toLocalIso(e),end:this._toLocalIso(s)}}_toLocalIso(t){return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}T00:00:00`}_getPeriodLabel(){const t=new Date(this._currentDate);switch(this._period){case"today":return"IDAG";case"day":return`${String(t.getDate()).padStart(2,"0")}/${It[t.getMonth()]} ${t.getFullYear()}`;case"week":{const e=t.getDay(),s=0===e?6:e-1,a=new Date(t.getFullYear(),t.getMonth(),t.getDate()-s),i=new Date(a);i.setDate(i.getDate()+6);return`${`${String(a.getDate()).padStart(2,"0")}/${It[a.getMonth()]}`}-${`${String(i.getDate()).padStart(2,"0")}/${It[i.getMonth()]}`}`}case"month":return`${Pt[t.getMonth()]} ${t.getFullYear()}`;case"year":return`${t.getFullYear()}`}}_navigate(t){const e=new Date(this._currentDate);switch(this._period){case"day":e.setDate(e.getDate()+t);break;case"week":e.setDate(e.getDate()+7*t);break;case"month":e.setMonth(e.getMonth()+t);break;case"year":e.setFullYear(e.getFullYear()+t)}this._currentDate=e,this._fetchData()}_setPeriod(t){this._period=t,this._currentDate=new Date,this._simData=null,this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=this._getDateRange(),e=await this.hass.callWS({type:"my_solar_cells/get_fakta_breakdown",entry_id:this.entryId,start_date:t.start,end_date:t.end});this._data=e,this._initialLoaded=!0}catch(t){this._error=t.message||"Failed to fetch data"}this._loading=!1}}async _simulate(){if(this.hass&&this.entryId){this._simLoading=!0;try{const t=this._getDateRange(),e=await this.hass.callWS({type:"my_solar_cells/simulate_fakta",entry_id:this.entryId,start_date:t.start,end_date:t.end,add_battery:this._simAddBattery,battery_kwh:this._simBatteryKwh,remove_tax_reduction:this._simRemoveTax});this._simData=e,this._simEnabled=!0}catch(t){this._error=t.message||"Simulation failed"}this._simLoading=!1}}_fmtKwh(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" kWh"}_fmtSek(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" Sek"}_fmtSekPerKwh(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" Sek"}render(){if(this._loading&&!this._initialLoaded)return K`<div class="loading">Loading...</div>`;if(this._error&&!this._data)return K`<div class="no-data">Error: ${this._error}</div>`;const t=this._simEnabled&&this._simData?this._simData:this._data;return K`
+    `],t([pt({attribute:!1})],Et.prototype,"hass",void 0),t([pt()],Et.prototype,"entryId",void 0),t([ut()],Et.prototype,"_projection",void 0),t([ut()],Et.prototype,"_investment",void 0),t([ut()],Et.prototype,"_loading",void 0),t([ut()],Et.prototype,"_error",void 0),t([ut()],Et.prototype,"_initialLoaded",void 0),Et=t([lt("roi-view")],Et);const Dt={today:"Idag",day:"Dag",week:"Vecka",month:"Månad",year:"År"},Pt=["JANUARI","FEBRUARI","MARS","APRIL","MAJ","JUNI","JULI","AUGUSTI","SEPTEMBER","OKTOBER","NOVEMBER","DECEMBER"],It=["JAN.","FEB.","MAR.","APR.","MAJ","JUN.","JUL.","AUG.","SEP.","OKT.","NOV.","DEC."];let Tt=class extends nt{constructor(){super(...arguments),this.entryId="",this._period="week",this._currentDate=new Date,this._data=null,this._simData=null,this._loading=!1,this._simLoading=!1,this._error="",this._simEnabled=!1,this._simAddBattery=!0,this._simBatteryKwh=10,this._simRemoveTax=!1,this._initialLoaded=!1}updated(t){t.has("hass")&&this.hass&&this.entryId&&!this._initialLoaded&&!this._loading&&this._fetchData()}_getDateRange(){const t=new Date(this._currentDate);let e,s;switch(this._period){case"today":{const t=new Date;e=new Date(t.getFullYear(),t.getMonth(),t.getDate()),s=new Date(e),s.setDate(s.getDate()+1);break}case"day":e=new Date(t.getFullYear(),t.getMonth(),t.getDate()),s=new Date(e),s.setDate(s.getDate()+1);break;case"week":{const a=t.getDay(),i=0===a?6:a-1;e=new Date(t.getFullYear(),t.getMonth(),t.getDate()-i),s=new Date(e),s.setDate(s.getDate()+7);break}case"month":e=new Date(t.getFullYear(),t.getMonth(),1),s=new Date(t.getFullYear(),t.getMonth()+1,1);break;case"year":e=new Date(t.getFullYear(),0,1),s=new Date(t.getFullYear()+1,0,1)}return{start:this._toLocalIso(e),end:this._toLocalIso(s)}}_toLocalIso(t){return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}T00:00:00`}_getPeriodLabel(){const t=new Date(this._currentDate);switch(this._period){case"today":return"IDAG";case"day":return`${String(t.getDate()).padStart(2,"0")}/${It[t.getMonth()]} ${t.getFullYear()}`;case"week":{const e=t.getDay(),s=0===e?6:e-1,a=new Date(t.getFullYear(),t.getMonth(),t.getDate()-s),i=new Date(a);i.setDate(i.getDate()+6);return`${`${String(a.getDate()).padStart(2,"0")}/${It[a.getMonth()]}`}-${`${String(i.getDate()).padStart(2,"0")}/${It[i.getMonth()]}`}`}case"month":return`${Pt[t.getMonth()]} ${t.getFullYear()}`;case"year":return`${t.getFullYear()}`}}_navigate(t){const e=new Date(this._currentDate);switch(this._period){case"day":e.setDate(e.getDate()+t);break;case"week":e.setDate(e.getDate()+7*t);break;case"month":e.setMonth(e.getMonth()+t);break;case"year":e.setFullYear(e.getFullYear()+t)}this._currentDate=e,this._fetchData()}_setPeriod(t){this._period=t,this._currentDate=new Date,this._simData=null,this._fetchData()}async _fetchData(){if(this.hass&&this.entryId){this._loading=!0,this._error="";try{const t=this._getDateRange(),e=await this.hass.callWS({type:"my_solar_cells/get_fakta_breakdown",entry_id:this.entryId,start_date:t.start,end_date:t.end});this._data=e,this._initialLoaded=!0}catch(t){this._error=t.message||"Failed to fetch data"}this._loading=!1}}async _simulate(){if(this.hass&&this.entryId){this._simLoading=!0;try{const t=this._getDateRange(),e=await this.hass.callWS({type:"my_solar_cells/simulate_fakta",entry_id:this.entryId,start_date:t.start,end_date:t.end,add_battery:this._simAddBattery,battery_kwh:this._simBatteryKwh,remove_tax_reduction:this._simRemoveTax});this._simData=e,this._simEnabled=!0}catch(t){this._error=t.message||"Simulation failed"}this._simLoading=!1}}_fmtKwh(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" kWh"}_fmtSek(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" Sek"}_fmtSekPerKwh(t){return t.toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2})+" Sek"}render(){if(this._loading&&!this._initialLoaded)return B`<div class="loading">Loading...</div>`;if(this._error&&!this._data)return B`<div class="no-data">Error: ${this._error}</div>`;const t=this._simEnabled&&this._simData?this._simData:this._data;return B`
       ${this._renderPeriodNav()}
-      ${t?this._renderColumns(t):K`<div class="no-data">No data for this period</div>`}
-    `}_renderPeriodNav(){const t="today"!==this._period;return K`
+      ${t?this._renderColumns(t):B`<div class="no-data">No data for this period</div>`}
+    `}_renderPeriodNav(){const t="today"!==this._period;return B`
       <div class="period-nav">
         <div class="period-tabs">
-          ${Object.keys(Dt).map(t=>K`
+          ${Object.keys(Dt).map(t=>B`
               <button
                 class="period-tab ${this._period===t?"active":""}"
                 @click=${()=>this._setPeriod(t)}
@@ -1167,19 +1167,19 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
               </button>
             `)}
         </div>
-        ${t?K`
+        ${t?B`
               <button class="nav-arrow" @click=${()=>this._navigate(-1)}>&larr;</button>
               <span class="period-label">${this._getPeriodLabel()}</span>
               <button class="nav-arrow" @click=${()=>this._navigate(1)}>&rarr;</button>
             `:H}
       </div>
-    `}_renderColumns(t){return K`
+    `}_renderColumns(t){return B`
       <div class="fakta-columns">
         ${this._renderProductionColumn(t)}
         ${this._renderCostColumn(t)}
         ${this._renderSimAndFactsColumn(t)}
       </div>
-    `}_renderProductionColumn(t){return K`
+    `}_renderProductionColumn(t){return B`
       <div class="fakta-card">
         <h3>Produktion och konsumtion</h3>
         <div class="fakta-row"><span class="label">S\u00e5ld</span><span class="value">${this._fmtKwh(t.production_sold)}</span></div>
@@ -1190,9 +1190,9 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         <hr class="fakta-separator" />
         <div class="fakta-row fakta-summary"><span class="label">Produktion</span><span class="value">${this._fmtKwh(t.sum_all_production)}</span></div>
         <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtKwh(t.sum_all_consumption)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Balans (prod. - f\u00f6rb.)</span><span class="value">${this._fmtKwh(t.sum_all_production-t.sum_all_consumption)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">Balans (prod. - Ink\u00f6p.)</span><span class="value">${this._fmtKwh(t.sum_all_production-t.sum_all_consumption)}</span></div>
       </div>
-    `}_renderCostColumn(t){return K`
+    `}_renderCostColumn(t){return B`
       <div class="fakta-card">
         <h3>Kostnader och int\u00e4kter</h3>
         <div class="fakta-row"><span class="label">Prod s\u00e5lt</span><span class="value">${this._fmtSek(t.production_sold_profit)}</span></div>
@@ -1213,21 +1213,21 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtSek(-t.sum_purchased_cost)}</span></div>
         <div class="fakta-row fakta-summary"><span class="label">Balans. (prod. - Ink\u00f6pt)</span><span class="value">${this._fmtSek(t.balance)}</span></div>
       </div>
-    `}_renderSimAndFactsColumn(t){return K`
+    `}_renderSimAndFactsColumn(t){return B`
       <div class="fakta-card">
-        <h3>Simulering</h3>
+        <h3>${this._simEnabled&&this._simData?this._simAddBattery?`Simulering (med ${this._simBatteryKwh} kWh batteri i beräkning)`:"Simulering (utan batteri i beräkning)":"Simulering"}</h3>
         <div class="sim-section">
           <div class="sim-toggle-group">
             <button
-              class="sim-toggle ${this._simAddBattery?"active":""}"
+              class="sim-toggle ${this._simAddBattery?"":"active"}"
               @click=${()=>{this._simAddBattery=!0}}
             >L\u00e4gg till batteri</button>
             <button
-              class="sim-toggle ${this._simAddBattery?"":"active"}"
+              class="sim-toggle ${this._simAddBattery?"active":""}"
               @click=${()=>{this._simAddBattery=!1}}
             >Ta bort batteri</button>
           </div>
-          ${this._simAddBattery?K`
+          ${this._simAddBattery?B`
                 <div class="sim-slider-row">
                   <input
                     type="range"
@@ -1256,7 +1256,7 @@ const lt=t=>(e,s)=>{void 0!==s?s.addInitializer(()=>{customElements.define(t,e)}
         <div class="fakta-row"><span class="label">Snittpris eget anv\u00e4ndning</span><span class="value">${this._fmtSekPerKwh(t.facts_production_own_use_avg_per_kwh_saved)}</span></div>
         <div class="fakta-row"><span class="label">Eget anv. reducering avg. f\u00f6rb.</span><span class="value">${this._fmtKwh(t.peak_energy_reduction)}</span></div>
       </div>
-    `}};Tt.styles=[mt],t([pt({attribute:!1})],Tt.prototype,"hass",void 0),t([pt()],Tt.prototype,"entryId",void 0),t([ut()],Tt.prototype,"_period",void 0),t([ut()],Tt.prototype,"_currentDate",void 0),t([ut()],Tt.prototype,"_data",void 0),t([ut()],Tt.prototype,"_simData",void 0),t([ut()],Tt.prototype,"_loading",void 0),t([ut()],Tt.prototype,"_simLoading",void 0),t([ut()],Tt.prototype,"_error",void 0),t([ut()],Tt.prototype,"_simEnabled",void 0),t([ut()],Tt.prototype,"_simAddBattery",void 0),t([ut()],Tt.prototype,"_simBatteryKwh",void 0),t([ut()],Tt.prototype,"_simRemoveTax",void 0),t([ut()],Tt.prototype,"_initialLoaded",void 0),Tt=t([lt("fakta-view")],Tt);let Ct=class extends nt{constructor(){super(...arguments),this._activeTab="overview"}get _entryId(){return this.panel?.config?.entry_id||""}render(){return K`
+    `}};Tt.styles=[mt],t([pt({attribute:!1})],Tt.prototype,"hass",void 0),t([pt()],Tt.prototype,"entryId",void 0),t([ut()],Tt.prototype,"_period",void 0),t([ut()],Tt.prototype,"_currentDate",void 0),t([ut()],Tt.prototype,"_data",void 0),t([ut()],Tt.prototype,"_simData",void 0),t([ut()],Tt.prototype,"_loading",void 0),t([ut()],Tt.prototype,"_simLoading",void 0),t([ut()],Tt.prototype,"_error",void 0),t([ut()],Tt.prototype,"_simEnabled",void 0),t([ut()],Tt.prototype,"_simAddBattery",void 0),t([ut()],Tt.prototype,"_simBatteryKwh",void 0),t([ut()],Tt.prototype,"_simRemoveTax",void 0),t([ut()],Tt.prototype,"_initialLoaded",void 0),Tt=t([lt("fakta-view")],Tt);let Ct=class extends nt{constructor(){super(...arguments),this._activeTab="overview"}get _entryId(){return this.panel?.config?.entry_id||""}render(){return B`
       <div class="content">
         <div class="header">
           <h1>Solar Data</h1>
