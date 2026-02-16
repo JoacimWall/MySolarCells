@@ -11,6 +11,10 @@ A Home Assistant custom integration that tracks solar energy production economic
 - **ROI Projection**: 30-year investment return projection with panel degradation and price development
 - **Swedish Tax Rules**: Handles tax reduction, grid compensation, transfer fees, and energy tax
 - **Custom Lovelace Card**: Visual ROI chart with payback year indicator
+- **Solar Data Panel**: Full admin panel with multiple tabs (Overview, ROI, Fakta, Sensors, Yearly Params, Hourly Energy)
+- **Fakta Tab**: Detailed cost/revenue breakdown for any period (day/week/month/year) with navigation
+- **Battery Simulation**: "What-if" simulator — explore adding or removing a battery and see the financial impact
+- **Yearly Parameter Overrides**: Configure different tax rates, grid compensation, etc. per year
 
 ## Installation
 
@@ -93,6 +97,38 @@ Same fields as daily plus:
 - `sensor.my_solar_cells_current_price_level` - CHEAP/NORMAL/EXPENSIVE
 - `sensor.my_solar_cells_avg_spot_price_today` - Today's average price
 
+## Solar Data Panel
+
+The integration registers a custom panel accessible from the HA sidebar. It includes the following tabs:
+
+### Overview
+Database summary, energy period summaries (today/week/month/year), and configured yearly parameters at a glance.
+
+### ROI
+Interactive 30-year ROI projection table. Adjust price development and panel degradation percentages and recalculate on the fly. The current (incomplete) year is filled using month-specific average prices from up to 3 prior years to avoid seasonal bias.
+
+### Fakta
+Detailed financial breakdown for any selectable period with navigation arrows:
+- **Periods**: Today, Day, Week, Month, Year
+- **Column 1 — Production & Consumption**: kWh breakdown (sold, own use, battery charge/discharge, purchased) with totals
+- **Column 2 — Costs & Revenue**: SEK breakdown for all line items (spot price, grid compensation, tax reduction, transfer fee, energy tax)
+- **Column 3 — Simulation & Facts**: Battery simulator and per-kWh averages
+
+#### Battery Simulation
+Explore "what-if" scenarios without changing your actual data:
+- **Add battery**: Simulates charging from excess production and discharging to offset purchases (1-30 kWh capacity slider)
+- **Remove battery**: Simulates what financials would look like without your existing battery
+- **Remove tax reduction**: Toggle to see impact of losing skattereduktion
+
+### Sensors
+Shows configured HA sensor entity IDs, their current states, and last stored readings.
+
+### Yearly Params
+Manage year-specific financial parameter overrides (tax reduction, grid compensation, transfer fee, energy tax, installed kW).
+
+### Hourly Energy
+Paginated view of raw hourly energy records with date filtering.
+
 ## Custom Lovelace Card
 
 Add the ROI projection card to your dashboard:
@@ -121,14 +157,20 @@ The financial calculations match the formulas from the MySolarCells mobile app:
 
 ```bash
 # Run tests
-cd ha-my-solar-cells
 pip install pytest pytest-asyncio aiohttp
 pytest tests/
 
-# Build the Lovelace card
+# Build the Lovelace ROI card
 cd custom_cards/my-solar-cells-roi-card
 npm install
 npm run build
+
+# Build the Solar Data panel
+cd custom_cards/my-solar-cells-panel
+npm install
+npm run build
+# Copy built JS to integration
+cp my-solar-cells-panel.js ../../custom_components/my_solar_cells/
 ```
 
 ## License
