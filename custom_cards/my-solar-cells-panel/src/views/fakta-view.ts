@@ -307,11 +307,11 @@ export class FaktaView extends LitElement {
         <div class="sim-section">
           <div class="sim-toggle-group">
             <button
-              class="sim-toggle ${!this._simAddBattery ? "active" : ""}"
+              class="sim-toggle ${this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = true; }}
             >${t(this.hass, "fakta.simAddBattery")}</button>
             <button
-              class="sim-toggle ${this._simAddBattery ? "active" : ""}"
+              class="sim-toggle ${!this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = false; }}
             >${t(this.hass, "fakta.simRemoveBattery")}</button>
           </div>
