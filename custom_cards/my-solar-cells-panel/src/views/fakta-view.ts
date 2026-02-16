@@ -294,16 +294,13 @@ export class FaktaView extends LitElement {
         <div class="fakta-row"><span class="label">Batt. anv. \u00f6verf\u00f6ring</span><span class="value">${this._fmtSek(d.battery_use_transfer_fee_saved)}</span></div>
         <div class="fakta-row"><span class="label">Batt. anv. energiskatt</span><span class="value">${this._fmtSek(d.battery_use_energy_tax_saved)}</span></div>
         <hr class="fakta-separator" />
-        <div class="fakta-row"><span class="label">K\u00f6pt kostnad</span><span class="value">${this._fmtSek(-d.purchased_cost)}</span></div>
-        <div class="fakta-row"><span class="label">K\u00f6pt \u00f6verf\u00f6ring</span><span class="value">${this._fmtSek(-d.purchased_transfer_fee_cost)}</span></div>
+        <div class="fakta-row"><span class="label">k\u00f6pt el kostnad</span><span class="value">${this._fmtSek(-d.purchased_cost)}</span></div>
+        <div class="fakta-row"><span class="label">K\u00f6pt \u00f6verf\u00f6ringavgift</span><span class="value">${this._fmtSek(-d.purchased_transfer_fee_cost)}</span></div>
         <div class="fakta-row"><span class="label">K\u00f6pt energiskatt</span><span class="value">${this._fmtSek(-d.purchased_tax_cost)}</span></div>
-        <hr class="fakta-separator" />
-        <div class="fakta-row fakta-summary"><span class="label">Inkl. kostnad</span><span class="value">${this._fmtSek(d.sum_all_production_sold_and_saved)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Exkl. kostnad</span><span class="value">${this._fmtSek(d.sum_all_production_sold_and_saved - d.sum_purchased_cost)}</span></div>
         <hr class="fakta-separator" />
         <div class="fakta-row fakta-summary"><span class="label">Produktion</span><span class="value">${this._fmtSek(d.sum_all_production_sold_and_saved)}</span></div>
         <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtSek(-d.sum_purchased_cost)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Batt. (prod. - f\u00f6rb.)</span><span class="value">${this._fmtSek(d.balance)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">Balans. (prod. - Ink\u00f6pt)</span><span class="value">${this._fmtSek(d.balance)}</span></div>
       </div>
     `;
   }
