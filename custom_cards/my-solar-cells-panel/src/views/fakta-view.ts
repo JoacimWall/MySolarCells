@@ -340,16 +340,6 @@ export class FaktaView extends LitElement {
                 </div>
               `
             : nothing}
-          <label class="sim-checkbox">
-            <input
-              type="checkbox"
-              .checked=${this._simRemoveTax}
-              @change=${(e: Event) => {
-                this._simRemoveTax = (e.target as HTMLInputElement).checked;
-              }}
-            />
-            Ta bort skattereduktionen
-          </label>
           <button
             class="sim-btn"
             @click=${this._simulate}
