@@ -2,6 +2,7 @@ import { LitElement, html, css, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { cardStyles, tableStyles } from "../styles";
 import type { EstimateRoi } from "../types";
+import { t, getLocale } from "../localize";
 
 @customElement("roi-view")
 export class RoiView extends LitElement {
@@ -139,18 +140,18 @@ export class RoiView extends LitElement {
   }
 
   private _fmtInt(v: number): string {
-    return Math.round(v).toLocaleString("sv-SE");
+    return Math.round(v).toLocaleString(getLocale(this.hass));
   }
 
   private _fmtSek(v: number): string {
-    return v.toLocaleString("sv-SE", {
+    return v.toLocaleString(getLocale(this.hass), {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
   }
 
   private _fmtPct(v: number): string {
-    return v.toLocaleString("sv-SE", {
+    return v.toLocaleString(getLocale(this.hass), {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
     });
@@ -158,59 +159,44 @@ export class RoiView extends LitElement {
 
   render(): TemplateResult {
     if (this._loading && !this._initialLoaded) {
-      return html`<div class="loading">Loading ROI projection...</div>`;
+      return html`<div class="loading">${t(this.hass, "roi.loadingRoi")}</div>`;
     }
     if (this._error) {
-      return html`<div class="no-data">Error: ${this._error}</div>`;
+      return html`<div class="no-data">${t(this.hass, "common.error")}: ${this._error}</div>`;
     }
     if (!this._projection.length) {
-      return html`<div class="no-data">No ROI projection data available.</div>`;
+      return html`<div class="no-data">${t(this.hass, "roi.noData")}</div>`;
     }
 
     return html`
       <div class="card">
-        <h3>ROI Projection</h3>
+        <h3>${t(this.hass, "roi.title")}</h3>
         <div class="investment-info">
-          Investment: <strong>${this._fmtSek(this._investment)} SEK</strong>
+          ${this._renderInvestment()}
         </div>
         <details class="info-box">
-          <summary>How is the ROI calculated?</summary>
+          <summary>${t(this.hass, "roi.howCalculated")}</summary>
           <ul>
-            <li><strong>Historical years</strong> use actual production and price data from Tibber.
-              If the current year is incomplete, each missing month is filled using
-              the average price and production for that specific month from up to
-              3 prior years. If no prior data exists for a month, the previous
-              month's price is used as fallback.</li>
-            <li><strong>Sold price</strong> = spot price + grid compensation (n&auml;tnytta)
-              + tax reduction (skattereduktion, until 2026).</li>
-            <li><strong>Own use price</strong> = avoided purchase cost (spot price + transfer fee
-              + energy tax). If a battery is present, it is the average of own-use and battery
-              savings per kWh.</li>
-            <li><strong>Future years</strong> are projected using monthly average prices and
-              production from up to 3 of the most recent historical years. Each
-              calendar month is averaged across however many years have data for
-              it. Price development and panel degradation are then applied per
-              month and summed to yearly totals. This captures seasonal variation
-              &mdash; summer has high production but typically lower prices,
-              winter the opposite.</li>
+            <li>${t(this.hass, "roi.explainHistorical")}</li>
+            <li>${t(this.hass, "roi.explainSoldPrice")}</li>
+            <li>${t(this.hass, "roi.explainOwnUsePrice")}</li>
+            <li>${t(this.hass, "roi.explainFuture")}
             <ul>
-              <li>Prices increase each year by the <em>price development</em> percentage.
-                E.g. 5% means next year's price = this year's price &times; 1.05.</li>
-              <li>Production decreases each year by the <em>panel degradation</em> percentage.
-                E.g. 0.25% means next year's production = this year's &times; 0.9975.</li>
+              <li>${t(this.hass, "roi.explainPriceDev")}</li>
+              <li>${t(this.hass, "roi.explainPanelDeg")}</li>
             </ul>
-            <li><strong>Savings sold</strong> = production sold &times; average sold price</li>
-            <li><strong>Savings own use</strong> = own use production &times; average own use price</li>
-            <li><strong>Remaining</strong> = investment &minus; cumulative total savings</li>
-            <li>The <strong>ROI year</strong> (green row) is when cumulative savings exceed the investment.</li>
-            <li>Tax reduction (skattereduktion) is removed from sold price starting 2026.</li>
-            <li><em>Note:</em> The table shows yearly weighted averages, but all savings
-              calculations use monthly granularity for accuracy.</li>
+            </li>
+            <li>${t(this.hass, "roi.explainSavingsSold")}</li>
+            <li>${t(this.hass, "roi.explainSavingsOwnUse")}</li>
+            <li>${t(this.hass, "roi.explainRemaining")}</li>
+            <li>${t(this.hass, "roi.explainRoiYear")}</li>
+            <li>${t(this.hass, "roi.explainTaxReduction")}</li>
+            <li><em>${t(this.hass, "roi.explainNote")}</em></li>
           </ul>
         </details>
         <div class="table-controls">
           <div class="input-group">
-            <label>Price development (%/year)</label>
+            <label>${t(this.hass, "roi.priceDevLabel")}</label>
             <input
               id="price-dev-input"
               type="number"
@@ -219,7 +205,7 @@ export class RoiView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>Panel degradation (%/year)</label>
+            <label>${t(this.hass, "roi.panelDegLabel")}</label>
             <input
               id="panel-deg-input"
               type="number"
@@ -228,23 +214,23 @@ export class RoiView extends LitElement {
             />
           </div>
           <button class="btn" @click=${this._onCalculate} ?disabled=${this._loading}>
-            ${this._loading ? "Calculating..." : "Calculate"}
+            ${this._loading ? t(this.hass, "roi.calculating") : t(this.hass, "roi.calculate")}
           </button>
         </div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th class="number">#</th>
-                <th class="number">Year</th>
-                <th class="number">Avg price sold</th>
-                <th class="number">Avg price own use</th>
-                <th class="number">Prod. sold (kWh)</th>
-                <th class="number">Prod. own use (kWh)</th>
-                <th class="number">Savings sold (SEK)</th>
-                <th class="number">Savings own use (SEK)</th>
-                <th class="number">Return %</th>
-                <th class="number">Remaining (SEK)</th>
+                <th class="number">${t(this.hass, "roi.colIndex")}</th>
+                <th class="number">${t(this.hass, "roi.colYear")}</th>
+                <th class="number">${t(this.hass, "roi.colAvgPriceSold")}</th>
+                <th class="number">${t(this.hass, "roi.colAvgPriceOwnUse")}</th>
+                <th class="number">${t(this.hass, "roi.colProdSold")}</th>
+                <th class="number">${t(this.hass, "roi.colProdOwnUse")}</th>
+                <th class="number">${t(this.hass, "roi.colSavingsSold")}</th>
+                <th class="number">${t(this.hass, "roi.colSavingsOwnUse")}</th>
+                <th class="number">${t(this.hass, "roi.colReturnPct")}</th>
+                <th class="number">${t(this.hass, "roi.colRemaining")}</th>
               </tr>
             </thead>
             <tbody>
@@ -254,6 +240,13 @@ export class RoiView extends LitElement {
         </div>
       </div>
     `;
+  }
+
+  private _renderInvestment(): TemplateResult {
+    const str = t(this.hass, "roi.investment", this._fmtSek(this._investment));
+    const el = document.createElement("span");
+    el.innerHTML = str;
+    return html`${el}`;
   }
 
   private _renderRow(r: EstimateRoi): TemplateResult {

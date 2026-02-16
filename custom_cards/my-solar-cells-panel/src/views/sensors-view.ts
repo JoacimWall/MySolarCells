@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { cardStyles, tableStyles } from "../styles";
+import { t } from "../localize";
 
 interface SensorInfo {
   role: string;
@@ -117,38 +118,30 @@ export class SensorsView extends LitElement {
 
   render(): TemplateResult {
     if (this._loading) {
-      return html`<div class="loading">Loading sensor configuration...</div>`;
+      return html`<div class="loading">${t(this.hass, "sensors.loadingSensors")}</div>`;
     }
     if (this._error) {
-      return html`<div class="no-data">Error: ${this._error}</div>`;
+      return html`<div class="no-data">${t(this.hass, "common.error")}: ${this._error}</div>`;
     }
 
     const configured = this._sensors.filter((s) => s.entity_id);
     const missing = this._sensors.filter((s) => !s.entity_id);
 
     return html`
-      <div class="info-box">
-        Only the <strong>production</strong> sensor is required — it is used to
-        calculate <strong>production_own_use</strong> (total production minus
-        grid export). All other data (grid export, grid import) comes from the
-        <strong>Tibber API</strong> by default. You can optionally override
-        grid export/import with HA sensors for higher accuracy, and add battery
-        sensors if you have a battery. Sensors are configured in the
-        integration setup flow.
-      </div>
+      <div class="info-box">${this._renderInfoBox()}</div>
 
       <div class="card">
-        <h3>Sensor Configuration</h3>
+        <h3>${t(this.hass, "sensors.title")}</h3>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>Status</th>
-                <th>Role</th>
-                <th>Description</th>
-                <th>Entity ID</th>
-                <th>Current State</th>
-                <th>Last Stored Reading</th>
+                <th>${t(this.hass, "sensors.status")}</th>
+                <th>${t(this.hass, "sensors.role")}</th>
+                <th>${t(this.hass, "sensors.description")}</th>
+                <th>${t(this.hass, "sensors.entityId")}</th>
+                <th>${t(this.hass, "sensors.currentState")}</th>
+                <th>${t(this.hass, "sensors.lastStoredReading")}</th>
               </tr>
             </thead>
             <tbody>
@@ -161,19 +154,16 @@ export class SensorsView extends LitElement {
       ${missing.some((s) => s.role === "production")
         ? html`
             <div class="card">
-              <h3>Required Sensor Missing</h3>
-              <p style="color: var(--error-color, #f44336); font-size: 0.9em;">
-                The <strong>production</strong> sensor is not configured.
-                Without it, <strong>production_own_use</strong> cannot be
-                calculated. Please configure it in the integration setup flow.
-              </p>
+              <h3>${t(this.hass, "sensors.requiredMissing")}</h3>
+              <p style="color: var(--error-color, #f44336); font-size: 0.9em;"
+                >${this._renderRequiredMissingText()}</p>
             </div>
           `
         : nothing}
 
       <div style="margin-top: 12px;">
         <button class="btn" @click=${this._fetchData} ?disabled=${this._loading}>
-          Refresh
+          ${t(this.hass, "common.refresh")}
         </button>
       </div>
     `;
@@ -184,9 +174,23 @@ export class SensorsView extends LitElement {
   }
 
   private _getFallbackLabel(role: string): string {
-    if (role === "grid_export") return "Using Tibber API";
-    if (role === "grid_import") return "Using Tibber API";
-    return "Not configured";
+    if (role === "grid_export") return t(this.hass, "sensors.usingTibberApi");
+    if (role === "grid_import") return t(this.hass, "sensors.usingTibberApi");
+    return t(this.hass, "sensors.notConfigured");
+  }
+
+  private _renderInfoBox(): TemplateResult {
+    return html`${this._unsafeHtml(t(this.hass, "sensors.infoBox"))}`;
+  }
+
+  private _renderRequiredMissingText(): TemplateResult {
+    return html`${this._unsafeHtml(t(this.hass, "sensors.requiredMissingText"))}`;
+  }
+
+  private _unsafeHtml(str: string): TemplateResult {
+    const el = document.createElement("span");
+    el.innerHTML = str;
+    return html`${el}`;
   }
 
   private _renderRow(s: SensorInfo): TemplateResult {
@@ -205,8 +209,8 @@ export class SensorsView extends LitElement {
         <td>
           <strong>${s.role}</strong>
           ${required
-            ? html`<span class="required-badge">Required</span>`
-            : html`<span class="optional-badge">Optional</span>`}
+            ? html`<span class="required-badge">${t(this.hass, "sensors.required")}</span>`
+            : html`<span class="optional-badge">${t(this.hass, "sensors.optional")}</span>`}
         </td>
         <td>${s.description}</td>
         <td>

@@ -2,6 +2,7 @@ import { LitElement, html, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { cardStyles, tableStyles } from "../styles";
 import { HourlyRecord } from "../types";
+import { t } from "../localize";
 
 const PAGE_SIZE = 50;
 
@@ -31,10 +32,10 @@ export class HourlyEnergyView extends LitElement {
   render(): TemplateResult {
     return html`
       <div class="card">
-        <h3>Hourly Energy Records</h3>
+        <h3>${t(this.hass, "hourly.title")}</h3>
         <div class="table-controls">
           <div class="input-group">
-            <label>Start Date</label>
+            <label>${t(this.hass, "hourly.startDate")}</label>
             <input
               type="date"
               .value=${this._startDate}
@@ -44,7 +45,7 @@ export class HourlyEnergyView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>End Date</label>
+            <label>${t(this.hass, "hourly.endDate")}</label>
             <input
               type="date"
               .value=${this._endDate}
@@ -54,17 +55,17 @@ export class HourlyEnergyView extends LitElement {
             />
           </div>
           <button class="btn" @click=${this._fetch} ?disabled=${this._loading}>
-            ${this._loading ? "Loading..." : "Load"}
+            ${this._loading ? t(this.hass, "hourly.loadingBtn") : t(this.hass, "hourly.loadBtn")}
           </button>
         </div>
 
         ${this._error
-          ? html`<div class="no-data">Error: ${this._error}</div>`
+          ? html`<div class="no-data">${t(this.hass, "common.error")}: ${this._error}</div>`
           : ""}
         ${this._records.length > 0 ? this._renderTable() : ""}
         ${!this._loading && this._records.length === 0 && !this._error
           ? html`<div class="no-data">
-              Select a date range and click Load
+              ${t(this.hass, "hourly.selectDateRange")}
             </div>`
           : ""}
       </div>
@@ -80,16 +81,16 @@ export class HourlyEnergyView extends LitElement {
         <table>
           <thead>
             <tr>
-              <th>Timestamp</th>
-              <th>Purchased kWh</th>
-              <th>Cost SEK</th>
-              <th>Sold kWh</th>
-              <th>Profit SEK</th>
-              <th>Own Use kWh</th>
-              <th>Saved SEK</th>
-              <th>Price Level</th>
-              <th>Synced</th>
-              <th>Enriched</th>
+              <th>${t(this.hass, "hourly.timestamp")}</th>
+              <th>${t(this.hass, "hourly.purchasedKwh")}</th>
+              <th>${t(this.hass, "hourly.costSek")}</th>
+              <th>${t(this.hass, "hourly.soldKwh")}</th>
+              <th>${t(this.hass, "hourly.profitSek")}</th>
+              <th>${t(this.hass, "hourly.ownUseKwh")}</th>
+              <th>${t(this.hass, "hourly.savedSek")}</th>
+              <th>${t(this.hass, "hourly.priceLevel")}</th>
+              <th>${t(this.hass, "hourly.synced")}</th>
+              <th>${t(this.hass, "hourly.enriched")}</th>
             </tr>
           </thead>
           <tbody>
@@ -104,8 +105,8 @@ export class HourlyEnergyView extends LitElement {
                   <td>${r.production_own_use.toFixed(3)}</td>
                   <td>${r.production_own_use_profit.toFixed(2)}</td>
                   <td>${r.price_level || "-"}</td>
-                  <td>${r.synced ? "Yes" : "No"}</td>
-                  <td>${r.sensor_enriched ? "Yes" : "No"}</td>
+                  <td>${r.synced ? t(this.hass, "common.yes") : t(this.hass, "common.no")}</td>
+                  <td>${r.sensor_enriched ? t(this.hass, "common.yes") : t(this.hass, "common.no")}</td>
                 </tr>
               `
             )}
@@ -118,15 +119,15 @@ export class HourlyEnergyView extends LitElement {
           ?disabled=${this._offset === 0 || this._loading}
           @click=${this._prevPage}
         >
-          Prev
+          ${t(this.hass, "hourly.prev")}
         </button>
-        <span>Page ${currentPage} of ${totalPages} (${this._totalCount} records)</span>
+        <span>${t(this.hass, "hourly.pageInfo", currentPage, totalPages, this._totalCount)}</span>
         <button
           class="btn"
           ?disabled=${this._offset + PAGE_SIZE >= this._totalCount || this._loading}
           @click=${this._nextPage}
         >
-          Next
+          ${t(this.hass, "hourly.next")}
         </button>
       </div>
     `;

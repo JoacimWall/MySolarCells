@@ -2,25 +2,16 @@ import { LitElement, html, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { faktaStyles } from "../styles";
 import type { HistoryStatsResponse } from "../types";
+import { t, getLocale, monthFull, monthShort } from "../localize";
 
 type PeriodType = "today" | "day" | "week" | "month" | "year";
 
-const PERIOD_LABELS: Record<PeriodType, string> = {
-  today: "Idag",
-  day: "Dag",
-  week: "Vecka",
-  month: "M\u00e5nad",
-  year: "\u00c5r",
-};
-
-const SWEDISH_MONTHS = [
-  "JANUARI", "FEBRUARI", "MARS", "APRIL", "MAJ", "JUNI",
-  "JULI", "AUGUSTI", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DECEMBER",
-];
-
-const SHORT_MONTHS = [
-  "JAN.", "FEB.", "MAR.", "APR.", "MAJ", "JUN.",
-  "JUL.", "AUG.", "SEP.", "OKT.", "NOV.", "DEC.",
+const PERIOD_KEYS: { type: PeriodType; labelKey: "fakta.periodToday" | "fakta.periodDay" | "fakta.periodWeek" | "fakta.periodMonth" | "fakta.periodYear" }[] = [
+  { type: "today", labelKey: "fakta.periodToday" },
+  { type: "day", labelKey: "fakta.periodDay" },
+  { type: "week", labelKey: "fakta.periodWeek" },
+  { type: "month", labelKey: "fakta.periodMonth" },
+  { type: "year", labelKey: "fakta.periodYear" },
 ];
 
 @customElement("fakta-view")
@@ -106,10 +97,10 @@ export class FaktaView extends LitElement {
     const d = new Date(this._currentDate);
     switch (this._period) {
       case "today":
-        return "IDAG";
+        return t(this.hass, "fakta.todayLabel");
       case "day": {
         const dd = String(d.getDate()).padStart(2, "0");
-        const mon = SHORT_MONTHS[d.getMonth()];
+        const mon = monthShort(this.hass, d.getMonth());
         return `${dd}/${mon} ${d.getFullYear()}`;
       }
       case "week": {
@@ -118,12 +109,12 @@ export class FaktaView extends LitElement {
         const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff);
         const sun = new Date(mon);
         sun.setDate(sun.getDate() + 6);
-        const monStr = `${String(mon.getDate()).padStart(2, "0")}/${SHORT_MONTHS[mon.getMonth()]}`;
-        const sunStr = `${String(sun.getDate()).padStart(2, "0")}/${SHORT_MONTHS[sun.getMonth()]}`;
+        const monStr = `${String(mon.getDate()).padStart(2, "0")}/${monthShort(this.hass, mon.getMonth())}`;
+        const sunStr = `${String(sun.getDate()).padStart(2, "0")}/${monthShort(this.hass, sun.getMonth())}`;
         return `${monStr}-${sunStr}`;
       }
       case "month":
-        return `${SWEDISH_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+        return `${monthFull(this.hass, d.getMonth())} ${d.getFullYear()}`;
       case "year":
         return `${d.getFullYear()}`;
     }
@@ -199,15 +190,15 @@ export class FaktaView extends LitElement {
   }
 
   private _fmtKwh(v: number): string {
-    return v.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " kWh";
+    return v.toLocaleString(getLocale(this.hass), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " kWh";
   }
 
   private _fmtSek(v: number): string {
-    return v.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " Sek";
+    return v.toLocaleString(getLocale(this.hass), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " SEK";
   }
 
   private _fmtSekPerKwh(v: number): string {
-    return v.toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " Sek";
+    return v.toLocaleString(getLocale(this.hass), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " SEK";
   }
 
   render(): TemplateResult {
@@ -231,13 +222,13 @@ export class FaktaView extends LitElement {
     return html`
       <div class="period-nav">
         <div class="period-tabs">
-          ${(Object.keys(PERIOD_LABELS) as PeriodType[]).map(
-            (p) => html`
+          ${PERIOD_KEYS.map(
+            (pk) => html`
               <button
-                class="period-tab ${this._period === p ? "active" : ""}"
-                @click=${() => this._setPeriod(p)}
+                class="period-tab ${this._period === pk.type ? "active" : ""}"
+                @click=${() => this._setPeriod(pk.type)}
               >
-                ${PERIOD_LABELS[p]}
+                ${t(this.hass, pk.labelKey)}
               </button>
             `
           )}
@@ -266,16 +257,16 @@ export class FaktaView extends LitElement {
   private _renderProductionColumn(d: HistoryStatsResponse): TemplateResult {
     return html`
       <div class="fakta-card">
-        <h3>Produktion och konsumtion</h3>
-        <div class="fakta-row"><span class="label">S\u00e5ld</span><span class="value">${this._fmtKwh(d.production_sold)}</span></div>
-        <div class="fakta-row"><span class="label">Eget anv.</span><span class="value">${this._fmtKwh(d.production_own_use)}</span></div>
-        <div class="fakta-row"><span class="label">Batteriladdning</span><span class="value">${this._fmtKwh(d.battery_charge)}</span></div>
-        <div class="fakta-row"><span class="label">Batteri anv.</span><span class="value">${this._fmtKwh(d.battery_used)}</span></div>
-        <div class="fakta-row"><span class="label">K\u00f6pt</span><span class="value">${this._fmtKwh(d.purchased)}</span></div>
+        <h3>${t(this.hass, "fakta.productionTitle")}</h3>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.sold")}</span><span class="value">${this._fmtKwh(d.production_sold)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.ownUse")}</span><span class="value">${this._fmtKwh(d.production_own_use)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.batteryCharge")}</span><span class="value">${this._fmtKwh(d.battery_charge)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.batteryUse")}</span><span class="value">${this._fmtKwh(d.battery_used)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.purchased")}</span><span class="value">${this._fmtKwh(d.purchased)}</span></div>
         <hr class="fakta-separator" />
-        <div class="fakta-row fakta-summary"><span class="label">Produktion</span><span class="value">${this._fmtKwh(d.sum_all_production)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtKwh(d.sum_all_consumption)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Balans (prod. - Ink\u00f6p.)</span><span class="value">${this._fmtKwh(d.sum_all_production - d.sum_all_consumption)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.production")}</span><span class="value">${this._fmtKwh(d.sum_all_production)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.consumption")}</span><span class="value">${this._fmtKwh(d.sum_all_consumption)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.balance")}</span><span class="value">${this._fmtKwh(d.sum_all_production - d.sum_all_consumption)}</span></div>
       </div>
     `;
   }
@@ -283,24 +274,24 @@ export class FaktaView extends LitElement {
   private _renderCostColumn(d: HistoryStatsResponse): TemplateResult {
     return html`
       <div class="fakta-card">
-        <h3>Kostnader och int\u00e4kter</h3>
-        <div class="fakta-row"><span class="label">Prod s\u00e5lt</span><span class="value">${this._fmtSek(d.production_sold_profit)}</span></div>
-        <div class="fakta-row"><span class="label">Prod n\u00e4tnytta</span><span class="value">${this._fmtSek(d.production_sold_grid_compensation_profit)}</span></div>
-        <div class="fakta-row"><span class="label">Prod energiskatt</span><span class="value">${this._fmtSek(d.production_sold_tax_reduction_profit)}</span></div>
-        <div class="fakta-row"><span class="label">Eget anv. spotpris</span><span class="value">${this._fmtSek(d.production_own_use_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Eget anv. \u00f6verf\u00f6ring</span><span class="value">${this._fmtSek(d.production_own_use_transfer_fee_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Eget anv. energiskatt</span><span class="value">${this._fmtSek(d.production_own_use_energy_tax_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Batt. anv. spotpris</span><span class="value">${this._fmtSek(d.battery_used_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Batt. anv. \u00f6verf\u00f6ring</span><span class="value">${this._fmtSek(d.battery_use_transfer_fee_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Batt. anv. energiskatt</span><span class="value">${this._fmtSek(d.battery_use_energy_tax_saved)}</span></div>
+        <h3>${t(this.hass, "fakta.costTitle")}</h3>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.prodSold")}</span><span class="value">${this._fmtSek(d.production_sold_profit)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.prodGridComp")}</span><span class="value">${this._fmtSek(d.production_sold_grid_compensation_profit)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.prodTaxReduction")}</span><span class="value">${this._fmtSek(d.production_sold_tax_reduction_profit)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.ownUseSpot")}</span><span class="value">${this._fmtSek(d.production_own_use_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.ownUseTransfer")}</span><span class="value">${this._fmtSek(d.production_own_use_transfer_fee_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.ownUseEnergyTax")}</span><span class="value">${this._fmtSek(d.production_own_use_energy_tax_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.battSpot")}</span><span class="value">${this._fmtSek(d.battery_used_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.battTransfer")}</span><span class="value">${this._fmtSek(d.battery_use_transfer_fee_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.battEnergyTax")}</span><span class="value">${this._fmtSek(d.battery_use_energy_tax_saved)}</span></div>
         <hr class="fakta-separator" />
-        <div class="fakta-row"><span class="label">k\u00f6pt el kostnad</span><span class="value">${this._fmtSek(-d.purchased_cost)}</span></div>
-        <div class="fakta-row"><span class="label">K\u00f6pt \u00f6verf\u00f6ringavgift</span><span class="value">${this._fmtSek(-d.purchased_transfer_fee_cost)}</span></div>
-        <div class="fakta-row"><span class="label">K\u00f6pt energiskatt</span><span class="value">${this._fmtSek(-d.purchased_tax_cost)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.purchasedCost")}</span><span class="value">${this._fmtSek(-d.purchased_cost)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.purchasedTransfer")}</span><span class="value">${this._fmtSek(-d.purchased_transfer_fee_cost)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.purchasedTax")}</span><span class="value">${this._fmtSek(-d.purchased_tax_cost)}</span></div>
         <hr class="fakta-separator" />
-        <div class="fakta-row fakta-summary"><span class="label">Produktion</span><span class="value">${this._fmtSek(d.sum_all_production_sold_and_saved)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Konsumtion</span><span class="value">${this._fmtSek(-d.sum_purchased_cost)}</span></div>
-        <div class="fakta-row fakta-summary"><span class="label">Balans. (prod. - Ink\u00f6pt)</span><span class="value">${this._fmtSek(d.balance)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.costProduction")}</span><span class="value">${this._fmtSek(d.sum_all_production_sold_and_saved)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.costConsumption")}</span><span class="value">${this._fmtSek(-d.sum_purchased_cost)}</span></div>
+        <div class="fakta-row fakta-summary"><span class="label">${t(this.hass, "fakta.costBalance")}</span><span class="value">${this._fmtSek(d.balance)}</span></div>
       </div>
     `;
   }
@@ -310,19 +301,19 @@ export class FaktaView extends LitElement {
       <div class="fakta-card">
         <h3>${this._simEnabled && this._simData
             ? this._simAddBattery
-              ? `Simulering (med ${this._simBatteryKwh} kWh batteri i ber\u00e4kning)`
-              : `Simulering (utan batteri i ber\u00e4kning)`
-            : `Simulering`}</h3>
+              ? t(this.hass, "fakta.simTitleWithBattery", this._simBatteryKwh)
+              : t(this.hass, "fakta.simTitleWithoutBattery")
+            : t(this.hass, "fakta.simTitle")}</h3>
         <div class="sim-section">
           <div class="sim-toggle-group">
             <button
               class="sim-toggle ${!this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = true; }}
-            >L\u00e4gg till batteri</button>
+            >${t(this.hass, "fakta.simAddBattery")}</button>
             <button
               class="sim-toggle ${this._simAddBattery ? "active" : ""}"
               @click=${() => { this._simAddBattery = false; }}
-            >Ta bort batteri</button>
+            >${t(this.hass, "fakta.simRemoveBattery")}</button>
           </div>
           ${this._simAddBattery
             ? html`
@@ -346,16 +337,16 @@ export class FaktaView extends LitElement {
             @click=${this._simulate}
             ?disabled=${this._simLoading}
           >
-            ${this._simLoading ? "Ber\u00e4knar..." : "Ber\u00e4kna"}
+            ${this._simLoading ? t(this.hass, "fakta.simCalculating") : t(this.hass, "fakta.simCalculate")}
           </button>
         </div>
 
-        <h3>Fakta</h3>
-        <div class="fakta-row"><span class="label">Produktionsindex (prod/dag)</span><span class="value">${this._fmtKwh(d.facts_production_index)}</span></div>
-        <div class="fakta-row"><span class="label">Snittpris s\u00e5ld</span><span class="value">${this._fmtSekPerKwh(d.facts_production_sold_avg_per_kwh_profit)}</span></div>
-        <div class="fakta-row"><span class="label">Snittpris k\u00f6pt</span><span class="value">${this._fmtSekPerKwh(d.facts_purchased_cost_avg_per_kwh)}</span></div>
-        <div class="fakta-row"><span class="label">Snittpris eget anv\u00e4ndning</span><span class="value">${this._fmtSekPerKwh(d.facts_production_own_use_avg_per_kwh_saved)}</span></div>
-        <div class="fakta-row"><span class="label">Eget anv. reducering avg. f\u00f6rb.</span><span class="value">${this._fmtKwh(d.peak_energy_reduction)}</span></div>
+        <h3>${t(this.hass, "fakta.factsTitle")}</h3>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.factsProductionIndex")}</span><span class="value">${this._fmtKwh(d.facts_production_index)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.factsAvgPriceSold")}</span><span class="value">${this._fmtSekPerKwh(d.facts_production_sold_avg_per_kwh_profit)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.factsAvgPricePurchased")}</span><span class="value">${this._fmtSekPerKwh(d.facts_purchased_cost_avg_per_kwh)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.factsAvgPriceOwnUse")}</span><span class="value">${this._fmtSekPerKwh(d.facts_production_own_use_avg_per_kwh_saved)}</span></div>
+        <div class="fakta-row"><span class="label">${t(this.hass, "fakta.factsPeakReduction")}</span><span class="value">${this._fmtKwh(d.peak_energy_reduction)}</span></div>
       </div>
     `;
   }

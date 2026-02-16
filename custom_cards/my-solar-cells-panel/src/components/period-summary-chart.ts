@@ -1,30 +1,32 @@
 import { LitElement, html, css, TemplateResult, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { PeriodSummariesResponse, PeriodSummary } from "../types";
+import { t } from "../localize";
 
 interface BarDef {
   key: keyof PeriodSummary;
-  label: string;
+  labelKey: "chart.ownUse" | "chart.sold";
   color: string;
   unit: string;
 }
 
 const BARS: BarDef[] = [
-  { key: "own_use_kwh", label: "Own Use", color: "#4285f4", unit: "kWh" },
-  { key: "sold_kwh", label: "Sold", color: "#34a853", unit: "kWh" },
-  { key: "own_use_sek", label: "Own Use", color: "#8ab4f8", unit: "SEK" },
-  { key: "sold_sek", label: "Sold", color: "#f4a742", unit: "SEK" },
+  { key: "own_use_kwh", labelKey: "chart.ownUse", color: "#4285f4", unit: "kWh" },
+  { key: "sold_kwh", labelKey: "chart.sold", color: "#34a853", unit: "kWh" },
+  { key: "own_use_sek", labelKey: "chart.ownUse", color: "#8ab4f8", unit: "SEK" },
+  { key: "sold_sek", labelKey: "chart.sold", color: "#f4a742", unit: "SEK" },
 ];
 
-const PERIODS: { key: keyof PeriodSummariesResponse; label: string }[] = [
-  { key: "today", label: "Today" },
-  { key: "this_week", label: "This Week" },
-  { key: "this_month", label: "This Month" },
-  { key: "this_year", label: "This Year" },
+const PERIOD_KEYS: { key: keyof PeriodSummariesResponse; labelKey: "chart.today" | "chart.thisWeek" | "chart.thisMonth" | "chart.thisYear" }[] = [
+  { key: "today", labelKey: "chart.today" },
+  { key: "this_week", labelKey: "chart.thisWeek" },
+  { key: "this_month", labelKey: "chart.thisMonth" },
+  { key: "this_year", labelKey: "chart.thisYear" },
 ];
 
 @customElement("period-summary-chart")
 export class PeriodSummaryChart extends LitElement {
+  @property({ attribute: false }) hass: any;
   @property({ attribute: false }) data?: PeriodSummariesResponse;
 
   static styles = css`
@@ -122,14 +124,14 @@ export class PeriodSummaryChart extends LitElement {
 
     return html`
       <div class="chart-container">
-        ${PERIODS.map((p) => this._renderPeriod(p, this.data![p.key], maxKwh, maxSek))}
+        ${PERIOD_KEYS.map((p) => this._renderPeriod(p, this.data![p.key], maxKwh, maxSek))}
       </div>
       <div class="legend">
         ${BARS.map(
           (b) => html`
             <div class="legend-item">
               <div class="legend-swatch" style="background:${b.color}"></div>
-              ${b.label} (${b.unit})
+              ${t(this.hass, b.labelKey)} (${b.unit})
             </div>
           `
         )}
@@ -138,14 +140,14 @@ export class PeriodSummaryChart extends LitElement {
   }
 
   private _renderPeriod(
-    period: { key: keyof PeriodSummariesResponse; label: string },
+    period: { key: keyof PeriodSummariesResponse; labelKey: "chart.today" | "chart.thisWeek" | "chart.thisMonth" | "chart.thisYear" },
     summary: PeriodSummary,
     maxKwh: number,
     maxSek: number
   ): TemplateResult {
     return html`
       <div class="period-column">
-        <div class="period-label">${period.label}</div>
+        <div class="period-label">${t(this.hass, period.labelKey)}</div>
         <div class="bars">
           ${BARS.map((bar) => {
             const value = summary[bar.key];
@@ -173,7 +175,7 @@ export class PeriodSummaryChart extends LitElement {
         ? ["own_use_kwh", "sold_kwh"]
         : ["own_use_sek", "sold_sek"];
     let max = 0;
-    for (const period of PERIODS) {
+    for (const period of PERIOD_KEYS) {
       const summary = this.data[period.key];
       for (const key of keys) {
         if (summary[key] > max) max = summary[key];

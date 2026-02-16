@@ -2,6 +2,7 @@ import { LitElement, html, css, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { cardStyles, tableStyles } from "../styles";
 import { YearlyParams, YearlyParamsResponse } from "../types";
+import { t } from "../localize";
 
 const DEFAULT_PARAMS: YearlyParams = {
   tax_reduction: 0.6,
@@ -126,53 +127,53 @@ export class YearlyParamsView extends LitElement {
 
   render(): TemplateResult {
     if (this._loading && !this._fetched) {
-      return html`<div class="loading">Loading yearly parameters...</div>`;
+      return html`<div class="loading">${t(this.hass, "params.loadingParams")}</div>`;
     }
     if (this._error) {
-      return html`<div class="no-data">Error: ${this._error}</div>`;
+      return html`<div class="no-data">${t(this.hass, "common.error")}: ${this._error}</div>`;
     }
     if (!this._fetched) {
-      return html`<div class="no-data">Waiting for data...</div>`;
+      return html`<div class="no-data">${t(this.hass, "params.waitingForData")}</div>`;
     }
 
     const years = Object.keys(this._params).sort();
 
     return html`
       <div class="card">
-        <h3>Yearly Financial Parameters</h3>
+        <h3>${t(this.hass, "params.title")}</h3>
 
         <div class="add-year-row">
           <div class="input-group">
-            <label>Add Year</label>
+            <label>${t(this.hass, "params.addYear")}</label>
             <select
               .value=${this._newYear}
               @change=${(e: Event) =>
                 (this._newYear = (e.target as HTMLSelectElement).value)}
             >
-              <option value="">Select year...</option>
+              <option value="">${t(this.hass, "params.selectYear")}</option>
               ${this._getAvailableYears().map(
                 (y) => html`<option value=${y}>${y}</option>`
               )}
             </select>
           </div>
-          <button class="btn" @click=${this._addYear}>Add</button>
+          <button class="btn" @click=${this._addYear}>${t(this.hass, "common.add")}</button>
         </div>
 
         ${years.length === 0
           ? html`<div class="no-data">
-              No yearly parameters configured yet. Add a year above.
+              ${t(this.hass, "params.noParams")}
             </div>`
           : html`
               <div class="table-wrapper">
                 <table>
                   <thead>
                     <tr>
-                      <th>Year</th>
-                      <th>Tax Reduction</th>
-                      <th>Grid Comp.</th>
-                      <th>Transfer Fee</th>
-                      <th>Energy Tax</th>
-                      <th>Installed kW</th>
+                      <th>${t(this.hass, "common.year")}</th>
+                      <th>${t(this.hass, "params.taxReduction")}</th>
+                      <th>${t(this.hass, "params.gridComp")}</th>
+                      <th>${t(this.hass, "params.transferFee")}</th>
+                      <th>${t(this.hass, "params.energyTax")}</th>
+                      <th>${t(this.hass, "params.installedKw")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -207,10 +208,10 @@ export class YearlyParamsView extends LitElement {
     const v = this._editValues;
     return html`
       <div class="card">
-        <h3>Edit ${this._editingYear}</h3>
+        <h3>${t(this.hass, "params.editYear", this._editingYear!)}</h3>
         <div class="edit-form">
           <div class="input-group">
-            <label>Tax Reduction (SEK/kWh)</label>
+            <label>${t(this.hass, "params.taxReductionLabel")}</label>
             <input
               type="number"
               step="0.001"
@@ -225,7 +226,7 @@ export class YearlyParamsView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>Grid Compensation (SEK/kWh)</label>
+            <label>${t(this.hass, "params.gridCompLabel")}</label>
             <input
               type="number"
               step="0.001"
@@ -240,7 +241,7 @@ export class YearlyParamsView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>Transfer Fee (SEK/kWh)</label>
+            <label>${t(this.hass, "params.transferFeeLabel")}</label>
             <input
               type="number"
               step="0.001"
@@ -255,7 +256,7 @@ export class YearlyParamsView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>Energy Tax (SEK/kWh)</label>
+            <label>${t(this.hass, "params.energyTaxLabel")}</label>
             <input
               type="number"
               step="0.001"
@@ -270,7 +271,7 @@ export class YearlyParamsView extends LitElement {
             />
           </div>
           <div class="input-group">
-            <label>Installed kW</label>
+            <label>${t(this.hass, "params.installedKwLabel")}</label>
             <input
               type="number"
               step="0.01"
@@ -287,12 +288,12 @@ export class YearlyParamsView extends LitElement {
         </div>
         <div class="form-actions">
           <button class="btn" ?disabled=${this._saving} @click=${this._save}>
-            ${this._saving ? "Saving..." : "Save"}
+            ${this._saving ? t(this.hass, "params.saving") : t(this.hass, "common.save")}
           </button>
           <button class="btn btn-secondary" @click=${this._cancelEdit}>
-            Cancel
+            ${t(this.hass, "common.cancel")}
           </button>
-          <button class="btn btn-danger" @click=${this._delete}>Delete</button>
+          <button class="btn btn-danger" @click=${this._delete}>${t(this.hass, "common.delete")}</button>
         </div>
       </div>
     `;
@@ -376,7 +377,7 @@ export class YearlyParamsView extends LitElement {
 
   private async _delete() {
     if (this._editingYear == null || !this.hass || !this.entryId) return;
-    if (!confirm(`Delete parameters for ${this._editingYear}?`)) return;
+    if (!confirm(t(this.hass, "params.deleteConfirm", this._editingYear!))) return;
     this._saving = true;
     try {
       await this.hass.callWS({

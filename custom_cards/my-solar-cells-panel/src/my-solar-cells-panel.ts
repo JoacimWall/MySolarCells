@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { panelStyles } from "./styles";
+import { t } from "./localize";
 import "./views/overview-view";
 import "./views/hourly-energy-view";
 import "./views/sensors-view";
@@ -45,44 +46,44 @@ export class MySolarCellsPanel extends LitElement {
     return html`
       <div class="content">
         <div class="header">
-          <h1>Solar Data</h1>
+          <h1>${t(this.hass, "panel.title")}</h1>
         </div>
         <div class="tabs">
           <button
             class="tab ${this._activeTab === "overview" ? "active" : ""}"
             @click=${() => (this._activeTab = "overview")}
           >
-            Overview
+            ${t(this.hass, "tab.overview")}
           </button>
           <button
             class="tab ${this._activeTab === "roi" ? "active" : ""}"
             @click=${() => (this._activeTab = "roi")}
           >
-            ROI
+            ${t(this.hass, "tab.roi")}
           </button>
           <button
             class="tab ${this._activeTab === "fakta" ? "active" : ""}"
             @click=${() => (this._activeTab = "fakta")}
           >
-            Fakta
+            ${t(this.hass, "tab.fakta")}
           </button>
           <button
             class="tab ${this._activeTab === "sensors" ? "active" : ""}"
             @click=${() => (this._activeTab = "sensors")}
           >
-            Sensors
+            ${t(this.hass, "tab.sensors")}
           </button>
           <button
             class="tab ${this._activeTab === "params" ? "active" : ""}"
             @click=${() => (this._activeTab = "params")}
           >
-            Yearly Params
+            ${t(this.hass, "tab.yearlyParams")}
           </button>
           <button
             class="tab ${this._activeTab === "hourly" ? "active" : ""}"
             @click=${() => (this._activeTab = "hourly")}
           >
-            Hourly Energy
+            ${t(this.hass, "tab.hourlyEnergy")}
           </button>
         </div>
         <div class="tab-content" ?active=${this._activeTab === "overview"}>
