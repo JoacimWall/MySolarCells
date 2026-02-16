@@ -177,18 +177,22 @@ export class RoiView extends LitElement {
           <summary>How is the ROI calculated?</summary>
           <ul>
             <li><strong>Historical years</strong> use actual production and price data from Tibber.
-              If the current year is incomplete, missing months are filled with data from the
-              previous year or average production estimates.</li>
+              If the current year is incomplete, each missing month is filled using
+              the average price and production for that specific month from up to
+              3 prior years. If no prior data exists for a month, the previous
+              month's price is used as fallback.</li>
             <li><strong>Sold price</strong> = spot price + grid compensation (n&auml;tnytta)
               + tax reduction (skattereduktion, until 2026).</li>
             <li><strong>Own use price</strong> = avoided purchase cost (spot price + transfer fee
               + energy tax). If a battery is present, it is the average of own-use and battery
               savings per kWh.</li>
             <li><strong>Future years</strong> are projected using monthly average prices and
-              production from the last historical year. Price development and panel degradation
-              are applied per month, then summed to yearly totals. This captures seasonal
-              variation &mdash; summer has high production but typically lower prices, winter
-              the opposite.</li>
+              production from up to 3 of the most recent historical years. Each
+              calendar month is averaged across however many years have data for
+              it. Price development and panel degradation are then applied per
+              month and summed to yearly totals. This captures seasonal variation
+              &mdash; summer has high production but typically lower prices,
+              winter the opposite.</li>
             <ul>
               <li>Prices increase each year by the <em>price development</em> percentage.
                 E.g. 5% means next year's price = this year's price &times; 1.05.</li>
